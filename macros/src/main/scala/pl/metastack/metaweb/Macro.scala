@@ -62,16 +62,11 @@ object Macro {
     import c.universe._
     val html = insertPlaceholders(c)(parts)
 
-    // TODO Cannot deal with an arbitrary number of arguments yet
-    val var1 = vars(0)
-    val var2 = vars(1)
-
     val tree =
       q"""
       import scala.xml._
       val xml = XML.loadString($html)
-      val myVars = Seq($var1, $var2)
-      xml.flatMap(iter(_, myVars))
+      xml.flatMap(iter(_, Seq(..$vars)))
       """
 
     c.Expr(tree)
