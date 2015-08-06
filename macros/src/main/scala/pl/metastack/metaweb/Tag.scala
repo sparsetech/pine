@@ -4,8 +4,12 @@ import scala.collection.mutable
 
 import pl.metastack.metarx._
 
-case class Tag(tagName: String) extends Node {
-  private val attributes = Dict[String, Any]()
+object Tag {
+  def apply(tagName: String): Tag = new Tag(tagName)
+}
+
+class Tag(tagName: String) extends Node {
+  private[metaweb] val attributes = Dict[String, Any]()
   private val contents = Buffer[Node]()
 
   val changes = Var[Unit](())
