@@ -1,3 +1,5 @@
+import java.io.PrintWriter
+
 import sbt._
 import Keys._
 
@@ -25,13 +27,16 @@ object MyBuild extends Build {
     )
   ).aggregate(macros, core)
 
+  val convertMDN = (sourceManaged in Compile).map(MDNParser.createFiles)
+
   lazy val macros: Project = Project(
     "metaweb-macros",
     file("macros"),
     settings = buildSettings ++ Seq(
       libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-reflect" % _),
-      libraryDependencies += "pl.metastack" %% "metarx" % "0.1.0-SNAPSHOT",
-      libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.11" % "1.0.5"
+      libraryDependencies += "pl.metastack" %% "metarx" % "0.1.0",
+      libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.11" % "1.0.5",
+      sourceGenerators in Compile <+= convertMDN
     )
   )
 

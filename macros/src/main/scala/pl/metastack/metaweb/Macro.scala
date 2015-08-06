@@ -6,6 +6,8 @@ import scala.reflect.macros.blackbox.Context
 
 import pl.metastack.metarx.Var
 
+import pl.metastack.metaweb.tag.HTMLTag
+
 object Macro {
   implicit class Html(sc: StringContext) {
     def html(vars: Var[String]*): Seq[Node] = macro HtmlImpl
@@ -27,7 +29,7 @@ object Macro {
         }
 
       case s =>
-        val tag = Tag(s)
+        val tag = HTMLTag.fromTag(s)
 
         node.attributes.asAttrMap.foreach { case (k, v) =>
           if (v.startsWith("${") && v.endsWith("}")) {

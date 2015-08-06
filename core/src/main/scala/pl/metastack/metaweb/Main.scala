@@ -10,13 +10,14 @@ object Main extends App {
   val parsedHtml = html"""<a href=$url>$title</a>"""
 
   // translates into:
-  // val root = pl.metastack.metaweb.Tag("a")
+  // val root = tag.a()
   // root.bind("href", url)
-  // root += pl.metastack.metaweb.Text(title)
+  // root += Text(title)
 
   parsedHtml.head match {
-    case root: Tag =>
-      root.toHtmlLive.attach(println)
+    case root: tag.a =>
+      println(s"Current URL: ${root.href}")
+      root.toHtmlLive.attach(html => println(s"HTML changed to: $html"))
 
       url := "http://google.com/"
       title := "Google"
