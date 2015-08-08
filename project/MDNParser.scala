@@ -134,7 +134,7 @@ object MDNParser {
         p.println( s"""  /**""")
         p.println( s"""   * $description""")
         p.println( s"""   */""")
-        p.println( s"""  def $attrName = attributes.value("${attribute.name}")""")
+        p.println( s"""  def $attrName: Option[String] = attributes.get("${attribute.name}").asInstanceOf[Option[String]]""")
         p.println( s"""  def $attrName(value: String) = attributes.insertOrUpdate("${attribute.name}", value)""")
       }
     }

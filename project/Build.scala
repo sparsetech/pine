@@ -36,7 +36,9 @@ object MyBuild extends Build {
       libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-reflect" % _),
       libraryDependencies += "pl.metastack" %% "metarx" % "0.1.0",
       libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.11" % "1.0.5",
-      sourceGenerators in Compile <+= convertMDN
+      libraryDependencies += "org.monifu" %% "minitest" % "0.12" % "test",
+      sourceGenerators in Compile <+= convertMDN,
+      testFrameworks += new TestFramework("minitest.runner.Framework")
     )
   )
 
