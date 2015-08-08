@@ -8,7 +8,7 @@ import pl.metastack.metarx.Var
 
 import pl.metastack.metaweb.tag.HTMLTag
 
-object Macro {
+object HtmlMacro {
   implicit class Html(sc: StringContext) {
     def html(vars: Var[String]*): Seq[Node] = macro HtmlImpl
   }

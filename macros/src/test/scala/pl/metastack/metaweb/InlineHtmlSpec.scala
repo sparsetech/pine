@@ -3,7 +3,7 @@ package pl.metastack.metaweb
 import scala.collection.mutable.ArrayBuffer
 
 import pl.metastack.metarx.Var
-import pl.metastack.metaweb.Macro._
+import pl.metastack.metaweb.HtmlMacro._
 
 import minitest._
 
