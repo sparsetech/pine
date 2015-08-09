@@ -13,7 +13,7 @@ object TemplateMacro {
     def byId[T <: Tag](id: String): T =
       node match {
         case t: Tag => t.byIdOpt(id).get
-        case _ => throw new RuntimeException("Root node must be a tag")
+        case _ => throw new RuntimeException("Root node must be an HTML element")
       }
 
     override def toString: String = node.toHtml
@@ -39,7 +39,7 @@ object TemplateMacro {
     }
   }
 
-  def convert(c: Context)(fileName: c.Expr[String]): c.Expr[Template] = {
+  def TemplateImpl(c: Context)(fileName: c.Expr[String]): c.Expr[Template] = {
     import c.universe._
 
     val tree =
@@ -50,9 +50,5 @@ object TemplateMacro {
       """
 
     c.Expr(tree)
-  }
-
-  def TemplateImpl(c: Context)(fileName: c.Expr[String]): c.Expr[Template] = {
-    convert(c)(fileName)
   }
 }

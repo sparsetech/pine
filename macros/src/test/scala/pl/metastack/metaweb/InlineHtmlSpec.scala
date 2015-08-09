@@ -53,23 +53,11 @@ object InlineHtmlSpec extends SimpleTestSuite {
     }
   }
 
-  test("Bind list item") {
-    val tpl =
-      html"""
-        <html>
-        <body>
-          <h1>List</h1>
-          <div id="list">
-
-          </div>
-        </body>
-        </html>
-      """
+  test("Bind list") {
+    val tpl = html"""<div id="list"></div>"""
 
     tpl match {
-      case node: tag.html =>
-        val list = node.byId[tag.div]("list")
-
+      case list: tag.div =>
         list.bindChildren(Buffer("a", "b", "c").map { i =>
           val title = Var(s"Title $i")
           val subtitle = Var(s"Subtitle $i")
