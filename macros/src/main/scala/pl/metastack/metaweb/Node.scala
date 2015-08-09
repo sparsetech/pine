@@ -7,4 +7,6 @@ trait Node {
 
   def toHtml: String
   def toHtmlLive: ReadChannel[String] = changes.map(_ => toHtml)
+
+  def copy(): Node
 }

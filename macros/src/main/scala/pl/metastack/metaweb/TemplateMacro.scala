@@ -1,7 +1,5 @@
 package pl.metastack.metaweb
 
-import java.io.File
-
 import scala.language.reflectiveCalls
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
@@ -10,23 +8,24 @@ import pl.metastack.metarx.Var
 
 import pl.metastack.metaweb.tag.HTMLTag
 
-import scala.xml.XML
-
 object TemplateMacro {
-  class Template(val nodes: Seq[Node]) {
+  class Template(val node: Node) {
     def byId[T <: Tag](id: String): T =
-      nodes.collectFirst {
-        case t: Tag if t.byIdOpt(id).isDefined => t.byIdOpt(id).get  // TODO optimise
-      }.get
+      node match {
+        case t: Tag => t.byIdOpt(id).get
+        case _ => throw new RuntimeException("Root node must be a tag")
+      }
+
+    override def toString: String = node.toHtml
   }
 
   object Template {
     def apply(fileName: String): Template = macro TemplateImpl
   }
 
-  def iter(node: scala.xml.Node): Seq[Node] = {
+  def iter(node: scala.xml.Node): Node = {
     node.label match {
-      case "#PCDATA" => Seq(Text(Var(node.text)))
+      case "#PCDATA" => Text(Var(node.text))
 
       case s =>
         val tag = HTMLTag.fromTag(s)
@@ -35,15 +34,9 @@ object TemplateMacro {
           tag.bind(k, Var(v))
         }
 
-        node.child.flatMap(iter).foreach(tag += _)
-        Seq(tag)
+        node.child.foreach(tag += iter(_))
+        tag
     }
-  }
-
-  def loadXml(file: String): Seq[scala.xml.Node] = {
-    import scala.xml.XML
-    val xml = scala.io.Source.fromFile(new File(file)).mkString
-    XML.loadString(s"<xml>$xml</xml>").child
   }
 
   def convert(c: Context)(fileName: c.Expr[String]): c.Expr[Template] = {
@@ -51,8 +44,9 @@ object TemplateMacro {
 
     val tree =
       q"""
-      val xml = loadXml($fileName)
-      new Template(xml.flatMap(iter))
+      import scala.xml.XML
+      val xml = XML.loadFile($fileName)
+      new Template(iter(xml))
       """
 
     c.Expr(tree)

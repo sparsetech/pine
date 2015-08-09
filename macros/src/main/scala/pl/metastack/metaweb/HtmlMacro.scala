@@ -10,7 +10,7 @@ import pl.metastack.metaweb.tag.HTMLTag
 
 object HtmlMacro {
   implicit class Html(sc: StringContext) {
-    def html(vars: Var[String]*): Seq[Node] = macro HtmlImpl
+    def html(vars: Var[String]*): Node = macro HtmlImpl
   }
 
   def iter(node: scala.xml.Node, vars: Seq[Var[String]]): Seq[Node] = {
@@ -58,21 +58,21 @@ object HtmlMacro {
   }
 
   def convert(c: Context)(parts: Seq[c.universe.Tree],
-                          vars: Seq[c.Expr[Var[String]]]): c.Expr[Seq[Node]] = {
+                          vars: Seq[c.Expr[Var[String]]]): c.Expr[Node] = {
     import c.universe._
     val html = insertPlaceholders(c)(parts)
 
     val tree =
       q"""
-      import scala.xml._
+      import scala.xml.XML
       val xml = XML.loadString($html)
-      xml.flatMap(iter(_, Seq(..$vars)))
+      iter(xml, Seq(..$vars)).head
       """
 
     c.Expr(tree)
   }
 
-  def HtmlImpl(c: Context)(vars: c.Expr[Var[String]]*): c.Expr[Seq[Node]] = {
+  def HtmlImpl(c: Context)(vars: c.Expr[Var[String]]*): c.Expr[Node] = {
     import c.universe._
 
     c.prefix.tree match {

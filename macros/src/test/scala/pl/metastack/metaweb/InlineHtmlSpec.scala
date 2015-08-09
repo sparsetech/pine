@@ -2,7 +2,7 @@ package pl.metastack.metaweb
 
 import scala.collection.mutable.ArrayBuffer
 
-import pl.metastack.metarx.Var
+import pl.metastack.metarx.{Buffer, Var}
 import pl.metastack.metaweb.HtmlMacro._
 
 import minitest._
@@ -18,7 +18,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
     // root.bind("href", url)
     // root += Text(title)
 
-    parsedHtml.head match {
+    parsedHtml match {
       case root: tag.a =>
         assertEquals(root.toHtml, """<a href="http://github.com/">GitHub</a>""")
 
@@ -36,7 +36,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
     val title = Var("GitHub")
     val parsedHtml = html"""<a href=$url>$title</a>"""
 
-    parsedHtml.head match {
+    parsedHtml match {
       case root: tag.a =>
         val changes = ArrayBuffer.empty[String]
 
@@ -50,6 +50,35 @@ object InlineHtmlSpec extends SimpleTestSuite {
           """<a href="http://github.com/">Google</a>""",
           """<a href="http://google.com/">Google</a>"""
         ))
+    }
+  }
+
+  test("Bind list item") {
+    val tpl =
+      html"""
+        <html>
+        <body>
+          <h1>List</h1>
+          <div id="list">
+
+          </div>
+        </body>
+        </html>
+      """
+
+    tpl match {
+      case node: tag.html =>
+        val list = node.byId[tag.div]("list")
+
+        list.bindChildren(Buffer("a", "b", "c").map { i =>
+          val title = Var(s"Title $i")
+          val subtitle = Var(s"Subtitle $i")
+          html"""<div><div>$title</div><div>$subtitle</div></div>"""
+        })
+
+        assertEquals(list.contents.get.size, 3)
+        assertEquals(list.contents.get.last.toHtml,
+          """<div><div>Title c</div><div>Subtitle c</div></div>""")
     }
   }
 }

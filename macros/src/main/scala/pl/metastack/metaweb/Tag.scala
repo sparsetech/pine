@@ -10,7 +10,29 @@ object Tag {
 
 class Tag(tagName: String) extends Node {
   private[metaweb] val attributes = Dict[String, Any]()
-  private val contents = Buffer[Node]()
+  private[metaweb] val contents = Buffer[Node]()
+
+  def copy(): Tag = {
+    val tag = Tag(tagName)
+    tag.attributes.set(attributes.toMap)
+    contents.foreach { node =>
+      tag.append(node.copy())
+    }
+    tag
+  }
+
+  def instantiate(nodes: (String, Node)*): Tag = {
+    val tag = copy()
+    tag.attributes -= "id"
+
+    nodes.foreach { case (id, node) =>
+      val n = tag.byId[Tag](id)
+      n.attributes -= "id"
+      n := node
+    }
+
+    tag
+  }
 
   val changes = Var[Unit](())
   changes << attributes.changes.map(_ => ())
@@ -24,7 +46,7 @@ class Tag(tagName: String) extends Node {
     }
   }
 
-  def byId[T <: Tag](id: String): Option[T] = byIdOpt(id).get
+  def byId[T <: Tag](id: String): T = byIdOpt(id).get
 
   def clear() {
     bound.foreach(_.dispose())
@@ -42,6 +64,11 @@ class Tag(tagName: String) extends Node {
   def set(node: Node) {
     clear()
     append(node)
+  }
+
+  def bindChildren(list: DeltaBuffer[Node]): ReadChannel[Unit] = {
+    clear()
+    contents.changes << list.changes
   }
 
   def bind[T](attribute: String, from: ReadChannel[T]) {
