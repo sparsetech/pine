@@ -1,50 +1,59 @@
-import java.io.PrintWriter
-
 import sbt._
-import Keys._
+import sbt.Keys._
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
-object BuildSettings {
-  val paradiseVersion = "2.1.0-M5"
-  val buildSettings = Defaults.defaultSettings ++ Seq(
+object Build extends sbt.Build {
+  val SharedSettings = Seq(
     organization := "pl.metastack",
     version := "0.1.0-SNAPSHOT",
-    scalacOptions ++= Seq(),
-    scalaVersion := "2.11.7",
-    resolvers += Resolver.sonatypeRepo("snapshots"),
-    resolvers += Resolver.sonatypeRepo("releases"),
-    addCompilerPlugin("org.scalamacros" % "paradise" % paradiseVersion cross CrossVersion.full)
+    scalaVersion := "2.11.7"
   )
-}
 
-object MyBuild extends Build {
-  import BuildSettings._
+  object Dependencies {
+    val MetaRx   = "0.1.0"
+    val MiniTest = "0.12"
+    val Paradise = "2.1.0-M5"
+  }
 
-  lazy val root: Project = Project(
-    "metaweb",
-    file("."),
-    settings = buildSettings ++ Seq(
-      run <<= run in Compile in core
+  lazy val root = project.in(file("."))
+    .aggregate(js, jvm)
+    .settings(
+      publishArtifact := false
     )
-  ).aggregate(macros, core)
 
   val convertMDN = (sourceManaged in Compile).map(MDNParser.createFiles)
 
-  lazy val macros: Project = Project(
-    "metaweb-macros",
-    file("macros"),
-    settings = buildSettings ++ Seq(
-      libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-reflect" % _),
-      libraryDependencies += "pl.metastack" %% "metarx" % "0.1.0",
-      libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.11" % "1.0.5",
-      libraryDependencies += "org.monifu" %% "minitest" % "0.12" % "test",
-      sourceGenerators in Compile <+= convertMDN,
+  lazy val metaRx = crossProject.in(file("."))
+    .settings(
+      name := "MetaWeb",
       testFrameworks += new TestFramework("minitest.runner.Framework")
     )
-  )
+    .settings(SharedSettings: _*)
+    .jvmSettings(
+      libraryDependencies ++= Seq(
+        "pl.metastack" %% "metarx" % Dependencies.MetaRx,
+        "org.monifu" %% "minitest" % Dependencies.MiniTest % "test"
+      )
+    )
+    .jsSettings(
+      libraryDependencies ++= Seq(
+        "pl.metastack" %%% "metarx" % Dependencies.MetaRx,
+        "org.monifu" %%% "minitest" % Dependencies.MiniTest % "test"
+      )
+    )
 
-  lazy val core: Project = Project(
-    "metaweb-core",
-    file("core"),
-    settings = buildSettings
-  ).dependsOn(macros)
+  lazy val metaRxMacros: Project = project.in(file("macros"))
+    .settings(SharedSettings: _*)
+    .settings(
+      libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.11.7",
+      libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.11" % "1.0.5",
+      libraryDependencies += "pl.metastack" %% "metarx" % Dependencies.MetaRx,
+
+      sourceGenerators in Compile <+= convertMDN,
+
+      addCompilerPlugin("org.scalamacros" % "paradise" % Dependencies.Paradise cross CrossVersion.full)
+    )
+
+  lazy val js = metaRx.js.dependsOn(metaRxMacros)
+  lazy val jvm = metaRx.jvm.dependsOn(metaRxMacros)
 }
