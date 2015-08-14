@@ -6,14 +6,17 @@ import scala.reflect.macros.blackbox.Context
 
 import pl.metastack.metarx.Var
 
-import pl.metastack.metaweb.tag.HTMLTag
+import scala.xml.XML
 
 object HtmlMacro {
   implicit class Html(sc: StringContext) {
     def html(vars: Var[String]*): Node = macro HtmlImpl
   }
 
-  def iter(node: scala.xml.Node, vars: Seq[Var[String]]): Seq[Node] = {
+  def iter(c: Context)(node: scala.xml.Node,
+                       vars: Seq[c.Expr[Var[String]]]): Seq[c.Expr[Node]] = {
+    import c.universe._
+
     node.label match {
       case "#PCDATA" =>
         // TODO Find a better solution
@@ -22,54 +25,60 @@ object HtmlMacro {
         parts.map { v =>
           if (v.startsWith("${") && v.endsWith("}")) {
             val index = v.drop(2).init.toInt
-            Text(vars(index))
+            c.Expr(q"Text(${vars(index)})")
           } else {
-            Text(Var(v))
+            c.Expr(q"Text(Var($v))")
           }
         }
 
-      case s =>
-        val tag = HTMLTag.fromTag(s)
+      case tagName =>
+        val tagNameIdent = TypeName(tagName.toLowerCase)
 
-        node.attributes.asAttrMap.foreach { case (k, v) =>
+        val tagAttrs = node.attributes.asAttrMap.map { case (k, v) =>
           if (v.startsWith("${") && v.endsWith("}")) {
             val index = v.drop(2).init.toInt
-            tag.bind(k, vars(index))
+            q"t.bind($k, ${vars(index)})"
           } else {
-            tag.bind(k, Var(v))
+            q"t.bind($k, Var($v))"
           }
         }
 
-        node.child.flatMap(iter(_, vars)).foreach(tag += _)
-        Seq(tag)
+        val tagChildren = node.child.flatMap { n =>
+          val children = iter(c)(n, vars)
+          children.map { child =>
+            q"t += $child"
+          }
+        }
+
+        Seq(
+          c.Expr(q"""
+            import pl.metastack.metarx.Var
+            import pl.metastack.metaweb.tag
+
+            val t = new tag.$tagNameIdent
+            ..$tagAttrs
+            ..$tagChildren
+            t
+          """)
+        )
     }
   }
 
   def insertPlaceholders(c: Context)(parts: Seq[c.universe.Tree]): String = {
-    import c.universe._
-    parts.zipWithIndex.map { case (x, i) =>
-      x match {
-        case Literal(Constant(p: String)) =>
-          if (i == parts.length - 1) p
-          else if (p.lastOption.contains('=')) p + "\"${" + i + "}\""
-          else p + "${" + i + "}"
-      }
+    parts.zipWithIndex.map { case (tree, i) =>
+      val p = MacroHelpers.literalValueTree[String](c)(tree)
+
+      if (i == parts.length - 1) p
+      else if (p.lastOption.contains('=')) p + "\"${" + i + "}\""
+      else p + "${" + i + "}"
     }.mkString
   }
 
   def convert(c: Context)(parts: Seq[c.universe.Tree],
                           vars: Seq[c.Expr[Var[String]]]): c.Expr[Node] = {
-    import c.universe._
     val html = insertPlaceholders(c)(parts)
-
-    val tree =
-      q"""
-      import scala.xml.XML
-      val xml = XML.loadString($html)
-      iter(xml, Seq(..$vars)).head
-      """
-
-    c.Expr(tree)
+    val xml = XML.loadString(html)
+    iter(c)(xml, vars).head
   }
 
   def HtmlImpl(c: Context)(vars: c.Expr[Var[String]]*): c.Expr[Node] = {

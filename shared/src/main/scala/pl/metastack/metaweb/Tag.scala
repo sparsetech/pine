@@ -46,8 +46,6 @@ class Tag(tagName: String) extends Node {
     }
   }
 
-  def byId[T <: Tag](id: String): T = byIdOpt(id).get
-
   def clear() {
     bound.foreach(_.dispose())
     bound.clear()

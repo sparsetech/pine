@@ -4,6 +4,7 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
 object Build extends sbt.Build {
   val SharedSettings = Seq(
+    name := "MetaWeb",
     organization := "pl.metastack",
     version := "0.1.0-SNAPSHOT",
     scalaVersion := "2.11.7"
@@ -17,6 +18,7 @@ object Build extends sbt.Build {
 
   lazy val root = project.in(file("."))
     .aggregate(js, jvm)
+    .settings(SharedSettings: _*)
     .settings(
       publishArtifact := false
     )
@@ -24,11 +26,17 @@ object Build extends sbt.Build {
   val convertMDN = (sourceManaged in Compile).map(MDNParser.createFiles)
 
   lazy val metaRx = crossProject.in(file("."))
-    .settings(
-      name := "MetaWeb",
-      testFrameworks += new TestFramework("minitest.runner.Framework")
-    )
     .settings(SharedSettings: _*)
+    .settings(
+      testFrameworks += new TestFramework("minitest.runner.Framework"),
+
+      libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.11.7",
+      libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.11" % "1.0.5",
+
+      addCompilerPlugin("org.scalamacros" % "paradise" % Dependencies.Paradise cross CrossVersion.full),
+
+      sourceGenerators in Compile <+= convertMDN
+    )
     .jvmSettings(
       libraryDependencies ++= Seq(
         "pl.metastack" %% "metarx" % Dependencies.MetaRx,
@@ -42,18 +50,6 @@ object Build extends sbt.Build {
       )
     )
 
-  lazy val metaRxMacros: Project = project.in(file("macros"))
-    .settings(SharedSettings: _*)
-    .settings(
-      libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.11.7",
-      libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.11" % "1.0.5",
-      libraryDependencies += "pl.metastack" %% "metarx" % Dependencies.MetaRx,
-
-      sourceGenerators in Compile <+= convertMDN,
-
-      addCompilerPlugin("org.scalamacros" % "paradise" % Dependencies.Paradise cross CrossVersion.full)
-    )
-
-  lazy val js = metaRx.js.dependsOn(metaRxMacros)
-  lazy val jvm = metaRx.jvm.dependsOn(metaRxMacros)
+  lazy val js = metaRx.js
+  lazy val jvm = metaRx.jvm
 }

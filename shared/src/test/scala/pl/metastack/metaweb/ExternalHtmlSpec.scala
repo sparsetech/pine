@@ -9,7 +9,7 @@ object ExternalHtmlSpec extends SimpleTestSuite {
   test("Load template") {
     val tpl = Template("test/test.html")
 
-    assertEquals(tpl.node.toHtml,
+    assertEquals(tpl.toHtml,
     """<html>
 <body>
 	<b>Hello World</b>
