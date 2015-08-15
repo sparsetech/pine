@@ -7,7 +7,7 @@ import pl.metastack.metaweb.tree.Text
 
 object ExternalHtmlSpec extends SimpleTestSuite {
   test("Load template") {
-    val tpl = html("test/test.html")
+    val tpl = html("shared/src/test/html/test.html")
 
     assertEquals(tpl.toHtml,
     """<html>
@@ -21,7 +21,7 @@ object ExternalHtmlSpec extends SimpleTestSuite {
   }
 
   test("Replace nodes") {
-    val tpl = html("test/test2.html")
+    val tpl = html("shared/src/test/html/test2.html")
 
     val div2 = tpl.byId[tag.div]("div2")
     assertEquals(div2.toHtml, """<div id="div2">Div 2 contents</div>""")
@@ -31,7 +31,7 @@ object ExternalHtmlSpec extends SimpleTestSuite {
   }
 
   test("Bind list item from template") {
-    val tpl = html("test/list.html")
+    val tpl = html("shared/src/test/html/list.html")
 
     val list = tpl.byId[tag.div]("list")
     val listItem = tpl.byId[tag.div]("list-item")
