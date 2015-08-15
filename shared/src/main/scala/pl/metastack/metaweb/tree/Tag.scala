@@ -1,4 +1,4 @@
-package pl.metastack.metaweb
+package pl.metastack.metaweb.tree
 
 import scala.collection.mutable
 

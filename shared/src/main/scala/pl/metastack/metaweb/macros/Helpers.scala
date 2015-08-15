@@ -1,10 +1,10 @@
-package pl.metastack.metaweb
+package pl.metastack.metaweb.macros
 
 import scala.language.experimental.macros
 import scala.language.reflectiveCalls
 import scala.reflect.macros.blackbox.Context
 
-object MacroHelpers {
+object Helpers {
   def literalValueTree[T](c: Context)(tree: c.Tree): T = {
     import c.universe._
     tree match {

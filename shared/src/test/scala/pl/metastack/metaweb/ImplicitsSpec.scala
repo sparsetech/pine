@@ -1,8 +1,6 @@
 package pl.metastack.metaweb
 
 import pl.metastack.metarx.{Buffer, Var}
-import pl.metastack.metaweb.HtmlMacro._
-import pl.metastack.metaweb.Implicits._
 
 import minitest._
 

@@ -1,6 +1,6 @@
-package pl.metastack.metaweb
+package pl.metastack.metaweb.tree
 
-import pl.metastack.metarx.{DeltaBuffer, Channel, ReadChannel}
+import pl.metastack.metarx.{Channel, DeltaBuffer, ReadChannel}
 
 case class PlaceholderNode(channel: ReadChannel[Node]) extends Node {
   val node = channel.cache

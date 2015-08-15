@@ -1,8 +1,9 @@
 package pl.metastack.metaweb
 
 import pl.metastack.metarx.{DeltaBuffer, ReadChannel, Var}
+import pl.metastack.metaweb.tree._
 
-object Implicits {
+trait Implicits {
   private def varFor[T](ipt: ReadChannel[T], default: T): Var[T] = {
     val v = Var[T](default)
     v << ipt

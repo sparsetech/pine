@@ -61,12 +61,12 @@ object MDNParser {
     val file = new File(path, "HTMLTag.scala")
     printToFile(file) { p =>
       writeHeader(p)
-      p.println(s"""trait HTMLTag { self: Tag =>""")
+      p.println(s"""trait HTMLTag { self: tree.Tag =>""")
       writeAttributes(p, attributes)
       p.println("}")
       p.println()
       p.println("""object HTMLTag {""")
-      p.println("""  def fromTag(tag: String): Tag =""")
+      p.println("""  def fromTag(tag: String): tree.Tag =""")
       p.println("""    tag match {""")
       elements.toList.sortBy(_.tag).foreach { element =>
         val className = escapeScalaName(element.tag)
@@ -81,7 +81,7 @@ object MDNParser {
   def writeHeader(p: PrintWriter) {
     p.println("package pl.metastack.metaweb.tag")
     p.println()
-    p.println("import pl.metastack.metaweb.Tag")
+    p.println("import pl.metastack.metaweb.tree")
     p.println()
   }
 
@@ -99,7 +99,7 @@ object MDNParser {
       p.println( s"""/**""")
       p.println( s""" * $description""")
       p.println( s""" */""")
-      p.println(s"""class $scalaTagName extends Tag("${element.tag}") with HTMLTag {""")
+      p.println(s"""class $scalaTagName extends tree.Tag("${element.tag}") with HTMLTag {""")
 
       val uniqueAttrs = element.attributes.filter { attr =>
         val exists = globalAttributes.exists(_.name == attr.name)

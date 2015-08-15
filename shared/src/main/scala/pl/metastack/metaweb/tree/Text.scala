@@ -1,4 +1,4 @@
-package pl.metastack.metaweb
+package pl.metastack.metaweb.tree
 
 import pl.metastack.metarx.{ReadChannel, Var}
 

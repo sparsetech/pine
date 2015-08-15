@@ -1,20 +1,21 @@
-package pl.metastack.metaweb
+package pl.metastack.metaweb.macros
 
-import scala.language.reflectiveCalls
+import pl.metastack.metaweb.tree.Node
+
 import scala.language.experimental.macros
+import scala.language.reflectiveCalls
 import scala.reflect.macros.blackbox.Context
-
 import scala.xml.XML
 
-object TemplateMacro {
-  object Template {
-    def apply(fileName: String): Node = macro TemplateImpl
+object ExternalHtml {
+  trait Import {
+    def html(fileName: String): Node = macro HtmlImpl
   }
 
   def iter(c: Context)(node: scala.xml.Node): c.Expr[Node] = {
     import c.universe._
     node.label match {
-      case "#PCDATA" => c.Expr(q"Text(Var(${node.text}))")
+      case "#PCDATA" => c.Expr(q"tree.Text(Var(${node.text}))")
       case tagName =>
         val tagNameIdent = TypeName(tagName.toLowerCase)
 
@@ -29,6 +30,7 @@ object TemplateMacro {
         c.Expr(q"""
           import pl.metastack.metarx.Var
           import pl.metastack.metaweb.tag
+          import pl.metastack.metaweb.tree
 
           val t = new tag.$tagNameIdent
           ..$tagAttrs
@@ -38,8 +40,8 @@ object TemplateMacro {
     }
   }
 
-  def TemplateImpl(c: Context)(fileName: c.Expr[String]): c.Expr[Node] = {
-    val fileNameValue = MacroHelpers.literalValueExpr(c)(fileName)
+  def HtmlImpl(c: Context)(fileName: c.Expr[String]): c.Expr[Node] = {
+    val fileNameValue = Helpers.literalValueExpr(c)(fileName)
     val xml = XML.loadFile(fileNameValue)
     iter(c)(xml)
   }

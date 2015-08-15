@@ -1,16 +1,19 @@
-package pl.metastack.metaweb
+package pl.metastack.metaweb.macros
+
+import pl.metastack.metaweb.tree.Node
 
 import scala.language.experimental.macros
 import scala.language.reflectiveCalls
 import scala.reflect.macros.blackbox.Context
+import scala.xml.XML
 
 import pl.metastack.metarx.Var
 
-import scala.xml.XML
-
-object HtmlMacro {
-  implicit class Html(sc: StringContext) {
-    def html(vars: Var[String]*): Node = macro HtmlImpl
+object InlineHtml {
+  trait Import {
+    implicit class Html(sc: StringContext) {
+      def html(vars: Var[String]*): Node = macro HtmlImpl
+    }
   }
 
   def iter(c: Context)(node: scala.xml.Node,
@@ -25,9 +28,9 @@ object HtmlMacro {
         parts.map { v =>
           if (v.startsWith("${") && v.endsWith("}")) {
             val index = v.drop(2).init.toInt
-            c.Expr(q"Text(${vars(index)})")
+            c.Expr(q"tree.Text(${vars(index)})")
           } else {
-            c.Expr(q"Text(Var($v))")
+            c.Expr(q"tree.Text(Var($v))")
           }
         }
 
@@ -54,6 +57,7 @@ object HtmlMacro {
           c.Expr(q"""
             import pl.metastack.metarx.Var
             import pl.metastack.metaweb.tag
+            import pl.metastack.metaweb.tree
 
             val t = new tag.$tagNameIdent
             ..$tagAttrs
@@ -66,7 +70,7 @@ object HtmlMacro {
 
   def insertPlaceholders(c: Context)(parts: Seq[c.universe.Tree]): String = {
     parts.zipWithIndex.map { case (tree, i) =>
-      val p = MacroHelpers.literalValueTree[String](c)(tree)
+      val p = Helpers.literalValueTree[String](c)(tree)
 
       if (i == parts.length - 1) p
       else if (p.lastOption.contains('=')) p + "\"${" + i + "}\""
