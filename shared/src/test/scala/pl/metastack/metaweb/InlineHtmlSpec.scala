@@ -25,7 +25,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
         assertEquals(root.href.get, "http://google.com/")
         assertEquals(root.toHtml, """<a href="http://google.com/">GitHub</a>""")
 
-        root.clear()
+        root.clearChildren()
         assertEquals(root.toHtml, """<a href="http://google.com/"></a>""")
     }
   }

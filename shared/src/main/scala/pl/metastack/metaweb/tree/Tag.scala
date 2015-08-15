@@ -12,6 +12,7 @@ class Tag(val tagName: String) extends Node {
   private[metaweb] val attributes = Dict[String, Any]()
   private[metaweb] val contents = Buffer[Node]()
   private[metaweb] val events = Dict[String, Any => Unit]()
+  private[metaweb] val actions = Channel[String]()
 
   def copy(): Tag = {
     val tag = Tag(tagName)
@@ -47,7 +48,7 @@ class Tag(val tagName: String) extends Node {
     }
   }
 
-  def clear() {
+  def clearChildren() {
     bound.foreach(_.dispose())
     bound.clear()
 
@@ -61,15 +62,16 @@ class Tag(val tagName: String) extends Node {
   }
 
   def set(node: Node) {
-    clear()
+    clearChildren()
     append(node)
   }
 
   def bindChildren(list: DeltaBuffer[Node]): ReadChannel[Unit] = {
-    clear()
+    clearChildren()
     contents.changes << list.changes
   }
 
+  // TODO Rename to bindAttribute
   def bind[T](attribute: String, from: ReadChannel[T]) {
     from.attach(value =>
       attributes.insertOrUpdate(attribute, value)
@@ -78,6 +80,10 @@ class Tag(val tagName: String) extends Node {
 
   def bindEvent[T](event: String, f: Any => Unit) {
     events.insertOrUpdate(event, f)
+  }
+
+  def triggerAction(action: String) {
+    actions := action
   }
 
   def toHtml: String = {

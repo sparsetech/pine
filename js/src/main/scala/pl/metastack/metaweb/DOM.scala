@@ -7,6 +7,8 @@ import org.scalajs.dom
 import pl.metastack.metarx.Buffer.Position
 import pl.metastack.metarx.{Buffer, Dict}
 
+import scala.scalajs.js
+
 object DOM {
   trait Extensions {
     implicit class DomExtensions(parent: dom.Node) {
@@ -29,6 +31,10 @@ object DOM {
 
   def render(node: tree.Tag): dom.Element = {
     val rendered = dom.document.createElement(node.tagName)
+
+    node.actions.attach { action =>
+      rendered.asInstanceOf[js.Dynamic].applyDynamic(action)()
+    }
 
     node.attributes.changes.attach {
       case Dict.Delta.Insert(k, v) => rendered.setAttribute(k, v.toString)
