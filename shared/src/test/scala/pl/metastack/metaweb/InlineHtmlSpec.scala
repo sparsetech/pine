@@ -68,4 +68,34 @@ object InlineHtmlSpec extends SimpleTestSuite {
           """<div><div>Title c</div><div>Subtitle c</div></div>""")
     }
   }
+
+  // TODO Generate in MDNParser for all events and tags
+  implicit class ButtonWithClick(button: tag.button) {
+    def click() {
+      button.events.get("click").foreach(_(()))
+    }
+  }
+
+  test("Inline event handler") {
+    var clicked = 0
+    val tpl = html"""<button onclick="${(_: Any) => clicked += 1}">Test</button>"""
+
+    tpl match {
+      case btn: tag.button =>
+        btn.click()
+        assertEquals(clicked, 1)
+    }
+  }
+
+  test("Function as event handler") {
+    var clicked = 0
+    def click(event: Any) { clicked += 1 }
+    val tpl = html"""<button onclick="${click(_: Any)}">Test</button>"""
+
+    tpl match {
+      case btn: tag.button =>
+        btn.click()
+        assertEquals(clicked, 1)
+    }
+  }
 }

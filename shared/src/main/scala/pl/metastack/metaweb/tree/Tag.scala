@@ -11,6 +11,7 @@ object Tag {
 class Tag(val tagName: String) extends Node {
   private[metaweb] val attributes = Dict[String, Any]()
   private[metaweb] val contents = Buffer[Node]()
+  private[metaweb] val events = Dict[String, Any => Unit]()
 
   def copy(): Tag = {
     val tag = Tag(tagName)
@@ -73,6 +74,10 @@ class Tag(val tagName: String) extends Node {
     from.attach(value =>
       attributes.insertOrUpdate(attribute, value)
     )
+  }
+
+  def bindEvent[T](event: String, f: Any => Unit) {
+    events.insertOrUpdate(event, f)
   }
 
   def toHtml: String = {

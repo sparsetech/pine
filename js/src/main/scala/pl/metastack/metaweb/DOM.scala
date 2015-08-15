@@ -35,6 +35,19 @@ object DOM {
       case Dict.Delta.Clear() => rendered.removeAttribute()
     }
 
+    node.events.changes.attach {
+      case Dict.Delta.Insert(k, v) => rendered.addEventListener(k, v)
+      case Dict.Delta.Update(k, v) =>
+        rendered.removeEventListener(k, node.events(k))
+        rendered.addEventListener(k, v)
+      case Dict.Delta.Remove(k) =>
+        rendered.removeEventListener(k, node.events(k))
+      case Dict.Delta.Clear() =>
+        node.events.foreach { case (k, v) =>
+          rendered.removeEventListener(k, v)
+        }
+    }
+
     val mapping = mutable.Map.empty[tree.Node, dom.Node]
 
     node.contents.changes.attach {
