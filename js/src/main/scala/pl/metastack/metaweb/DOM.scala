@@ -8,20 +8,22 @@ import pl.metastack.metarx.Buffer.Position
 import pl.metastack.metarx.{Buffer, Dict}
 
 object DOM {
-  implicit class DomExtensions(parent: dom.Node) {
-    def clear() {
-      while (parent.lastChild != null)
-        parent.removeChild(parent.lastChild)
-    }
+  trait Extensions {
+    implicit class DomExtensions(parent: dom.Node) {
+      def clear() {
+        while (parent.lastChild != null)
+          parent.removeChild(parent.lastChild)
+      }
 
-    def prepend(node: dom.Node) {
-      if (parent.firstChild != null) parent.insertBefore(node, parent.firstChild)
-      else parent.appendChild(node)
-    }
+      def prependChild(node: dom.Node) {
+        if (parent.firstChild != null) parent.insertBefore(node, parent.firstChild)
+        else parent.appendChild(node)
+      }
 
-    def insertAfter(reference: dom.Node, node: dom.Node) {
-      if (reference == null || reference.nextSibling == null) parent.appendChild(node)
-      else parent.insertBefore(node, reference.nextSibling)
+      def insertAfter(reference: dom.Node, node: dom.Node) {
+        if (reference == null || reference.nextSibling == null) parent.appendChild(node)
+        else parent.insertBefore(node, reference.nextSibling)
+      }
     }
   }
 
@@ -53,7 +55,7 @@ object DOM {
     node.contents.changes.attach {
       case Buffer.Delta.Insert(Position.Head(), element) =>
         mapping += element -> render(element)
-        rendered.prepend(mapping(element))
+        rendered.prependChild(mapping(element))
 
       case Buffer.Delta.Insert(Position.Last(), element) =>
         mapping += element -> render(element)
