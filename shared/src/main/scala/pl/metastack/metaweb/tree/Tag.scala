@@ -8,7 +8,7 @@ object Tag {
   def apply(tagName: String): Tag = new Tag(tagName)
 }
 
-class Tag(tagName: String) extends Node {
+class Tag(val tagName: String) extends Node {
   private[metaweb] val attributes = Dict[String, Any]()
   private[metaweb] val contents = Buffer[Node]()
 

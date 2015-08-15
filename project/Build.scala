@@ -45,6 +45,7 @@ object Build extends sbt.Build {
     )
     .jsSettings(
       libraryDependencies ++= Seq(
+        "org.scala-js" %%% "scalajs-dom" % "0.8.1",
         "pl.metastack" %%% "metarx" % Dependencies.MetaRx,
         "org.monifu" %%% "minitest" % Dependencies.MiniTest % "test"
       )
