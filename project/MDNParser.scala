@@ -2,7 +2,7 @@ import java.io.{PrintWriter, File}
 import java.nio.file.{Paths, Files}
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
+import org.jsoup.nodes
 
 import scala.collection.JavaConverters._
 
@@ -10,7 +10,8 @@ import scalaj.http._
 
 object MDNParser {
   case class Element(tag: String, description: String, attributes: Seq[Attribute])
-  case class Attribute(name: String, deprecated: Boolean, description: String)
+  case class Attribute(name: String, deprecated: Boolean, description: String, tpe: Option[String] = None)
+  case class AttributeType(name: String, tpe: String)
 
   val cache = new File("cache/")
   cache.mkdir()
@@ -125,17 +126,29 @@ object MDNParser {
   def escapeScalaComment(comment: String): String =
     comment.replaceAll("""\/\*""", "/")
 
+  def mapDomType(tpe: String): String =
+    tpe match {
+      case "DOMString" => "String"
+      case "unsigned long" => "Long"
+      case "long" => "Long"
+      case "double" => "Double"
+      case "boolean" => "Boolean"
+      case _ if tpe.startsWith("HTML") => "tree.Node"  // TODO Generate interfaces
+      case _ => tpe
+    }
+
   def writeAttributes(p: PrintWriter, attributes: Seq[Attribute]) {
     attributes.foreach { attribute =>
       if (attribute.name != "data-*") {
         val attrName = escapeScalaName(attribute.name)
+        val attrType = attribute.tpe.map(mapDomType).getOrElse("String")
         val description = escapeScalaComment(attribute.description)
 
         p.println( s"""  /**""")
         p.println( s"""   * $description""")
         p.println( s"""   */""")
-        p.println( s"""  def $attrName: Option[String] = attributes.get("${attribute.name}").asInstanceOf[Option[String]]""")
-        p.println( s"""  def $attrName(value: String) = attributes.insertOrUpdate("${attribute.name}", value)""")
+        p.println( s"""  def $attrName: Option[$attrType] = attributes.get("${attribute.name}").asInstanceOf[Option[$attrType]]""")
+        p.println( s"""  def $attrName(value: $attrType) = attributes.insertOrUpdate("${attribute.name}", value)""")
       }
     }
   }
@@ -147,7 +160,7 @@ object MDNParser {
     parseAttributes(document)
   }
 
-  def parseAttributes(document: Document): Seq[Attribute] = {
+  def parseAttributes(document: nodes.Document): Seq[Attribute] = {
     val attributes = document.select("article > dl > dt").asScala
 
     attributes.flatMap { attr =>
@@ -172,6 +185,69 @@ object MDNParser {
     }
   }
 
+  def processInterface(url: String): Option[Seq[AttributeType]] = {
+    val document = Jsoup.parse(request(url))
+
+    // For https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement
+    if (document.select("h1").text() == "Not Found") None
+    else {
+      val table = document.select("table.standard-table").first
+      val properties = table.select("tr").asScala
+
+      // For https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
+      if (properties.headOption.exists(x =>
+        Option(x.select("th").first())
+          .exists(_.text() == "Specification"))) Some(Seq.empty)
+      else
+        Some(properties.tail.flatMap { property =>
+          val td = property.select("td")
+          val name = td.get(0).select("code").text()
+          val tpe = td.get(1).select("code").text()
+
+          assert(name.nonEmpty)
+
+          if (tpe.nonEmpty) Some(AttributeType(name, tpe))
+          else {
+            println(s"$url: Attribute `$name` does not have a type")
+            None
+          }
+        })
+    }
+  }
+
+  def processMetaBox(parentUrl: String, element: nodes.Element): Seq[AttributeType] = {
+    val domInterface = element
+      .select("li")
+      .asScala
+      .find(_.select("dfn").text() == "DOM interface")
+
+    domInterface.flatMap { itf =>
+      val url = itf.select("a").first().absUrl("href")
+      val attributes = processInterface(url)
+      if (attributes.isEmpty) println(s"Interface $url (linked to from $parentUrl) does not exist")
+      attributes
+    }.getOrElse(Seq.empty)
+  }
+
+  def mergeAttributes(parentUrl: String,
+                      attributes: Seq[Attribute],
+                      types: Seq[AttributeType]): Seq[Attribute] = {
+    types.foreach { case AttributeType(name, tpe) =>
+      if (!attributes.exists(_.name == name)) {
+        println(s"$parentUrl: Attribute `$name` missing")
+      }
+    }
+
+    attributes.map { case attribute @ Attribute(name, _, _, _) =>
+      types.find(_.name == name) match {
+        case Some(AttributeType(_, tpe)) => attribute.copy(tpe = Some(tpe))
+        case None =>
+          println(s"$parentUrl: Could not find type for `$name` in linked interface")
+          attribute
+      }
+    }
+  }
+
   def processElement(url: String): Option[Element] = {
     val document = Jsoup.parse(request(url))
     document.setBaseUri(url)
@@ -193,12 +269,21 @@ object MDNParser {
         fst.elementSiblingIndex() + 1,
         snd.elementSiblingIndex())
 
+      // Find box with meta information
+      val attributes = descriptionElements.asScala.find(_.hasClass("htmlelt")) match {
+        case Some(meta) =>
+          mergeAttributes(url,
+            parseAttributes(document),
+            processMetaBox(url, meta))
+        case None => parseAttributes(document)
+      }
+
       val description = descriptionElements.asScala
         .filterNot(_.hasClass("htmlelt"))  // Filter box with meta information
         .map(_.html())
         .mkString("\n")
 
-      Some(Element(tag, description, parseAttributes(document)))
+      Some(Element(tag, description, attributes))
     }
   }
 

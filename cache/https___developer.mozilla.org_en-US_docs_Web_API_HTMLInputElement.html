@@ -1,0 +1,1277 @@
+
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr" class="redesign no-js"  data-ffo-opensanslight=false data-ffo-opensans=false >
+<head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge"><script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={xpid:"VgAEV1RTGwABU1NSAAQ="};window.NREUM||(NREUM={}),__nr_require=function(t,e,n){function r(n){if(!e[n]){var o=e[n]={exports:{}};t[n][0].call(o.exports,function(e){var o=t[n][1][e];return r(o?o:e)},o,o.exports)}return e[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<n.length;o++)r(n[o]);return r}({QJf3ax:[function(t,e){function n(t){function e(e,n,a){t&&t(e,n,a),a||(a={});for(var c=s(e),f=c.length,u=i(a,o,r),d=0;f>d;d++)c[d].apply(u,n);return u}function a(t,e){f[t]=s(t).concat(e)}function s(t){return f[t]||[]}function c(){return n(e)}var f={};return{on:a,emit:e,create:c,listeners:s,_events:f}}function r(){return{}}var o="nr@context",i=t("gos");e.exports=n()},{gos:"7eSDFh"}],ee:[function(t,e){e.exports=t("QJf3ax")},{}],3:[function(t){function e(t){try{i.console&&console.log(t)}catch(e){}}var n,r=t("ee"),o=t(1),i={};try{n=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(i.console=!0,-1!==n.indexOf("dev")&&(i.dev=!0),-1!==n.indexOf("nr_dev")&&(i.nrDev=!0))}catch(a){}i.nrDev&&r.on("internal-error",function(t){e(t.stack)}),i.dev&&r.on("fn-err",function(t,n,r){e(r.stack)}),i.dev&&(e("NR AGENT IN DEVELOPMENT MODE"),e("flags: "+o(i,function(t){return t}).join(", ")))},{1:23,ee:"QJf3ax"}],4:[function(t){function e(t,e,n,i,s){try{c?c-=1:r("err",[s||new UncaughtException(t,e,n)])}catch(f){try{r("ierr",[f,(new Date).getTime(),!0])}catch(u){}}return"function"==typeof a?a.apply(this,o(arguments)):!1}function UncaughtException(t,e,n){this.message=t||"Uncaught error with no additional information",this.sourceURL=e,this.line=n}function n(t){r("err",[t,(new Date).getTime()])}var r=t("handle"),o=t(6),i=t("ee"),a=window.onerror,s=!1,c=0;t("loader").features.err=!0,t(5),window.onerror=e;try{throw new Error}catch(f){"stack"in f&&(t(1),t(2),"addEventListener"in window&&t(3),window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&!/CriOS/.test(navigator.userAgent)&&t(4),s=!0)}i.on("fn-start",function(){s&&(c+=1)}),i.on("fn-err",function(t,e,r){s&&(this.thrown=!0,n(r))}),i.on("fn-end",function(){s&&!this.thrown&&c>0&&(c-=1)}),i.on("internal-error",function(t){r("ierr",[t,(new Date).getTime(),!0])})},{1:10,2:9,3:7,4:11,5:3,6:24,ee:"QJf3ax",handle:"D5DuLP",loader:"G9z0Bl"}],5:[function(t){t("loader").features.ins=!0},{loader:"G9z0Bl"}],6:[function(t){function e(){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var n=t("ee"),r=t("handle"),o=t(1),i=t(2);t("loader").features.stn=!0,t(3),n.on("fn-start",function(t){var e=t[0];e instanceof Event&&(this.bstStart=Date.now())}),n.on("fn-end",function(t,e){var n=t[0];n instanceof Event&&r("bst",[n,e,this.bstStart,Date.now()])}),o.on("fn-start",function(t,e,n){this.bstStart=Date.now(),this.bstType=n}),o.on("fn-end",function(t,e){r("bstTimer",[e,this.bstStart,Date.now(),this.bstType])}),i.on("fn-start",function(){this.bstStart=Date.now()}),i.on("fn-end",function(t,e){r("bstTimer",[e,this.bstStart,Date.now(),"requestAnimationFrame"])}),n.on("pushState-start",function(){this.time=Date.now(),this.startPath=location.pathname+location.hash}),n.on("pushState-end",function(){r("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),"addEventListener"in window.performance&&(window.performance.addEventListener("webkitresourcetimingbufferfull",function(){r("bstResource",[window.performance.getEntriesByType("resource")]),window.performance.webkitClearResourceTimings()},!1),window.performance.addEventListener("resourcetimingbufferfull",function(){r("bstResource",[window.performance.getEntriesByType("resource")]),window.performance.clearResourceTimings()},!1)),document.addEventListener("scroll",e,!1),document.addEventListener("keypress",e,!1),document.addEventListener("click",e,!1)}},{1:10,2:9,3:8,ee:"QJf3ax",handle:"D5DuLP",loader:"G9z0Bl"}],7:[function(t,e){function n(t){i.inPlace(t,["addEventListener","removeEventListener"],"-",r)}function r(t){return t[1]}var o=t("ee").create(),i=t(1)(o),a=t("gos");if(e.exports=o,n(window),"getPrototypeOf"in Object){for(var s=document;s&&!s.hasOwnProperty("addEventListener");)s=Object.getPrototypeOf(s);s&&n(s);for(var c=XMLHttpRequest.prototype;c&&!c.hasOwnProperty("addEventListener");)c=Object.getPrototypeOf(c);c&&n(c)}else XMLHttpRequest.prototype.hasOwnProperty("addEventListener")&&n(XMLHttpRequest.prototype);o.on("addEventListener-start",function(t){if(t[1]){var e=t[1];"function"==typeof e?this.wrapped=t[1]=a(e,"nr@wrapped",function(){return i(e,"fn-",null,e.name||"anonymous")}):"function"==typeof e.handleEvent&&i.inPlace(e,["handleEvent"],"fn-")}}),o.on("removeEventListener-start",function(t){var e=this.wrapped;e&&(t[1]=e)})},{1:25,ee:"QJf3ax",gos:"7eSDFh"}],8:[function(t,e){var n=t("ee").create(),r=t(1)(n);e.exports=n,r.inPlace(window.history,["pushState"],"-")},{1:25,ee:"QJf3ax"}],9:[function(t,e){var n=t("ee").create(),r=t(1)(n);e.exports=n,r.inPlace(window,["requestAnimationFrame","mozRequestAnimationFrame","webkitRequestAnimationFrame","msRequestAnimationFrame"],"raf-"),n.on("raf-start",function(t){t[0]=r(t[0],"fn-")})},{1:25,ee:"QJf3ax"}],10:[function(t,e){function n(t,e,n){t[0]=o(t[0],"fn-",null,n)}var r=t("ee").create(),o=t(1)(r);e.exports=r,o.inPlace(window,["setTimeout","setInterval","setImmediate"],"setTimer-"),r.on("setTimer-start",n)},{1:25,ee:"QJf3ax"}],11:[function(t,e){function n(){f.inPlace(this,p,"fn-")}function r(t,e){f.inPlace(e,["onreadystatechange"],"fn-")}function o(t,e){return e}function i(t,e){for(var n in t)e[n]=t[n];return e}var a=t("ee").create(),s=t(1),c=t(2),f=c(a),u=c(s),d=window.XMLHttpRequest,p=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"];e.exports=a,window.XMLHttpRequest=function(t){var e=new d(t);try{a.emit("new-xhr",[],e),u.inPlace(e,["addEventListener","removeEventListener"],"-",o),e.addEventListener("readystatechange",n,!1)}catch(r){try{a.emit("internal-error",[r])}catch(i){}}return e},i(d,XMLHttpRequest),XMLHttpRequest.prototype=d.prototype,f.inPlace(XMLHttpRequest.prototype,["open","send"],"-xhr-",o),a.on("send-xhr-start",r),a.on("open-xhr-start",r)},{1:7,2:25,ee:"QJf3ax"}],12:[function(t){function e(t){var e=this.params,r=this.metrics;if(!this.ended){this.ended=!0;for(var i=0;c>i;i++)t.removeEventListener(s[i],this.listener,!1);if(!e.aborted){if(r.duration=(new Date).getTime()-this.startTime,4===t.readyState){e.status=t.status;var a=t.responseType,f="arraybuffer"===a||"blob"===a||"json"===a?t.response:t.responseText,u=n(f);if(u&&(r.rxSize=u),this.sameOrigin){var d=t.getResponseHeader("X-NewRelic-App-Data");d&&(e.cat=d.split(", ").pop())}}else e.status=0;r.cbTime=this.cbTime,o("xhr",[e,r,this.startTime])}}}function n(t){if("string"==typeof t&&t.length)return t.length;if("object"!=typeof t)return void 0;if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if("undefined"!=typeof FormData&&t instanceof FormData)return void 0;try{return JSON.stringify(t).length}catch(e){return void 0}}function r(t,e){var n=i(e),r=t.params;r.host=n.hostname+":"+n.port,r.pathname=n.pathname,t.sameOrigin=n.sameOrigin}if(window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&!/CriOS/.test(navigator.userAgent)){t("loader").features.xhr=!0;var o=t("handle"),i=t(2),a=t("ee"),s=["load","error","abort","timeout"],c=s.length,f=t(1);t(4),t(3),a.on("new-xhr",function(){this.totalCbs=0,this.called=0,this.cbTime=0,this.end=e,this.ended=!1,this.xhrGuids={}}),a.on("open-xhr-start",function(t){this.params={method:t[0]},r(this,t[1]),this.metrics={}}),a.on("open-xhr-end",function(t,e){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&e.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),a.on("send-xhr-start",function(t,e){var r=this.metrics,o=t[0],i=this;if(r&&o){var f=n(o);f&&(r.txSize=f)}this.startTime=(new Date).getTime(),this.listener=function(t){try{"abort"===t.type&&(i.params.aborted=!0),("load"!==t.type||i.called===i.totalCbs&&(i.onloadCalled||"function"!=typeof e.onload))&&i.end(e)}catch(n){try{a.emit("internal-error",[n])}catch(r){}}};for(var u=0;c>u;u++)e.addEventListener(s[u],this.listener,!1)}),a.on("xhr-cb-time",function(t,e,n){this.cbTime+=t,e?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof n.onload||this.end(n)}),a.on("xhr-load-added",function(t,e){var n=""+f(t)+!!e;this.xhrGuids&&!this.xhrGuids[n]&&(this.xhrGuids[n]=!0,this.totalCbs+=1)}),a.on("xhr-load-removed",function(t,e){var n=""+f(t)+!!e;this.xhrGuids&&this.xhrGuids[n]&&(delete this.xhrGuids[n],this.totalCbs-=1)}),a.on("addEventListener-end",function(t,e){e instanceof XMLHttpRequest&&"load"===t[0]&&a.emit("xhr-load-added",[t[1],t[2]],e)}),a.on("removeEventListener-end",function(t,e){e instanceof XMLHttpRequest&&"load"===t[0]&&a.emit("xhr-load-removed",[t[1],t[2]],e)}),a.on("fn-start",function(t,e,n){e instanceof XMLHttpRequest&&("onload"===n&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=(new Date).getTime()))}),a.on("fn-end",function(t,e){this.xhrCbStart&&a.emit("xhr-cb-time",[(new Date).getTime()-this.xhrCbStart,this.onload,e],e)})}},{1:"XL7HBI",2:13,3:11,4:7,ee:"QJf3ax",handle:"D5DuLP",loader:"G9z0Bl"}],13:[function(t,e){e.exports=function(t){var e=document.createElement("a"),n=window.location,r={};e.href=t,r.port=e.port;var o=e.href.split("://");return!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=e.hostname||n.hostname,r.pathname=e.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname),r.sameOrigin=!e.hostname||e.hostname===document.domain&&e.port===n.port&&e.protocol===n.protocol,r}},{}],14:[function(t,e){function n(t){return function(){r(t,[(new Date).getTime()].concat(i(arguments)))}}var r=t("handle"),o=t(1),i=t(2);"undefined"==typeof window.newrelic&&(newrelic=window.NREUM);var a=["setPageViewName","addPageAction","setCustomAttribute","finished","addToTrace","inlineHit","noticeError"];o(a,function(t,e){window.NREUM[e]=n("api-"+e)}),e.exports=window.NREUM},{1:23,2:24,handle:"D5DuLP"}],gos:[function(t,e){e.exports=t("7eSDFh")},{}],"7eSDFh":[function(t,e){function n(t,e,n){if(r.call(t,e))return t[e];var o=n();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,e,{value:o,writable:!0,enumerable:!1}),o}catch(i){}return t[e]=o,o}var r=Object.prototype.hasOwnProperty;e.exports=n},{}],D5DuLP:[function(t,e){function n(t,e,n){return r.listeners(t).length?r.emit(t,e,n):void(r.q&&(r.q[t]||(r.q[t]=[]),r.q[t].push(e)))}var r=t("ee").create();e.exports=n,n.ee=r,r.q={}},{ee:"QJf3ax"}],handle:[function(t,e){e.exports=t("D5DuLP")},{}],XL7HBI:[function(t,e){function n(t){var e=typeof t;return!t||"object"!==e&&"function"!==e?-1:t===window?0:i(t,o,function(){return r++})}var r=1,o="nr@id",i=t("gos");e.exports=n},{gos:"7eSDFh"}],id:[function(t,e){e.exports=t("XL7HBI")},{}],G9z0Bl:[function(t,e){function n(){var t=p.info=NREUM.info,e=f.getElementsByTagName("script")[0];if(t&&t.licenseKey&&t.applicationID&&e){s(d,function(e,n){e in t||(t[e]=n)});var n="https"===u.split(":")[0]||t.sslForHttp;p.proto=n?"https://":"http://",a("mark",["onload",i()]);var r=f.createElement("script");r.src=p.proto+t.agent,e.parentNode.insertBefore(r,e)}}function r(){"complete"===f.readyState&&o()}function o(){a("mark",["domContent",i()])}function i(){return(new Date).getTime()}var a=t("handle"),s=t(1),c=window,f=c.document;t(2);var u=(""+location).split("?")[0],d={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-686.min.js"},p=e.exports={offset:i(),origin:u,features:{}};f.addEventListener?(f.addEventListener("DOMContentLoaded",o,!1),c.addEventListener("load",n,!1)):(f.attachEvent("onreadystatechange",r),c.attachEvent("onload",n)),a("mark",["firstbyte",i()])},{1:23,2:14,handle:"D5DuLP"}],loader:[function(t,e){e.exports=t("G9z0Bl")},{}],23:[function(t,e){function n(t,e){var n=[],o="",i=0;for(o in t)r.call(t,o)&&(n[i]=e(o,t[o]),i+=1);return n}var r=Object.prototype.hasOwnProperty;e.exports=n},{}],24:[function(t,e){function n(t,e,n){e||(e=0),"undefined"==typeof n&&(n=t?t.length:0);for(var r=-1,o=n-e||0,i=Array(0>o?0:o);++r<o;)i[r]=t[e+r];return i}e.exports=n},{}],25:[function(t,e){function n(t){return!(t&&"function"==typeof t&&t.apply&&!t[i])}var r=t("ee"),o=t(1),i="nr@wrapper",a=Object.prototype.hasOwnProperty;e.exports=function(t){function e(t,e,r,a){function nrWrapper(){var n,i,s,f;try{i=this,n=o(arguments),s=r&&r(n,i)||{}}catch(d){u([d,"",[n,i,a],s])}c(e+"start",[n,i,a],s);try{return f=t.apply(i,n)}catch(p){throw c(e+"err",[n,i,p],s),p}finally{c(e+"end",[n,i,f],s)}}return n(t)?t:(e||(e=""),nrWrapper[i]=!0,f(t,nrWrapper),nrWrapper)}function s(t,r,o,i){o||(o="");var a,s,c,f="-"===o.charAt(0);for(c=0;c<r.length;c++)s=r[c],a=t[s],n(a)||(t[s]=e(a,f?s+o:o,i,s))}function c(e,n,r){try{t.emit(e,n,r)}catch(o){u([o,e,n,r])}}function f(t,e){if(Object.defineProperty&&Object.keys)try{var n=Object.keys(t);return n.forEach(function(n){Object.defineProperty(e,n,{get:function(){return t[n]},set:function(e){return t[n]=e,e}})}),e}catch(r){u([r])}for(var o in t)a.call(t,o)&&(e[o]=t[o]);return e}function u(e){try{t.emit("internal-error",e)}catch(n){}}return t||(t=r),e.inPlace=s,e.flag=i,e}},{1:24,ee:"QJf3ax"}]},{},["G9z0Bl",4,12,6,5]);</script><script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","queueTime":1,"licenseKey":"42869b6ed3","agent":"js-agent.newrelic.com/nr-686.min.js","transactionName":"b1QHMUtVDRdSW0YKXVYeIxBXVxcNXFYdCEdVUEsSUF8KSkVRVxRBAlUKBkxZBgpH","applicationID":"3172075","errorBeacon":"bam.nr-data.net","applicationTime":138}</script>
+  <script>(function(d) { d.className = d.className.replace(/\bno-js/, ''); })(document.documentElement);</script>
+        
+    <title>HTMLInputElement - Web API Interfaces | MDN</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index, follow">
+  <link rel="home" href="/en-US/">
+  <link rel="copyright" href="#copyright">
+
+              <link rel="stylesheet" media="all" href="https://developer.cdn.mozilla.net/media/css/mdn-min.css?build=0e7ce0f" />
+
+      
+    <link rel="stylesheet" media="all" href="https://developer.cdn.mozilla.net/media/css/wiki-min.css?build=0e7ce0f" />
+
+    
+    
+  <!-- common social tags -->
+    <meta property="og:type" content="website">
+  <meta property="og:image" content="https://developer.mozilla.org/media/img/opengraph-logo.png">
+  <meta property="og:site_name" content="Mozilla Developer Network">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://developer.mozilla.org/media/img/opengraph-logo.png">
+  <meta name="twitter:site" content="@MozDevNet">
+  <meta name="twitter:creator" content="@MozDevNet">
+
+  <link rel="search" type="application/opensearchdescription+xml" href="https://developer.mozilla.org/en-US/search/xml" title="Mozilla Developer Network">
+
+  <!-- third-generation iPad with high-resolution Retina display: -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://developer.cdn.mozilla.net/media/img/favicon144.png">
+  <!-- iPhone with high-resolution Retina display: -->
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://developer.cdn.mozilla.net/media/img/favicon114.png">
+  <!-- first- and second-generation iPad: -->
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://developer.cdn.mozilla.net/media/img/favicon72.png">
+  <!-- non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+  <link rel="apple-touch-icon-precomposed" href="https://developer.cdn.mozilla.net/media/img/favicon57.png">
+  <!-- basic favicon -->
+          <link rel="shortcut icon" href="https://developer.cdn.mozilla.net/media/img/favicon32.png">
+  <!--[if IE]>
+  <meta http-equiv="imagetoolbar" content="no">
+  <script src="https://developer.cdn.mozilla.net/media/js/libs/html5.js"></script>
+  <![endif]-->
+
+    <link rel="alternate" type="application/json" href="/en-US/docs/Web/API/HTMLInputElement$json">
+  <link rel="canonical" href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement" >
+
+            <link rel="alternate" hreflang="fr" href="/fr/docs/Web/API/HTMLInputElement" title="HTMLInputElement">
+          <link rel="alternate" hreflang="zh-CN" href="/zh-CN/docs/Web/API/HTMLInputElement" title="HTMLInputElement">
+      
+  <!-- document-specific social tags -->
+  <meta property="og:title" content="HTMLInputElement">
+  <meta property="og:url" content="https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement">
+  <meta name="twitter:url" content="https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement">
+  <meta name="twitter:title" content="HTMLInputElement">
+    <meta property="og:description" content="The HTMLInputElement interface provides special properties and methods (beyond the regular HTMLElement interface it also has available to it by inheritance) for manipulating the layout and presentation of input elements.">
+  <meta name="description" content="The HTMLInputElement interface provides special properties and methods (beyond the regular HTMLElement interface it also has available to it by inheritance) for manipulating the layout and presentation of input elements.">
+  <meta name="twitter:description" content="The HTMLInputElement interface provides special properties and methods (beyond the regular HTMLElement interface it also has available to it by inheritance) for manipulating the layout and presentation of input elements.">
+  
+      <script type="text/javascript">
+
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-36116321-5', 'mozilla.org');
+    ga('set', 'anonymizeIp', true);
+
+    
+            // dimension4 == "top contributors"
+        ga('set', 'dimension4', 'Yes');
+    
+    
+    (function() {
+        // http://cfsimplicity.com/61/removing-analytics-clutter-from-campaign-urls
+        var win = window;
+        var removeUtms = function(){
+            var location = win.location;
+            if (location.href.indexOf('utm') != -1 && win.history.replaceState) {
+                win.history.replaceState({}, '', location.pathname);
+            }
+        };
+
+        ga('send', 'pageview', {'hitCallback': removeUtms});
+    })();
+</script>
+  </head>
+<body data-slug="Web/API/HTMLInputElement" contextmenu="edit-history-menu" class="document  ">
+
+  <script type="text/javascript">
+    
+
+(function (globals) {
+
+  var django = globals.django || (globals.django = {});
+
+  
+  django.pluralidx = function (count) { return (count == 1) ? 0 : 1; };
+  
+
+  
+  /* gettext identity library */
+
+  django.gettext = function (msgid) { return msgid; };
+  django.ngettext = function (singular, plural, count) { return (count == 1) ? singular : plural; };
+  django.gettext_noop = function (msgid) { return msgid; };
+  django.pgettext = function (context, msgid) { return msgid; };
+  django.npgettext = function (context, singular, plural, count) { return (count == 1) ? singular : plural; };
+  
+
+  django.interpolate = function (fmt, obj, named) {
+    if (named) {
+      return fmt.replace(/%\(\w+\)s/g, function(match){return String(obj[match.slice(2,-2)])});
+    } else {
+      return fmt.replace(/%s/g, function(match){return String(obj.shift())});
+    }
+  };
+
+
+  /* formatting library */
+
+  django.formats = {
+    "DATETIME_FORMAT": "N j, Y, P", 
+    "DATETIME_INPUT_FORMATS": [
+      "%Y-%m-%d %H:%M:%S", 
+      "%Y-%m-%d %H:%M:%S.%f", 
+      "%Y-%m-%d %H:%M", 
+      "%Y-%m-%d", 
+      "%m/%d/%Y %H:%M:%S", 
+      "%m/%d/%Y %H:%M:%S.%f", 
+      "%m/%d/%Y %H:%M", 
+      "%m/%d/%Y", 
+      "%m/%d/%y %H:%M:%S", 
+      "%m/%d/%y %H:%M:%S.%f", 
+      "%m/%d/%y %H:%M", 
+      "%m/%d/%y"
+    ], 
+    "DATE_FORMAT": "N j, Y", 
+    "DATE_INPUT_FORMATS": [
+      "%Y-%m-%d", 
+      "%m/%d/%Y", 
+      "%m/%d/%y"
+    ], 
+    "DECIMAL_SEPARATOR": ".", 
+    "FIRST_DAY_OF_WEEK": "0", 
+    "MONTH_DAY_FORMAT": "F j", 
+    "NUMBER_GROUPING": "3", 
+    "SHORT_DATETIME_FORMAT": "m/d/Y P", 
+    "SHORT_DATE_FORMAT": "m/d/Y", 
+    "THOUSAND_SEPARATOR": ",", 
+    "TIME_FORMAT": "P", 
+    "TIME_INPUT_FORMATS": [
+      "%H:%M:%S", 
+      "%H:%M:%S.%f", 
+      "%H:%M"
+    ], 
+    "YEAR_MONTH_FORMAT": "F Y"
+  };
+
+  django.get_format = function (format_type) {
+    var value = django.formats[format_type];
+    if (typeof(value) == 'undefined') {
+      return format_type;
+    } else {
+      return value;
+    }
+  };
+
+  /* add to global namespace */
+  globals.pluralidx = django.pluralidx;
+  globals.gettext = django.gettext;
+  globals.ngettext = django.ngettext;
+  globals.gettext_noop = django.gettext_noop;
+  globals.pgettext = django.pgettext;
+  globals.npgettext = django.npgettext;
+  globals.interpolate = django.interpolate;
+  globals.get_format = django.get_format;
+
+}(this));
+
+
+
+    (function(win) {
+        'use strict';
+
+                    (function(){
+  var FLAGS = {
+    'dirtiness_tracking': true,'fellowship_applications_open': false,'header_feedback': false,'header_tools': false,'helpfulness': false,'kumaediting': false,'mdn10_logo': true,'mdn10_tile': true,'page_move': false,'promote_script': false,'redirect_messages': false,'registration_disabled': false,'search_explanation': false,'search_suggestions': false,'share_links': false,'top_contributors': true,'wiki_samples': false,'wiki_spellcheck': false
+    },
+    SWITCHES = {
+    'wiki_error_on_delete': false,'wiki_force_immediate_rendering': false,'enable_optimizely': false,'welcome_email': true,'application_ACAO': false,'store_revision_ips': true,'dumb_doc_urls': true
+    },
+    SAMPLES = {
+    
+    };
+  window.waffle = {
+    "flag_is_active": function waffle_flag(flag_name) {
+      
+      return !!FLAGS[flag_name];
+    },
+    "switch_is_active": function waffle_switch(switch_name) {
+      
+      return !!SWITCHES[switch_name];
+    },
+    "sample_is_active": function waffle_sample(sample_name) {
+      
+      return !!SAMPLES[sample_name];
+    },
+    "FLAGS": FLAGS,
+    "SWITCHES": SWITCHES,
+    "SAMPLES": SAMPLES
+  };
+})();
+
+        
+        // This represents the site configuration
+        win.mdn = {
+            build: '0e7ce0f',
+            // Properties and settings for CKEditor will go here
+            ckeditor: {},
+            // Feature test results and methods will be placed here
+            features: {},
+            // The path to media (images, CSS, JS) in MDN
+            mediaPath: 'https://developer.cdn.mozilla.net/media/',
+            // Optimizely API
+            optimizely: win['optimizely'] || [],
+            // Site notifications
+                        notifications: [],
+                        // Wiki-specific settings will be placed here
+            wiki: {
+                autosuggestTitleUrl: '/en-US/docs/get-documents'
+            }
+        };
+    })(this);
+</script>
+  
+
+  <ul id="nav-access">
+    <li><a href="#document-main" id="skip-main">Skip to main content</a></li>
+    <li><a id="skip-language" href="#language">Select language</a></li>
+          <li><a href="#q" id="skip-search">Skip to search</a></li>
+      </ul>
+
+  <!-- Header -->
+  <header id="main-header"><div class="center">
+
+    <div id="tabzilla">
+        <a href="//www.mozilla.org/" class="no-track">mozilla</a>
+    </div>
+
+    <div class="clear header-clear"></div>
+
+            <a href="/en-US/" class="logo logo-mdn10">Mozilla Developer Network</a>
+    
+    <div id="nav-sec">
+        
+                          
+    
+    <form>
+      <div class="oauth-login-container">
+          <div class="oauth-login-options" tabIndex="0">
+              <span class="oauth-login-options-text">
+                <span class="oauth-login-options-text-icons">Sign in with</span>
+                <span class="oauth-login-options-text-no-icons">Sign in</span>
+              </span>
+              <span class="oauth-icon oauth-persona launch-persona-login wait-for-persona disabled" data-service="Persona" data-next="/en-US/docs/Web/API/HTMLInputElement" title="Persona"><i class="icon-user" aria-hidden="true"></i></span>
+              <span class="oauth-icon oauth-github" data-service="GitHub" data-href="/users/github/login/?next=%2Fen-US%2Fdocs%2FWeb%2FAPI%2FHTMLInputElement" title="GitHub"><i class="icon-github" aria-hidden="true"></i></span>
+          </div>
+          <div class="oauth-login-picker" aria-hidden="true">
+              <ul>
+                  <li class="wait-for-persona disabled"><a href="/en-US/users/signin" class="login-link launch-persona-login" data-next="/en-US/docs/Web/API/HTMLInputElement" data-service="Persona"><i class="icon-user" aria-hidden="true"></i>Persona</a></li>
+                  <li><a href="/users/github/login/?next=%2Fen-US%2Fdocs%2FWeb%2FAPI%2FHTMLInputElement" class="login-link" data-service="GitHub"><i class="icon-github" aria-hidden="true"></i>GitHub</a></li>
+              </ul>
+          </div>
+      </div>
+    </form>
+                        </div>
+
+    <nav id="main-nav" role="navigation"><ul><li><a href="/en-US/docs/Web">Web Platform<i aria-hidden="true" class="icon-caret-down"></i></a>
+
+        <div class="submenu submenu-cols-2 js-submenu" id="nav-platform-submenu">
+          <div class="submenu-column">
+            <div class="title">Technologies</div>
+            <ul>
+              <li><a href="/en-US/docs/Web/HTML">HTML</a></li>
+              <li><a href="/en-US/docs/Web/CSS">CSS</a></li>
+              <li><a href="/en-US/docs/Web/JavaScript">JavaScript</a></li>
+              <li><a href="/en-US/docs/Web/Guide/Graphics">Graphics</a></li>
+              <li><a href="/en-US/docs/Web/API">APIs / DOM</a></li>
+              <li><a href="/en-US/docs/Web/Apps">Apps</a></li>
+              <li><a href="/en-US/docs/Web/MathML">MathML</a></li>
+            </ul>
+          </div><div class="submenu-column last">
+            <div class="title">References & Guides</div>
+            <ul>
+              <li><a href="/en-US/docs/Learn">Learn the Web</a></li>
+              <li><a href="/en-US/docs/Web/Tutorials">Tutorials</a></li>
+              <li><a href="/en-US/docs/Web/Reference">References</a></li>
+              <li><a href="/en-US/docs/Web/Guide">Developer Guides</a></li>
+              <li><a href="/en-US/docs/Web/Accessibility">Accessibility</a></li>
+              <li><a href="/en-US/demos/">Demos</a></li>
+              <li><a href="/en-US/docs/Web">...more docs</a></li>
+            </ul>
+          </div>
+        </div>
+      </li><li><a href="/en-US/docs/Zones">Mozilla Docs<i aria-hidden="true" class="icon-caret-down"></i></a>
+
+        <div class="submenu js-submenu" id="nav-zones-submenu">
+          <div class="submenu-column">
+            <ul>
+              <li><a href="/en-US/docs/Mozilla/Add-ons">Add-ons</a></li>
+              <li><a href="/en-US/docs/Firefox">Firefox</a></li>
+              <li><a href="/en-US/docs/Mozilla/Marketplace">Firefox Marketplace</a></li>
+              <li><a href="/en-US/docs/Firefox_OS">Firefox OS</a></li>
+              <li><a href="/en-US/docs/Persona">Persona</a></li>
+            </ul>
+          </div>
+        </div>
+      </li><li><a href="/en-US/docs/Tools">Developer Tools</a></li><li><a href="/en-US/demos/">Demos</a></li><li><a href="/en-US/docs/Mozilla/Connect">Connect</a></li><li class="nav-search-link"><a href="/en-US/search" title="Search"><i aria-hidden="true" class="icon-search"></i></a></li><li class="main-nav-search"><form action="/en-US/search" method="get" role="search">
+        <div class="search-wrap">
+          <label for="main-q" class="offscreen">Search</label>
+          <input type="search" id="main-q" name="q" placeholder="Search" data-value="" value="" />
+          <span class="search-trigger"><i aria-hidden="true" class="icon-search"></i></span>&nbsp;
+          <button type="submit" class="offscreen">Search</button>
+        </div>
+      </form></li></ul></nav>
+  </div></header>
+
+  <!-- Content will go here -->
+  <main id="content"><div class="center clear">
+  
+   <!-- end is_zone -->
+
+
+    <div class="wiki-main-content" id="document-main"><div class="center">
+            <div class="article-meta">
+        <!-- action buttons -->
+        
+        
+        
+
+  <ul class="page-buttons" data-sticky="false"><li><button id="languages-menu" class="transparent" aria-haspopup="true" aria-owns="languages-menu-submenu" aria-expanded="false"><span>Languages</span><i aria-hidden="true" class="icon-globe"></i></button>
+
+        <div class="submenu js-submenu" id="languages-menu-submenu">
+          <div class="submenu-column">
+            <ul id="translations">
+                                                <li><bdi><a rel="internal" href="/fr/docs/Web/API/HTMLInputElement" title="HTMLInputElement">Français</a></bdi></li>
+                                  <li><bdi><a rel="internal" href="/zh-CN/docs/Web/API/HTMLInputElement" title="HTMLInputElement">中文 (简体)</a></bdi></li>
+                              
+                              <li><a href="/en-US/docs/Web/API/HTMLInputElement$locales" rel="nofollow, noindex" id="translations-add">Add a translation</a></li>
+                          </ul>
+          </div>
+        </div></li><li class="page-buttons-edit"><a href="/en-US/docs/Web/API/HTMLInputElement$edit" class="button" data-optimizely-hook="button-edit-doc" id="edit-button">Edit<i aria-hidden="true" class="icon-pencil"></i></a></li><li><button id="advanced-menu" class="only-icon" aria-haspopup="true" aria-owns="advanced-menu-submenu" aria-expanded="false"><span>Advanced</span><i aria-hidden="true" class="icon-cog"></i></button>
+
+        <div class="submenu js-submenu" id="advanced-menu-submenu">
+          <!-- this page -->
+          <div class="submenu-column">
+            <div class="title">Advanced</div>
+            <ul>
+                <li><a href="/en-US/docs/Web/API/HTMLInputElement$history" rel="nofollow, noindex">History</a></li>
+                                                                
+                
+                                                                <li class="page-print"><a href="#" onclick="return window.print();">Print this page</a></li>
+            </ul>
+          </div>
+        </div>
+  </li></ul>
+
+        <!-- crumbs -->
+          <nav class="crumbs" role="navigation"><ol xmlns:v="http://rdf.data-vocabulary.org/#" aria-label="breadcrumbs">
+    <li typeof="v:Breadcrumb"><a href="/en-US" rel="v:url" property="v:title">MDN</a></li>
+          <li class="crumb" typeof="v:Breadcrumb"><a href="/en-US/docs/Web" rel="v:url" property="v:title">Web technology for developers</a></li>
+          <li class="crumb" typeof="v:Breadcrumb"><a href="/en-US/docs/Web/API" rel="v:url" property="v:title">Web API Interfaces</a></li>
+        <li class="crumb" typeof="v:Breadcrumb" property="v:title">HTMLInputElement</li>
+  </ol></nav>
+      </div>
+
+      <!-- heading -->
+      <div id="wiki-document-head" class="document-head">
+          <span class="from-search-previous-box">
+            <a class="button from-search-previous only-icon disabled" title="Previous Search Result" data-empty-title="No Previous Search Result"><i aria-hidden="true" class="icon-chevron-left"></i></a>
+          </span>
+          <span class="from-search-navigate-wrap">
+            <a href="#" class="from-search-navigate"><span class="from-search-navigate-up"><i aria-hidden="true" class="icon-double-angle-up"></i></span><span class="from-search-navigate-down"><i aria-hidden="true" class="icon-double-angle-down"></i></span></a>
+          </span>
+          <div class="from-search-toc submenu">
+            <span class="title">Your Search Results</span>
+            <ol></ol>
+          </div>
+          <span class="from-search-next-box">
+            <a class="button from-search-next only-icon disabled" title="Next Search Result" data-empty-title="No Previous Search Result"><i aria-hidden="true" class="icon-chevron-right"></i></a>
+          </span>
+
+        <h1>HTMLInputElement</h1>
+
+        
+                <div class="contributor-avatars" data-all-text="Show all&hellip;<span class='hidden'>contributors</span>" data-has-hidden="1">
+            <span class="quickstat">
+            by 21 contributors:            </span>
+            <ul>
+                            <li class="shown">
+                <a href="/en-US/profiles/jpmedley" title="View profile: jpmedley">
+                <noscript data-class="avatar" data-alt="jpmedley" data-src="https://secure.gravatar.com/avatar/fde784135f738cc182672e703dea9a4b?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">jpmedley</noscript></a>
+                </li>
+                            <li class="shown">
+                <a href="/en-US/profiles/chrisdavidmills" title="View profile: chrisdavidmills">
+                <noscript data-class="avatar" data-alt="chrisdavidmills" data-src="https://secure.gravatar.com/avatar/deeea0ba82390bd5acc539703c4b0cfb?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">chrisdavidmills</noscript></a>
+                </li>
+                            <li class="shown">
+                <a href="/en-US/profiles/blunderboy" title="View profile: blunderboy">
+                <noscript data-class="avatar" data-alt="blunderboy" data-src="https://secure.gravatar.com/avatar/cca7231ef479289c77b1aa109d838bb2?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">blunderboy</noscript></a>
+                </li>
+                            <li class="shown">
+                <a href="/en-US/profiles/jldavis" title="View profile: jldavis">
+                <noscript data-class="avatar" data-alt="jldavis" data-src="https://secure.gravatar.com/avatar/0e698ba5145076e93cadb50d6e22edcf?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">jldavis</noscript></a>
+                </li>
+                            <li class="shown">
+                <a href="/en-US/profiles/fscholz" title="View profile: fscholz">
+                <noscript data-class="avatar" data-alt="fscholz" data-src="https://secure.gravatar.com/avatar/e24391c9174352988d819a9b9ea77c9e?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">fscholz</noscript></a>
+                </li>
+                            <li class="shown">
+                <a href="/en-US/profiles/MHasan" title="View profile: MHasan">
+                <noscript data-class="avatar" data-alt="MHasan" data-src="https://secure.gravatar.com/avatar/04d096e57c03e1627aa0abbd32056baf?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">MHasan</noscript></a>
+                </li>
+                            <li class="shown">
+                <a href="/en-US/profiles/Nickolay" title="View profile: Nickolay">
+                <noscript data-class="avatar" data-alt="Nickolay" data-src="https://secure.gravatar.com/avatar/ea331e778d54effc15b5fbc694bc8232?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">Nickolay</noscript></a>
+                </li>
+                            <li class="shown">
+                <a href="/en-US/profiles/teoli" title="View profile: teoli">
+                <noscript data-class="avatar" data-alt="teoli" data-src="https://secure.gravatar.com/avatar/d0d90148e08e3b64ccf75c46f31442c5?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">teoli</noscript></a>
+                </li>
+                            <li class="shown">
+                <a href="/en-US/profiles/dbruant" title="View profile: dbruant">
+                <noscript data-class="avatar" data-alt="dbruant" data-src="https://secure.gravatar.com/avatar/b9b113093c351a599f86e0647c43add1?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">dbruant</noscript></a>
+                </li>
+                            <li class="shown">
+                <a href="/en-US/profiles/ziyunfei" title="View profile: ziyunfei">
+                <noscript data-class="avatar" data-alt="ziyunfei" data-src="https://secure.gravatar.com/avatar/2dbf9c055c2b32d3ca45d25be0117423?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">ziyunfei</noscript></a>
+                </li>
+                            <li class="shown">
+                <a href="/en-US/profiles/kscarfone" title="View profile: kscarfone">
+                <noscript data-class="avatar" data-alt="kscarfone" data-src="https://secure.gravatar.com/avatar/89c1e54a9703125168e40d22316d2b49?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">kscarfone</noscript></a>
+                </li>
+                            <li class="shown">
+                <a href="/en-US/profiles/Sheppy" title="View profile: Sheppy">
+                <noscript data-class="avatar" data-alt="Sheppy" data-src="https://secure.gravatar.com/avatar/945076feb88f2d7003891ffbf06f32bf?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">Sheppy</noscript></a>
+                </li>
+                            <li class="shown">
+                <a href="/en-US/profiles/Ms2ger" title="View profile: Ms2ger">
+                <noscript data-class="avatar" data-alt="Ms2ger" data-src="https://secure.gravatar.com/avatar/42f6fa059df34a3d5c3e4091c50ebde7?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">Ms2ger</noscript></a>
+                </li>
+                            <li class="hidden">
+                <a href="/en-US/profiles/lmorchard" title="View profile: lmorchard">
+                <noscript data-class="avatar" data-alt="lmorchard" data-src="https://secure.gravatar.com/avatar/b45c48fc9e05922e2f368a9d7d7d8de1?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">lmorchard</noscript></a>
+                </li>
+                            <li class="hidden">
+                <a href="/en-US/profiles/myakura" title="View profile: myakura">
+                <noscript data-class="avatar" data-alt="myakura" data-src="https://secure.gravatar.com/avatar/5053cd2607234c47d43959cc9430f1a5?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">myakura</noscript></a>
+                </li>
+                            <li class="hidden">
+                <a href="/en-US/profiles/secoif" title="View profile: secoif">
+                <noscript data-class="avatar" data-alt="secoif" data-src="https://secure.gravatar.com/avatar/f0deca4576206207a882928e7ff32ddb?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">secoif</noscript></a>
+                </li>
+                            <li class="hidden">
+                <a href="/en-US/profiles/brunoais" title="View profile: brunoais">
+                <noscript data-class="avatar" data-alt="brunoais" data-src="https://secure.gravatar.com/avatar/40b7aab671c7fa61c2eaa92de6209c5b?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">brunoais</noscript></a>
+                </li>
+                            <li class="hidden">
+                <a href="/en-US/profiles/Yoric" title="View profile: Yoric">
+                <noscript data-class="avatar" data-alt="Yoric" data-src="https://secure.gravatar.com/avatar/92b1d0d78f138831a9343e0b6aa7b028?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">Yoric</noscript></a>
+                </li>
+                            <li class="hidden">
+                <a href="/en-US/profiles/jswisher" title="View profile: jswisher">
+                <noscript data-class="avatar" data-alt="jswisher" data-src="https://secure.gravatar.com/avatar/38185c2812cbcae186ebbe4a82910661?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">jswisher</noscript></a>
+                </li>
+                            <li class="hidden">
+                <a href="/en-US/profiles/Crash" title="View profile: Crash">
+                <noscript data-class="avatar" data-alt="Crash" data-src="https://secure.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">Crash</noscript></a>
+                </li>
+                            <li class="hidden">
+                <a href="/en-US/profiles/OsamaBinLogin" title="View profile: OsamaBinLogin">
+                <noscript data-class="avatar" data-alt="OsamaBinLogin" data-src="https://secure.gravatar.com/avatar/203b98055f67a88be80148de49e6137a?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2F%2Fimg%2Favatar.png">OsamaBinLogin</noscript></a>
+                </li>
+                        </ul>
+        </div>
+        
+      </div>
+      
+      <!-- start the main content container -->
+        <div id="wiki-column-container" class="wiki-right-present wiki-left-present">
+
+                    <!-- additional controls row; hidden unless needed -->
+          <div id="wiki-controls" class="column-container column-container-reverse">
+            <div class="column-strip">
+              <!-- Show TOC "show" link -->
+            </div>
+            <div class="column-half">
+            </div>
+            <div class="column-strip quick-links hidden">
+              <a href="#show-quick-links" class="title smaller" id="show-quick-links"><i aria-hidden="true" class="icon-caret-down"></i>Show Sidebar</a>
+            </div>
+          </div>
+          
+          <!-- content row with three strips -->
+          <div class="column-container column-container-reverse">
+
+                          <!-- TOC, approvals, etc -->
+              <div class="column-strip wiki-column" id="wiki-right">
+                            <!-- table of contents -->
+              <div id="toc" class="toc toggleable">
+                <a href="#toc" class="title toggler" data-open-icon="icon-plus" data-closed-icon="icon-minus">In This Article<i></i></a>
+                <ol class="toggle-container">
+                  <li><a href="#Properties" rel="internal">Properties</a><li><a href="#Methods" rel="internal">Methods</a><li><a href="#Specifications" rel="internal">Specifications</a><li><a href="#Browser_compatibility" rel="internal">Browser compatibility</a><li><a href="#See_also" rel="internal">See also</a>
+                </ol>
+                              </div>
+                            </div>
+            
+                                                  
+            <!-- center: main article content -->
+            <div id="wiki-content" class="column-half wiki-column text-content">
+
+              
+              
+                                                                                          
+              <!-- just the article content -->
+              <article id="wikiArticle">
+                                                      <div><section class="Quick_links" id="Quick_Links"><!-- --></section></div>
+
+<p>The <strong><code>HTMLInputElement</code></strong> interface provides special properties and methods (beyond the regular <a href="/en-US/docs/Web/API/HTMLElement" title="The HTMLElement interface represents any HTML element. Some elements directly implement this interface, others implement it via an interface that inherits it."><code>HTMLElement</code></a> interface it also has available to it by inheritance) for manipulating the layout and presentation of input elements.</p>
+
+<h2 id="Properties" name="Properties">Properties</h2>
+
+<p><em>Inherits properties from its parent, </em><em><a href="/en-US/docs/Web/API/HTMLElement" title="The HTMLElement interface represents any HTML element. Some elements directly implement this interface, others implement it via an interface that inherits it."><code>HTMLElement</code></a>.</em></p>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th>Name</th>
+   <th>Type</th>
+   <th>Description</th>
+  </tr>
+  <tr>
+   <td><code>accept</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-accept">accept</a></code> HTML attribute, containing comma-separated list of file types accepted by the server when <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> is <code>file</code>.</td>
+  </tr>
+  <tr>
+   <td><code>accessKey</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>A single character that switches input focus to the control.</td>
+  </tr>
+  <tr>
+   <td><code>align</code> <span title="This is an obsolete API and is no longer guaranteed to work."><i class="icon-trash"> </i></span></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Alignment of the element.</td>
+  </tr>
+  <tr>
+   <td><code>alt</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-alt">alt</a></code> HTML attribute, containing alternative text to use when <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> is <code>image.</code></td>
+  </tr>
+  <tr>
+   <td><code>autocapitalize</code> <span title="This is an experimental API that should not be used in production code."><i class="icon-beaker"> </i></span></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Defines capitalization behavior for user input. Valid values are <code>none</code>, <code>off</code>, <code>characters</code>, <code>words</code>, or <code>sentences</code>.</td>
+  </tr>
+  <tr>
+   <td><code>autocomplete</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-autocomplete">autocomplete</a></code> HTML attribute, indicating whether the value of the control can be automatically completed by the browser. Ignored if the value of the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> attribute is <span style="font-family: courier new;">hidden</span>, <span style="font-family: courier new;">checkbox</span>, <span style="font-family: courier new;">radio</span>, <span style="font-family: courier new;">file</span>, or a button type (<span style="font-family: courier new;">button</span>, <span style="font-family: courier new;">submit</span>, <span style="font-family: courier new;">reset</span>, <span style="font-family: courier new;">image</span>). Possible values are:
+    <ul>
+     <li><span style="font-family: courier new;">off</span>: The user must explicitly enter a value into this field for every use, or the document provides its own auto-completion method; the browser does not automatically complete the entry.</li>
+     <li><span style="font-family: courier new;">on</span>: The browser can automatically complete the value based on values that the user has entered during previous uses.</li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td><code>autofocus</code></td>
+   <td><a href="/en-US/docs/Web/API/Boolean" title="The Boolean object is an object wrapper for a boolean value."><code>Boolean</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-autofocus">autofocus</a></code> HTML attribute, which specifies that a form control should have input focus when the page loads, unless the user overrides it, for example by typing in a different control. Only one form element in a document can have the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-autofocus">autofocus</a></code> attribute. It cannot be applied if the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> attribute is set to <code>hidden</code> (that is, you cannot automatically set focus to a hidden control).</td>
+  </tr>
+  <tr>
+   <td><code>checked</code></td>
+   <td><a href="/en-US/docs/Web/API/Boolean" title="The Boolean object is an object wrapper for a boolean value."><code>Boolean</code></a></td>
+   <td>The current state of the element when <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> is <code>checkbox</code> or <code>radio</code>.</td>
+  </tr>
+  <tr>
+   <td><code>defaultChecked</code></td>
+   <td><a href="/en-US/docs/Web/API/Boolean" title="The Boolean object is an object wrapper for a boolean value."><code>Boolean</code></a></td>
+   <td>The default state of a radio button or checkbox as originally specified in HTML that created this object.</td>
+  </tr>
+  <tr>
+   <td><code>defaultValue</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>The default value as originally specified in HTML that created this object.</td>
+  </tr>
+  <tr>
+   <td><code>dirName</code></td>
+   <td> </td>
+   <td> </td>
+  </tr>
+  <tr>
+   <td><code>disabled</code></td>
+   <td><a href="/en-US/docs/Web/API/Boolean" title="The Boolean object is an object wrapper for a boolean value."><code>Boolean</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-disabled">disabled</a></code> HTML attribute, indicating that the control is not available for interaction. The input values will not be submitted with the form. See also <code><a href="/en-US/docs/Web/HTML/Element/input#attr-readonly">readonly</a></code> </td>
+  </tr>
+  <tr>
+   <td><code>files</code> <span class="inlineIndicator readOnly readOnlyInline" title="This value may not be changed.">Read only </span></td>
+   <td><a href="/en-US/docs/Web/API/FileList" title="An object of this type is returned by the files property of the HTML &lt;input> element; this lets you access the list of files selected with the &lt;input type=&quot;file&quot;> element. It's also used for a list of files dropped into web content when using the drag and drop API; see the DataTransfer object for details on this usage."><code>FileList</code></a></td>
+   <td>A list of selected files.</td>
+  </tr>
+  <tr>
+   <td><code>form</code> <span class="inlineIndicator readOnly readOnlyInline" title="This value may not be changed.">Read only </span></td>
+   <td><a href="/en-US/docs/Web/API/HTMLFormElement" title="The HTMLFormElement interface provides methods to create and modify &lt;form> elements; it inherits from properties and methods of the HTMLElement interface."><code>HTMLFormElement</code></a></td>
+   <td>The containing form element, if this element is in a form. If this element is not contained in a form element:
+    <ul>
+     <li><span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML/HTML5">HTML5</a></span> this can be the <code><a href="/en-US/docs/Web/HTML/Element/form#attr-id">id</a></code> attribute of any <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML &lt;form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> element in the same document. Even if the attribute is set on <a href="/en-US/docs/Web/HTML/Element/input" title="The HTML &lt;input> element is used to create interactive controls for web-based forms in order to accept data from the user. The semantics of an &lt;input> varies considerably depending on the value of its type attribute."><code>&lt;input&gt;</code></a>, this property will be <code>null</code>, if it isn't the id of a <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML &lt;form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> element.</li>
+     <li><span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML">HTML 4</a></span> this must be <code>null</code>.</li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td><code>formAction</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-formaction">formaction</a></code> HTML attribute, containing the URI of a program that processes information submitted by the element. If specified, this attribute overrides the <code><a href="/en-US/docs/Web/HTML/Element/form#attr-action">action</a></code> attribute of the <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML &lt;form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> element that owns this element.</td>
+  </tr>
+  <tr>
+   <td><code>formEncType</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-formenctype">formenctype</a></code> HTML attribute, containing the type of content that is used to submit the form to the server. If specified, this attribute overrides the <code><a href="/en-US/docs/Web/HTML/Element/form#attr-enctype">enctype</a></code> attribute of the <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML &lt;form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> element that owns this element.</td>
+  </tr>
+  <tr>
+   <td><code>formMethod</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-formmethod">formmethod</a></code> HTML attribute, containing the HTTP method that the browser uses to submit the form. If specified, this attribute overrides the <code><a href="/en-US/docs/Web/HTML/Element/form#attr-method">method</a></code> attribute of the <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML &lt;form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> element that owns this element.</td>
+  </tr>
+  <tr>
+   <td><code>formNoValidate</code></td>
+   <td><a href="/en-US/docs/Web/API/Boolean" title="The Boolean object is an object wrapper for a boolean value."><code>Boolean</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-formnovalidate">formnovalidate</a></code> HTML attribute, indicating that the form is not to be validated when it is submitted. If specified, this attribute overrides the <code><a href="/en-US/docs/Web/HTML/Element/form#attr-novalidate">novalidate</a></code> attribute of the <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML &lt;form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> element that owns this element.</td>
+  </tr>
+  <tr>
+   <td><code>formTarget</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-formtarget">formtarget</a></code> HTML attribute, containing a name or keyword indicating where to display the response that is received after submitting the form. If specified, this attribute overrides the <code><a href="/en-US/docs/Web/HTML/Element/form#attr-target">target</a></code> attribute of the <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML &lt;form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> element that owns this element.</td>
+  </tr>
+  <tr>
+   <td><code>height</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-height">height</a></code> HTML attribute, which defines the height of the image displayed for the button, if the value of <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> is <span style="font-family: courier new;">image</span>.</td>
+  </tr>
+  <tr>
+   <td><code>indeterminate</code></td>
+   <td><a href="/en-US/docs/Web/API/Boolean" title="The Boolean object is an object wrapper for a boolean value."><code>Boolean</code></a></td>
+   <td>Indicates that a checkbox is neither on nor off.</td>
+  </tr>
+  <tr>
+   <td><code>labels</code> <span class="inlineIndicator readOnly readOnlyInline" title="This value may not be changed.">Read only </span></td>
+   <td><a href="/en-US/docs/Web/API/NodeList" title="NodeList objects are collections of nodes such as those returned by Node.childNodes and the document.querySelectorAll method."><code>NodeList</code></a></td>
+   <td>A list of <a href="/en-US/docs/Web/HTML/Element/label" title="The HTML Label Element (&lt;label>) represents a caption for an item in a user interface. It can be associated with a control either by placing the control element inside the &lt;label> element, or by using the for attribute. Such a control is called the labeled control of the label element."><code>&lt;label&gt;</code></a> elements that are labels for this element.</td>
+  </tr>
+  <tr>
+   <td><code>list</code></td>
+   <td><a href="/en-US/docs/Web/API/HTMLElement" title="The HTMLElement interface represents any HTML element. Some elements directly implement this interface, others implement it via an interface that inherits it."><code>HTMLElement</code></a></td>
+   <td>Identifies a list of pre-defined options to suggest to the user. The value must be the <strong>id</strong> of a <a href="/en-US/docs/Web/HTML/Element/datalist" title="The HTML Datalist Element (&lt;datalist>) contains a set of &lt;option> elements that represent the values available for other controls."><code>&lt;datalist&gt;</code></a> element in the same document. The browser displays only options that are valid values for this input element. This attribute is ignored when the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> attribute's value is <span style="font-family: courier new;">hidden</span>, <span style="font-family: courier new;">checkbox</span>, <span style="font-family: courier new;">radio</span>, <span style="font-family: courier new;">file</span>, or a button type.</td>
+  </tr>
+  <tr>
+   <td><code>max</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-max">max</a></code> HTML attribute, containing the maximum (numeric or date-time) value for this item, which must not be less than its minimum (<strong>min</strong> attribute) value.</td>
+  </tr>
+  <tr>
+   <td><code>maxLength</code></td>
+   <td> <code>long</code></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-maxlength">maxlength</a></code> HTML attribute, containing the maximum length of text (in Unicode code points) that the value can be changed to. The constraint is evaluated only when the value is changed
+    <div class="note"><strong>Note:</strong> If you set <code>maxLength</code> to a negative value programmatically, an exception will be thrown.</div>
+   </td>
+  </tr>
+  <tr>
+   <td><code>min</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-min">min</a></code> HTML attribute, containing the minimum (numeric or date-time) value for this item, which must not be greater than its maximum (<code><a href="/en-US/docs/Web/HTML/Element/input#attr-max">max</a></code> attribute) value.</td>
+  </tr>
+  <tr>
+   <td><code>multiple</code></td>
+   <td> </td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-multiple">multiple</a></code> HTML attribute, indicating whether more than one value is possible (e.g., multiple files).</td>
+  </tr>
+  <tr>
+   <td><code>name</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-name">name</a></code> HTML attribute, containing a name that identifies the element when submitting the form.</td>
+  </tr>
+  <tr>
+   <td><code>pattern</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-pattern">pattern</a></code> HTML attribute, containing a regular expression that the control's value is checked against. The pattern must match the entire value, not just some subset. Use the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-title">title</a></code> attribute to describe the pattern to help the user. This attribute applies when the value of the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> attribute is <span style="font-family: courier new;">text</span>, <span style="font-family: courier new;">search</span>, <span style="font-family: courier new;">tel</span>, <span style="font-family: courier new;">url</span> or <span style="font-family: courier new;">email</span>; otherwise it is ignored.</td>
+  </tr>
+  <tr>
+   <td><code>placeholder</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-placeholder">placeholder</a></code> HTML attribute, containing a hint to the user of what can be entered in the control. The placeholder text must not contain carriage returns or line-feeds. This attribute applies when the value of the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> attribute is <span style="font-family: courier new;">text</span>, <span style="font-family: courier new;">search</span>, <span style="font-family: courier new;">tel</span>, <span style="font-family: courier new;">url</span> or <span style="font-family: courier new;">email</span>; otherwise it is ignored.</td>
+  </tr>
+  <tr>
+   <td><code>readOnly</code></td>
+   <td><a href="/en-US/docs/Web/API/Boolean" title="The Boolean object is an object wrapper for a boolean value."><code>Boolean</code></a></td>
+   <td>
+    <p>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-readonly">readonly</a></code> HTML attribute, indicating that the user cannot modify the value of the control.<br>
+     <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML/HTML5">HTML5</a></span>This is ignored if the value of the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> attribute is <span style="font-family: courier new;">hidden</span>, <span style="font-family: courier new;">range</span>, <span style="font-family: courier new;">color</span>, <span style="font-family: courier new;">checkbox</span>, <span style="font-family: courier new;">radio</span>, <span style="font-family: courier new;">file</span>, or a button type.</p>
+   </td>
+  </tr>
+  <tr>
+   <td><code>required</code></td>
+   <td><a href="/en-US/docs/Web/API/Boolean" title="The Boolean object is an object wrapper for a boolean value."><code>Boolean</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-required">required</a></code> HTML attribute, indicating that the user must fill in a value before submitting a form.</td>
+  </tr>
+  <tr>
+   <td><code>selectionDirection</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>The direction in which selection occurred. This is <code>"forward"</code> if selection was performed in the start-to-end direction of the current locale, or <code>"backward"</code> for the opposite direction. This can also be <code>"none"</code> if the direction is unknown."</td>
+  </tr>
+  <tr>
+   <td><code>selectionEnd</code></td>
+   <td><code>unsigned long</code></td>
+   <td>The index of the end of selected text.</td>
+  </tr>
+  <tr>
+   <td><code>selectionStart</code></td>
+   <td><code>unsigned long</code></td>
+   <td>The index of the beginning of selected text. When nothing is selected, this is also the caret position inside of the <code>&lt;input&gt;</code> element.</td>
+  </tr>
+  <tr>
+   <td><code>size</code></td>
+   <td><code>unsigned long</code></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-size">size</a></code> HTML attribute, containing size of the control. This value is in pixels unless the value of <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> is <span style="font-family: courier new;">text</span> or <span style="font-family: courier new;">password</span>, in which case, it is an integer number of characters. <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML/HTML5">HTML5</a></span> Applies only when <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> is set to <span style="font-family: courier new;">text</span>, <span style="font-family: courier new;">search</span>, <span style="font-family: courier new;">tel</span>, <span style="font-family: courier new;">url</span>, <span style="font-family: courier new;">email</span>, or <span style="font-family: courier new;">password</span>; otherwise it is ignored.</td>
+  </tr>
+  <tr>
+   <td><code>src</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-src">src</a></code> HTML attribute, which specifies a URI for the location of an image to display on the graphical submit button, if the value of <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> is <span style="font-family: courier new;">image</span>; otherwise it is ignored.</td>
+  </tr>
+  <tr>
+   <td><code>step</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-step">step</a></code> HTML attribute, which works with<strong> </strong><code><a href="/en-US/docs/Web/HTML/Element/input#attr-min">min</a></code> and <code><a href="/en-US/docs/Web/HTML/Element/input#attr-max">max</a></code> to limit the increments at which a numeric or date-time value can be set. It can be the string <span style="font-family: courier new;">any</span> or a positive floating point number. If this is not set to <span style="font-family: courier new;">any</span>, the control accepts only values at multiples of the step value greater than the minimum.</td>
+  </tr>
+  <tr>
+   <td><code>tabIndex</code></td>
+   <td>long</td>
+   <td>The position of the element in the tabbing navigation order for the current document.</td>
+  </tr>
+  <tr>
+   <td><code>type</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> HTML attribute, indicating the type of control to display. See <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> attribute of <a href="/en-US/docs/Web/HTML/Element/input" title="The HTML &lt;input> element is used to create interactive controls for web-based forms in order to accept data from the user. The semantics of an &lt;input> varies considerably depending on the value of its type attribute."><code>&lt;input&gt;</code></a> for possible values.</td>
+  </tr>
+  <tr>
+   <td><code>useMap</code> <span title="This is an obsolete API and is no longer guaranteed to work."><i class="icon-trash"> </i></span></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>A client-side image map.</td>
+  </tr>
+  <tr>
+   <td><code>validationMessage</code> <span class="inlineIndicator readOnly readOnlyInline" title="This value may not be changed.">Read only </span></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>A localized message that describes the validation constraints that the control does not satisfy (if any). This is the empty string if the control is not a candidate for constraint validation (<code><a href="/en-US/docs/Web/HTML/Element/input#attr-willvalidate">willvalidate</a></code> is <code>false</code>), or it satisfies its constraints.</td>
+  </tr>
+  <tr>
+   <td><code>validity</code> <span class="inlineIndicator readOnly readOnlyInline" title="This value may not be changed.">Read only </span></td>
+   <td><a href="/en-US/docs/Web/API/ValidityState" title="The ValidityState interface represents the validity states that an element can be in, with respect to constraint validation. Together, they help explain why an element's value fails to validate, if it's not valid."><code>ValidityState</code></a></td>
+   <td>The validity state that this element is in. </td>
+  </tr>
+  <tr>
+   <td><code>value</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>
+    <p>Current value in the control.</p>
+
+    <div class="note">
+    <p><strong>Note: </strong>for certain input types the returned value might not match the value the user has entered. For example, if the user enters a non-numeric value into an &lt;input type="number"&gt;, the returned value might be an empty string instead.</p>
+    </div>
+   </td>
+  </tr>
+  <tr>
+   <td><code>valueAsDate</code></td>
+   <td><a class="new" href="/en-US/docs/Web/API/Date" title="The documentation about this has not yet been written; please consider contributing!"><code>Date</code></a></td>
+   <td>The value of the element, interpreted as a date, or <code>null</code> if conversion is not possible.</td>
+  </tr>
+  <tr>
+   <td><code>valueAsNumber</code></td>
+   <td><code>double</code></td>
+   <td>The value of the element, interpreted as one of the following in order:
+    <ol>
+     <li>a time value</li>
+     <li>a number</li>
+     <li><code>NaN</code> if conversion is not possible</li>
+    </ol>
+   </td>
+  </tr>
+  <tr>
+   <td><code>width</code></td>
+   <td><a href="/en-US/docs/Web/API/DOMString" title="DOMString is a UTF-16 String. As JavaScript already uses such strings, DOMString is mapped directly to a String."><code>DOMString</code></a></td>
+   <td>Reflects the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-width">width</a></code> HTML attribute, which defines the width of the image displayed for the button, if the value of <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> is <span style="font-family: courier new;">image</span>.</td>
+  </tr>
+  <tr>
+   <td><code>willValidate</code></td>
+   <td><a href="/en-US/docs/Web/API/Boolean" title="The Boolean object is an object wrapper for a boolean value."><code>Boolean</code></a></td>
+   <td>Indicates whether the element is a candidate for constraint validation. It is <code>false</code> if any conditions bar it from constraint validation.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Methods">Methods</h2>
+
+<p><em>Inherits methods from its parent, </em><em><a href="/en-US/docs/Web/API/HTMLElement" title="The HTMLElement interface represents any HTML element. Some elements directly implement this interface, others implement it via an interface that inherits it."><code>HTMLElement</code></a>.</em></p>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th>Name &amp; Arguments</th>
+   <th>Return</th>
+   <th>Description</th>
+  </tr>
+  <tr>
+   <td><code>blur()</code></td>
+   <td><code>void</code></td>
+   <td>Removes focus from input; keystrokes will subsequently go nowhere.</td>
+  </tr>
+  <tr>
+   <td><code>checkValidity</code>()</td>
+   <td><a href="/en-US/docs/Web/API/Boolean" title="The Boolean object is an object wrapper for a boolean value."><code>Boolean</code></a></td>
+   <td>Returns false if the element is a candidate for constraint validation, and it does not satisfy its constraints. In this case, it also fires an <code><a href="/en-US/docs/Web/Events/invalid" title="/en-US/docs/Web/Events/invalid">invalid</a></code> event at the element. It returns true if the element is not a candidate for constraint validation, or if it satisfies its constraints.</td>
+  </tr>
+  <tr>
+   <td><code>click()</code></td>
+   <td><code>void</code></td>
+   <td>Simulates a click on the element.</td>
+  </tr>
+  <tr>
+   <td><code>focus()</code></td>
+   <td><code>void</code></td>
+   <td>Focus on input; keystrokes will subsequently go to this element.</td>
+  </tr>
+  <tr>
+   <td><code>mozSetFileArray(files)</code><span title="This API has not been standardized."><i class="icon-warning-sign"> </i></span></td>
+   <td><code>void</code></td>
+   <td>Sets the files selected on the input to the given array of <code><a href="/en-US/docs/Web/API/File">File</a></code> objects.  This is an alternative to <code>mozSetFileNameArray</code> which can be used in frame scripts: a chrome script can <a href="/en-US/docs/Extensions/Using_the_DOM_File_API_in_chrome_code">open files as <code>File</code> objects</a> and send them via <a href="/en-US/Firefox/Multiprocess_Firefox/The_message_manager">message manager</a>.</td>
+  </tr>
+  <tr>
+   <td><code><a href="/en/DOM/Input.mozGetFileNameArray" title="en/DOM/Input.mozGetFileNameArray">mozGetFileNameArray</a>(length, filenames)</code><span title="This API has not been standardized."><i class="icon-warning-sign"> </i></span></td>
+   <td><code>void</code></td>
+   <td>Returns an array of all the file names from the input.</td>
+  </tr>
+  <tr>
+   <td><code><a href="/en/DOM/Input.mozSetFileNameArray" title="en/DOM/Input.mozSetFileNameArray">mozSetFileNameArray</a>(filenames, length)</code><span title="This API has not been standardized."><i class="icon-warning-sign"> </i></span></td>
+   <td><code>void</code></td>
+   <td>Sets the filenames for the files selected on the input.  Not for use in <a href="/en-US/Firefox/Multiprocess_Firefox/Limitations_of_frame_scripts">frame scripts</a>, because it accesses the filesystem.</td>
+  </tr>
+  <tr>
+   <td><code><a href="/en/DOM/Input.select" title="en/DOM/Input.select">select</a>()</code></td>
+   <td><code>void</code></td>
+   <td>Selects the input text in the element, and focuses it so the user can subsequently replace the whole entry.</td>
+  </tr>
+  <tr>
+   <td><code>setCustomValidity(error)</code></td>
+   <td><code>void</code></td>
+   <td>Sets a custom validity message for the element. If this message is not the empty string, then the element is suffering from a custom validity error, and does not validate.</td>
+  </tr>
+  <tr>
+   <td><code><a href="/en/DOM/Input.setSelectionRange" title="en/DOM/Input.setSelectionRange">setSelectionRange</a>(selectionStart, selectionEnd, [optional] selectionDirection)</code></td>
+   <td><code>void</code></td>
+   <td>Selects a range of text in the element (but does not focus it). The optional <code>selectionDirection</code> parameter may be <code>"forward"</code> or <code>"backward"</code> to establish the direction in which selection was set, or <code>"none"</code> if the direction is unknown or not relevant. The default is <code>"none"</code>. Specifying a <code>selectionDirection</code> parameter sets the value of the <code>selectionDirection</code> property.</td>
+  </tr>
+  <tr>
+   <td><code>setRangeText(replacement, [optional] start, [optional] end, [optional] selectMode)</code></td>
+   <td><code>void</code></td>
+   <td>Replaces a range of text with the new text. Supported input types: <code>text</code>, <code>search</code>, <code>url</code>, <code>tel</code>, <code>password.</code></td>
+  </tr>
+  <tr>
+   <td><code>stepDown(n)</code></td>
+   <td><code>void</code></td>
+   <td>Decrements the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-value">value</a></code> by (<code><a href="/en-US/docs/Web/HTML/Element/input#attr-step">step</a></code> * <code>n</code>), where <code>n</code> defaults to <code>1</code> if not specified. Throws an <code>INVALID_STATE_ERR</code> exception:
+    <ul>
+     <li>if the method is not applicable to for the current <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> value.</li>
+     <li>if the element has no <code><a href="/en-US/docs/Web/HTML/Element/input#attr-step">step</a></code> value.</li>
+     <li>if the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-value">value</a></code> cannot be converted to a number.</li>
+     <li>if the resulting value is above the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-max">max</a></code> or below the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-min">min</a></code>. </li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td><code>stepUp(n)</code></td>
+   <td><code>void</code></td>
+   <td>Increments the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-value">value</a></code> by (<code><a href="/en-US/docs/Web/HTML/Element/input#attr-step">step</a></code> * <code>n</code>), where <code>n</code> defaults to <code>1</code> if not specified. Throws an <code>INVALID_STATE_ERR</code> exception:
+    <ul>
+     <li>if the method is not applicable to for the current <code><a href="/en-US/docs/Web/HTML/Element/input#attr-type">type</a></code> value.</li>
+     <li>if the element has no <code><a href="/en-US/docs/Web/HTML/Element/input#attr-step">step</a></code> value.</li>
+     <li>if the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-value">value</a></code> cannot be converted to a number.</li>
+     <li>if the resulting value is above the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-max">max</a></code> or below the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-min">min</a></code>.</li>
+    </ul>
+   </td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Specifications">Specifications</h2>
+
+<table class="standard-table">
+ <tbody>
+  <tr>
+   <th scope="col">Specification</th>
+   <th scope="col">Status</th>
+   <th scope="col">Comment</th>
+  </tr>
+  <tr>
+   <td><a class="external" href="https://html.spec.whatwg.org/multipage/tthe-input-element.html#the-input-element" hreflang="en" lang="en">WHATWG HTML Living Standard<br><small lang="en-US">The definition of 'HTMLInputElement' in that specification.</small></a></td>
+   <td><span class="spec-Living">Living Standard</span></td>
+   <td>No change from <a class="external" href="http://www.w3.org/TR/html5/" hreflang="en" lang="en" title="The 'HTML5' specification">HTML5</a></td>
+  </tr>
+  <tr>
+   <td><a class="external" href="http://www.w3.org/TR/html5/forms.html#the-input-element" hreflang="en" lang="en">HTML5<br><small lang="en-US">The definition of 'HTMLInputElement' in that specification.</small></a></td>
+   <td><span class="spec-REC">Recommendation</span></td>
+   <td>Technically, the  <code>tabindex</code> and <code>accesskey</code> properties, as well as the <code>blur()</code>, <code>click()</code>, and <code>focus()</code> methods, are now defined on <a href="/en-US/docs/Web/API/HTMLElement" title="The HTMLElement interface represents any HTML element. Some elements directly implement this interface, others implement it via an interface that inherits it."><code>HTMLElement</code></a>.<br>
+    The following properties are now obsolete: <code>align</code> and <code>useMap</code>.<br>
+    The following properties have been added: <code>autocomplete</code>, <code>autofocus</code>, <code>dirName</code>, <code>files</code>, <code>formAction</code>, <code>formEncType</code>, <code>formMethod</code>, <code>formNoValidate</code>, <code>formTarget</code>, <code>height</code>, <code>indeterminate</code>, <code>labels</code>, <code>list</code>, <code>max</code>, <code>min</code>, <code>multiple</code>, <code>pattern</code>, <code>placeholder</code>, <code>required</code>, <code>selectionDirection</code>, <code>selectionEnd</code>, <code>selectionStart</code>, <code>step</code>, <code>validationMessage</code>, <code>validity</code>, <code>valueAsDate</code>, <code>valueAsNumber</code>, <code>width</code>, and <code>willValidate</code>.<br>
+    The following methods have been added: <code>checkValidity()</code>, <code>setCustomValidity()</code>, <code>setSelectionRange()</code>, <code>stepUp()</code>, and <code>stepDown()</code>.</td>
+  </tr>
+  <tr>
+   <td><a class="external" href="http://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-6043025" hreflang="en" lang="en">Document Object Model (DOM) Level 2 HTML Specification<br><small lang="en-US">The definition of 'HTMLInputElement' in that specification.</small></a></td>
+   <td><span class="spec-REC">Recommendation</span></td>
+   <td>The <code>size</code> property is now an <code>unsigned</code> <code>long</code>. The <code>type</code> property must be entirely given in lowercase characters.</td>
+  </tr>
+  <tr>
+   <td><a class="external" href="http://www.w3.org/TR/REC-DOM-Level-1/level-one-html.html#ID-6043025" hreflang="en" lang="en">Document Object Model (DOM) Level 1 Specification<br><small lang="en-US">The definition of 'HTMLInputElement' in that specification.</small></a></td>
+   <td><span class="spec-REC">Recommendation</span></td>
+   <td>Initial definition.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="Browser_compatibility">Browser compatibility</h2>
+
+<p></p><div class="htab"> 
+    <a id="AutoCompatibilityTable" name="AutoCompatibilityTable"></a> 
+    <ul> 
+        <li class="selected"><a>Desktop</a></li> 
+        <li><a>Mobile</a></li> 
+    </ul> 
+</div><p></p>
+
+<div id="compat-desktop">
+<table class="compat-table">
+ <tbody>
+  <tr>
+   <th>Feature</th>
+   <th>Chrome</th>
+   <th>Firefox (Gecko)</th>
+   <th>Internet Explorer</th>
+   <th>Opera</th>
+   <th>Safari (WebKit)</th>
+  </tr>
+  <tr>
+   <td>Basic support</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td>1.0 (1.7 or earlier)</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+  </tr>
+  <tr>
+   <td><code>autocomplete</code> &amp; <code>autofocus</code> properties</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+  </tr>
+  <tr>
+   <td><code>files</code> property</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><a href="/en-US/Firefox/Releases/3" title="Released on 2008-06-17.">3.0</a> (1.9)</td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+  </tr>
+  <tr>
+   <td><code>multiple</code> property</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><a href="/en-US/Firefox/Releases/3.6" title="Released on 2010-01-21.">3.6</a> (1.9.2)</td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+  </tr>
+  <tr>
+   <td><code>indeterminate</code> property</td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+  </tr>
+  <tr>
+   <td><code>list</code> property</td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+  </tr>
+  <tr>
+   <td><code>formAction</code>, <code>formEncType</code>, <code>formMethod</code>, <code>formTarget</code> properties</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><a href="/en-US/Firefox/Releases/4" title="Released on 2011-03-22.">4.0</a> (2)</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+  </tr>
+  <tr>
+   <td><code>formNoValidate</code>, <code>validationMessage</code>, <code>validity</code>, <code>willValidate</code> properties and <code>setCustomValidity()</code> and <code>checkValidity()</code> methods.</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><a href="/en-US/Firefox/Releases/4" title="Released on 2011-03-22.">4.0</a> (2)</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+  </tr>
+  <tr>
+   <td><code>pattern</code>, <code>placeholder</code>, <code>required</code> properties</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><a href="/en-US/Firefox/Releases/4" title="Released on 2011-03-22.">4.0</a> (2)</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+  </tr>
+  <tr>
+   <td><code>height</code> and <code>weight</code> properties</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><a href="/en-US/Firefox/Releases/16" title="Released on 2012-10-09.">16</a> (16)</td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+  </tr>
+  <tr>
+   <td><code>labels</code> property</td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: #f00;">Not supported</span> (<a class="external" href="https://bugzilla.mozilla.org/show_bug.cgi?id=556743" title="Implement the labels attribute">bug 556743</a>)</td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+  </tr>
+  <tr>
+   <td><code>min</code>, <code>max</code>, and <code>step</code> for <code>&lt;input type="number"&gt;</code></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td>Experimental, and without specific UI, since <a href="/en-US/Firefox/Releases/16" title="Released on 2012-10-09.">16</a> (16): behind the pref <code>dom.experimental_forms</code></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+  </tr>
+  <tr>
+   <td><code>stepUp</code> and <code>stepDown</code> methods</td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td>Experimental since <a href="/en-US/Firefox/Releases/16" title="Released on 2012-10-09.">16</a> (16): behind the pref <code>dom.experimental_forms</code><br>
+    <br>
+    There are still differences with the latest spec: <a class="external" href="https://bugzilla.mozilla.org/show_bug.cgi?id=835773" title="Align stepUp() and stepDown() implementation to HTML spec">bug 835773</a></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+  </tr>
+  <tr>
+   <td><code>min</code>, <code>max</code>, and <code>step </code>properties for <code>&lt;input type="range"&gt;</code></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><a href="/en-US/Firefox/Releases/23" title="Released on 2013-08-06.">23</a> (23)</td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+  </tr>
+  <tr>
+   <td><code>min</code>, <code>max</code>, and <code>step </code>properties for <code>&lt;input type="date"&gt;</code></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td>Experimental, and without specific UI, since <a href="/en-US/Firefox/Releases/20" title="Released on 2013-04-02.">20</a> (20): behind the pref <code>dom.experimental_forms</code></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+  </tr>
+  <tr>
+   <td><code>min</code>, <code>max</code>, and <code>step </code>properties for other date-related <code>type</code> values</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #f00;">Not supported</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+  </tr>
+  <tr>
+   <td><code>mozGetFileNameArray()</code> and <code>mozSetFileNameArray() </code>methods <span title="This API has not been standardized."><i class="icon-warning-sign"> </i></span></td>
+   <td><span style="color: #f00;">Not supported</span></td>
+   <td><a href="/en-US/Firefox/Releases/3.6" title="Released on 2010-01-21.">3.6</a> (1.9.2)</td>
+   <td><span style="color: #f00;">Not supported</span></td>
+   <td><span style="color: #f00;">Not supported</span></td>
+   <td><span style="color: #f00;">Not supported</span></td>
+  </tr>
+  <tr>
+   <td><code>mozSetFileArray()</code> method <span title="This API has not been standardized."><i class="icon-warning-sign"> </i></span></td>
+   <td><span style="color: #f00;">Not supported</span></td>
+   <td><a href="/en-US/Firefox/Releases/38" title="Released on 2015-05-19.">38</a> (38)</td>
+   <td><span style="color: #f00;">Not supported</span></td>
+   <td><span style="color: #f00;">Not supported</span></td>
+   <td><span style="color: #f00;">Not supported</span></td>
+  </tr>
+  <tr>
+   <td><code>autocapitalize</code></td>
+   <td>43.0</td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+  </tr>
+ </tbody>
+</table>
+</div>
+
+<div id="compat-mobile">
+<table class="compat-table">
+ <tbody>
+  <tr>
+   <th>Feature</th>
+   <th>Android</th>
+   <th>Android Webview</th>
+   <th>Firefox Mobile (Gecko)</th>
+   <th>IE Phone</th>
+   <th>Opera Mobile</th>
+   <th>Safari Mobile</th>
+   <th>Chrome for Android</th>
+  </tr>
+  <tr>
+   <td>Basic support</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td>1.0 (1.0)</td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+   <td><span style="color: #888;" title="Please update this with the earliest version of support.">(Yes)</span></td>
+  </tr>
+  <tr>
+   <td>autocapitalize</td>
+   <td><span style="color: #f00;">Not supported</span></td>
+   <td>43.0</td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="font-size: 12px; line-height: 16.3636360168457px;"><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td><span style="color: rgb(255, 153, 0);" title="Compatibility unknown; please update this.">?</span></td>
+   <td>43.0</td>
+  </tr>
+ </tbody>
+</table>
+</div>
+
+<h2 id="See_also">See also</h2>
+
+<ul>
+ <li>HTML element implementing this interface: <a href="/en-US/docs/Web/HTML/Element/input" title="The HTML &lt;input> element is used to create interactive controls for web-based forms in order to accept data from the user. The semantics of an &lt;input> varies considerably depending on the value of its type attribute."><code>&lt;input&gt;</code></a>.</li>
+</ul>
+                                                </article>
+
+            
+
+              
+                <!-- contributors -->
+                <div class="wiki-block contributors">
+                  <h2 class="offscreen">Document Tags and Contributors</h2>
+                                      <div class="tag-attach-list contributors-sub">
+    <i aria-hidden="true" class="icon-tags"></i>
+    <strong>Tags:</strong>&nbsp;
+    <ul class="tags tags-small">
+              <li><a href="/en-US/docs/tag/API">API</a></li>
+              <li><a href="/en-US/docs/tag/HTML%20DOM">HTML DOM</a></li>
+              <li><a href="/en-US/docs/tag/Interface">Interface</a></li>
+              <li><a href="/en-US/docs/tag/NeedsNewLayout">NeedsNewLayout</a></li>
+              <li><a href="/en-US/docs/tag/Reference">Reference</a></li>
+              <li><a href="/en-US/docs/tag/R%C3%A9f%C3%A9rence">Référence</a></li>
+          </ul>
+  </div>
+
+                                      <div class="contributors-sub"> <i aria-hidden="true" class="icon-group"></i><strong>Contributors to this page:</strong>         <a href="/en-US/profiles/jpmedley">jpmedley</a>,             <a href="/en-US/profiles/chrisdavidmills">chrisdavidmills</a>,             <a href="/en-US/profiles/blunderboy">blunderboy</a>,             <a href="/en-US/profiles/jldavis">jldavis</a>,             <a href="/en-US/profiles/fscholz">fscholz</a>,             <a href="/en-US/profiles/MHasan">MHasan</a>,             <a href="/en-US/profiles/Nickolay">Nickolay</a>,             <a href="/en-US/profiles/teoli">teoli</a>,             <a href="/en-US/profiles/dbruant">dbruant</a>,             <a href="/en-US/profiles/ziyunfei">ziyunfei</a>,             <a href="/en-US/profiles/kscarfone">kscarfone</a>,             <a href="/en-US/profiles/Sheppy">Sheppy</a>,             <a href="/en-US/profiles/Ms2ger">Ms2ger</a>,             <a href="/en-US/profiles/lmorchard">lmorchard</a>,             <a href="/en-US/profiles/myakura">myakura</a>,             <a href="/en-US/profiles/secoif">secoif</a>,             <a href="/en-US/profiles/brunoais">brunoais</a>,             <a href="/en-US/profiles/Yoric">Yoric</a>,             <a href="/en-US/profiles/jswisher">jswisher</a>,             <a href="/en-US/profiles/Crash">Crash</a>,             <a href="/en-US/profiles/OsamaBinLogin">OsamaBinLogin</a>     </div>                  
+                                      <div class="contributors-sub">
+                      <i aria-hidden="true" class="icon-clock-o"></i><strong>Last updated by:</strong>
+                      <a href="/en-US/profiles/jpmedley">jpmedley</a>,
+                      <time datetime="2015-06-08T12:06:07-07:00">Jun 8, 2015, 12:06:07 PM</time>
+                    </div>
+                                  </div>
+                          </div>
+
+                          <!-- quick links and zone subnav strip -->
+              <div id="wiki-left" class="column-strip wiki-column">
+
+              
+                <a href="#quick-links" class="title smaller" id="quick-links-toggle"><i aria-hidden="true" class="icon-caret-up"></i>Hide Sidebar</a>
+
+                
+                                  <!-- quick links -->
+                    <div class="quick-links" id="quick-links">
+    <div class="title see-also">See also</div>
+    <ol><li><strong><a href="/en-US/docs/Web/API/HTMLInputElement"><code>HTMLInputElement</code></a></strong></li><li data-default-state="open"><a href="#"><strong>Properties</strong></a><ol><li><a href="/en-US/docs/Web/API/HTMLInputElement/multiple" title='The HTMLInputElement.multiple property indicates if an input can have more than one value. Firefox currently only supports multiple for &lt;input type="file">.'><code>HTMLInputElement.multiple</code></a></li></ol></li><li data-default-state="open"><a href="#"><strong>Methods</strong></a><ol><li><span class="sidebar-icon"><span title="This API has not been standardized."><i class="icon-warning-sign"> </i></span></span><a href="/en-US/docs/Web/API/HTMLInputElement/mozGetFileNameArray" title="The HTMLInputElement.mozGetFileNameArray() method returns an array of the names of the files that were selected by the user on an HTML input element."><code>HTMLInputElement.mozGetFileNameArray()</code></a></li><li><span class="sidebar-icon"><span title="This API has not been standardized."><i class="icon-warning-sign"> </i></span></span><a href="/en-US/docs/Web/API/HTMLInputElement/mozSetFileNameArray" title="The HTMLInputElement.mozSetFileNameArray() sets the names of the files that selected on an HTML input element."><code>HTMLInputElement.mozSetFileNameArray()</code></a></li><li><a href="/en-US/docs/Web/API/HTMLInputElement/select" title="The HTMLInputElement.select() method focuses an element and selects all the text in it. For instance:"><code>HTMLInputElement.select()</code></a></li><li><a href="/en-US/docs/Web/API/HTMLInputElement/setSelectionRange" title="The HTMLInputElement.setSelectionRange() method sets the start and end positions of the current text selection in an &lt;input> element. Optionally, in newer browser versions, you can specify the direction in which selection should be considered to have occurred; this lets you indicate, for example, that the selection as set by the user clicking and dragging from the end of the selected text toward the beginning."><code>HTMLInputElement.setSelectionRange()</code></a></li></ol></li><li data-default-state="open"><a href="#"><strong>Inheritance:</strong></a><ol><li><a href="/en-US/docs/Web/API/HTMLElement"><code>HTMLElement</code></a></li><li><a href="/en-US/docs/Web/API/Element"><code>Element</code></a></li><li><a href="/en-US/docs/Web/API/Node"><code>Node</code></a></li><li><a href="/en-US/docs/Web/API/EventTarget"><code>EventTarget</code></a></li></ol></li><li data-default-state="open"><a href="#"><strong>Related pages for HTML DOM</strong></a><ol><li><a href="/en-US/docs/Web/API/BeforeUnloadEvent"><code>BeforeUnloadEvent</code></a></li><li><a href="/en-US/docs/Web/API/DOMStringMap"><code>DOMStringMap</code></a></li><li><a href="/en-US/docs/Web/API/DataTransfer"><code>DataTransfer</code></a></li><li><a href="/en-US/docs/Web/API/DragEvent"><code>DragEvent</code></a></li><li><a href="/en-US/docs/Web/API/ErrorEvent"><code>ErrorEvent</code></a></li><li><a href="/en-US/docs/Web/API/GlobalEventHandlers"><code>GlobalEventHandlers</code></a></li><li><a href="/en-US/docs/Web/API/HTMLAnchorElement"><code>HTMLAnchorElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLAreaElement"><code>HTMLAreaElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLAudioElement"><code>HTMLAudioElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLBRElement"><code>HTMLBRElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLBaseElement"><code>HTMLBaseElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLBaseFontElement"><code>HTMLBaseFontElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLBodyElement"><code>HTMLBodyElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLButtonElement"><code>HTMLButtonElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLCanvasElement"><code>HTMLCanvasElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLContentElement"><code>HTMLContentElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLDListElement"><code>HTMLDListElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLDataElement"><code>HTMLDataElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLDataListElement"><code>HTMLDataListElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLDialogElement"><code>HTMLDialogElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLDivElement"><code>HTMLDivElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLDocument"><code>HTMLDocument</code></a></li><li><a href="/en-US/docs/Web/API/HTMLElement"><code>HTMLElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLEmbedElement"><code>HTMLEmbedElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLFieldSetElement"><code>HTMLFieldSetElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLFormControlsCollection"><code>HTMLFormControlsCollection</code></a></li><li><a href="/en-US/docs/Web/API/HTMLFormElement"><code>HTMLFormElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLFrameSetElement"><code>HTMLFrameSetElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLHRElement"><code>HTMLHRElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLHeadElement"><code>HTMLHeadElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLHeadingElement"><code>HTMLHeadingElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLHtmlElement"><code>HTMLHtmlElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLIFrameElement"><code>HTMLIFrameElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLImageElement"><code>HTMLImageElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLIsIndexElement"><code>HTMLIsIndexElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLKeygenElement"><code>HTMLKeygenElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLLIElement"><code>HTMLLIElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLLabelElement"><code>HTMLLabelElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLLegendElement"><code>HTMLLegendElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLLinkElement"><code>HTMLLinkElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLMapElement"><code>HTMLMapElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLMediaElement"><code>HTMLMediaElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLMetaElement"><code>HTMLMetaElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLMeterElement"><code>HTMLMeterElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLModElement"><code>HTMLModElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLOListElement"><code>HTMLOListElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLObjectElement"><code>HTMLObjectElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLOptGroupElement"><code>HTMLOptGroupElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLOptionElement"><code>HTMLOptionElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLOptionsCollection"><code>HTMLOptionsCollection</code></a></li><li><a href="/en-US/docs/Web/API/HTMLOutputElement"><code>HTMLOutputElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLParagraphElement"><code>HTMLParagraphElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLParamElement"><code>HTMLParamElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLPictureElement"><code>HTMLPictureElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLPreElement"><code>HTMLPreElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLProgressElement"><code>HTMLProgressElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLQuoteElement"><code>HTMLQuoteElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLScriptElement"><code>HTMLScriptElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLSelectElement"><code>HTMLSelectElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLShadowElement"><code>HTMLShadowElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLSourceElement"><code>HTMLSourceElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLSpanElement"><code>HTMLSpanElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLStyleElement"><code>HTMLStyleElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLTableCaptionElement"><code>HTMLTableCaptionElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLTableCellElement"><code>HTMLTableCellElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLTableColElement"><code>HTMLTableColElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLTableDataCellElement"><code>HTMLTableDataCellElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLTableElement"><code>HTMLTableElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLTableHeaderCellElement"><code>HTMLTableHeaderCellElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLTableRowElement"><code>HTMLTableRowElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLTableSectionElement"><code>HTMLTableSectionElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLTextAreaElement"><code>HTMLTextAreaElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLTimeElement"><code>HTMLTimeElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLTitleElement"><code>HTMLTitleElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLTrackElement"><code>HTMLTrackElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLUListElement"><code>HTMLUListElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLUnknownElement"><code>HTMLUnknownElement</code></a></li><li><a href="/en-US/docs/Web/API/HTMLVideoElement"><code>HTMLVideoElement</code></a></li><li><a href="/en-US/docs/Web/API/HashChangeEvent"><code>HashChangeEvent</code></a></li><li><a href="/en-US/docs/Web/API/History"><code>History</code></a></li><li><a href="/en-US/docs/Web/API/ImageData"><code>ImageData</code></a></li><li><a href="/en-US/docs/Web/API/Location"><code>Location</code></a></li><li><a href="/en-US/docs/Web/API/MessageChannel"><code>MessageChannel</code></a></li><li><a href="/en-US/docs/Web/API/MessageEvent"><code>MessageEvent</code></a></li><li><a href="/en-US/docs/Web/API/MessagePort"><code>MessagePort</code></a></li><li><a href="/en-US/docs/Web/API/Navigator"><code>Navigator</code></a></li><li><a href="/en-US/docs/Web/API/NavigatorGeolocation"><code>NavigatorGeolocation</code></a></li><li><a href="/en-US/docs/Web/API/NavigatorID"><code>NavigatorID</code></a></li><li><a href="/en-US/docs/Web/API/NavigatorLanguage"><code>NavigatorLanguage</code></a></li><li><a href="/en-US/docs/Web/API/NavigatorOnLine"><code>NavigatorOnLine</code></a></li><li><a href="/en-US/docs/Web/API/NavigatorPlugins"><code>NavigatorPlugins</code></a></li><li><a href="/en-US/docs/Web/API/PageTransitionEvent"><code>PageTransitionEvent</code></a></li><li><a href="/en-US/docs/Web/API/Plugin"><code>Plugin</code></a></li><li><a href="/en-US/docs/Web/API/PluginArray"><code>PluginArray</code></a></li><li><a href="/en-US/docs/Web/API/PopStateEvent"><code>PopStateEvent</code></a></li><li><a href="/en-US/docs/Web/API/PortCollection"><code>PortCollection</code></a></li><li><a href="/en-US/docs/Web/API/RadioNodeList"><code>RadioNodeList</code></a></li><li><a href="/en-US/docs/Web/API/Transferable"><code>Transferable</code></a></li><li><a href="/en-US/docs/Web/API/ValidityState"><code>ValidityState</code></a></li><li><a href="/en-US/docs/Web/API/WebVTT"><code>WebVTT</code></a></li><li><a href="/en-US/docs/Web/API/Window"><code>Window</code></a></li><li><a href="/en-US/docs/Web/API/WindowBase64"><code>WindowBase64</code></a></li><li><a href="/en-US/docs/Web/API/WindowEventHandlers"><code>WindowEventHandlers</code></a></li><li><a href="/en-US/docs/Web/API/WindowTimers"><code>WindowTimers</code></a></li></ol></li></ol>
+  </div>
+                
+                <!-- approvals -->
+                
+              
+              </div>
+                      </div>
+        </div>
+      </div>
+    </div> <!-- ends "main-content" -->
+
+  <menu type="context" id="edit-history-menu">
+    <menuitem data-action="/en-US/docs/Web/API/HTMLInputElement$edit" label="Edit page"></menuitem>
+    <menuitem data-action="/en-US/docs/Web/API/HTMLInputElement$history" label="View page history"></menuitem>
+  </menu>
+  </div></main>
+
+  <!-- Footer -->
+  <footer><div class="center">
+    <div class="column-container">
+      <div class="column-main">
+                <p>
+          <bdi>&copy; 2005-2015 Mozilla Developer Network and individual contributors<br /> Content is available under <a href="/en-US/docs/MDN/About#Copyrights_and_licenses">these licenses</a> &middot; <a href="/docs/MDN/About">About MDN</a> &middot; <a href="//www.mozilla.org/about/legal/terms/mozilla">Terms</a> &middot; <a href="//www.mozilla.org/privacy/websites/">Privacy</a> &middot; <a href="//www.mozilla.org/privacy/websites/#cookies">Cookies</a> &middot; <a href="//github.com/mozilla/kuma">Contribute to the code</a></bdi>        </p>
+              </div>
+      <div class="column-strip">
+                        <form class="languages go" method="get" action="/en-US/docs/Web">
+      <label for="language">Other languages:</label>
+      <select id="language" class="wiki-l10n" name="next" dir="ltr">
+        <option value="/en-US/docs/Web/API/HTMLInputElement" selected>
+          English (US)
+        </option>
+                  <option value="/fr/docs/Web/API/HTMLInputElement">
+            Français
+          </option>          <option value="/zh-CN/docs/Web/API/HTMLInputElement">
+            中文 (简体)
+          </option>      </select>
+      <noscript><button type="submit">Go</button></noscript>
+    </form>
+                </div>
+    </div>
+  </div></footer>
+
+  <!-- site js -->
+      <!--[if lte IE 8]><script src="/media/js/libs/selectivizr-1.0.2/selectivizr-build.js"></script><![endif]-->
+
+    <form id="_persona_login" method="post" action="/users/persona/signin" data-csrf-token-url="/users/persona/csrf" data-request='{"siteName": "Mozilla Developer Network", "siteLogo": "/media/img/opengraph-logo.png"}' data-persona-script="https://login.persona.org/include.js">
+  <input type="hidden" name="csrfmiddlewaretoken" value="" id="_persona_csrf_token" />
+  <input type="hidden" name="next" value="" id="_persona_next_url"/>
+  <input type="hidden" name="process" value="" id="_persona_process"/>
+  <input type="hidden" name="assertion" id="_persona_assertion"/>
+</form>
+
+    <script src="https://developer.cdn.mozilla.net/media/js/main-min.js?build=0e7ce0f"></script>
+
+      <script>
+        if(window.mdn && mdn.analytics) mdn.analytics.trackOutboundLinks();
+      </script>
+
+          <script src="https://developer.cdn.mozilla.net/media/js/wiki-min.js?build=0e7ce0f"></script>
+      
+    <script type="text/javascript">
+      if(window.jQuery) jQuery('.from-search-toc').mozSearchResults('');
+
+            mdn.optimizely.push(['activate', 2796520257]);
+  </script>
+
+  
+  
+</body>
+</html>

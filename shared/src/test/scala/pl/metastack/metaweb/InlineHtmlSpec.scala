@@ -83,6 +83,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
     tpl match {
       case btn: tag.button =>
         btn.click()
+        btn.disabled(true)
         assertEquals(clicked, 1)
     }
   }
