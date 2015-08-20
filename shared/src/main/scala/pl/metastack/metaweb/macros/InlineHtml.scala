@@ -35,6 +35,8 @@ object InlineHtml {
               case n: c.Expr[Seq[Node]]
                 if n.tree.tpe.toString == "Seq[pl.metastack.metaweb.tree.Node]" =>
                   c.Expr(q"tree.PlaceholderSeqNode($n)")
+              case n: c.Expr[String]
+                if n.tree.tpe.toString == "String" => c.Expr(q"tree.Text(Var($n))")
               case _ => c.Expr(q"tree.Text(${args(index)})")
             }
           } else {

@@ -100,6 +100,12 @@ object InlineHtmlSpec extends SimpleTestSuite {
     }
   }
 
+  test("String placeholder") {
+    val text = "Hello world"
+    val div = html"<div>$text</div>"
+    assertEquals(div.toHtml, "<div>Hello world</div>")
+  }
+
   test("Node placeholder") {
     val span = html"<span>test</span>"
     val div = html"<div>$span</div>"
