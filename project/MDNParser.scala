@@ -18,7 +18,7 @@ object MDNParser {
 
   val ElementsUrl = "https://developer.mozilla.org/en-US/docs/Web/HTML/Element"
   val GlobalAttributesUrl = "https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes"
-  val AdditionalTagUrls = Set("a", "b", "br", "span")
+  val AdditionalTagUrls = Set("a", "b", "br", "span", "em")
     .map(ElementsUrl + "/" + _)
 
   def encodeFileName(url: String) =
