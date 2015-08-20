@@ -28,7 +28,12 @@ object InlineHtml {
         parts.map { v =>
           if (v.startsWith("${") && v.endsWith("}")) {
             val index = v.drop(2).init.toInt
-            c.Expr(q"tree.Text(${args(index)})")
+
+            args(index) match {
+              case n: c.Expr[Node]
+                if n.tree.tpe.toString == "pl.metastack.metaweb.tree.Node" => n
+              case _ => c.Expr(q"tree.Text(${args(index)})")
+            }
           } else {
             c.Expr(q"tree.Text(Var($v))")
           }

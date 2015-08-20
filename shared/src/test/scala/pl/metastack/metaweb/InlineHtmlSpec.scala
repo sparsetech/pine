@@ -99,4 +99,10 @@ object InlineHtmlSpec extends SimpleTestSuite {
         assertEquals(clicked, 1)
     }
   }
+
+  test("Node placeholders") {
+    val div = html"<span>test</span>"
+    val ul = html"<div>$div</div>"
+    assertEquals(ul.toHtml, "<div><span>test</span></div>")
+  }
 }
