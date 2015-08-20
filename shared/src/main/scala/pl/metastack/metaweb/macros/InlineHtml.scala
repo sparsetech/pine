@@ -1,6 +1,6 @@
 package pl.metastack.metaweb.macros
 
-import pl.metastack.metaweb.tree.Node
+import pl.metastack.metaweb.tree.{PlaceholderSeqNode, Node}
 
 import scala.language.experimental.macros
 import scala.language.reflectiveCalls
@@ -32,6 +32,9 @@ object InlineHtml {
             args(index) match {
               case n: c.Expr[Node]
                 if n.tree.tpe.toString == "pl.metastack.metaweb.tree.Node" => n
+              case n: c.Expr[Seq[Node]]
+                if n.tree.tpe.toString == "Seq[pl.metastack.metaweb.tree.Node]" =>
+                  c.Expr(q"tree.PlaceholderSeqNode($n)")
               case _ => c.Expr(q"tree.Text(${args(index)})")
             }
           } else {
