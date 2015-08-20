@@ -56,9 +56,13 @@ class Tag(val tagName: String) extends Node {
     changes := (())
   }
 
-  def append(value: Node) {
-    bound += changes << value.changes
-    contents += value
+  def append(node: Node) {
+    bound += changes << node.changes
+    contents += node
+  }
+
+  def appendAll(nodes: Seq[Node]) {
+    nodes.foreach(append)
   }
 
   def set(node: Node) {
@@ -98,5 +102,7 @@ class Tag(val tagName: String) extends Node {
   }
 
   def :=(node: Node) { set(node) }
+
   def +=(node: Node) { append(node) }
+  def ++=(nodes: Seq[Node]) { appendAll(nodes) }
 }
