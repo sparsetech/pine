@@ -100,6 +100,26 @@ object InlineHtmlSpec extends SimpleTestSuite {
     }
   }
 
+  test("String attribute placeholder") {
+    val id = "test"
+    val div = html"<div id=$id></div>"
+    assertEquals(div.toHtml, """<div id="test"></div>""")
+  }
+
+  test("Option[String] attribute placeholder") {
+    val id = Some("test")
+    val div = html"<div id=$id></div>"
+    assertEquals(div.toHtml, """<div id="test"></div>""")
+
+    val id2 = None
+    val div2 = html"<div id=$id2></div>"
+    assertEquals(div2.toHtml, """<div></div>""")
+
+    val id3 = Option.empty[String]
+    val div3 = html"<div id=$id3></div>"
+    assertEquals(div3.toHtml, """<div></div>""")
+  }
+
   test("String placeholder") {
     val text = "Hello world"
     val div = html"<div>$text</div>"

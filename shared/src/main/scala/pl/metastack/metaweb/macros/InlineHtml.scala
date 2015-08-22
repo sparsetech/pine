@@ -53,7 +53,20 @@ object InlineHtml {
 
             if (k.startsWith("on"))
               q"t.bindEvent(${k.drop(2)}, ${args(index)}.asInstanceOf[Any => Unit])"
-            else q"t.bind($k, ${args(index)})"
+            else {
+              args(index) match {
+                case a: c.Expr[String]
+                  if a.tree.tpe.toString == "String" => q"t.bind($k, Var($a))"
+
+                case a: c.Expr[Option[String]]
+                  if a.tree.tpe.toString == "Option[String]" ||
+                     a.tree.tpe.toString == "Some[String]" ||
+                     a.tree.tpe.toString == "None.type" =>
+                  q"$a.foreach(v => t.bind($k, Var(v)))"
+
+                case a => q"t.bind($k, $a)"
+              }
+            }
           } else {
             if (k.startsWith("on")) q"t.bindEvent(${k.drop(2)}, $v.asInstanceOf[Any => Unit])"
             else q"t.bind($k, Var($v))"
