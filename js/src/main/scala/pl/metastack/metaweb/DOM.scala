@@ -103,8 +103,13 @@ object DOM {
     elem
   }
 
+  def renderNull(): dom.Element =
+    dom.document.createComment("")
+      .asInstanceOf[dom.Element]
+
   def render(node: tree.Node): dom.Element =
     node match {
+      case tree.Null => renderNull()
       case n: tree.Tag => render(n)
       case n: tree.Text => render(n)
     }
