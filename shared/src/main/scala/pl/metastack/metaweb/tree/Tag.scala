@@ -1,5 +1,7 @@
 package pl.metastack.metaweb.tree
 
+import pl.metastack.metaweb.HtmlHelpers
+
 import scala.collection.mutable
 
 import pl.metastack.metarx._
@@ -90,15 +92,21 @@ class Tag(val tagName: String) extends Node {
     actions := action
   }
 
-  def toHtml: String = {
-    val attrs =
-      attributes.toMap.map { case (k, v) =>
-        s"""$k="$v""""
-      }.mkString(" ")
-    val attrsSpace = if (attrs.isEmpty) "" else s" $attrs"
-    val cont = contents.get.map(_.toHtml).mkString
+  def encodedAttributes: String =
+    attributes.toMap.map { case (key, value) =>
+      s"$key=" + HtmlHelpers.quoteAttribute(value.toString)
+    }.mkString(" ")
 
-    s"<$tagName$attrsSpace>$cont</$tagName>"
+  def toHtml: String = {
+    val attrs = if (attributes.isEmpty$) "" else s" $encodedAttributes"
+
+    if (HtmlHelpers.VoidElements.contains(tagName) && contents.get.isEmpty)
+      s"<$tagName$attrs/>"
+    else {
+      val docType = if (tagName == "html") "<!DOCTYPE html>" else ""
+      val children = contents.get.map(_.toHtml).mkString
+      s"$docType<$tagName$attrs>$children</$tagName>"
+    }
   }
 
   def :=(node: Node) { set(node) }

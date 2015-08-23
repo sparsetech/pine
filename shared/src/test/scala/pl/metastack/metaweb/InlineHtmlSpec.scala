@@ -141,4 +141,26 @@ object InlineHtmlSpec extends SimpleTestSuite {
     val div = html"<div>$spans</div>"
     assertEquals(div.toHtml, "<div><span>test</span><span>test2</span></div>")
   }
+
+  test("Keep DOCTYPE") {
+    val doctype = html"<!DOCTYPE html><html></html>"
+    assertEquals(doctype.toHtml, """<!DOCTYPE html><html></html>""")
+  }
+
+  test("Escape strings") {
+    val id = "a < b"
+    val div = html"<div>$id</div>"
+    assertEquals(div.toHtml, """<div>a &lt; b</div>""")
+  }
+
+  test("Escape attributes") {
+    val id = "a\"b"
+    val div = html"<div id=$id></div>"
+    assertEquals(div.toHtml, """<div id="a&quot;b"></div>""")
+  }
+
+  test("Void element") {
+    val div = html"<meta/>"
+    assertEquals(div.toHtml, "<meta/>")
+  }
 }

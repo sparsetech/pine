@@ -10,7 +10,7 @@ object ExternalHtmlSpec extends SimpleTestSuite {
     val tpl = html("shared/src/test/html/test.html")
 
     assertEquals(tpl.toHtml,
-    """<html>
+    """<!DOCTYPE html><html>
 <body>
 	<b>Hello World</b>
 	<div id="div1">Div 1 contents</div>
