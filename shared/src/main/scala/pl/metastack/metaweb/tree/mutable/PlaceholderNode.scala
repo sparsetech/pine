@@ -4,27 +4,31 @@ import pl.metastack.metarx.{Channel, DeltaBuffer, ReadChannel}
 
 import pl.metastack.metaweb.tree
 
-case class PlaceholderNode(channel: ReadChannel[Node]) extends Node {
+case class PlaceholderNode(channel: ReadChannel[tree.Node]) extends Node {
   val node = channel.cache
 
-  override val changes = channel.flatMap(_.changes)
+  override val changes = channel.flatMap[Unit] {
+    case mutable: Node => mutable.changes
+    case _ => Channel()
+  }
+
   override def copy(): Node = PlaceholderNode(channel)
   override def toHtml: String = node.get.map(_.toHtml).getOrElse("")
 }
 
-case class PlaceholderOptNode(channel: ReadChannel[Option[Node]]) extends Node {
+case class PlaceholderOptNode(channel: ReadChannel[Option[tree.Node]]) extends Node {
   val node = channel.cache(None)
 
   override val changes = channel.flatMap[Unit] {
-    case Some(n) => n.changes
-    case None    => Channel()
+    case Some(n: Node) if n.isInstanceOf[Node] => n.changes
+    case _ => Channel()
   }
 
   override def copy(): Node = PlaceholderOptNode(channel)
   override def toHtml: String = node.get.map(_.toHtml).getOrElse("")
 }
 
-case class PlaceholderListNode(delta: DeltaBuffer[Node]) extends Node {
+case class PlaceholderListNode(delta: DeltaBuffer[tree.Node]) extends Node {
   val buffer = delta.buffer
 
   // TODO Also produce value when children change
@@ -33,12 +37,15 @@ case class PlaceholderListNode(delta: DeltaBuffer[Node]) extends Node {
   override def toHtml: String = buffer.get.map(_.toHtml).mkString("")
 }
 
-case class PlaceholderSeqNode(nodes: Seq[Node])
+case class PlaceholderSeqNode(nodes: Seq[tree.Node])
   extends Node with tree.PlaceholderSeqNode
 {
   override val changes =
     nodes.foldLeft[ReadChannel[Unit]](Channel[Unit]()) { (acc, cur) =>
-      acc | cur.changes
+      cur match {
+        case n: tree.mutable.Node => acc | n.changes
+        case _ => acc
+      }
     }
   override def copy(): Node = PlaceholderSeqNode(nodes)
   override def toHtml: String = nodes.map(_.toHtml).mkString("")

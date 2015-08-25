@@ -7,14 +7,37 @@ import pl.metastack.metarx.{Buffer, Var}
 import minitest._
 
 object InlineHtmlSpec extends SimpleTestSuite {
-  test("toHtml") {
-    val url = Var("http://github.com/")
-    val title = Var("GitHub")
+  test("toHtml on immutable tree") {
+    val url = "http://github.com/"
+    val title = "GitHub"
     val parsedHtml = html"""<a href=$url>$title</a>"""
 
     // translates into:
     // val root = tag.a()
-    // root.bind("href", url)
+    // root.setAttribute("href", url)
+    // root += Text(title)
+
+    parsedHtml match {
+      case root: tag.a =>
+        assertEquals(root.toHtml, """<a href="http://github.com/">GitHub</a>""")
+
+        root.href("http://google.com/")
+        assertEquals(root.href.get, "http://google.com/")
+        assertEquals(root.toHtml, """<a href="http://google.com/">GitHub</a>""")
+
+        root.clearChildren()
+        assertEquals(root.toHtml, """<a href="http://google.com/"></a>""")
+    }
+  }
+
+  test("toHtml on mutable tree") {
+    val url = Var("http://github.com/")
+    val title = Var("GitHub")
+    val parsedHtml = htmlMutable"""<a href=$url>$title</a>"""
+
+    // translates into:
+    // val root = tag.a()
+    // root.bindAttribute("href", url)
     // root += Text(title)
 
     parsedHtml match {
@@ -33,10 +56,10 @@ object InlineHtmlSpec extends SimpleTestSuite {
   test("toHtmlLive") {
     val url = Var("http://github.com/")
     val title = Var("GitHub")
-    val parsedHtml = html"""<a href=$url>$title</a>"""
+    val parsedHtml = htmlMutable"""<a href=$url>$title</a>"""
 
     parsedHtml match {
-      case root: tag.a =>
+      case root: tag.mutable.a =>
         val changes = ArrayBuffer.empty[String]
 
         root.toHtmlLive.attach(changes += _)
@@ -53,14 +76,14 @@ object InlineHtmlSpec extends SimpleTestSuite {
   }
 
   test("Bind list") {
-    val tpl = html"""<div id="list"></div>"""
+    val tpl = htmlMutable"""<div id="list"></div>"""
 
     tpl match {
       case list: tag.mutable.div =>
         list.bindChildrenBuffer(Buffer("a", "b", "c").map { i =>
           val title = Var(s"Title $i")
           val subtitle = Var(s"Subtitle $i")
-          html"""<div><div>$title</div><div>$subtitle</div></div>"""
+          htmlMutable"""<div><div>$title</div><div>$subtitle</div></div>"""
         })
 
         assertEquals(list.contents.get.size, 3)
@@ -78,7 +101,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
 
   test("Inline event handler") {
     var clicked = 0
-    val tpl = html"""<button onclick="${(_: Any) => clicked += 1}">Test</button>"""
+    val tpl = htmlMutable"""<button onclick="${(_: Any) => clicked += 1}">Test</button>"""
 
     tpl match {
       case btn: tag.mutable.button =>
@@ -91,7 +114,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
   test("Function as event handler") {
     var clicked = 0
     def click(event: Any) { clicked += 1 }
-    val tpl = html"""<button onclick="${click(_: Any)}">Test</button>"""
+    val tpl = htmlMutable"""<button onclick="${click(_: Any)}">Test</button>"""
 
     tpl match {
       case btn: tag.mutable.button =>

@@ -35,7 +35,6 @@ object ExternalHtml {
         }
 
         c.Expr(q"""
-          import pl.metastack.metarx.Var
           import pl.metastack.metaweb.tag
           import pl.metastack.metaweb.tree
 
