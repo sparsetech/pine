@@ -84,7 +84,7 @@ object InlineHtml {
             import pl.metastack.metaweb.tag
             import pl.metastack.metaweb.tree
 
-            val t = new tag.$tagNameIdent
+            val t = new tag.mutable.$tagNameIdent
             ..$tagAttrs
             ..$tagChildren
             t

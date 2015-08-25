@@ -1,21 +1,28 @@
 package pl.metastack.metaweb.macros
 
-import pl.metastack.metaweb.tree.mutable.Node
-
-import scala.language.experimental.macros
-import scala.language.reflectiveCalls
-import scala.reflect.macros.blackbox.Context
 import scala.xml.XML
+import scala.language.reflectiveCalls
+import scala.language.experimental.macros
+import scala.reflect.macros.blackbox.Context
+
+import pl.metastack.metaweb.tree.Node
+import pl.metastack.metaweb.tree.{mutable, immutable}
 
 object ExternalHtml {
   trait Import {
-    def html(fileName: String): Node = macro HtmlImpl
+    def html(fileName: String): immutable.Node = macro HtmlImplImmutable
+
+    // TODO Rename
+    def htmlMutable(fileName: String): mutable.Node = macro HtmlImplMutable
   }
 
-  def iter(c: Context)(node: scala.xml.Node): c.Expr[Node] = {
+  def convert(c: Context)
+             (node: scala.xml.Node, mutable: Boolean): c.Expr[Node] = {
     import c.universe._
+    val namespace = TermName(if (mutable) "mutable" else "immutable")
+
     node.label match {
-      case "#PCDATA" => c.Expr(q"tree.mutable.Text(Var(${node.text}))")
+      case "#PCDATA" => c.Expr(q"tree.$namespace.Text(${node.text})")
       case tagName =>
         val tagNameIdent = TypeName(tagName.toLowerCase)
 
@@ -24,7 +31,7 @@ object ExternalHtml {
         }
 
         val tagChildren = node.child.map { n =>
-          q"t += ${iter(c)(n)}"
+          q"t += ${convert(c)(n, mutable)}"
         }
 
         c.Expr(q"""
@@ -32,7 +39,7 @@ object ExternalHtml {
           import pl.metastack.metaweb.tag
           import pl.metastack.metaweb.tree
 
-          val t = new tag.$tagNameIdent
+          val t = new tag.$namespace.$tagNameIdent
           ..$tagAttrs
           ..$tagChildren
           t
@@ -40,9 +47,20 @@ object ExternalHtml {
     }
   }
 
-  def HtmlImpl(c: Context)(fileName: c.Expr[String]): c.Expr[Node] = {
+  def HtmlImpl(c: Context)(fileName: c.Expr[String],
+                           mutable: Boolean): c.Expr[Node] = {
     val fileNameValue = Helpers.literalValueExpr(c)(fileName)
     val xml = XML.loadFile(fileNameValue)
-    iter(c)(xml)
+    convert(c)(xml, mutable)
   }
+
+  def HtmlImplImmutable(c: Context)
+                       (fileName: c.Expr[String]): c.Expr[immutable.Node] =
+    HtmlImpl(c)(fileName, mutable = false)
+      .asInstanceOf[c.Expr[immutable.Node]]
+
+  def HtmlImplMutable(c: Context)
+                     (fileName: c.Expr[String]): c.Expr[mutable.Node] =
+    HtmlImpl(c)(fileName, mutable = true)
+      .asInstanceOf[c.Expr[mutable.Node]]
 }

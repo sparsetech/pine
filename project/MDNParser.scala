@@ -56,18 +56,28 @@ object MDNParser {
     }
   }
 
+  def writeGlobalAttrsTrait(path: File,
+                            elements: Set[Element],
+                            attributes: Seq[Attribute]): File = {
+    val file = new File(path, "HTMLTag.scala")
+    printToFile(file) { p =>
+      writeHeaderTrait(p)
+      p.println(s"""trait HTMLTag { self: tree.Tag =>""")
+      writeAttributes(p, attributes)
+      p.println("}")
+    }
+    file
+  }
+
   def writeGlobalAttrs(path: File,
+                       namespace: String,
                        elements: Set[Element],
                        attributes: Seq[Attribute]): File = {
     val file = new File(path, "HTMLTag.scala")
     printToFile(file) { p =>
-      writeHeader(p)
-      p.println(s"""trait HTMLTag { self: tree.mutable.Tag =>""")
-      writeAttributes(p, attributes)
-      p.println("}")
-      p.println()
+      writeHeader(p, namespace)
       p.println("""object HTMLTag {""")
-      p.println("""  def fromTag(tag: String): tree.mutable.Tag =""")
+      p.println(s"""  def fromTag(tag: String): tree.$namespace.Tag =""")
       p.println("""    tag match {""")
       elements.toList.sortBy(_.tag).foreach { element =>
         val className = escapeScalaName(element.tag)
@@ -79,19 +89,27 @@ object MDNParser {
     file
   }
 
-  def writeHeader(p: PrintWriter) {
-    p.println("package pl.metastack.metaweb.tag")
+  def writeHeaderTrait(p: PrintWriter) {
+    p.println(s"package pl.metastack.metaweb.tag")
     p.println()
     p.println("import pl.metastack.metaweb.tree")
     p.println()
   }
 
-  def writeElement(path: File,
-                   globalAttributes: Seq[Attribute],
-                   element: Element): File = {
-    val file = new File(path, element.tag + ".scala")
+  def writeHeader(p: PrintWriter, namespace: String) {
+    p.println(s"package pl.metastack.metaweb.tag.$namespace")
+    p.println()
+    p.println("import pl.metastack.metaweb.tree")
+    p.println("import pl.metastack.metaweb.tag")
+    p.println()
+  }
+
+  def writeElementTrait(path: File,
+                        globalAttributes: Seq[Attribute],
+                        element: Element): File = {
+    val file = new File(path, s"${element.tag}.scala")
     printToFile(file) { p =>
-      writeHeader(p)
+      writeHeaderTrait(p)
       val scalaTagName = escapeScalaName(element.tag)
 
       // TODO Use absolute URLs
@@ -100,7 +118,7 @@ object MDNParser {
       p.println( s"""/**""")
       p.println( s""" * $description""")
       p.println( s""" */""")
-      p.println(s"""class $scalaTagName extends tree.mutable.Tag("${element.tag}") with HTMLTag {""")
+      p.println(s"""trait $scalaTagName extends tree.Tag with HTMLTag {""")
 
       val uniqueAttrs = element.attributes.filter { attr =>
         val exists = globalAttributes.exists(_.name == attr.name)
@@ -110,6 +128,21 @@ object MDNParser {
 
       writeAttributes(p, uniqueAttrs)
       p.println("}")
+      p.println()
+    }
+    file
+  }
+
+  def writeElement(path: File,
+                   namespace: String,
+                   globalAttributes: Seq[Attribute],
+                   element: Element): File = {
+    val file = new File(path, s"${element.tag}.scala")
+    printToFile(file) { p =>
+      writeHeader(p, namespace)
+      val scalaTagName = escapeScalaName(element.tag)
+
+      p.println(s"""class $scalaTagName extends tree.$namespace.Tag("${element.tag}") with tag.$scalaTagName""")
       p.println()
       p.println(s"""object $scalaTagName { def apply() = new $scalaTagName }""")
     }
@@ -133,7 +166,7 @@ object MDNParser {
       case "long" => "Long"
       case "double" => "Double"
       case "boolean" => "Boolean"
-      case _ if tpe.startsWith("HTML") => "tree.mutable.Node"  // TODO Generate interfaces
+      case _ if tpe.startsWith("HTML") => "tree.Node"  // TODO Generate interfaces
       case _ => tpe
     }
 
@@ -305,12 +338,28 @@ object MDNParser {
         println(s"Link $additionalTag missing in index")
     }
 
+    val parsedElements = (elements ++ AdditionalTagUrls).flatMap(processElement)
     val globalAttrs = globalAttributes()
 
-    val parsedElements = (elements ++ AdditionalTagUrls).flatMap(processElement)
-    val elemsFiles = parsedElements.map(writeElement(tagsPath, globalAttrs, _))
-    val attrsFile = writeGlobalAttrs(tagsPath, parsedElements, globalAttrs)
+    val traitFiles = parsedElements.map(
+      writeElementTrait(tagsPath, globalAttrs, _))
+    val traitAttrsFile = writeGlobalAttrsTrait(
+      tagsPath, parsedElements, globalAttrs)
 
-    elemsFiles.toSeq :+ attrsFile
+    def generateFiles(namespace: String): Seq[File] = {
+      val namespacePath = new File(tagsPath, namespace)
+      namespacePath.mkdir()
+
+      val elemsFiles = parsedElements.map(
+        writeElement(namespacePath, namespace, globalAttrs, _))
+
+      val attrsFile = writeGlobalAttrs(
+        namespacePath, namespace, parsedElements, globalAttrs)
+
+      elemsFiles.toSeq :+ attrsFile
+    }
+
+    (traitFiles.toSeq :+ traitAttrsFile) ++
+      generateFiles("mutable") ++ generateFiles("immutable")
   }
 }

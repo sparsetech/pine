@@ -41,5 +41,5 @@ trait Implicits {
     PlaceholderSeqNode(value.asInstanceOf[Seq[Node]])
 
   implicit def StringBufferToNode[T <: String](value: DeltaBuffer[T]):
-    PlaceholderListNode = PlaceholderListNode(value.map(v => Text(Var(v))))
+    PlaceholderListNode = PlaceholderListNode(value.map(v => Text(v)))
 }

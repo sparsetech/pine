@@ -56,7 +56,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
     val tpl = html"""<div id="list"></div>"""
 
     tpl match {
-      case list: tag.div =>
+      case list: tag.mutable.div =>
         list.bindChildrenBuffer(Buffer("a", "b", "c").map { i =>
           val title = Var(s"Title $i")
           val subtitle = Var(s"Subtitle $i")
@@ -70,7 +70,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
   }
 
   // TODO Generate in MDNParser for all events and tags
-  implicit class ButtonWithClick(button: tag.button) {
+  implicit class ButtonWithClick(button: tag.mutable.button) {
     def click() {
       button.events.get("click").foreach(_(()))
     }
@@ -81,7 +81,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
     val tpl = html"""<button onclick="${(_: Any) => clicked += 1}">Test</button>"""
 
     tpl match {
-      case btn: tag.button =>
+      case btn: tag.mutable.button =>
         btn.click()
         btn.disabled(true)
         assertEquals(clicked, 1)
@@ -94,7 +94,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
     val tpl = html"""<button onclick="${click(_: Any)}">Test</button>"""
 
     tpl match {
-      case btn: tag.button =>
+      case btn: tag.mutable.button =>
         btn.click()
         assertEquals(clicked, 1)
     }

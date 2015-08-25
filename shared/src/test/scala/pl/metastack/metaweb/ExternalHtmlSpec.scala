@@ -6,11 +6,9 @@ import minitest._
 import pl.metastack.metaweb.tree.mutable.Text
 
 object ExternalHtmlSpec extends SimpleTestSuite {
-  test("Load template") {
-    val tpl = html("shared/src/test/html/test.html")
-
-    assertEquals(tpl.toHtml,
-    """<!DOCTYPE html><html>
+  def checkTestHtml(value: String) {
+    assertEquals(value,
+      """<!DOCTYPE html><html>
 <body>
 	<b>Hello World</b>
 	<div id="div1">Div 1 contents</div>
@@ -20,8 +18,18 @@ object ExternalHtmlSpec extends SimpleTestSuite {
     )
   }
 
+  test("Load immutable template") {
+    val tpl = html("shared/src/test/html/test.html")
+    checkTestHtml(tpl.toHtml)
+  }
+
+  test("Load mutable template") {
+    val tpl = htmlMutable("shared/src/test/html/test.html")
+    checkTestHtml(tpl.toHtml)
+  }
+
   test("Replace nodes") {
-    val tpl = html("shared/src/test/html/test2.html")
+    val tpl = htmlMutable("shared/src/test/html/test2.html")
 
     val div2 = tpl.byId[tag.div]("div2")
     assertEquals(div2.toHtml, """<div id="div2">Div 2 contents</div>""")
@@ -31,19 +39,16 @@ object ExternalHtmlSpec extends SimpleTestSuite {
   }
 
   test("Bind list item from template") {
-    val tpl = html("shared/src/test/html/list.html")
+    val tpl = htmlMutable("shared/src/test/html/list.html")
 
-    val list = tpl.byId[tag.div]("list")
-    val listItem = tpl.byId[tag.div]("list-item")
+    val list = tpl.byId[tag.mutable.div]("list")
+    val listItem = tpl.byId[tag.mutable.div]("list-item")
 
     list.bindChildrenBuffer(
       Buffer("a", "b", "c").map { i =>
-        val title = Var(s"Title $i")
-        val subtitle = Var(s"Subtitle $i")
-
         listItem.instantiate(
-          "list-item-title" -> Text(title),
-          "list-item-subtitle" -> Text(subtitle))
+          "list-item-title" -> Text(s"Title $i"),
+          "list-item-subtitle" -> Text(s"Subtitle $i"))
       }
     )
 
