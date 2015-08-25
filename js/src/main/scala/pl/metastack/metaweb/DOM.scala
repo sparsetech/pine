@@ -32,8 +32,9 @@ object DOM {
   def render(node: tree.mutable.Tag): dom.Element = {
     val rendered = dom.document.createElement(node.tagName)
 
-    node.actions.attach { action =>
-      rendered.asInstanceOf[js.Dynamic].applyDynamic(action)()
+    node.actions.attach { case (action, arg) =>
+      rendered.asInstanceOf[js.Dynamic]
+        .applyDynamic(action)(arg.asInstanceOf[js.Dynamic])
     }
 
     node.attributes.changes.attach {
@@ -92,6 +93,24 @@ object DOM {
     rendered
   }
 
+  def render(node: tree.immutable.Tag): dom.Element = {
+    val rendered = dom.document.createElement(node.tagName)
+
+    node.attributes.foreach { case (k, v) =>
+      rendered.setAttribute(k, v.toString)
+    }
+
+    node.events.foreach { case (k, v) =>
+      rendered.addEventListener(k, v)
+    }
+
+    node.contents.foreach { node =>
+      rendered.appendChild(render(node))
+    }
+
+    rendered
+  }
+
   def render(node: tree.mutable.Text): dom.Element = {
     val elem = dom.document.createElement("span")
 
@@ -102,6 +121,10 @@ object DOM {
 
     elem
   }
+
+  def render(node: tree.immutable.Text): dom.Element =
+    dom.document.createTextNode(node.text)
+      .asInstanceOf[dom.Element]
 
   def renderNull(): dom.Element =
     dom.document.createComment("")
@@ -114,7 +137,7 @@ object DOM {
       case n: tree.mutable.Text => render(n)
 
       case tree.immutable.Null => renderNull()
-      case n: tree.immutable.Tag => sys.error("Not implemented yet")
-      case n: tree.immutable.Text => sys.error("Not implemented yet")
+      case n: tree.immutable.Tag => render(n)
+      case n: tree.immutable.Text => render(n)
     }
 }

@@ -76,6 +76,7 @@ class Tag(val tagName: String) extends Node with tree.Tag {
     events += event -> f
   }
 
+  // TODO Take arbitrary number of arguments
   def triggerAction[T](action: String, argument: T) {
     events(action)(argument)
   }

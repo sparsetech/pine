@@ -15,7 +15,7 @@ class Tag(val tagName: String) extends Node with tree.Tag {
   private[metaweb] val attributes = Dict[String, Any]()
   private[metaweb] val contents = Buffer[tree.Node]()
   private[metaweb] val events = Dict[String, Any => Unit]()
-  private[metaweb] val actions = Channel[String]()
+  private[metaweb] val actions = Channel[(String, Any)]()
 
   def copy(): Tag = {
     val tag = Tag(tagName)
@@ -105,9 +105,8 @@ class Tag(val tagName: String) extends Node with tree.Tag {
     events.insertOrUpdate(event, f)
   }
 
-  /** TODO Don't ignore `argument` */
   def triggerAction[T](action: String, argument: T) {
-    actions := action
+    actions := (action, argument)
   }
 
   def toHtml: String =

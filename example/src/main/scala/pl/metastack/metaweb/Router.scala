@@ -14,6 +14,7 @@ object Router extends js.JSApp {
   def dispatch(url: String) {
     val path = url.split('#').last
     if (path == "/numberguess") render(new numberguess.View())
+    else if (path == "/numberguess/file") render(new numberguess.ViewFile())
     else if (path == "/") render(new events.View())
     else render(View(html"<h1>Page Not Found</h1>"))
   }

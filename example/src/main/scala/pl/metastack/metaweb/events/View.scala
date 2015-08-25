@@ -15,7 +15,7 @@ class View extends metaweb.View {
   val v = Var("")
 
   val view =
-    html"""
+    htmlMutable"""
        <div>
          <h1>MetaWeb example</h1>
          <input type="text" value=$v />
