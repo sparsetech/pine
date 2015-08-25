@@ -62,12 +62,12 @@ object MDNParser {
     val file = new File(path, "HTMLTag.scala")
     printToFile(file) { p =>
       writeHeader(p)
-      p.println(s"""trait HTMLTag { self: tree.Tag =>""")
+      p.println(s"""trait HTMLTag { self: tree.reactive.Tag =>""")
       writeAttributes(p, attributes)
       p.println("}")
       p.println()
       p.println("""object HTMLTag {""")
-      p.println("""  def fromTag(tag: String): tree.Tag =""")
+      p.println("""  def fromTag(tag: String): tree.reactive.Tag =""")
       p.println("""    tag match {""")
       elements.toList.sortBy(_.tag).foreach { element =>
         val className = escapeScalaName(element.tag)
@@ -100,7 +100,7 @@ object MDNParser {
       p.println( s"""/**""")
       p.println( s""" * $description""")
       p.println( s""" */""")
-      p.println(s"""class $scalaTagName extends tree.Tag("${element.tag}") with HTMLTag {""")
+      p.println(s"""class $scalaTagName extends tree.reactive.Tag("${element.tag}") with HTMLTag {""")
 
       val uniqueAttrs = element.attributes.filter { attr =>
         val exists = globalAttributes.exists(_.name == attr.name)
@@ -133,7 +133,7 @@ object MDNParser {
       case "long" => "Long"
       case "double" => "Double"
       case "boolean" => "Boolean"
-      case _ if tpe.startsWith("HTML") => "tree.Node"  // TODO Generate interfaces
+      case _ if tpe.startsWith("HTML") => "tree.reactive.Node"  // TODO Generate interfaces
       case _ => tpe
     }
 
@@ -147,8 +147,8 @@ object MDNParser {
         p.println( s"""  /**""")
         p.println( s"""   * $description""")
         p.println( s"""   */""")
-        p.println( s"""  def $attrName: Option[$attrType] = attributes.get("${attribute.name}").asInstanceOf[Option[$attrType]]""")
-        p.println( s"""  def $attrName(value: $attrType) = attributes.insertOrUpdate("${attribute.name}", value)""")
+        p.println( s"""  def $attrName: Option[$attrType] = getAttribute("${attribute.name}").asInstanceOf[Option[$attrType]]""")
+        p.println( s"""  def $attrName(value: $attrType) = setAttribute("${attribute.name}", value)""")
       }
     }
   }

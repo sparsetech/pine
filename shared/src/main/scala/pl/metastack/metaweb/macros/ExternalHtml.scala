@@ -1,6 +1,6 @@
 package pl.metastack.metaweb.macros
 
-import pl.metastack.metaweb.tree.Node
+import pl.metastack.metaweb.tree.reactive.Node
 
 import scala.language.experimental.macros
 import scala.language.reflectiveCalls
@@ -15,12 +15,12 @@ object ExternalHtml {
   def iter(c: Context)(node: scala.xml.Node): c.Expr[Node] = {
     import c.universe._
     node.label match {
-      case "#PCDATA" => c.Expr(q"tree.Text(Var(${node.text}))")
+      case "#PCDATA" => c.Expr(q"tree.reactive.Text(Var(${node.text}))")
       case tagName =>
         val tagNameIdent = TypeName(tagName.toLowerCase)
 
         val tagAttrs = node.attributes.asAttrMap.map { case (k, v) =>
-          q"t.bind($k, Var($v))"
+          q"t.setAttribute($k, $v)"
         }
 
         val tagChildren = node.child.map { n =>
@@ -30,7 +30,7 @@ object ExternalHtml {
         c.Expr(q"""
           import pl.metastack.metarx.Var
           import pl.metastack.metaweb.tag
-          import pl.metastack.metaweb.tree
+          import pl.metastack.metaweb.tree.reactive
 
           val t = new tag.$tagNameIdent
           ..$tagAttrs

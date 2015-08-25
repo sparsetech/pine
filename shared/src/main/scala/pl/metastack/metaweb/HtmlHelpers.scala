@@ -23,4 +23,25 @@ object HtmlHelpers {
       case c if c >= ' ' => c.toString
       case c => ""
     }
+
+  def encodedAttributes(attributes: Map[String, Any]): String =
+    attributes.map { case (key, value) =>
+      s"$key=" + HtmlHelpers.quoteAttribute(value.toString)
+    }.mkString(" ")
+
+  def node(tagName: String,
+           attributes: Map[String, Any],
+           contents: Seq[String]): String = {
+    val attrs =
+      if (attributes.isEmpty) ""
+      else s" ${encodedAttributes(attributes)}"
+
+    if (HtmlHelpers.VoidElements.contains(tagName) && contents.isEmpty)
+      s"<$tagName$attrs/>"
+    else {
+      val docType = if (tagName == "html") "<!DOCTYPE html>" else ""
+      val children = contents.mkString
+      s"$docType<$tagName$attrs>$children</$tagName>"
+    }
+  }
 }

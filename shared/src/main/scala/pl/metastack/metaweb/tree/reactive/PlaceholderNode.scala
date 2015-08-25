@@ -1,4 +1,4 @@
-package pl.metastack.metaweb.tree
+package pl.metastack.metaweb.tree.reactive
 
 import pl.metastack.metarx.{Channel, DeltaBuffer, ReadChannel}
 

@@ -1,22 +1,24 @@
-package pl.metastack.metaweb.tree
+package pl.metastack.metaweb.tree.reactive
 
 import pl.metastack.metaweb.HtmlHelpers
 
 import scala.collection.mutable
 
+import pl.metastack.metarx._
+
 object Tag {
   def apply(tagName: String): Tag = new Tag(tagName)
 }
 
-/** TODO Should implement an interface */
 class Tag(val tagName: String) extends Node {
-  private[metaweb] val attributes = mutable.Map.empty[String, Any]
-  private[metaweb] val contents = mutable.ArrayBuffer[Node]()
-  private[metaweb] val events = mutable.Map.empty[String, Any => Unit]
+  private[metaweb] val attributes = Dict[String, Any]()
+  private[metaweb] val contents = Buffer[Node]()
+  private[metaweb] val events = Dict[String, Any => Unit]()
+  private[metaweb] val actions = Channel[String]()
 
   def copy(): Tag = {
     val tag = Tag(tagName)
-    tag.attributes ++= attributes
+    tag.attributes.set(attributes.toMap)
     contents.foreach { node =>
       tag.append(node.copy())
     }
@@ -36,18 +38,28 @@ class Tag(val tagName: String) extends Node {
     tag
   }
 
+  val changes = Var[Unit](())
+  changes << attributes.changes.map(_ => ())
+
+  val bound = mutable.ArrayBuffer.empty[ReadChannel[Unit]]
+
   def byIdOpt[T <: Tag](id: String): Option[T] = {
-    contents.collectFirst {
+    contents.get.collectFirst {
       case t: Tag if t.attributes.get("id").contains(id) => t.asInstanceOf[T]
       case t: Tag if t.byIdOpt[T](id).isDefined => t.byIdOpt[T](id).get  // TODO optimise
     }
   }
 
   def clearChildren() {
+    bound.foreach(_.dispose())
+    bound.clear()
+
     contents.clear()
+    changes := (())
   }
 
   def append(node: Node) {
+    bound += changes << node.changes
     contents += node
   }
 
@@ -60,28 +72,34 @@ class Tag(val tagName: String) extends Node {
     append(node)
   }
 
-  def bindChildren(list: Seq[Node]) {
+  def bindChildren(list: DeltaBuffer[Node]): ReadChannel[Unit] = {
     clearChildren()
-    contents ++= list
+    contents.changes << list.changes
+  }
+
+  def bindAttribute[T](attribute: String, from: ReadChannel[T]) {
+    from.attach(value =>
+      attributes.insertOrUpdate(attribute, value)
+    )
   }
 
   def setAttribute[T](attribute: String, value: T) {
-    attributes += attribute -> value
+    attributes.insertOrUpdate(attribute, value)
   }
 
   def getAttribute(attribute: String): Option[Any] =
     attributes.get(attribute)
 
   def setEvent[T](event: String, f: Any => Unit) {
-    events += event -> f
+    events.insertOrUpdate(event, f)
   }
 
-  def triggerAction[T](action: String, argument: T) {
-    events(action)(argument)
+  def triggerAction(action: String) {
+    actions := action
   }
 
   def toHtml: String =
-    HtmlHelpers.node(tagName, attributes.toMap, contents.map(_.toHtml))
+    HtmlHelpers.node(tagName, attributes.toMap, contents.get.map(_.toHtml))
 
   def :=(node: Node) { set(node) }
 

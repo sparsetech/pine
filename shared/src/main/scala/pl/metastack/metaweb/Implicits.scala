@@ -1,7 +1,7 @@
 package pl.metastack.metaweb
 
 import pl.metastack.metarx.{DeltaBuffer, ReadChannel, Var}
-import pl.metastack.metaweb.tree._
+import pl.metastack.metaweb.tree.reactive._
 
 trait Implicits {
   private def varFor[T](ipt: ReadChannel[T], default: T): Var[T] = {

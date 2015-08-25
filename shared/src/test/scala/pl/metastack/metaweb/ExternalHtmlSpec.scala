@@ -3,7 +3,7 @@ package pl.metastack.metaweb
 import pl.metastack.metarx.{Buffer, Var}
 
 import minitest._
-import pl.metastack.metaweb.tree.Text
+import pl.metastack.metaweb.tree.reactive.Text
 
 object ExternalHtmlSpec extends SimpleTestSuite {
   test("Load template") {
