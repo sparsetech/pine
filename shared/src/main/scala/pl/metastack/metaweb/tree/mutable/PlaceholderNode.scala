@@ -1,6 +1,8 @@
-package pl.metastack.metaweb.tree.reactive
+package pl.metastack.metaweb.tree.mutable
 
 import pl.metastack.metarx.{Channel, DeltaBuffer, ReadChannel}
+
+import pl.metastack.metaweb.tree
 
 case class PlaceholderNode(channel: ReadChannel[Node]) extends Node {
   val node = channel.cache
@@ -31,7 +33,9 @@ case class PlaceholderListNode(delta: DeltaBuffer[Node]) extends Node {
   override def toHtml: String = buffer.get.map(_.toHtml).mkString("")
 }
 
-case class PlaceholderSeqNode(nodes: Seq[Node]) extends Node {
+case class PlaceholderSeqNode(nodes: Seq[Node])
+  extends Node with tree.PlaceholderSeqNode
+{
   override val changes =
     nodes.foldLeft[ReadChannel[Unit]](Channel[Unit]()) { (acc, cur) =>
       acc | cur.changes

@@ -29,7 +29,7 @@ object DOM {
     }
   }
 
-  def render(node: tree.reactive.Tag): dom.Element = {
+  def render(node: tree.mutable.Tag): dom.Element = {
     val rendered = dom.document.createElement(node.tagName)
 
     node.actions.attach { action =>
@@ -56,7 +56,7 @@ object DOM {
         }
     }
 
-    val mapping = mutable.Map.empty[tree.reactive.Node, dom.Node]
+    val mapping = mutable.Map.empty[tree.Node, dom.Node]
 
     node.contents.changes.attach {
       case Buffer.Delta.Insert(Position.Head(), element) =>
@@ -92,10 +92,10 @@ object DOM {
     rendered
   }
 
-  def render(node: tree.reactive.Text): dom.Element = {
+  def render(node: tree.mutable.Text): dom.Element = {
     val elem = dom.document.createElement("span")
 
-    node.text.attach { s =>
+    node.textVar.attach { s =>
       elem.clear()
       elem.appendChild(dom.document.createTextNode(s))
     }
@@ -107,10 +107,14 @@ object DOM {
     dom.document.createComment("")
       .asInstanceOf[dom.Element]
 
-  def render(node: tree.reactive.Node): dom.Element =
+  def render(node: tree.Node): dom.Element =
     node match {
-      case tree.reactive.Null => renderNull()
-      case n: tree.reactive.Tag => render(n)
-      case n: tree.reactive.Text => render(n)
+      case tree.mutable.Null => renderNull()
+      case n: tree.mutable.Tag => render(n)
+      case n: tree.mutable.Text => render(n)
+
+      case tree.immutable.Null => renderNull()
+      case n: tree.immutable.Tag => sys.error("Not implemented yet")
+      case n: tree.immutable.Text => sys.error("Not implemented yet")
     }
 }

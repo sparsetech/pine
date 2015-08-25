@@ -3,7 +3,7 @@ package pl.metastack.metaweb
 import pl.metastack.metarx.{Buffer, Var}
 
 import minitest._
-import pl.metastack.metaweb.tree.reactive.Text
+import pl.metastack.metaweb.tree.mutable.Text
 
 object ExternalHtmlSpec extends SimpleTestSuite {
   test("Load template") {
@@ -36,7 +36,7 @@ object ExternalHtmlSpec extends SimpleTestSuite {
     val list = tpl.byId[tag.div]("list")
     val listItem = tpl.byId[tag.div]("list-item")
 
-    list.bindChildren(
+    list.bindChildrenBuffer(
       Buffer("a", "b", "c").map { i =>
         val title = Var(s"Title $i")
         val subtitle = Var(s"Subtitle $i")

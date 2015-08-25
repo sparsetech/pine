@@ -57,7 +57,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
 
     tpl match {
       case list: tag.div =>
-        list.bindChildren(Buffer("a", "b", "c").map { i =>
+        list.bindChildrenBuffer(Buffer("a", "b", "c").map { i =>
           val title = Var(s"Title $i")
           val subtitle = Var(s"Subtitle $i")
           html"""<div><div>$title</div><div>$subtitle</div></div>"""

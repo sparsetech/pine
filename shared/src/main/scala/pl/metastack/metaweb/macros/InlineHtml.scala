@@ -1,6 +1,6 @@
 package pl.metastack.metaweb.macros
 
-import pl.metastack.metaweb.tree.reactive.Node
+import pl.metastack.metaweb.tree.mutable.Node
 
 import scala.language.experimental.macros
 import scala.language.reflectiveCalls
@@ -29,16 +29,16 @@ object InlineHtml {
 
             args(index) match {
               case n: c.Expr[Node]
-                if n.tree.tpe.toString == "pl.metastack.metaweb.tree.reactive.Node" => n
+                if n.tree.tpe.toString == "pl.metastack.metaweb.tree.mutable.Node" => n
               case n: c.Expr[Seq[Node]]
-                if n.tree.tpe.toString == "Seq[pl.metastack.metaweb.tree.reactive.Node]" =>
-                  c.Expr(q"tree.reactive.PlaceholderSeqNode($n)")
+                if n.tree.tpe.toString == "Seq[pl.metastack.metaweb.tree.mutable.Node]" =>
+                  c.Expr(q"tree.mutable.PlaceholderSeqNode($n)")
               case n: c.Expr[String]
-                if n.tree.tpe.toString == "String" => c.Expr(q"tree.reactive.Text(Var($n))")
-              case _ => c.Expr(q"tree.reactive.Text(${args(index)})")
+                if n.tree.tpe.toString == "String" => c.Expr(q"tree.mutable.Text(Var($n))")
+              case _ => c.Expr(q"tree.mutable.Text(${args(index)})")
             }
           } else {
-            c.Expr(q"tree.reactive.Text(Var($v))")
+            c.Expr(q"tree.mutable.Text(Var($v))")
           }
         }
 
@@ -82,7 +82,7 @@ object InlineHtml {
           c.Expr(q"""
             import pl.metastack.metarx.Var
             import pl.metastack.metaweb.tag
-            import pl.metastack.metaweb.tree.reactive
+            import pl.metastack.metaweb.tree
 
             val t = new tag.$tagNameIdent
             ..$tagAttrs

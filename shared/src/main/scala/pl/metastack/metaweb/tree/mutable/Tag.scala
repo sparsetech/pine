@@ -1,18 +1,19 @@
-package pl.metastack.metaweb.tree.reactive
-
-import pl.metastack.metaweb.HtmlHelpers
+package pl.metastack.metaweb.tree.mutable
 
 import scala.collection.mutable
 
 import pl.metastack.metarx._
 
+import pl.metastack.metaweb.tree
+import pl.metastack.metaweb.HtmlHelpers
+
 object Tag {
   def apply(tagName: String): Tag = new Tag(tagName)
 }
 
-class Tag(val tagName: String) extends Node {
+class Tag(val tagName: String) extends Node with tree.Tag {
   private[metaweb] val attributes = Dict[String, Any]()
-  private[metaweb] val contents = Buffer[Node]()
+  private[metaweb] val contents = Buffer[tree.Node]()
   private[metaweb] val events = Dict[String, Any => Unit]()
   private[metaweb] val actions = Channel[String]()
 
@@ -25,7 +26,7 @@ class Tag(val tagName: String) extends Node {
     tag
   }
 
-  def instantiate(nodes: (String, Node)*): Tag = {
+  def instantiate(nodes: (String, tree.Node)*): Tag = {
     val tag = copy()
     tag.attributes -= "id"
 
@@ -43,10 +44,11 @@ class Tag(val tagName: String) extends Node {
 
   val bound = mutable.ArrayBuffer.empty[ReadChannel[Unit]]
 
-  def byIdOpt[T <: Tag](id: String): Option[T] = {
+  // TODO Same as immutable.Tag, merge?
+  def byIdOpt[T <: tree.Tag](id: String): Option[T] = {
     contents.get.collectFirst {
-      case t: Tag if t.attributes.get("id").contains(id) => t.asInstanceOf[T]
-      case t: Tag if t.byIdOpt[T](id).isDefined => t.byIdOpt[T](id).get  // TODO optimise
+      case t: tree.Tag if t.getAttribute("id").contains(id) => t.asInstanceOf[T]
+      case t: tree.Tag if t.byIdOpt[T](id).isDefined => t.byIdOpt[T](id).get  // TODO optimise
     }
   }
 
@@ -58,21 +60,30 @@ class Tag(val tagName: String) extends Node {
     changes := (())
   }
 
-  def append(node: Node) {
-    bound += changes << node.changes
+  def append(node: tree.Node) {
+    node match {
+      case n: Node => bound += changes << n.changes
+      case _ =>
+    }
+
     contents += node
   }
 
-  def appendAll(nodes: Seq[Node]) {
+  def appendAll(nodes: Seq[tree.Node]) {
     nodes.foreach(append)
   }
 
-  def set(node: Node) {
+  def set(node: tree.Node) {
     clearChildren()
     append(node)
   }
 
-  def bindChildren(list: DeltaBuffer[Node]): ReadChannel[Unit] = {
+  def bindChildren(list: Seq[tree.Node]) {
+    clearChildren()
+    appendAll(list)
+  }
+
+  def bindChildrenBuffer(list: DeltaBuffer[tree.Node]): ReadChannel[Unit] = {
     clearChildren()
     contents.changes << list.changes
   }
@@ -94,15 +105,11 @@ class Tag(val tagName: String) extends Node {
     events.insertOrUpdate(event, f)
   }
 
-  def triggerAction(action: String) {
+  /** TODO Don't ignore `argument` */
+  def triggerAction[T](action: String, argument: T) {
     actions := action
   }
 
   def toHtml: String =
     HtmlHelpers.node(tagName, attributes.toMap, contents.get.map(_.toHtml))
-
-  def :=(node: Node) { set(node) }
-
-  def +=(node: Node) { append(node) }
-  def ++=(nodes: Seq[Node]) { appendAll(nodes) }
 }
