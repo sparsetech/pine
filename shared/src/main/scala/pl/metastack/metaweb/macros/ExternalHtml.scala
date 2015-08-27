@@ -1,65 +1,51 @@
 package pl.metastack.metaweb.macros
 
-import scala.xml.XML
 import scala.language.reflectiveCalls
 import scala.language.experimental.macros
+
 import scala.reflect.macros.blackbox.Context
 
-import pl.metastack.metaweb.tree.Node
-import pl.metastack.metaweb.tree.{mutable, immutable}
+import scala.xml.XML
+
+import pl.metastack.metaweb.tree
+import pl.metastack.metaweb.state
 
 object ExternalHtml {
   trait Import {
-    def html(fileName: String): immutable.Node = macro HtmlImplImmutable
-
-    // TODO Rename
-    def htmlMutable(fileName: String): mutable.Node = macro HtmlImplMutable
+    def html(fileName: String): state.zeroway.Tag = macro HtmlImpl0
+    def html1(fileName: String): state.oneway.Tag = macro HtmlImpl1
+    def html2(fileName: String): state.twoway.Tag = macro HtmlImpl2
+    def htmlT(fileName: String): tree.Tag = macro HtmlImplT
   }
 
-  def convert(c: Context)
-             (node: scala.xml.Node, mutable: Boolean): c.Expr[Node] = {
+  def convert(c: Context)(node: scala.xml.Node): c.Expr[tree.Node] = {
     import c.universe._
-    val namespace = TermName(if (mutable) "mutable" else "immutable")
 
     node.label match {
-      case "#PCDATA" => c.Expr(q"tree.$namespace.Text(${node.text})")
+      case "#PCDATA" => c.Expr(q"pl.metastack.metaweb.tree.Text(${node.text})")
       case tagName =>
-        val tagNameIdent = TypeName(tagName.toLowerCase)
-
-        val tagAttrs = node.attributes.asAttrMap.map { case (k, v) =>
-          q"t.setAttribute($k, $v)"
-        }
-
-        val tagChildren = node.child.map { n =>
-          q"t += ${convert(c)(n, mutable)}"
-        }
-
-        c.Expr(q"""
-          import pl.metastack.metaweb.tag
-          import pl.metastack.metaweb.tree
-
-          val t = new tag.$namespace.$tagNameIdent
-          ..$tagAttrs
-          ..$tagChildren
-          t
-        """)
+        val tagAttrs = node.attributes.asAttrMap
+        val tagChildren = node.child.map(convert(c)(_))
+        c.Expr(q"new pl.metastack.metaweb.tree.Tag($tagName, $tagAttrs, Map.empty, Seq(..$tagChildren))")
     }
   }
 
-  def HtmlImpl(c: Context)(fileName: c.Expr[String],
-                           mutable: Boolean): c.Expr[Node] = {
+  def HtmlImplT(c: Context)(fileName: c.Expr[String]): c.Expr[tree.Tag] = {
     val fileNameValue = Helpers.literalValueExpr(c)(fileName)
     val xml = XML.loadFile(fileNameValue)
-    convert(c)(xml, mutable)
+    convert(c)(xml)
+      .asInstanceOf[c.Expr[tree.Tag]]
   }
 
-  def HtmlImplImmutable(c: Context)
-                       (fileName: c.Expr[String]): c.Expr[immutable.Node] =
-    HtmlImpl(c)(fileName, mutable = false)
-      .asInstanceOf[c.Expr[immutable.Node]]
+  def HtmlImpl0(c: Context)(fileName: c.Expr[String]): c.Expr[state.zeroway.Tag] =
+    Helpers.treeToState(c)(HtmlImplT(c)(fileName), way = 0)
+      .asInstanceOf[c.Expr[state.zeroway.Tag]]
 
-  def HtmlImplMutable(c: Context)
-                     (fileName: c.Expr[String]): c.Expr[mutable.Node] =
-    HtmlImpl(c)(fileName, mutable = true)
-      .asInstanceOf[c.Expr[mutable.Node]]
+  def HtmlImpl1(c: Context)(fileName: c.Expr[String]): c.Expr[state.oneway.Tag] =
+    Helpers.treeToState(c)(HtmlImplT(c)(fileName), way = 1)
+      .asInstanceOf[c.Expr[state.oneway.Tag]]
+
+  def HtmlImpl2(c: Context)(fileName: c.Expr[String]): c.Expr[state.twoway.Tag] =
+    Helpers.treeToState(c)(HtmlImplT(c)(fileName), way = 2)
+      .asInstanceOf[c.Expr[state.twoway.Tag]]
 }

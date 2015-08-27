@@ -1,7 +1,8 @@
 package pl.metastack.metaweb.tree
 
+import pl.metastack.metaweb
+import pl.metastack.metaweb.State
+
 trait Node {
-  def toHtml: String
-  def copy(): Node
-  def byId[T <: Tag](id: String): T
+  def state[T <: metaweb.state.Node](creator: State[T]): T
 }

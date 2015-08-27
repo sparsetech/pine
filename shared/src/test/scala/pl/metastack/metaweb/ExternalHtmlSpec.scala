@@ -1,9 +1,8 @@
 package pl.metastack.metaweb
 
-import pl.metastack.metarx.{Buffer, Var}
-
 import minitest._
-import pl.metastack.metaweb.tree.mutable.Text
+
+import pl.metastack.metaweb.tree.Text
 
 object ExternalHtmlSpec extends SimpleTestSuite {
   def checkTestHtml(value: String) {
@@ -21,39 +20,54 @@ object ExternalHtmlSpec extends SimpleTestSuite {
   test("Load immutable template") {
     val tpl = html("shared/src/test/html/test.html")
     checkTestHtml(tpl.toHtml)
+
+    val tplOneWay = html1("shared/src/test/html/test.html")
+    checkTestHtml(tplOneWay.toHtml)
+
+    val tplTwoWay = html2("shared/src/test/html/test.html")
+    checkTestHtml(tplTwoWay.toHtml)
   }
 
   test("Load mutable template") {
-    val tpl = htmlMutable("shared/src/test/html/test.html")
+    val tpl = html("shared/src/test/html/test.html")
     checkTestHtml(tpl.toHtml)
+
+    val tplOneWay = html1("shared/src/test/html/test.html")
+    checkTestHtml(tplOneWay.toHtml)
+
+    val tplTwoWay = html2("shared/src/test/html/test.html")
+    checkTestHtml(tplTwoWay.toHtml)
   }
 
   test("Replace nodes") {
-    val tpl = htmlMutable("shared/src/test/html/test2.html")
+    val tpl = html("shared/src/test/html/test2.html")
 
-    val div2 = tpl.byId[tag.div]("div2")
+    val div2 = tpl.byId[state.Tag]("div2")
     assertEquals(div2.toHtml, """<div id="div2">Div 2 contents</div>""")
 
-    div2 := Text(Var("42"))
+    div2 := Text("42").state(state.OneWay)
     assertEquals(div2.toHtml, """<div id="div2">42</div>""")
   }
 
   test("Bind list item from template") {
-    val tpl = htmlMutable("shared/src/test/html/list.html")
+    // Obtain tree without creating a state object
+    val tpl = htmlT("shared/src/test/html/list.html")
+    val listItem = tpl.byId("list-item")
 
-    val list = tpl.byId[tag.mutable.div]("list")
-    val listItem = tpl.byId[tag.mutable.div]("list-item")
+    val items = Seq("a", "b", "c").map { i =>
+      listItem.instantiate(
+        "list-item-title" -> Text(s"Title $i"),
+        "list-item-subtitle" -> Text(s"Subtitle $i")
+      ).state(state.OneWay)
+    }
 
-    list.bindChildrenBuffer(
-      Buffer("a", "b", "c").map { i =>
-        listItem.instantiate(
-          "list-item-title" -> Text(s"Title $i"),
-          "list-item-subtitle" -> Text(s"Subtitle $i"))
-      }
-    )
+    // Instantiate template and replace list
+    val tplState = tpl.state(state.OneWay)
+    tplState.byId[state.Tag]("list").setChildren(items)
 
-    assertEquals(list.contents.get.size, 3)
-    assertEquals(list.contents.get.last.toHtml,
+    val list = tplState.byId[state.Tag]("list")
+    assertEquals(list.children.size, 3)
+    assertEquals(list.children.last.toHtml,
       """<div><div>Title c</div><div>Subtitle c</div></div>""")
   }
 }

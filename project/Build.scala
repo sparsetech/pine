@@ -25,7 +25,7 @@ object Build extends sbt.Build {
 
   val convertMDN = (sourceManaged in Compile).map(MDNParser.createFiles)
 
-  lazy val metaRx = crossProject.in(file("."))
+  lazy val metaWeb = crossProject.in(file("."))
     .settings(SharedSettings: _*)
     .settings(
       testFrameworks += new TestFramework("minitest.runner.Framework"),
@@ -33,9 +33,10 @@ object Build extends sbt.Build {
       libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.11.7",
       libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.11" % "1.0.5",
 
-      addCompilerPlugin("org.scalamacros" % "paradise" % Dependencies.Paradise cross CrossVersion.full),
+      addCompilerPlugin("org.scalamacros" % "paradise" % Dependencies.Paradise cross CrossVersion.full)
 
-      sourceGenerators in Compile <+= convertMDN
+      // TODO Temporarily disabled
+      // , sourceGenerators in Compile <+= convertMDN
     )
     .jvmSettings(
       libraryDependencies ++= Seq(
@@ -48,9 +49,12 @@ object Build extends sbt.Build {
         "org.scala-js" %%% "scalajs-dom" % "0.8.1",
         "pl.metastack" %%% "metarx" % Dependencies.MetaRx,
         "org.monifu" %%% "minitest" % Dependencies.MiniTest % "test"
-      )
+      ),
+
+      requiresDOM := true,  // For test cases
+      scalaJSStage in Global := FastOptStage  // Use Node.js
     )
 
-  lazy val js = metaRx.js
-  lazy val jvm = metaRx.jvm
+  lazy val js = metaWeb.js
+  lazy val jvm = metaWeb.jvm
 }

@@ -8,13 +8,12 @@ import scala.scalajs.js.annotation.JSExport
 object Router extends js.JSApp {
   def render(page: View) {
     dom.document.body.clear()
-    dom.document.body.appendChild(page.view.toDom)
+    page.view.toDom.foreach(dom.document.body.appendChild)
   }
 
   def dispatch(url: String) {
     val path = url.split('#').last
     if (path == "/numberguess") render(new numberguess.View())
-    else if (path == "/numberguess/file") render(new numberguess.ViewFile())
     else if (path == "/") render(new events.View())
     else render(View(html"<h1>Page Not Found</h1>"))
   }

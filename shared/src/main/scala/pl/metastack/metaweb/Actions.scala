@@ -2,13 +2,17 @@ package pl.metastack.metaweb
 
 trait Actions {
   /* TODO Import actions from MDN */
-  implicit class InputActions(input: tag.input) {
+  implicit class TagActions(tag: state.Tag) {
     def focus() {
-      input.triggerAction("focus", null)
+      tag.triggerAction("focus")
     }
 
     def select() {
-      input.triggerAction("select", null)
+      tag.triggerAction("select")
+    }
+
+    def click() {
+      tag.triggerAction("click")
     }
   }
 }

@@ -2,7 +2,7 @@ package pl.metastack.metaweb.events
 
 import org.scalajs.dom
 
-import pl.metastack.metarx.Var
+import pl.metastack.metarx.{Channel, Var}
 
 import pl.metastack.metaweb
 import pl.metastack.metaweb._
@@ -15,12 +15,15 @@ class View extends metaweb.View {
   val v = Var("")
 
   val view =
-    htmlMutable"""
+    html2"""
        <div>
          <h1>MetaWeb example</h1>
-         <input type="text" value=$v />
+         <input id="text" type="text" />
          <button onclick="${(e: dom.MouseEvent) => replace(e, v)}">Replace</button><br />
          <a href="#/numberguess">Number guess</a>
        </div>
       """
+
+  view.byId[state.twoway.Tag]("text")
+    .bindAttribute("value", v.asInstanceOf[Channel[Any]])
 }

@@ -2,15 +2,13 @@ package pl.metastack.metaweb
 
 trait Events {
   /* TODO Import events and interfaces from MDN */
-  implicit class FormEvents(form: tag.form) {
+  implicit class Events(tag: state.Tag) {
     def onsubmit(f: Any => Unit) {
-      form.setEvent("submit", f)
+      tag.setEvent("submit", f)
     }
-  }
 
-  implicit class ButtonEvents(button: tag.button) {
     def onclick(f: Any => Unit) {
-      button.setEvent("click", f)
+      tag.setEvent("click", f)
     }
   }
 }

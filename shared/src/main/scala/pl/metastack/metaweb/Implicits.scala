@@ -1,48 +1,70 @@
 package pl.metastack.metaweb
 
-import pl.metastack.metarx.{DeltaBuffer, ReadChannel, Var}
+import pl.metastack.metarx.{DeltaBuffer, ReadChannel}
+import pl.metastack.metaweb.render.HTMLImplicit
 
-import pl.metastack.metaweb.tree.Node
-import pl.metastack.metaweb.tree.{mutable, immutable}
-
-trait Implicits {
-  private def varFor[T](ipt: ReadChannel[T], default: T): Var[T] = {
-    val v = Var[T](default)
-    v << ipt
-    v
+trait Implicits extends HTMLImplicit {
+  private def zeroWayText(value: String) = {
+    val t = new state.zeroway.Text()
+    t.set(value)
+    t
   }
 
-  implicit def NumericToText[T](value: T)(implicit num: Numeric[T]): immutable.Text =
-    immutable.Text(value.toString)
+  private def oneWayText(value: ReadChannel[String]) = {
+    val t = new state.oneway.Text()
+    t.listen(value)
+    t
+  }
 
-  implicit def BooleanToText(value: Boolean): immutable.Text =
-    immutable.Text(value.toString)
+  implicit def NumericToText[T](value: T)(implicit num: Numeric[T]): state.zeroway.Text =
+    zeroWayText(value.toString)
 
-  implicit def StringToText(value: String): immutable.Text =
-    immutable.Text(value)
+  implicit def BooleanToText(value: Boolean): state.zeroway.Text =
+    zeroWayText(value.toString)
 
-  implicit def StringChannelToText[T <: String](value: ReadChannel[T]): mutable.Text =
-    mutable.Text(varFor(value.asInstanceOf[ReadChannel[String]], ""))
+  implicit def StringToText(value: String): state.zeroway.Text =
+    zeroWayText(value)
+
+  implicit def StringChannelToText[T <: String](value: ReadChannel[T]): state.oneway.Text =
+    oneWayText(value.asInstanceOf[ReadChannel[String]])
 
   implicit def NumericChannelToText[T](value: ReadChannel[T])
-                                       (implicit num: Numeric[T]): mutable.Text =
-    mutable.Text(varFor(value.map(_.toString), ""))
+                                       (implicit num: Numeric[T]): state.oneway.Text =
+    oneWayText(value.map(_.toString))
 
-  implicit def BooleanChannelToText[T <: Boolean](value: ReadChannel[T]): mutable.Text =
-    mutable.Text(varFor(value.map(_.toString), ""))
+  implicit def BooleanChannelToText[T <: Boolean](value: ReadChannel[T]): state.oneway.Text =
+    oneWayText(value.map(_.toString))
 
-  implicit def NodeChannelToNode[T <: Node](value: ReadChannel[T]): mutable.PlaceholderNode =
-    mutable.PlaceholderNode(value.asInstanceOf[ReadChannel[Node]])
+  implicit def NodeChannelToNode[T <: state.Node](value: ReadChannel[T]): state.oneway.Placeholder = {
+    val ph = new state.oneway.Placeholder()
+    ph.listen(value.map(v => Some(v)))
+    ph
+  }
 
-  implicit def OptNodeChannelToNode[T <: Option[Node]](value: ReadChannel[T]):
-    mutable.PlaceholderOptNode = mutable.PlaceholderOptNode(value.asInstanceOf[ReadChannel[Option[Node]]])
+  implicit def OptNodeChannelToNode[T <: Option[state.Node]](value: ReadChannel[T]):
+    state.oneway.Placeholder =
+  {
+    val ph = new state.oneway.Placeholder()
+    ph.listen(value.map(v => v.asInstanceOf[Option[state.Node]]))
+    ph
+  }
 
-  implicit def NodeBufferToNode[T <: Node](value: DeltaBuffer[T]):
-    mutable.PlaceholderListNode = mutable.PlaceholderListNode(value.asInstanceOf[DeltaBuffer[Node]])
+  implicit def NodeBufferToNode[T <: state.Node](value: DeltaBuffer[T]):
+    state.oneway.Container = {
+    val ctr = new state.oneway.Container()
+    ctr.listen(value.asInstanceOf[DeltaBuffer[state.Node]])
+    ctr
+  }
 
-  implicit def NodeSeqToNode[T <: Node](value: Seq[T]): immutable.PlaceholderSeqNode =
-    immutable.PlaceholderSeqNode(value.asInstanceOf[Seq[Node]])
+  implicit def NodeSeqToNode[T <: state.Node](value: Seq[T]): state.oneway.Container = {
+    val ctr = new state.oneway.Container()
+    ctr.set(value.asInstanceOf[Seq[state.Node]])
+    ctr
+  }
 
-  implicit def StringBufferToNode[T <: String](value: DeltaBuffer[T]):
-    mutable.PlaceholderListNode = mutable.PlaceholderListNode(value.map(immutable.Text(_)))
+  implicit def StringBufferToNode[T <: String](value: DeltaBuffer[T]): state.oneway.Container = {
+    val ctr = new state.oneway.Container()
+    ctr.listen(value.asInstanceOf[DeltaBuffer[String]].map(StringToText))
+    ctr
+  }
 }
