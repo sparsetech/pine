@@ -88,7 +88,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
 
   test("Inline event handler") {
     var clicked = 0
-    val btn = html"""<button onclick="${(_: Seq[Any]) => clicked += 1}">Test</button>"""
+    val btn = html"""<button onclick="${(_: Any) => clicked += 1}">Test</button>"""
 
     btn.click()
     assertEquals(clicked, 1)
@@ -96,8 +96,8 @@ object InlineHtmlSpec extends SimpleTestSuite {
 
   test("Function as event handler") {
     var clicked = 0
-    def click(event: Seq[Any]) { clicked += 1 }
-    val btn = html"""<button onclick="${click(_: Seq[Any])}">Test</button>"""
+    def click(event: Any) { clicked += 1 }
+    val btn = html"""<button onclick="${click(_: Any)}">Test</button>"""
     btn.click()
     assertEquals(clicked, 1)
   }

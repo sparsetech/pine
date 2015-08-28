@@ -22,8 +22,6 @@ object InlineHtml {
     }
   }
 
-  val nodeTypes = Set("")
-
   def iter(c: Context)(node: scala.xml.Node,
                        args: Seq[c.Expr[Any]]): Seq[c.Expr[tree.Node]] = {
     import c.universe._
