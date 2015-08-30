@@ -5,7 +5,6 @@ import scala.collection.mutable
 import scala.scalajs.js
 
 import org.scalajs.dom
-import org.scalajs.dom.raw.MutationObserverInit
 
 import pl.metastack.metarx.{ReadChannel, Dict, Buffer}
 import pl.metastack.metarx.Buffer.Position
@@ -18,6 +17,21 @@ trait DOMImplicit {
   implicit class NodeToDom(node: state.Node) {
     def toDom: Seq[dom.Element] = DOM.render(node)
   }
+}
+
+object DOMObserverRules {
+  /** Hierarchy: Tag -> Field -> Events */
+  val rules = Map(
+    "input" -> Map(
+      "value" -> Set("keyup", "paste", "blur", "change")
+    )
+  )
+
+  def resolveEvents(tag: String, field: String): Option[Set[String]] =
+    for {
+      tagRule <- DOMObserverRules.rules.get(tag)
+      attrEvents <- tagRule.get(field)
+    } yield attrEvents
 }
 
 /* The rendering rules make sure that the resulting Seq[dom.Element] node is
@@ -116,21 +130,80 @@ object DOM extends DOM[state.Node]
     }
   }
 
-  case class AttributeListener(var ignore: Option[String] = None)
-
-  def renderTag(tag: state.oneway.Tag): (dom.Element, AttributeListener) = {
-    val attributeListener = AttributeListener()
+  def renderTag(tag: state.oneway.Tag): dom.Element = {
     val rendered = dom.document.createElement(tag.name)
+    val attrCallbacks = mutable.Map.empty[String, dom.Event => Unit]
+
+    var ignoreNext = false
+
+    def setAttr(k: String, v: Any) {
+      rendered
+        .asInstanceOf[js.Dynamic]
+        .updateDynamic(k)(v.asInstanceOf[js.Any])
+    }
+
+    def getAttr(k: String): Any = {
+      rendered
+        .asInstanceOf[js.Dynamic]
+        .selectDynamic(k)
+    }
+
+    def remAttr(k: String) {
+      rendered.removeAttribute(k)
+
+      if (tag.ways == 2) {
+        DOMObserverRules.resolveEvents(tag.name, k).foreach { events =>
+          events.foreach { event =>
+            rendered.removeEventListener(event,
+              attrCallbacks(k),
+              useCapture = false)
+          }
+        }
+
+        attrCallbacks -= k
+      }
+    }
+
+    tag.attributeProvider.register { case attr =>
+      getAttr(attr)
+    }
+
+    tag.eventProvider.register { case (event, args) =>
+      rendered
+        .asInstanceOf[js.Dynamic]
+        .applyDynamic(event)(args.map(_.asInstanceOf[js.Any]): _*)
+    }
 
     tag.watchAttributes.attach {
       case Dict.Delta.Insert(k, v) =>
-        if (!attributeListener.ignore.contains(k)) rendered.setAttribute(k, v.toString)
+        setAttr(k, v)
+
+        if (tag.ways == 2) {
+          DOMObserverRules.resolveEvents(tag.name, k).foreach { events =>
+            attrCallbacks += k -> ((e: dom.Event) => {
+              ignoreNext = true
+              tag.updateAttribute(k, getAttr(k))
+            })
+
+            events.foreach { event =>
+              rendered.addEventListener(event,
+                attrCallbacks(k),
+                useCapture = false)
+            }
+          }
+        }
       case Dict.Delta.Update(k, v) =>
-        if (!attributeListener.ignore.contains(k)) rendered.setAttribute(k, v.toString)
-      case Dict.Delta.Remove(k) =>
-        if (!attributeListener.ignore.contains(k)) rendered.removeAttribute(k)
+        if (!ignoreNext) {
+          setAttr(k, v)
+        }
+
+        ignoreNext = false
+
+      case Dict.Delta.Remove(k) => remAttr(k)
       case Dict.Delta.Clear() =>
-        rendered.removeAttribute()
+        tag.attributes.foreach { case (k, _) =>
+          remAttr(k)
+        }
     }
 
     tag.watchEvents.attach {
@@ -147,7 +220,7 @@ object DOM extends DOM[state.Node]
     }
 
     renderBuffer(rendered, tag.watchChildren)
-    (rendered, attributeListener)
+    rendered
   }
 
   case object RenderTag extends DOM[state.Tag] {
@@ -170,25 +243,7 @@ object DOM extends DOM[state.Node]
 
           Seq(element)
 
-        case n: state.twoway.Tag =>
-          val (elem, attributeListener) = renderTag(n)
-
-          val f: js.Function2[js.Array[dom.MutationRecord], dom.MutationObserver, Unit] =
-            (arr: js.Array[dom.MutationRecord], obs: dom.MutationObserver) => {
-              arr.toSeq.foreach { record =>
-                attributeListener.ignore = Some(record.attributeName)
-                n.setAttribute(record.attributeName,
-                  elem.getAttribute(record.attributeName))
-                attributeListener.ignore = None
-              }
-            }
-
-          val observer = new dom.MutationObserver(f)
-          observer.observe(elem, MutationObserverInit.apply(attributes = true))
-
-          Seq(elem)
-
-        case n: state.oneway.Tag => Seq(renderTag(n)._1)
+        case n: state.oneway.Tag => Seq(renderTag(n))
       }
     }
   }

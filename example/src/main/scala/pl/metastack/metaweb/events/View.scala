@@ -2,7 +2,7 @@ package pl.metastack.metaweb.events
 
 import org.scalajs.dom
 
-import pl.metastack.metarx.{Channel, Var}
+import pl.metastack.metarx.Var
 
 import pl.metastack.metaweb
 import pl.metastack.metaweb._
@@ -12,7 +12,8 @@ class View extends metaweb.View {
     v := "Coordinates: " + (event.clientX, event.clientY)
   }
 
-  val v = Var("")
+  val v = Var("Initial value")
+  v.attach(value => println(s"Value updated: $value"))
 
   val view =
     html2"""
@@ -25,5 +26,5 @@ class View extends metaweb.View {
       """
 
   view.byId[state.twoway.Tag]("text")
-    .bindAttribute("value", v.asInstanceOf[Channel[Any]])
+    .bindAttribute("value", v)
 }

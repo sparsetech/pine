@@ -69,4 +69,16 @@ object ImplicitsSpec extends SimpleTestSuite {
     buffer += " world"
     assertEquals(span.toHtml, "<span>Hello world</span>")
   }
+
+  test("Convert string channels") {
+    val v = Var("")
+
+    val span = html1"""<span></span>"""
+    span.subscribe(v)
+
+    assertEquals(span.toHtml, "<span></span>")
+
+    v := "Hello world"
+    assertEquals(span.toHtml, "<span>Hello world</span>")
+  }
 }

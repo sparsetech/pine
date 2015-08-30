@@ -6,15 +6,15 @@ import pl.metastack.metaweb.state
 class Tag(name: String) extends state.oneway.Tag(name) with Node {
   override def ways = 2
 
-  def bindAttribute(attribute: String, ch: Channel[Any]): ReadChannel[Unit] = {
+  def bindAttribute[T](attribute: String, ch: Channel[T]): ReadChannel[Unit] = {
     val ignore = ch.attach { value =>
       _attributes.insertOrUpdate(attribute, value)
     }
 
-    ch << (_attributes.value(attribute).values, ignore)
+    ch << (_attributes.value(attribute).values.tail.asInstanceOf[ReadChannel[T]], ignore)
   }
 
-  def bindAttributeOpt(attribute: String, ch: Channel[Option[Any]]): ReadChannel[Unit] = {
+  def bindAttributeOpt[T](attribute: String, ch: Channel[Option[T]]): ReadChannel[Unit] = {
     // TODO Provide Dict.bind(key, ch)
 
     val ignore = ch.attach {
@@ -22,6 +22,6 @@ class Tag(name: String) extends state.oneway.Tag(name) with Node {
       case Some(v) => _attributes.insertOrUpdate(attribute, v)
     }
 
-    ch << (_attributes.value(attribute), ignore)
+    ch << (_attributes.value(attribute).tail.asInstanceOf[ReadChannel[Option[T]]], ignore)
   }
 }

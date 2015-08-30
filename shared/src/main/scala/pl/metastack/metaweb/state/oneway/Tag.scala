@@ -1,14 +1,17 @@
 package pl.metastack.metaweb.state.oneway
 
 import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.{Provider, state}
 
 class Tag(val name: String) extends state.Tag with Node {
-  private[state] val _attributes = Dict[String, Any]()
+  protected val _attributes = Dict[String, Any]()
   private val contents = Buffer[state.Node]()
   private val _events = Dict[String, Any => Unit]()
 
-  def ways = 2
+  val attributeProvider = Provider[String, Any]()
+  val eventProvider = Provider[(String, Seq[Any]), Unit]()
+
+  def ways = 1
 
   def attributes: Map[String, Any] = _attributes.toMap
 
@@ -41,6 +44,11 @@ class Tag(val name: String) extends state.Tag with Node {
     append(node)
   }
 
+  def subscribe(node: ReadChannel[state.Node]): ReadChannel[Unit] = {
+    clearChildren()
+    node.attach(set)
+  }
+
   def setChildren(nodes: Seq[state.Node]) {
     clearChildren()
     appendAll(nodes)
@@ -55,8 +63,15 @@ class Tag(val name: String) extends state.Tag with Node {
     _attributes.insertOrUpdate(attribute, value)
   }
 
-  def getAttribute(attribute: String): Option[Any] =
-    _attributes.get(attribute)
+  def getAttribute(attribute: String): Option[Any] = {
+    _attributes.get(attribute).orElse(
+      attributeProvider.poll(attribute)
+    )
+  }
+
+  def updateAttribute[T](attribute: String, value: T) {
+    _attributes.update(attribute, value)
+  }
 
   def subscribeAttribute[T](attribute: String, from: ReadChannel[T]): ReadChannel[Unit] =
     from.attach(value =>
@@ -68,6 +83,7 @@ class Tag(val name: String) extends state.Tag with Node {
   }
 
   def triggerAction(action: String, arguments: Any*) {
-    _events(action)(arguments)
+    eventProvider.poll((action, arguments))
+    if (_events.isDefinedAt$(action)) _events(action)(arguments)
   }
 }

@@ -35,6 +35,17 @@ trait Implicits extends HTMLImplicit {
   implicit def BooleanChannelToText[T <: Boolean](value: ReadChannel[T]): state.oneway.Text =
     oneWayText(value.map(_.toString))
 
+  implicit def StringChannelToTextChannel[T <: String](value: ReadChannel[T]):
+    ReadChannel[state.Node] =
+      value.asInstanceOf[ReadChannel[String]].map(zeroWayText)
+
+  implicit def NumericChannelToTextChannel[T](value: ReadChannel[T])
+                                      (implicit num: Numeric[T]):
+    ReadChannel[state.Node] = value.map(v => zeroWayText(v.toString))
+
+  implicit def BooleanChannelToTextChannel[T <: Boolean](value: ReadChannel[T]):
+    ReadChannel[state.Node] = value.map(v => zeroWayText(v.toString))
+
   implicit def NodeChannelToNode[T <: state.Node](value: ReadChannel[T]): state.oneway.Placeholder = {
     val ph = new state.oneway.Placeholder()
     ph.listen(value.map(v => Some(v)))

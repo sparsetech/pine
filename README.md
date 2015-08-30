@@ -14,7 +14,7 @@ This allows for more fine-grained control as one-way and two-way binding have a 
 MetaWeb has two rendering methods:
 
 - HTML: ``toHtml`` is defined on every state node and will return a snapshot of the state as a string
-- DOM: ``toDom`` is defined only for Scala.js; it uses mutation observers to detect changes in nodes
+- DOM: ``toDom`` is only available in Scala.js; it renders a node in the browser DOM
 
 HTML code is parsed during compile-time and then translated to an immutable or stateful tree. This reduces any runtime overhead. HTML can be specified inline or loaded from external files.
 
