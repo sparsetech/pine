@@ -49,10 +49,24 @@ object ExternalHtmlSpec extends SimpleTestSuite {
     assertEquals(div2.toHtml, """<div id="div2">42</div>""")
   }
 
+  test("Instantiate template") {
+    val tpl = htmlT("shared/src/test/html/list.html")
+    val listItem = tpl.byId("list-item")
+
+    val html = listItem.instantiate(
+      "list-item-title" -> Text(s"Title"),
+      "list-item-subtitle" -> Text(s"Subtitle")
+    ).state(state.OneWay).toHtml
+
+    assertEquals(html, """<div id="list-item"><div>Title</div><div>Subtitle</div></div>""")
+  }
+
   test("Bind list item from template") {
     // Obtain tree without creating a state object
     val tpl = htmlT("shared/src/test/html/list.html")
-    val listItem = tpl.byId("list-item")
+
+    // When embedding list items, we need to drop the ID attribute
+    val listItem = tpl.byId("list-item").withoutId
 
     val items = Seq("a", "b", "c").map { i =>
       listItem.instantiate(

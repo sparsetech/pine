@@ -7,6 +7,7 @@ case class Tag(tagName: String,
                attributes: Map[String, Any] = Map.empty,
                events: Map[String, Any => Unit],
                children: Seq[Node] = Seq.empty) extends Node {
+  def withoutId: Tag = copy(attributes = attributes - "id")
 
   def instantiateMap(nodes: Map[String, Node]): Node = {
     val attrId = attributes.get("id")
@@ -18,7 +19,6 @@ case class Tag(tagName: String,
         children = Seq(nodes(idString)))
     } else
       copy(
-        attributes = attributes - "id",
         children = children.map {
           case tag: Tag => tag.instantiateMap(nodes)
           case n => n
