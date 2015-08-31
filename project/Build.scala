@@ -6,8 +6,26 @@ object Build extends sbt.Build {
   val SharedSettings = Seq(
     name := "MetaWeb",
     organization := "pl.metastack",
-    version := "0.1.0-SNAPSHOT",
-    scalaVersion := "2.11.7"
+    version := "0.1.1-SNAPSHOT",
+    scalaVersion := "2.11.7",
+    pomExtra :=
+      <url>https://github.com/MetaStack-pl/MetaWeb</url>
+        <licenses>
+          <license>
+            <name>Apache-2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
+          </license>
+        </licenses>
+        <scm>
+          <url>git@github.com:MetaStack-pl/MetaWeb.git</url>
+        </scm>
+        <developers>
+          <developer>
+            <id>tindzk</id>
+            <name>Tim Nieradzik</name>
+            <url>http://github.com/tindzk/</url>
+          </developer>
+        </developers>
   )
 
   object Dependencies {
