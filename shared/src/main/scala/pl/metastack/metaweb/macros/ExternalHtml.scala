@@ -18,14 +18,20 @@ object ExternalHtml {
     def htmlT(fileName: String): tree.Tag = macro HtmlImplT
   }
 
-  def convert(c: Context)(node: scala.xml.Node): c.Expr[tree.Node] = {
+  def convert(c: Context)(node: scala.xml.Node,
+                          root: Boolean): c.Expr[tree.Node] = {
     import c.universe._
 
-    node.label match {
-      case "#PCDATA" => c.Expr(q"pl.metastack.metaweb.tree.Text(${node.text})")
-      case tagName =>
-        val tagAttrs = node.attributes.asAttrMap
-        val tagChildren = node.child.map(convert(c)(_))
+    (node.label, Option(node.prefix)) match {
+      case ("#PCDATA", _) => c.Expr(q"pl.metastack.metaweb.tree.Text(${node.text})")
+      case (tag, prefix) =>
+        val tagName = prefix.map(pfx => s"$pfx:$tag").getOrElse(tag)
+        val rootAttributes: Map[String, String] =
+          if (root) Helpers.namespaceBinding(node.scope)
+          else Map.empty
+
+        val tagAttrs = node.attributes.asAttrMap ++ rootAttributes
+        val tagChildren = node.child.map(convert(c)(_, root = false))
         c.Expr(q"new pl.metastack.metaweb.tree.Tag($tagName, $tagAttrs, Map.empty, Seq(..$tagChildren))")
     }
   }
@@ -33,7 +39,7 @@ object ExternalHtml {
   def HtmlImplT(c: Context)(fileName: c.Expr[String]): c.Expr[tree.Tag] = {
     val fileNameValue = Helpers.literalValueExpr(c)(fileName)
     val xml = XML.loadFile(fileNameValue)
-    convert(c)(xml)
+    convert(c)(xml, root = true)
       .asInstanceOf[c.Expr[tree.Tag]]
   }
 

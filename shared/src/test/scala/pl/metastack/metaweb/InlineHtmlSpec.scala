@@ -165,4 +165,20 @@ object InlineHtmlSpec extends SimpleTestSuite {
     val div = html"<meta/>"
     assertEquals(div.toHtml, "<meta/>")
   }
+
+  test("XML parsing") {
+    val xml =
+      htmlT"""<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><atom:link type="application/rss+xml" /></channel></rss>"""
+
+    assertEquals(xml.attributes, Map(
+      "version" -> "2.0",
+      "xmlns:atom" -> "http://www.w3.org/2005/Atom",
+      "xmlns:dc" -> "http://purl.org/dc/elements/1.1/"
+    ))
+
+    val atomLink = xml
+      .children.head.asInstanceOf[tree.Tag]
+      .children.head.asInstanceOf[tree.Tag]
+    assertEquals(atomLink.tagName, "atom:link")
+  }
 }

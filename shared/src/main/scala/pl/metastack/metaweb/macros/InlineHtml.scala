@@ -7,7 +7,7 @@ import scala.collection.mutable
 
 import scala.reflect.macros.blackbox.Context
 
-import scala.xml.XML
+import scala.xml.{NamespaceBinding, XML}
 
 import pl.metastack.metaweb.tree
 import pl.metastack.metaweb.state
@@ -23,11 +23,12 @@ object InlineHtml {
   }
 
   def iter(c: Context)(node: scala.xml.Node,
-                       args: Seq[c.Expr[Any]]): Seq[c.Expr[tree.Node]] = {
+                       args: Seq[c.Expr[Any]],
+                       root: Boolean): Seq[c.Expr[tree.Node]] = {
     import c.universe._
 
-    node.label match {
-      case "#PCDATA" =>
+    (node.label, Option(node.prefix)) match {
+      case ("#PCDATA", _) =>
         // TODO Find a better solution
         val parts = node.text.replaceAll("""\$\{\d+\}""", "_$0_").split("_").toSeq
 
@@ -60,11 +61,16 @@ object InlineHtml {
           }
         }
 
-      case tagName =>
+      case (tag, prefix) =>
+        val tagName = prefix.map(pfx => s"$pfx:$tag").getOrElse(tag)
+        val rootAttributes: Map[String, String] =
+          if (root) Helpers.namespaceBinding(node.scope)
+          else Map.empty
+
         val tagAttrs = mutable.ArrayBuffer.empty[c.Expr[Option[(String, Any)]]]
         val tagEvents = mutable.ArrayBuffer.empty[c.Expr[(String, Seq[Any] => Unit)]]
 
-        node.attributes.asAttrMap.foreach { case (k, v) =>
+        (node.attributes.asAttrMap ++ rootAttributes).foreach { case (k, v) =>
           if (!v.startsWith("${") || !v.endsWith("}")) {
             if (k.startsWith("on")) tagEvents += c.Expr(q"${k.drop(2)} -> $v.asInstanceOf[Any => Unit]")
             else tagAttrs += c.Expr(q"Some($k -> $v)")
@@ -93,7 +99,7 @@ object InlineHtml {
           }
         }
 
-        val tagChildren = node.child.flatMap(n => iter(c)(n, args))
+        val tagChildren = node.child.flatMap(n => iter(c)(n, args, root = false))
 
         Seq(c.Expr(
           q"""new pl.metastack.metaweb.tree.Tag(
@@ -120,7 +126,7 @@ object InlineHtml {
                           args: Seq[c.Expr[Any]]): c.Expr[tree.Tag] = {
     val html = insertPlaceholders(c)(parts)
     val xml = XML.loadString(html)
-    iter(c)(xml, args).head
+    iter(c)(xml, args, root = true).head
       .asInstanceOf[c.Expr[tree.Tag]]
   }
 
