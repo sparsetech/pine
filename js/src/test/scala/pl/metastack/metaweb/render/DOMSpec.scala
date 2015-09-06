@@ -19,7 +19,7 @@ object DOMSpec extends SimpleTestSuite
     span.setChildren(Seq(title))
 
     val html = span.toDom.map(_.outerHTML).mkString
-    assertEquals(html, """<div id="text"><span>test</span></div>""")
+    assertEquals(html, """<div id="text">test</div>""")
 
     title := "test2"
     val html2 = span.toDom.map(_.outerHTML).mkString
@@ -165,5 +165,18 @@ object DOMSpec extends SimpleTestSuite
     val node = div.toDom.head
 
     assertEquals(node.outerHTML, """<div class="b c" id="a"></div>""")
+  }
+
+  test("Listen to text value changes") {
+    val text = Var("Initial value")
+
+    val div = html1"""<div></div>"""
+    div.setChildren(Seq(text))
+
+    val node = div.toDom.head
+    assertEquals(node.outerHTML, """<div>Initial value</div>""")
+
+    text := "Changed value"
+    assertEquals(node.outerHTML, """<div>Changed value</div>""")
   }
 }

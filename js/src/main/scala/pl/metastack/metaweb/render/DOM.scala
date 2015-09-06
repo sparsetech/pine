@@ -261,11 +261,14 @@ object DOM extends DOM[state.Node]
             .asInstanceOf[dom.Element])
 
         case n: state.oneway.Text =>
-          // TODO Don't create <span>
-          val rendered = dom.document.createElement("span")
+          val rendered = dom.document.createTextNode("")
+            .asInstanceOf[dom.Element]
+
           n.values.attach { text =>
-            rendered.replaceFirst(dom.document.createTextNode(text))
+            // TODO Use `var` in scalajs-dom
+            rendered.asInstanceOf[js.Dynamic].nodeValue = text
           }
+
           Seq(rendered)
       }
     }
