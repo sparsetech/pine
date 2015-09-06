@@ -23,7 +23,7 @@ object DOMSpec extends SimpleTestSuite
 
     title := "test2"
     val html2 = span.toDom.map(_.outerHTML).mkString
-    assertEquals(html2, """<div id="text"><span>test2</span></div>""")
+    assertEquals(html2, """<div id="text">test2</div>""")
   }
 
   test("Update `value` attribute of `input` node") {
@@ -167,6 +167,15 @@ object DOMSpec extends SimpleTestSuite
     assertEquals(node.outerHTML, """<div class="b c" id="a"></div>""")
   }
 
+  test("Set `style` attribute on nodes") {
+    val div = html1"""<div></div>"""
+    val node = div.toDom.head
+
+    div.setAttribute("style", "display: none")
+
+    assertEquals(node.outerHTML, """<div style="display: none"></div>""")
+  }
+
   test("Listen to text value changes") {
     val text = Var("Initial value")
 
@@ -178,5 +187,20 @@ object DOMSpec extends SimpleTestSuite
 
     text := "Changed value"
     assertEquals(node.outerHTML, """<div>Changed value</div>""")
+  }
+
+  test("Obtain `options` from `select` node") {
+    ignore()
+    val select = html1"""<select id="type">
+      <option value="opt1">Option 1</option>
+      <option value="opt2" selected="true">Option 2</option>
+    </select>"""
+
+    val node = select.toDom
+
+    val options = select.getAttribute("options").get.asInstanceOf[js.Dynamic]
+    val selectedIndex = select.getAttribute("selectedIndex").get.asInstanceOf[Int]
+
+    assertEquals(options(selectedIndex).value, "opt2")
   }
 }

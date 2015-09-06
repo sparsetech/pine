@@ -137,7 +137,8 @@ object DOM extends DOM[state.Node]
     var ignoreNext = false
 
     def nonStandard(k: String) =
-      k == "class" ||
+      k == "style" ||
+        k == "class" ||
         k.startsWith("aria-") ||
         k.startsWith("data-")
 

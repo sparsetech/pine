@@ -29,7 +29,7 @@ object Build extends sbt.Build {
   )
 
   object Dependencies {
-    val MetaRx   = "0.1.0"
+    val MetaRx   = "0.1.3-SNAPSHOT"
     val MiniTest = "0.12"
     val Paradise = "2.1.0-M5"
   }
