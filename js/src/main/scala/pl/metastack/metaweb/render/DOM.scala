@@ -136,17 +136,21 @@ object DOM extends DOM[state.Node]
 
     var ignoreNext = false
 
+    def nonStandard(k: String) =
+      k == "class" ||
+        k.startsWith("aria-") ||
+        k.startsWith("data-")
+
+    val renderedDyn = rendered.asInstanceOf[js.Dynamic]
+
     def setAttr(k: String, v: Any) {
-      rendered
-        .asInstanceOf[js.Dynamic]
-        .updateDynamic(k)(v.asInstanceOf[js.Any])
+      if (nonStandard(k)) renderedDyn.setAttribute(k, v.asInstanceOf[js.Any])
+      else renderedDyn.updateDynamic(k)(v.asInstanceOf[js.Any])
     }
 
-    def getAttr(k: String): Any = {
-      rendered
-        .asInstanceOf[js.Dynamic]
-        .selectDynamic(k)
-    }
+    def getAttr(k: String): Any =
+      if (nonStandard(k)) renderedDyn.getAttribute(k)
+      else renderedDyn.selectDynamic(k)
 
     def remAttr(k: String) {
       rendered.removeAttribute(k)
@@ -192,6 +196,7 @@ object DOM extends DOM[state.Node]
             }
           }
         }
+
       case Dict.Delta.Update(k, v) =>
         if (!ignoreNext) {
           setAttr(k, v)

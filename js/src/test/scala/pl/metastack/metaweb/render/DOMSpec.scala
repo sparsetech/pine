@@ -159,4 +159,11 @@ object DOMSpec extends SimpleTestSuite
     text := "42"
     assertEquals(domElement.value, "42")
   }
+
+  test("Set `class` attribute on nodes") {
+    val div = html1"""<div id="a" class="b c"></div>"""
+    val node = div.toDom.head
+
+    assertEquals(node.outerHTML, """<div class="b c" id="a"></div>""")
+  }
 }
