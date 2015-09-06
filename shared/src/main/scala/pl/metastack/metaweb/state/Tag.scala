@@ -28,4 +28,13 @@ trait Tag extends Node {
   }
 
   def byId[T <: Tag](id: String): T = byIdOpt(id).get
+
+  def byTagOpt[T <: Tag](tag: String): Option[T] = {
+    children.collectFirst {
+      case t: Tag if t.name == tag => t.asInstanceOf[T]
+      case t: Tag if t.byTagOpt[T](tag).isDefined => t.byTagOpt[T](tag).get  // TODO optimise
+    }
+  }
+
+  def byTag[T <: Tag](tag: String): T = byTagOpt(tag).get
 }

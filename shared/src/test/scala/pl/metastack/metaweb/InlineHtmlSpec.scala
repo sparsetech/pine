@@ -179,6 +179,6 @@ object InlineHtmlSpec extends SimpleTestSuite {
     val atomLink = xml
       .children.head.asInstanceOf[tree.Tag]
       .children.head.asInstanceOf[tree.Tag]
-    assertEquals(atomLink.tagName, "atom:link")
+    assertEquals(atomLink.name, "atom:link")
   }
 }
