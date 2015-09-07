@@ -10,4 +10,4 @@ persistLauncher in Compile := true
 
 persistLauncher in Test := false
 
-libraryDependencies += "pl.metastack" %%% "metaweb" % "0.1.0-SNAPSHOT"
+libraryDependencies += "pl.metastack" %%% "metaweb" % "0.1.1-SNAPSHOT"
