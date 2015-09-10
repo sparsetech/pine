@@ -1,4 +1,4 @@
-package pl.metastack.metaweb.state.oneway
+package pl.metastack.metaweb.state.reactive
 
 import pl.metastack.metarx.{Opt, ReadChannel}
 
@@ -6,8 +6,6 @@ import pl.metastack.metaweb.state
 
 class Placeholder extends state.Placeholder with Node {
   private val node = Opt[state.Node]()
-
-  def ways = 1
 
   def set(value: Option[state.Node]) {
     node := value

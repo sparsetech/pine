@@ -1,4 +1,4 @@
-package pl.metastack.metaweb.state.oneway
+package pl.metastack.metaweb.state.reactive
 
 import pl.metastack.metaweb.state
 

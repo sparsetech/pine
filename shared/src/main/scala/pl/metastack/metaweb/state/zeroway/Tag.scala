@@ -9,8 +9,6 @@ class Tag(val name: String) extends state.Tag with Node {
   private val contents = mutable.ArrayBuffer.empty[state.Node]
   private val _events = mutable.Map.empty[String, Any => Unit]
 
-  def ways = 0
-
   def attributes: Map[String, Any] = attrs.toMap
 
   def children: Seq[state.Node] = contents

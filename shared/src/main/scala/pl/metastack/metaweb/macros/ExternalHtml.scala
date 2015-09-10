@@ -13,7 +13,7 @@ import pl.metastack.metaweb.state
 object ExternalHtml {
   trait Import {
     def html(fileName: String): state.zeroway.Tag = macro HtmlImpl0
-    def html1(fileName: String): state.oneway.Tag = macro HtmlImpl1
+    def htmlR(fileName: String): state.reactive.Tag = macro HtmlImplR
     def htmlT(fileName: String): tree.Tag = macro HtmlImplT
   }
 
@@ -46,7 +46,7 @@ object ExternalHtml {
     Helpers.treeToState(c)(HtmlImplT(c)(fileName), way = 0)
       .asInstanceOf[c.Expr[state.zeroway.Tag]]
 
-  def HtmlImpl1(c: Context)(fileName: c.Expr[String]): c.Expr[state.oneway.Tag] =
+  def HtmlImplR(c: Context)(fileName: c.Expr[String]): c.Expr[state.reactive.Tag] =
     Helpers.treeToState(c)(HtmlImplT(c)(fileName), way = 1)
-      .asInstanceOf[c.Expr[state.oneway.Tag]]
+      .asInstanceOf[c.Expr[state.reactive.Tag]]
 }

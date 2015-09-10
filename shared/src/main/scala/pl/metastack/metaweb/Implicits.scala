@@ -11,7 +11,7 @@ trait Implicits extends HTMLImplicit {
   }
 
   private def oneWayText(value: ReadChannel[String]) = {
-    val t = new state.oneway.Text()
+    val t = new state.reactive.Text()
     t.listen(value)
     t
   }
@@ -25,14 +25,14 @@ trait Implicits extends HTMLImplicit {
   implicit def StringToText(value: String): state.zeroway.Text =
     zeroWayText(value)
 
-  implicit def StringChannelToText[T <: String](value: ReadChannel[T]): state.oneway.Text =
+  implicit def StringChannelToText[T <: String](value: ReadChannel[T]): state.reactive.Text =
     oneWayText(value.asInstanceOf[ReadChannel[String]])
 
   implicit def NumericChannelToText[T](value: ReadChannel[T])
-                                       (implicit num: Numeric[T]): state.oneway.Text =
+                                       (implicit num: Numeric[T]): state.reactive.Text =
     oneWayText(value.map(_.toString))
 
-  implicit def BooleanChannelToText[T <: Boolean](value: ReadChannel[T]): state.oneway.Text =
+  implicit def BooleanChannelToText[T <: Boolean](value: ReadChannel[T]): state.reactive.Text =
     oneWayText(value.map(_.toString))
 
   implicit def StringChannelToTextChannel[T <: String](value: ReadChannel[T]):
@@ -46,35 +46,35 @@ trait Implicits extends HTMLImplicit {
   implicit def BooleanChannelToTextChannel[T <: Boolean](value: ReadChannel[T]):
     ReadChannel[state.Node] = value.map(v => zeroWayText(v.toString))
 
-  implicit def NodeChannelToNode[T <: state.Node](value: ReadChannel[T]): state.oneway.Placeholder = {
-    val ph = new state.oneway.Placeholder()
+  implicit def NodeChannelToNode[T <: state.Node](value: ReadChannel[T]): state.reactive.Placeholder = {
+    val ph = new state.reactive.Placeholder()
     ph.listen(value.map(v => Some(v)))
     ph
   }
 
   implicit def OptNodeChannelToNode[T <: Option[state.Node]](value: ReadChannel[T]):
-    state.oneway.Placeholder =
+    state.reactive.Placeholder =
   {
-    val ph = new state.oneway.Placeholder()
+    val ph = new state.reactive.Placeholder()
     ph.listen(value.map(v => v.asInstanceOf[Option[state.Node]]))
     ph
   }
 
   implicit def NodeBufferToNode[T <: state.Node](value: DeltaBuffer[T]):
-    state.oneway.Container = {
-    val ctr = new state.oneway.Container()
+    state.reactive.Container = {
+    val ctr = new state.reactive.Container()
     ctr.listen(value.asInstanceOf[DeltaBuffer[state.Node]])
     ctr
   }
 
-  implicit def NodeSeqToNode[T <: state.Node](value: Seq[T]): state.oneway.Container = {
-    val ctr = new state.oneway.Container()
+  implicit def NodeSeqToNode[T <: state.Node](value: Seq[T]): state.reactive.Container = {
+    val ctr = new state.reactive.Container()
     ctr.set(value.asInstanceOf[Seq[state.Node]])
     ctr
   }
 
-  implicit def StringBufferToNode[T <: String](value: DeltaBuffer[T]): state.oneway.Container = {
-    val ctr = new state.oneway.Container()
+  implicit def StringBufferToNode[T <: String](value: DeltaBuffer[T]): state.reactive.Container = {
+    val ctr = new state.reactive.Container()
     ctr.listen(value.asInstanceOf[DeltaBuffer[String]].map(StringToText))
     ctr
   }

@@ -15,7 +15,7 @@ object DOMSpec extends SimpleTestSuite
   test("Render node with one-way binding") {
     val title = Var("test")
 
-    val span = html1"""<div id="text"></div>"""
+    val span = htmlR"""<div id="text"></div>"""
     span.setChildren(Seq(title))
 
     val html = span.toDom.map(_.outerHTML).mkString
@@ -27,7 +27,7 @@ object DOMSpec extends SimpleTestSuite
   }
 
   test("Update `value` attribute of `input` node") {
-    val input = html1"""<input type="text" />"""
+    val input = htmlR"""<input type="text" />"""
     val node = input.toDom.head.asInstanceOf[dom.html.Input]
 
     assertEquals(node.value, "")
@@ -37,7 +37,7 @@ object DOMSpec extends SimpleTestSuite
   }
 
   test("Update `href` attribute of `a` node") {
-    val input = html1"""<a>Action</a>"""
+    val input = htmlR"""<a>Action</a>"""
     val node = input.toDom.head.asInstanceOf[dom.html.Anchor]
 
     assertEquals(node.href, "")
@@ -47,7 +47,7 @@ object DOMSpec extends SimpleTestSuite
   }
 
   test("Update `disabled` attribute of `input` node") {
-    val input = html1"""<input type="text" />"""
+    val input = htmlR"""<input type="text" />"""
     val node = input.toDom.head.asInstanceOf[dom.html.Input]
 
     assertEquals(node.disabled, false)
@@ -57,7 +57,7 @@ object DOMSpec extends SimpleTestSuite
   }
 
   test("Get updated `value` attribute of `input` node") {
-    val input = html1"""<input type="text" />"""
+    val input = htmlR"""<input type="text" />"""
     val node = input.toDom.head.asInstanceOf[dom.html.Input]
 
     assertEquals(input.getAttribute("value").get, "")
@@ -67,7 +67,7 @@ object DOMSpec extends SimpleTestSuite
   }
 
   test("Listen to attribute `value` on `input` node") {
-    val input = html1"""<input type="text" />"""
+    val input = htmlR"""<input type="text" />"""
     val node = input.toDom.head.asInstanceOf[dom.html.Input]
 
     val value = Var("")
@@ -82,7 +82,7 @@ object DOMSpec extends SimpleTestSuite
   }
 
   test("Listen to attribute `disabled` on `input` node") {
-    val input = html1"""<input type="text" />"""
+    val input = htmlR"""<input type="text" />"""
     val node = input.toDom.head.asInstanceOf[dom.html.Input]
 
     val value = Var(false)
@@ -98,7 +98,7 @@ object DOMSpec extends SimpleTestSuite
   }
 
   test("Call `focus` on `input` node") {
-    val input = html1"""<input type="text" />"""
+    val input = htmlR"""<input type="text" />"""
     val node = input.toDom.head.asInstanceOf[dom.html.Input]
 
     var eventTriggered = 0
@@ -112,7 +112,7 @@ object DOMSpec extends SimpleTestSuite
   }
 
   test("Listen to `onclick` on `button` node") {
-    val input = html1"""<button />"""
+    val input = htmlR"""<button />"""
     val node = input.toDom.head.asInstanceOf[dom.html.Input]
 
     var eventTriggered = 0
@@ -127,7 +127,7 @@ object DOMSpec extends SimpleTestSuite
   }
 
   test("Listen to child channel on `span` node") {
-    val span = html1"""<span></span>"""
+    val span = htmlR"""<span></span>"""
     val node = span.toDom.head
 
     val text = Var("Hello world")
@@ -142,7 +142,7 @@ object DOMSpec extends SimpleTestSuite
   test("Render node with two-way binding") {
     val text = Var("")
 
-    val input = html1"""<input type="text" />"""
+    val input = htmlR"""<input type="text" />"""
     input.bindAttribute("value", text.asInstanceOf[Channel[Any]])
 
     val domElement = input.toDom.head.asInstanceOf[dom.html.Input]
@@ -161,14 +161,14 @@ object DOMSpec extends SimpleTestSuite
   }
 
   test("Set `class` attribute on nodes") {
-    val div = html1"""<div id="a" class="b c"></div>"""
+    val div = htmlR"""<div id="a" class="b c"></div>"""
     val node = div.toDom.head
 
     assertEquals(node.outerHTML, """<div class="b c" id="a"></div>""")
   }
 
   test("Set `style` attribute on nodes") {
-    val div = html1"""<div></div>"""
+    val div = htmlR"""<div></div>"""
     val node = div.toDom.head
 
     div.setAttribute("style", "display: none")
@@ -179,7 +179,7 @@ object DOMSpec extends SimpleTestSuite
   test("Listen to text value changes") {
     val text = Var("Initial value")
 
-    val div = html1"""<div></div>"""
+    val div = htmlR"""<div></div>"""
     div.setChildren(Seq(text))
 
     val node = div.toDom.head
@@ -191,7 +191,7 @@ object DOMSpec extends SimpleTestSuite
 
   test("Obtain `options` from `select` node") {
     ignore()
-    val select = html1"""<select id="type">
+    val select = htmlR"""<select id="type">
       <option value="opt1">Option 1</option>
       <option value="opt2" selected="true">Option 2</option>
     </select>"""

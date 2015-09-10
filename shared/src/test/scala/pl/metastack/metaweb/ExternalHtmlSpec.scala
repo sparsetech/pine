@@ -21,7 +21,7 @@ object ExternalHtmlSpec extends SimpleTestSuite {
     val tpl = html("shared/src/test/html/test.html")
     checkTestHtml(tpl.toHtml)
 
-    val tplOneWay = html1("shared/src/test/html/test.html")
+    val tplOneWay = htmlR("shared/src/test/html/test.html")
     checkTestHtml(tplOneWay.toHtml)
   }
 
@@ -29,7 +29,7 @@ object ExternalHtmlSpec extends SimpleTestSuite {
     val tpl = html("shared/src/test/html/test.html")
     checkTestHtml(tpl.toHtml)
 
-    val tplOneWay = html1("shared/src/test/html/test.html")
+    val tplOneWay = htmlR("shared/src/test/html/test.html")
     checkTestHtml(tplOneWay.toHtml)
   }
 
@@ -39,7 +39,7 @@ object ExternalHtmlSpec extends SimpleTestSuite {
     val div2 = tpl.byId[state.Tag]("div2")
     assertEquals(div2.toHtml, """<div id="div2">Div 2 contents</div>""")
 
-    div2 := Text("42").state(state.OneWay)
+    div2 := Text("42").state(state.Reactive)
     assertEquals(div2.toHtml, """<div id="div2">42</div>""")
   }
 
@@ -50,7 +50,7 @@ object ExternalHtmlSpec extends SimpleTestSuite {
     val html = listItem.instantiate(
       "list-item-title" -> Text(s"Title"),
       "list-item-subtitle" -> Text(s"Subtitle")
-    ).state(state.OneWay).toHtml
+    ).state(state.Reactive).toHtml
 
     assertEquals(html, """<div id="list-item"><div>Title</div><div>Subtitle</div></div>""")
   }
@@ -66,11 +66,11 @@ object ExternalHtmlSpec extends SimpleTestSuite {
       listItem.instantiate(
         "list-item-title" -> Text(s"Title $i"),
         "list-item-subtitle" -> Text(s"Subtitle $i")
-      ).state(state.OneWay)
+      ).state(state.Reactive)
     }
 
     // Instantiate template and replace list
-    val tplState = tpl.state(state.OneWay)
+    val tplState = tpl.state(state.Reactive)
     tplState.byId[state.Tag]("list").setChildren(items)
 
     val list = tplState.byId[state.Tag]("list")

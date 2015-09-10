@@ -63,7 +63,7 @@ object DOM extends DOM[state.Node]
         case n: state.zeroway.Placeholder =>
           val dom = node.get.map(_.toDom)
           dom.getOrElse(Seq(nullNode()))
-        case n: state.oneway.Placeholder =>
+        case n: state.reactive.Placeholder =>
           // TODO Don't create <span>
           val elem = dom.document.createElement("span")
           n.values.attach {
@@ -121,7 +121,7 @@ object DOM extends DOM[state.Node]
     def render(node: state.Container): Seq[dom.Element] = {
       node match {
         case n: state.zeroway.Container => node.get.flatMap(_.toDom)
-        case n: state.oneway.Container =>
+        case n: state.reactive.Container =>
           // TODO Don't create <span>
           val rendered = dom.document.createElement("span")
           renderBuffer(rendered, n.deltas)
@@ -130,7 +130,7 @@ object DOM extends DOM[state.Node]
     }
   }
 
-  def renderTag(tag: state.oneway.Tag): dom.Element = {
+  def renderTag(tag: state.reactive.Tag): dom.Element = {
     val rendered = dom.document.createElement(tag.name)
     val attrCallbacks = mutable.Map.empty[String, dom.Event => Unit]
 
@@ -249,7 +249,7 @@ object DOM extends DOM[state.Node]
 
           Seq(element)
 
-        case n: state.oneway.Tag => Seq(renderTag(n))
+        case n: state.reactive.Tag => Seq(renderTag(n))
       }
     }
   }
@@ -261,7 +261,7 @@ object DOM extends DOM[state.Node]
           Seq(dom.document.createTextNode(n.get)
             .asInstanceOf[dom.Element])
 
-        case n: state.oneway.Text =>
+        case n: state.reactive.Text =>
           val rendered = dom.document.createTextNode("")
             .asInstanceOf[dom.Element]
 

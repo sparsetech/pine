@@ -33,13 +33,8 @@ object Helpers {
                               way: Int): c.Expr[state.Tag] = {
     import c.universe._
 
-    val wayObj = TermName(
-      if (way == 0) "ZeroWay"
-      else "OneWay")
-
-    val ns = TermName(
-      if (way == 0) "zeroway"
-      else "oneway")
+    val wayObj = TermName(if (way == 0) "ZeroWay" else "Reactive")
+    val ns = TermName(if (way == 0) "zeroway" else "reactive")
 
     c.Expr(q"""
       import pl.metastack.metaweb

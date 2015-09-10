@@ -1,4 +1,4 @@
-package pl.metastack.metaweb.state.oneway
+package pl.metastack.metaweb.state.reactive
 
 import pl.metastack.metarx.{ReadChannel, DeltaBuffer, Buffer}
 
@@ -6,8 +6,6 @@ import pl.metastack.metaweb.state
 
 class Container extends state.Container with Node {
   private val nodes = Buffer[state.Node]()
-
-  def ways = 1
 
   def set(value: Seq[state.Node]) {
     nodes.set(value)

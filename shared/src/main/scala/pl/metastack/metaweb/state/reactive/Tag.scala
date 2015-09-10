@@ -1,4 +1,4 @@
-package pl.metastack.metaweb.state.oneway
+package pl.metastack.metaweb.state.reactive
 
 import pl.metastack.metarx._
 import pl.metastack.metaweb.{Provider, state}
@@ -12,8 +12,6 @@ class Tag(val name: String) extends state.Tag with Node {
 
   val attributeProvider = Provider[String, Any]()
   val eventProvider = Provider[(String, Seq[Any]), Unit]()
-
-  def ways = 1
 
   def attributes: Map[String, Any] = _attributes.toMap
 

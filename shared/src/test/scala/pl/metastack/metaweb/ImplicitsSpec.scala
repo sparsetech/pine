@@ -8,7 +8,7 @@ object ImplicitsSpec extends SimpleTestSuite {
   test("Var[String] to node") {
     val title = Var("test")
 
-    val span = html1"""<span></span>"""
+    val span = htmlR"""<span></span>"""
     span.setChildren(Seq(title))
 
     assertEquals(span.toHtml, "<span>test</span>")
@@ -73,7 +73,7 @@ object ImplicitsSpec extends SimpleTestSuite {
   test("Convert string channels") {
     val v = Var("")
 
-    val span = html1"""<span></span>"""
+    val span = htmlR"""<span></span>"""
     span.subscribe(v)
 
     assertEquals(span.toHtml, "<span></span>")

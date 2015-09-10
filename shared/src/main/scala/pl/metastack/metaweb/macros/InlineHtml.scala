@@ -16,7 +16,7 @@ object InlineHtml {
   trait Import {
     implicit class Html(sc: StringContext) {
       def html(args: Any*): state.zeroway.Tag = macro HtmlImpl0
-      def html1(args: Any*): state.oneway.Tag = macro HtmlImpl1
+      def htmlR(args: Any*): state.reactive.Tag = macro HtmlImplR
       def htmlT(args: Any*): tree.Tag = macro HtmlImplT
     }
   }
@@ -142,7 +142,7 @@ object InlineHtml {
     Helpers.treeToState(c)(HtmlImplT(c)(args: _*), way = 0)
       .asInstanceOf[c.Expr[state.zeroway.Tag]]
 
-  def HtmlImpl1(c: Context)(args: c.Expr[Any]*): c.Expr[state.oneway.Tag] =
+  def HtmlImplR(c: Context)(args: c.Expr[Any]*): c.Expr[state.reactive.Tag] =
     Helpers.treeToState(c)(HtmlImplT(c)(args: _*), way = 1)
-      .asInstanceOf[c.Expr[state.oneway.Tag]]
+      .asInstanceOf[c.Expr[state.reactive.Tag]]
 }
