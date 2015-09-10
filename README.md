@@ -3,11 +3,10 @@
 
 MetaWeb provides Scala and Scala.js bindings for HTML5.
 
-It implements a DOM as an immutable tree. This tree can be transformed into a stateful tree. There are three different state trees:
+It implements a DOM as an immutable tree. This tree can be transformed into a stateful tree. There are two different state trees:
 
 - Zero-way: Initially just a copy of the immutable tree. Attributes and children can be updated, but don't trigger changes.
-- One-way: Value updates will trigger changes.
-- Two-way: Value updates in the rendered tree (browser DOM e.g.) will be propagated back.
+- Reactive: Value updates will trigger changes. Two-way binding is supported, so that value updates in the rendered tree (i.e. browser DOM) will be propagated back.
 
 This allows for more fine-grained control as one-way and two-way binding have a slightly higher memory and performance footprint.
 
