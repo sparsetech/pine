@@ -3,6 +3,8 @@ package pl.metastack.metaweb.state.oneway
 import pl.metastack.metarx._
 import pl.metastack.metaweb.{Provider, state}
 
+import scala.collection.mutable
+
 class Tag(val name: String) extends state.Tag with Node {
   protected val _attributes = Dict[String, Any]()
   private val contents = Buffer[state.Node]()
@@ -85,5 +87,28 @@ class Tag(val name: String) extends state.Tag with Node {
   def triggerAction(action: String, arguments: Any*) {
     eventProvider.poll((action, arguments))
     if (_events.isDefinedAt$(action)) _events(action)(arguments)
+  }
+
+  val twoWay = mutable.Set.empty[String]
+
+  def bindAttribute[T](attribute: String, ch: Channel[T]): ReadChannel[Unit] = {
+    twoWay += attribute
+    val ignore = ch.attach { value =>
+      _attributes.insertOrUpdate(attribute, value)
+    }
+
+    ch << (_attributes.value(attribute).values.tail.asInstanceOf[ReadChannel[T]], ignore)
+  }
+
+  def bindAttributeOpt[T](attribute: String, ch: Channel[Option[T]]): ReadChannel[Unit] = {
+    twoWay += attribute
+    // TODO Provide Dict.bind(key, ch)
+
+    val ignore = ch.attach {
+      case None => _attributes.removeIfExists(attribute)
+      case Some(v) => _attributes.insertOrUpdate(attribute, v)
+    }
+
+    ch << (_attributes.value(attribute).tail.asInstanceOf[ReadChannel[Option[T]]], ignore)
   }
 }

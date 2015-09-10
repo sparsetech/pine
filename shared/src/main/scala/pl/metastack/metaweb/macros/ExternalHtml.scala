@@ -14,7 +14,6 @@ object ExternalHtml {
   trait Import {
     def html(fileName: String): state.zeroway.Tag = macro HtmlImpl0
     def html1(fileName: String): state.oneway.Tag = macro HtmlImpl1
-    def html2(fileName: String): state.twoway.Tag = macro HtmlImpl2
     def htmlT(fileName: String): tree.Tag = macro HtmlImplT
   }
 
@@ -50,8 +49,4 @@ object ExternalHtml {
   def HtmlImpl1(c: Context)(fileName: c.Expr[String]): c.Expr[state.oneway.Tag] =
     Helpers.treeToState(c)(HtmlImplT(c)(fileName), way = 1)
       .asInstanceOf[c.Expr[state.oneway.Tag]]
-
-  def HtmlImpl2(c: Context)(fileName: c.Expr[String]): c.Expr[state.twoway.Tag] =
-    Helpers.treeToState(c)(HtmlImplT(c)(fileName), way = 2)
-      .asInstanceOf[c.Expr[state.twoway.Tag]]
 }

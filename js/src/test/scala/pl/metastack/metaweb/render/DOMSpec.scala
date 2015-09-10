@@ -142,7 +142,7 @@ object DOMSpec extends SimpleTestSuite
   test("Render node with two-way binding") {
     val text = Var("")
 
-    val input = html2"""<input type="text" />"""
+    val input = html1"""<input type="text" />"""
     input.bindAttribute("value", text.asInstanceOf[Channel[Any]])
 
     val domElement = input.toDom.head.asInstanceOf[dom.html.Input]

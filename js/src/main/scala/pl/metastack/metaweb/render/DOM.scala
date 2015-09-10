@@ -156,7 +156,7 @@ object DOM extends DOM[state.Node]
     def remAttr(k: String) {
       rendered.removeAttribute(k)
 
-      if (tag.ways == 2) {
+      if (tag.twoWay.contains(k)) {
         DOMObserverRules.resolveEvents(tag.name, k).foreach { events =>
           events.foreach { event =>
             rendered.removeEventListener(event,
@@ -183,7 +183,7 @@ object DOM extends DOM[state.Node]
       case Dict.Delta.Insert(k, v) =>
         setAttr(k, v)
 
-        if (tag.ways == 2) {
+        if (tag.twoWay.contains(k)) {
           DOMObserverRules.resolveEvents(tag.name, k).foreach { events =>
             attrCallbacks += k -> ((e: dom.Event) => {
               ignoreNext = true

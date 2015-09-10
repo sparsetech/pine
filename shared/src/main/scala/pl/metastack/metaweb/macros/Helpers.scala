@@ -35,13 +35,11 @@ object Helpers {
 
     val wayObj = TermName(
       if (way == 0) "ZeroWay"
-      else if (way == 1) "OneWay"
-      else "TwoWay")
+      else "OneWay")
 
     val ns = TermName(
       if (way == 0) "zeroway"
-      else if (way == 1) "oneway"
-      else "twoway")
+      else "oneway")
 
     c.Expr(q"""
       import pl.metastack.metaweb

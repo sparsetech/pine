@@ -17,7 +17,6 @@ object InlineHtml {
     implicit class Html(sc: StringContext) {
       def html(args: Any*): state.zeroway.Tag = macro HtmlImpl0
       def html1(args: Any*): state.oneway.Tag = macro HtmlImpl1
-      def html2(args: Any*): state.twoway.Tag = macro HtmlImpl2
       def htmlT(args: Any*): tree.Tag = macro HtmlImplT
     }
   }
@@ -146,8 +145,4 @@ object InlineHtml {
   def HtmlImpl1(c: Context)(args: c.Expr[Any]*): c.Expr[state.oneway.Tag] =
     Helpers.treeToState(c)(HtmlImplT(c)(args: _*), way = 1)
       .asInstanceOf[c.Expr[state.oneway.Tag]]
-
-  def HtmlImpl2(c: Context)(args: c.Expr[Any]*): c.Expr[state.twoway.Tag] =
-    Helpers.treeToState(c)(HtmlImplT(c)(args: _*), way = 2)
-      .asInstanceOf[c.Expr[state.twoway.Tag]]
 }

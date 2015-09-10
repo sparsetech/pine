@@ -23,9 +23,6 @@ object ExternalHtmlSpec extends SimpleTestSuite {
 
     val tplOneWay = html1("shared/src/test/html/test.html")
     checkTestHtml(tplOneWay.toHtml)
-
-    val tplTwoWay = html2("shared/src/test/html/test.html")
-    checkTestHtml(tplTwoWay.toHtml)
   }
 
   test("Load mutable template") {
@@ -34,9 +31,6 @@ object ExternalHtmlSpec extends SimpleTestSuite {
 
     val tplOneWay = html1("shared/src/test/html/test.html")
     checkTestHtml(tplOneWay.toHtml)
-
-    val tplTwoWay = html2("shared/src/test/html/test.html")
-    checkTestHtml(tplTwoWay.toHtml)
   }
 
   test("Replace nodes") {
