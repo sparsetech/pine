@@ -26,10 +26,10 @@ object InlineHtmlSpec extends SimpleTestSuite {
     val url = Var("http://github.com/")
     val title = Var("GitHub")
 
-    val root = htmlR"""<a></a>"""
+    val root = html"""<a></a>"""
     root.attribute("href").asInstanceOf[Var[String]].subscribe(url)
     root.subscribeChildren(Buffer({
-      val s = state.Reactive.text()
+      val s = new state.Text
       s.listen(title)
       s
     }))
@@ -48,7 +48,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
     val url = Var("http://github.com/")
     val title = Var("GitHub")
 
-    val root = htmlR"""<a></a>"""
+    val root = html"""<a></a>"""
     assertEquals(root.toHtml, """<a></a>""")
 
     val href = root.attribute("href").asInstanceOf[StateChannel[String]]
@@ -56,7 +56,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
 
     href.subscribe(url)
     root := {
-      val s = state.Reactive.text()
+      val s = new state.Text
       s.listen(title)
       s
     }
@@ -69,7 +69,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
   }
 
   test("Bind list") {
-    val list = htmlR"""<div id="list"></div>"""
+    val list = html"""<div id="list"></div>"""
 
     list.subscribeChildren(Buffer("a", "b", "c").map { i =>
       val title = s"Title $i"

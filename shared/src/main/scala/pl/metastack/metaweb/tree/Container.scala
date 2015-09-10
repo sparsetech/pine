@@ -1,12 +1,12 @@
 package pl.metastack.metaweb.tree
 
 import pl.metastack.metaweb
-import pl.metastack.metaweb.{tree, State}
+import pl.metastack.metaweb.tree
 
-case class Container(nodes: Seq[tree.Node]) extends Node {
-  override def state[T <: metaweb.state.Node](creator: State[T]): T with metaweb.state.Container = {
-    val container = creator.container()
-    container.set(nodes.map(_.state(creator)))
-    container.asInstanceOf[T with metaweb.state.Container]
+case class Container(nodes: Seq[tree.Node]) extends metaweb.Container with Node {
+  override def state: metaweb.state.Container = {
+    val container = new metaweb.state.Container
+    container.set(nodes.map(_.state))
+    container
   }
 }

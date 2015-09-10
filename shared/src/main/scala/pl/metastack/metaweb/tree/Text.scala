@@ -1,12 +1,11 @@
 package pl.metastack.metaweb.tree
 
 import pl.metastack.metaweb
-import pl.metastack.metaweb.State
 
-case class Text(text: String) extends Node {
-  override def state[T <: metaweb.state.Node](creator: State[T]): T with metaweb.state.Text = {
-    val target = creator.text()
+case class Text(text: String) extends metaweb.Text with Node {
+  override def state: metaweb.state.Text = {
+    val target = new metaweb.state.Text
     target.set(text)
-    target.asInstanceOf[T with metaweb.state.Text]
+    target
   }
 }

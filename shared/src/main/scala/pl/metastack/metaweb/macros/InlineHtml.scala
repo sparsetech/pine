@@ -7,7 +7,7 @@ import scala.collection.mutable
 
 import scala.reflect.macros.blackbox.Context
 
-import scala.xml.{NamespaceBinding, XML}
+import scala.xml.XML
 
 import pl.metastack.metaweb.tree
 import pl.metastack.metaweb.state
@@ -15,8 +15,7 @@ import pl.metastack.metaweb.state
 object InlineHtml {
   trait Import {
     implicit class Html(sc: StringContext) {
-      def html(args: Any*): state.zeroway.Tag = macro HtmlImpl0
-      def htmlR(args: Any*): state.reactive.Tag = macro HtmlImplR
+      def html(args: Any*): state.Tag = macro HtmlImpl
       def htmlT(args: Any*): tree.Tag = macro HtmlImplT
     }
   }
@@ -138,11 +137,7 @@ object InlineHtml {
     }
   }
 
-  def HtmlImpl0(c: Context)(args: c.Expr[Any]*): c.Expr[state.zeroway.Tag] =
-    Helpers.treeToState(c)(HtmlImplT(c)(args: _*), way = 0)
-      .asInstanceOf[c.Expr[state.zeroway.Tag]]
-
-  def HtmlImplR(c: Context)(args: c.Expr[Any]*): c.Expr[state.reactive.Tag] =
-    Helpers.treeToState(c)(HtmlImplT(c)(args: _*), way = 1)
-      .asInstanceOf[c.Expr[state.reactive.Tag]]
+  def HtmlImpl(c: Context)(args: c.Expr[Any]*): c.Expr[state.Tag] =
+    Helpers.treeToState(c)(HtmlImplT(c)(args: _*))
+      .asInstanceOf[c.Expr[state.Tag]]
 }

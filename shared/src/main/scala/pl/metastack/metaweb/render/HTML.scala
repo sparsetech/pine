@@ -1,50 +1,49 @@
 package pl.metastack.metaweb.render
 
-import pl.metastack.metaweb.state
-import pl.metastack.metaweb.{HtmlHelpers, Render}
+import pl.metastack.metaweb._
 
 trait HTML[N] extends Render[N, String]
 
 trait HTMLImplicit {
-  implicit class NodeToHtml(node: state.Node) {
+  implicit class NodeToHtml(node: Node) {
     def toHtml: String = HTML.render(node)
   }
 }
 
-object HTML extends HTML[state.Node] with HTMLImplicit {
-  override def render(node: state.Node): String =
+object HTML extends HTML[Node] with HTMLImplicit {
+  override def render(node: Node): String =
     node match {
-      case n: state.Null => RenderNull.render(n)
-      case n: state.Placeholder => RenderPlaceholder.render(n)
-      case n: state.Container => RenderContainer.render(n)
-      case n: state.Text => RenderText.render(n)
-      case n: state.Tag => RenderTag.render(n)
+      case n: Null => RenderNull.render(n)
+      case n: Placeholder => RenderPlaceholder.render(n)
+      case n: Container => RenderContainer.render(n)
+      case n: Text => RenderText.render(n)
+      case n: Tag => RenderTag.render(n)
     }
 
-  case object RenderNull extends HTML[state.Null] {
-    def render(node: state.Null): String = ""
+  case object RenderNull extends HTML[Null] {
+    def render(node: Null): String = ""
   }
 
-  case object RenderPlaceholder extends HTML[state.Placeholder] {
-    def render(node: state.Placeholder): String =
-      node.get.map(_.toHtml).getOrElse("")
+  case object RenderPlaceholder extends HTML[Placeholder] {
+    def render(node: Placeholder): String =
+      node.node.map(_.toHtml).getOrElse("")
   }
 
-  case object RenderContainer extends HTML[state.Container] {
-    def render(node: state.Container): String =
-      node.get.map(_.toHtml).mkString
+  case object RenderContainer extends HTML[Container] {
+    def render(node: Container): String =
+      node.nodes.map(_.toHtml).mkString
   }
 
-  case object RenderTag extends HTML[state.Tag] {
-    def render(node: state.Tag): String =
+  case object RenderTag extends HTML[Tag] {
+    def render(node: Tag): String =
       HtmlHelpers.node(
         node.tagName,
         node.attributes,
         node.children.map(_.toHtml))
   }
 
-  case object RenderText extends HTML[state.Text] {
-    def render(node: state.Text): String =
-      HtmlHelpers.escape(node.get)
+  case object RenderText extends HTML[Text] {
+    def render(node: Text): String =
+      HtmlHelpers.escape(node.text)
   }
 }

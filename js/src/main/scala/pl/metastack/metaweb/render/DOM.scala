@@ -9,12 +9,12 @@ import org.scalajs.dom
 import pl.metastack.metarx._
 import pl.metastack.metarx.Buffer.Position
 
-import pl.metastack.metaweb.{PlatformSupport, state, Render}
+import pl.metastack.metaweb._
 
 trait DOM[N] extends Render[N, Seq[dom.Element]]
 
 trait DOMImplicit {
-  implicit class NodeToDom(node: state.Node) {
+  implicit class NodeToDom(node: Node) {
     def toDom: Seq[dom.Element] = DOM.render(node)
   }
 }
@@ -37,33 +37,33 @@ object DOMObserverRules {
 /* The rendering rules make sure that the resulting Seq[dom.Element] node is
  * non-empty. Otherwise state.Null cannot be located in the DOM.
  */
-object DOM extends DOM[state.Node]
+object DOM extends DOM[Node]
   with PlatformSupport  // TODO For IntelliJ
 {
-  override def render(node: state.Node): Seq[dom.Element] =
+  override def render(node: Node): Seq[dom.Element] =
     node match {
-      case n: state.Null => RenderNull.render(n)
-      case n: state.Placeholder => RenderPlaceholder.render(n)
-      case n: state.Container => RenderContainer.render(n)
-      case n: state.Text => RenderText.render(n)
-      case n: state.Tag => RenderTag.render(n)
+      case n: Null => RenderNull.render(n)
+      case n: Placeholder => RenderPlaceholder.render(n)
+      case n: Container => RenderContainer.render(n)
+      case n: Text => RenderText.render(n)
+      case n: Tag => RenderTag.render(n)
     }
 
   def nullNode(): dom.Element =
     dom.document.createComment("")
       .asInstanceOf[dom.Element]
 
-  case object RenderNull extends DOM[state.Null] {
-    def render(node: state.Null): Seq[dom.Element] = Seq(nullNode())
+  case object RenderNull extends DOM[Null] {
+    def render(node: Null): Seq[dom.Element] = Seq(nullNode())
   }
 
-  case object RenderPlaceholder extends DOM[state.Placeholder] {
-    def render(node: state.Placeholder): Seq[dom.Element] = {
+  case object RenderPlaceholder extends DOM[Placeholder] {
+    def render(node: Placeholder): Seq[dom.Element] = {
       node match {
-        case n: state.zeroway.Placeholder =>
-          val dom = node.get.map(_.toDom)
+        case n: tree.Placeholder =>
+          val dom = node.node.map(_.toDom)
           dom.getOrElse(Seq(nullNode()))
-        case n: state.reactive.Placeholder =>
+        case n: state.Placeholder =>
           // TODO Don't create <span>
           val elem = dom.document.createElement("span")
           n.values.attach {
@@ -78,8 +78,8 @@ object DOM extends DOM[state.Node]
   }
 
   def renderBuffer(rendered: dom.Element,
-                   deltas: ReadChannel[Buffer.Delta[state.Node]]) {
-    val mapping = mutable.Map.empty[state.Node, Seq[dom.Node]]
+                   deltas: ReadChannel[Buffer.Delta[Node]]) {
+    val mapping = mutable.Map.empty[Node, Seq[dom.Node]]
 
     deltas.attach {
       case Buffer.Delta.Insert(Position.Head(), element) =>
@@ -117,11 +117,11 @@ object DOM extends DOM[state.Node]
     }
   }
 
-  case object RenderContainer extends DOM[state.Container] {
-    def render(node: state.Container): Seq[dom.Element] = {
+  case object RenderContainer extends DOM[Container] {
+    def render(node: Container): Seq[dom.Element] = {
       node match {
-        case n: state.zeroway.Container => node.get.flatMap(_.toDom)
-        case n: state.reactive.Container =>
+        case n: tree.Container => n.nodes.flatMap(_.toDom)
+        case n: state.Container =>
           // TODO Don't create <span>
           val rendered = dom.document.createElement("span")
           renderBuffer(rendered, n.deltas)
@@ -130,7 +130,7 @@ object DOM extends DOM[state.Node]
     }
   }
 
-  def renderTag(tag: state.reactive.Tag): dom.Element = {
+  def renderTag(tag: state.Tag): dom.Element = {
     val rendered = dom.document.createElement(tag.tagName)
     val attrCallbacks = mutable.Map.empty[String, dom.Event => Unit]
 
@@ -214,10 +214,10 @@ object DOM extends DOM[state.Node]
     rendered
   }
 
-  case object RenderTag extends DOM[state.Tag] {
-    def render(node: state.Tag): Seq[dom.Element] = {
+  case object RenderTag extends DOM[Tag] {
+    def render(node: Tag): Seq[dom.Element] = {
       node match {
-        case n: state.zeroway.Tag =>
+        case n: tree.Tag =>
           val element = dom.document.createElement(n.tagName)
 
           n.attributes.foreach { case (k, v) =>
@@ -234,19 +234,19 @@ object DOM extends DOM[state.Node]
 
           Seq(element)
 
-        case n: state.reactive.Tag => Seq(renderTag(n))
+        case n: state.Tag => Seq(renderTag(n))
       }
     }
   }
 
-  case object RenderText extends DOM[state.Text] {
-    def render(node: state.Text): Seq[dom.Element] = {
+  case object RenderText extends DOM[Text] {
+    def render(node: Text): Seq[dom.Element] = {
       node match {
-        case n: state.zeroway.Text =>
-          Seq(dom.document.createTextNode(n.get)
+        case n: tree.Text =>
+          Seq(dom.document.createTextNode(n.text)
             .asInstanceOf[dom.Element])
 
-        case n: state.reactive.Text =>
+        case n: state.Text =>
           val rendered = dom.document.createTextNode("")
             .asInstanceOf[dom.Element]
 

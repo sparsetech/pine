@@ -5,8 +5,7 @@ import scala.language.reflectiveCalls
 
 import scala.reflect.macros.blackbox.Context
 
-import pl.metastack.metaweb.tree
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.{Tag, tree, state}
 
 import scala.xml.NamespaceBinding
 
@@ -29,16 +28,12 @@ object Helpers {
   def literalValueExpr[T](c: Context)(expr: c.Expr[T]): T =
     literalValueTree[T](c)(expr.tree)
 
-  def treeToState(c: Context)(node: c.Expr[tree.Tag],
-                              way: Int): c.Expr[state.Tag] = {
+  def treeToState(c: Context)(node: c.Expr[tree.Tag]): c.Expr[Tag] = {
     import c.universe._
-
-    val wayObj = TermName(if (way == 0) "ZeroWay" else "Reactive")
-    val ns = TermName(if (way == 0) "zeroway" else "reactive")
 
     c.Expr(q"""
       import pl.metastack.metaweb
-      $node.state(metaweb.state.$wayObj).asInstanceOf[state.$ns.Tag]
+      $node.state
     """)
   }
 }

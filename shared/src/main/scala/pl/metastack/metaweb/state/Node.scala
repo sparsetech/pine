@@ -1,3 +1,5 @@
 package pl.metastack.metaweb.state
 
-trait Node
+import pl.metastack.metaweb
+
+trait Node extends metaweb.Node

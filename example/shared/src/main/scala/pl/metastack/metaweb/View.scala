@@ -1,11 +1,11 @@
 package pl.metastack.metaweb
 
 trait View {
-  val view: state.Node
+  val view: Node
 }
 
 object View {
-  def apply(node: state.Node): View = new View {
+  def apply(node: Node): View = new View {
     val view = node
   }
 }

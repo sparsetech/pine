@@ -1,12 +1,13 @@
 package pl.metastack.metaweb.tree
 
 import pl.metastack.metaweb
-import pl.metastack.metaweb.State
 
 case class Tag(tagName: String,
                attributes: Map[String, Any] = Map.empty,
                events: Map[String, Any => Unit],
-               children: Seq[Node] = Seq.empty) extends Node {
+               children: Seq[Node] = Seq.empty) extends metaweb.Tag with Node {
+  def getAttribute(attribute: String): Option[Any] = attributes.get(attribute)
+
   def withoutId: Tag = copy(attributes = attributes - "id")
 
   def instantiateMap(nodes: Map[String, Node]): Node = {
@@ -29,31 +30,13 @@ case class Tag(tagName: String,
   def instantiate(nodes: (String, Node)*): Node =
     instantiateMap(nodes.toMap)
 
-  def byIdOpt(id: String): Option[Tag] = {
-    if (attributes.get("id").contains(id)) Some(this)
-    else children.collectFirst {
-      case t: Tag if t.byIdOpt(id).isDefined => t.byIdOpt(id).get  // TODO optimise
-    }
-  }
-
-  def byId(id: String): Tag = byIdOpt(id).get
-
-  def byTagOpt(tag: String): Option[Tag] = {
-    if (tagName == tag) Some(this)
-    else children.collectFirst {
-      case t: Tag if t.byTagOpt(tag).isDefined => t.byTagOpt(tag).get  // TODO optimise
-    }
-  }
-
-  def byTag(tagName: String): Tag = byTagOpt(tagName).get
-
-  override def state[T <: metaweb.state.Node](creator: State[T]): T with metaweb.state.Tag = {
-    val target = creator.tag(tagName)
+  override def state: metaweb.state.Tag = {
+    val target = new metaweb.state.Tag(tagName)
 
     attributes.foreach { case (k, v) => target.setAttribute(k, v) }
     events.foreach { case (k, v) => target.setEvent(k, v) }
-    target ++= children.map(_.state(creator))
+    target ++= children.map(_.state)
 
-    target.asInstanceOf[T with metaweb.state.Tag]
+    target
   }
 }

@@ -2,6 +2,8 @@ package pl.metastack.metaweb.numberguess
 
 import scalajs.js
 
+import pl.metastack.metarx._
+
 import pl.metastack.metaweb
 import pl.metastack.metaweb._
 
@@ -10,9 +12,9 @@ class View extends ViewBase {
 
   // TODO These functions must request an `EventContext` implicit, so that
   // dispose() can be called automatically on the channels when the page changes.
-  input.subscribeAttribute("disabled", model.solved)
-  guess.subscribeAttribute("disabled", model.solved)
-  input.subscribeAttribute("value", model.solved.collect {
+  input.attribute("disabled").asInstanceOf[Var[Boolean]].subscribe(model.solved)
+  guess.attribute("disabled").asInstanceOf[Var[Boolean]].subscribe(model.solved)
+  input.attribute("value").subscribe(model.solved.collect {
     case true => ""
   })
   message.subscribe(model.message)
