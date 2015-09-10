@@ -3,7 +3,7 @@ package pl.metastack.metaweb.tree
 import pl.metastack.metaweb
 import pl.metastack.metaweb.State
 
-case class Tag(name: String,
+case class Tag(tagName: String,
                attributes: Map[String, Any] = Map.empty,
                events: Map[String, Any => Unit],
                children: Seq[Node] = Seq.empty) extends Node {
@@ -39,7 +39,7 @@ case class Tag(name: String,
   def byId(id: String): Tag = byIdOpt(id).get
 
   def byTagOpt(tag: String): Option[Tag] = {
-    if (name == tag) Some(this)
+    if (tagName == tag) Some(this)
     else children.collectFirst {
       case t: Tag if t.byTagOpt(tag).isDefined => t.byTagOpt(tag).get  // TODO optimise
     }
@@ -48,7 +48,7 @@ case class Tag(name: String,
   def byTag(tagName: String): Tag = byTagOpt(tagName).get
 
   override def state[T <: metaweb.state.Node](creator: State[T]): T with metaweb.state.Tag = {
-    val target = creator.tag(name)
+    val target = creator.tag(tagName)
 
     attributes.foreach { case (k, v) => target.setAttribute(k, v) }
     events.foreach { case (k, v) => target.setEvent(k, v) }

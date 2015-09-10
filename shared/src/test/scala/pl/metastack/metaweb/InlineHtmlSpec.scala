@@ -2,7 +2,7 @@ package pl.metastack.metaweb
 
 import scala.collection.mutable.ArrayBuffer
 
-import pl.metastack.metarx.{Buffer, Var}
+import pl.metastack.metarx.{Opt, StateChannel, Buffer, Var}
 
 import minitest._
 
@@ -27,7 +27,7 @@ object InlineHtmlSpec extends SimpleTestSuite {
     val title = Var("GitHub")
 
     val root = htmlR"""<a></a>"""
-    root.subscribeAttribute("href", url)
+    root.attribute("href").asInstanceOf[Var[String]].subscribe(url)
     root.subscribeChildren(Buffer({
       val s = state.Reactive.text()
       s.listen(title)
@@ -37,39 +37,35 @@ object InlineHtmlSpec extends SimpleTestSuite {
     assertEquals(root.toHtml, """<a href="http://github.com/">GitHub</a>""")
 
     url := "http://google.com/"
-    assertEquals(root.getAttribute("href").get, "http://google.com/")
+    assertEquals(root.attribute("href").get, "http://google.com/")
     assertEquals(root.toHtml, """<a href="http://google.com/">GitHub</a>""")
 
     root.clearChildren()
     assertEquals(root.toHtml, """<a href="http://google.com/"></a>""")
   }
 
-  test("Listen to changes") {
+  test("Check attribute and content updates") {
     val url = Var("http://github.com/")
     val title = Var("GitHub")
 
     val root = htmlR"""<a></a>"""
-    root.subscribeAttribute("href", url)
+    assertEquals(root.toHtml, """<a></a>""")
+
+    val href = root.attribute("href").asInstanceOf[StateChannel[String]]
+    assertEquals(root.toHtml, """<a href=""></a>""")
+
+    href.subscribe(url)
     root := {
       val s = state.Reactive.text()
       s.listen(title)
       s
     }
 
-    val changes = ArrayBuffer.empty[String]
-
-    root.watchAttributes.attach(_ => changes += root.toHtml)
+    assertEquals(root.toHtml, """<a href="http://github.com/">GitHub</a>""")
 
     url := "http://google.com/"
     title := "Google"
-
-    changes += root.toHtml
-
-    assertEquals(changes, Seq(
-      """<a href="http://github.com/">GitHub</a>""",
-      """<a href="http://google.com/">GitHub</a>""",
-      """<a href="http://google.com/">Google</a>"""
-    ))
+    assertEquals(root.toHtml, """<a href="http://google.com/">Google</a>""")
   }
 
   test("Bind list") {
@@ -179,6 +175,6 @@ object InlineHtmlSpec extends SimpleTestSuite {
     val atomLink = xml
       .children.head.asInstanceOf[tree.Tag]
       .children.head.asInstanceOf[tree.Tag]
-    assertEquals(atomLink.name, "atom:link")
+    assertEquals(atomLink.tagName, "atom:link")
   }
 }

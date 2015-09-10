@@ -8,7 +8,9 @@ object HtmlHelpers {
     "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr")
 
   def escapeAttribute(value: String): String = value.replaceAll("\"", "&quot;")
-  def quoteAttribute(value: String): String = "\"" + escapeAttribute(value) + "\""
+  def quoteAttribute(value: Any): String =
+    if (value == null) "\"\""
+    else "\"" + escapeAttribute(value.toString) + "\""
 
   /** See also scala.xml.Utility.escape() */
   def escape(text: String): String =
@@ -26,7 +28,7 @@ object HtmlHelpers {
 
   def encodedAttributes(attributes: Map[String, Any]): String =
     attributes.map { case (key, value) =>
-      s"$key=" + HtmlHelpers.quoteAttribute(value.toString)
+      s"$key=" + HtmlHelpers.quoteAttribute(value)
     }.mkString(" ")
 
   def node(tagName: String,

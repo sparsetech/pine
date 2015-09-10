@@ -62,7 +62,7 @@ object MDNParser {
     val file = new File(path, "HTMLTag.scala")
     printToFile(file) { p =>
       writeHeaderTrait(p)
-      p.println(s"""trait HTMLTag { self: tree.Tag =>""")
+      p.println(s"""trait HTMLTag { self: state.Tag =>""")
       writeAttributes(p, attributes)
       p.println("}")
     }
@@ -77,7 +77,7 @@ object MDNParser {
     printToFile(file) { p =>
       writeHeader(p, namespace)
       p.println("""object HTMLTag {""")
-      p.println(s"""  def fromTag(tag: String): tree.$namespace.Tag =""")
+      p.println(s"""  def fromTag(tag: String): state.$namespace.Tag =""")
       p.println("""    tag match {""")
       elements.toList.sortBy(_.tag).foreach { element =>
         val className = escapeScalaName(element.tag)
@@ -92,14 +92,14 @@ object MDNParser {
   def writeHeaderTrait(p: PrintWriter) {
     p.println(s"package pl.metastack.metaweb.tag")
     p.println()
-    p.println("import pl.metastack.metaweb.tree")
+    p.println("import pl.metastack.metaweb.state")
     p.println()
   }
 
   def writeHeader(p: PrintWriter, namespace: String) {
     p.println(s"package pl.metastack.metaweb.tag.$namespace")
     p.println()
-    p.println("import pl.metastack.metaweb.tree")
+    p.println("import pl.metastack.metaweb.state")
     p.println("import pl.metastack.metaweb.tag")
     p.println()
   }
@@ -118,7 +118,7 @@ object MDNParser {
       p.println( s"""/**""")
       p.println( s""" * $description""")
       p.println( s""" */""")
-      p.println(s"""trait $scalaTagName extends tree.Tag with HTMLTag {""")
+      p.println(s"""trait $scalaTagName extends state.Tag with HTMLTag {""")
 
       val uniqueAttrs = element.attributes.filter { attr =>
         val exists = globalAttributes.exists(_.name == attr.name)
@@ -142,7 +142,7 @@ object MDNParser {
       writeHeader(p, namespace)
       val scalaTagName = escapeScalaName(element.tag)
 
-      p.println(s"""class $scalaTagName extends tree.$namespace.Tag("${element.tag}") with tag.$scalaTagName""")
+      p.println(s"""class $scalaTagName extends state.$namespace.Tag("${element.tag}") with tag.$scalaTagName""")
       p.println()
       p.println(s"""object $scalaTagName { def apply() = new $scalaTagName }""")
     }
@@ -166,7 +166,7 @@ object MDNParser {
       case "long" => "Long"
       case "double" => "Double"
       case "boolean" => "Boolean"
-      case _ if tpe.startsWith("HTML") => "tree.Node"  // TODO Generate interfaces
+      case _ if tpe.startsWith("HTML") => "state.Node"  // TODO Generate interfaces
       case _ => tpe
     }
 
@@ -360,6 +360,6 @@ object MDNParser {
     }
 
     (traitFiles.toSeq :+ traitAttrsFile) ++
-      generateFiles("mutable") ++ generateFiles("immutable")
+      generateFiles("reactive") ++ generateFiles("zeroway")
   }
 }

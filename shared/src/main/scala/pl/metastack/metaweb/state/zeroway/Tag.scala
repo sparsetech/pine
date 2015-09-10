@@ -4,7 +4,7 @@ import pl.metastack.metaweb.state
 
 import scala.collection.mutable
 
-class Tag(val name: String) extends state.Tag with Node {
+class Tag(val tagName: String) extends state.Tag with Node {
   private val attrs = mutable.Map.empty[String, Any]
   private val contents = mutable.ArrayBuffer.empty[state.Node]
   private val _events = mutable.Map.empty[String, Any => Unit]

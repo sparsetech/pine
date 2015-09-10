@@ -6,7 +6,7 @@ import scala.scalajs.js
 
 import org.scalajs.dom
 
-import pl.metastack.metarx.{ReadChannel, Dict, Buffer}
+import pl.metastack.metarx._
 import pl.metastack.metarx.Buffer.Position
 
 import pl.metastack.metaweb.{PlatformSupport, state, Render}
@@ -131,10 +131,8 @@ object DOM extends DOM[state.Node]
   }
 
   def renderTag(tag: state.reactive.Tag): dom.Element = {
-    val rendered = dom.document.createElement(tag.name)
+    val rendered = dom.document.createElement(tag.tagName)
     val attrCallbacks = mutable.Map.empty[String, dom.Event => Unit]
-
-    var ignoreNext = false
 
     def nonStandard(k: String) =
       k == "style" ||
@@ -149,6 +147,22 @@ object DOM extends DOM[state.Node]
       else renderedDyn.updateDynamic(k)(v.asInstanceOf[js.Any])
     }
 
+    def setAttrCh(k: String, v: Var[Any]) {
+      val ignore = v.attach(setAttr(k, _))
+
+      // TODO Only register in DOM when there are subscribers in `ch`
+      DOMObserverRules.resolveEvents(tag.tagName, k).foreach { events =>
+        attrCallbacks += k -> ((e: dom.Event) =>
+          v.produce(getAttr(k), ignore))
+
+        events.foreach { event =>
+          rendered.addEventListener(event,
+            attrCallbacks(k),
+            useCapture = false)
+        }
+      }
+    }
+
     def getAttr(k: String): Any =
       if (nonStandard(k)) renderedDyn.getAttribute(k)
       else renderedDyn.selectDynamic(k)
@@ -156,21 +170,15 @@ object DOM extends DOM[state.Node]
     def remAttr(k: String) {
       rendered.removeAttribute(k)
 
-      if (tag.twoWay.contains(k)) {
-        DOMObserverRules.resolveEvents(tag.name, k).foreach { events =>
-          events.foreach { event =>
-            rendered.removeEventListener(event,
-              attrCallbacks(k),
-              useCapture = false)
-          }
+      DOMObserverRules.resolveEvents(tag.tagName, k).foreach { events =>
+        events.foreach { event =>
+          rendered.removeEventListener(event,
+            attrCallbacks(k),
+            useCapture = false)
         }
-
-        attrCallbacks -= k
       }
-    }
 
-    tag.attributeProvider.register { case attr =>
-      getAttr(attr)
+      attrCallbacks -= k
     }
 
     tag.eventProvider.register { case (event, args) =>
@@ -180,31 +188,8 @@ object DOM extends DOM[state.Node]
     }
 
     tag.watchAttributes.attach {
-      case Dict.Delta.Insert(k, v) =>
-        setAttr(k, v)
-
-        if (tag.twoWay.contains(k)) {
-          DOMObserverRules.resolveEvents(tag.name, k).foreach { events =>
-            attrCallbacks += k -> ((e: dom.Event) => {
-              ignoreNext = true
-              tag.updateAttribute(k, getAttr(k))
-            })
-
-            events.foreach { event =>
-              rendered.addEventListener(event,
-                attrCallbacks(k),
-                useCapture = false)
-            }
-          }
-        }
-
-      case Dict.Delta.Update(k, v) =>
-        if (!ignoreNext) {
-          setAttr(k, v)
-        }
-
-        ignoreNext = false
-
+      case Dict.Delta.Insert(k, v) => setAttrCh(k, v)
+      case Dict.Delta.Update(k, v) => setAttrCh(k, v)
       case Dict.Delta.Remove(k) => remAttr(k)
       case Dict.Delta.Clear() =>
         tag.attributes.foreach { case (k, _) =>
@@ -233,7 +218,7 @@ object DOM extends DOM[state.Node]
     def render(node: state.Tag): Seq[dom.Element] = {
       node match {
         case n: state.zeroway.Tag =>
-          val element = dom.document.createElement(n.name)
+          val element = dom.document.createElement(n.tagName)
 
           n.attributes.foreach { case (k, v) =>
             element.setAttribute(k, v.toString)

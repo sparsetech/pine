@@ -38,7 +38,7 @@ object HTML extends HTML[state.Node] with HTMLImplicit {
   case object RenderTag extends HTML[state.Tag] {
     def render(node: state.Tag): String =
       HtmlHelpers.node(
-        node.name,
+        node.tagName,
         node.attributes,
         node.children.map(_.toHtml))
   }

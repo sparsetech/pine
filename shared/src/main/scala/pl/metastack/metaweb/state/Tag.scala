@@ -1,7 +1,7 @@
 package pl.metastack.metaweb.state
 
 trait Tag extends Node {
-  def name: String
+  def tagName: String
   def attributes: Map[String, Any]
   def events: Map[String, Any => Unit]
   def children: Seq[Node]
@@ -31,7 +31,7 @@ trait Tag extends Node {
 
   def byTagOpt[T <: Tag](tag: String): Option[T] = {
     children.collectFirst {
-      case t: Tag if t.name == tag => t.asInstanceOf[T]
+      case t: Tag if t.tagName == tag => t.asInstanceOf[T]
       case t: Tag if t.byTagOpt[T](tag).isDefined => t.byTagOpt[T](tag).get  // TODO optimise
     }
   }
