@@ -1,14 +1,14 @@
 # MetaWeb
 [![Build Status](https://travis-ci.org/MetaStack-pl/MetaWeb.svg)](https://travis-ci.org/MetaStack-pl/MetaWeb)
 
-MetaWeb provides Scala and Scala.js bindings for HTML5.
+MetaWeb provides reactive Scala and Scala.js bindings for HTML5.
 
-It implements a DOM as an immutable tree. This tree can be transformed into a stateful tree. There are two different state trees:
+We implemented the DOM as two trees:
 
-- Zero-way: Initially just a copy of the immutable tree. Attributes and children can be updated, but don't trigger changes.
-- Reactive: Value updates will trigger changes. Two-way binding is supported, so that value updates in the rendered tree (i.e. browser DOM) will be propagated back.
+- `tree`: This tree is immutable and non-reactive (no changes are triggered when attributes are updated). Every node has a method `state` to obtain a stateful version that can be modified.
+- `state`: This tree is mutable and reactive. Value updates will trigger changes. Two-way binding is supported, so that value updates in the rendered tree (i.e. browser DOM) will be propagated back.
 
-This allows for more fine-grained control as one-way and two-way binding have a slightly higher memory and performance footprint.
+`tree` and `state` nodes can be used interchangeably. This allows for more fine-grained control as `state` nodes have a slightly higher memory/performance footprint and cannot be reused.
 
 MetaWeb has two rendering methods:
 
