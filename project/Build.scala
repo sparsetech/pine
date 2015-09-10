@@ -51,10 +51,9 @@ object Build extends sbt.Build {
       libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.11.7",
       libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.11" % "1.0.5",
 
-      addCompilerPlugin("org.scalamacros" % "paradise" % Dependencies.Paradise cross CrossVersion.full)
+      addCompilerPlugin("org.scalamacros" % "paradise" % Dependencies.Paradise cross CrossVersion.full),
 
-      // TODO Temporarily disabled
-      // , sourceGenerators in Compile <+= convertMDN
+      sourceGenerators in Compile <+= convertMDN
     )
     .jvmSettings(
       libraryDependencies ++= Seq(

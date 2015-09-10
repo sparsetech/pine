@@ -56,31 +56,21 @@ object MDNParser {
     }
   }
 
-  def writeGlobalAttrsTrait(path: File,
-                            elements: Set[Element],
-                            attributes: Seq[Attribute]): File = {
-    val file = new File(path, "HTMLTag.scala")
-    printToFile(file) { p =>
-      writeHeaderTrait(p)
-      p.println(s"""trait HTMLTag { self: state.Tag =>""")
-      writeAttributes(p, attributes)
-      p.println("}")
-    }
-    file
-  }
-
   def writeGlobalAttrs(path: File,
-                       namespace: String,
                        elements: Set[Element],
                        attributes: Seq[Attribute]): File = {
     val file = new File(path, "HTMLTag.scala")
     printToFile(file) { p =>
-      writeHeader(p, namespace)
+      writeHeader(p)
+      p.println(s"""trait HTMLTag { self: state.Tag =>""")
+      writeAttributes(p, attributes)
+      p.println("}")
       p.println("""object HTMLTag {""")
-      p.println(s"""  def fromTag(tag: String): state.$namespace.Tag =""")
+      p.println(s"""  def fromTag(tag: String): state.Tag =""")
       p.println("""    tag match {""")
       elements.toList.sortBy(_.tag).foreach { element =>
-        val className = escapeScalaName(element.tag)
+        val scalaTagName = element.tag.head.toUpper + element.tag.tail
+        val className = escapeScalaName(scalaTagName)
         p.println(s"""      case "${element.tag}" => new $className""")
       }
       p.println("""    }""")
@@ -89,28 +79,22 @@ object MDNParser {
     file
   }
 
-  def writeHeaderTrait(p: PrintWriter) {
+  def writeHeader(p: PrintWriter) {
     p.println(s"package pl.metastack.metaweb.tag")
     p.println()
+    p.println("import pl.metastack.metarx._")
     p.println("import pl.metastack.metaweb.state")
     p.println()
   }
 
-  def writeHeader(p: PrintWriter, namespace: String) {
-    p.println(s"package pl.metastack.metaweb.tag.$namespace")
-    p.println()
-    p.println("import pl.metastack.metaweb.state")
-    p.println("import pl.metastack.metaweb.tag")
-    p.println()
-  }
-
-  def writeElementTrait(path: File,
+  def writeElement(path: File,
                         globalAttributes: Seq[Attribute],
                         element: Element): File = {
-    val file = new File(path, s"${element.tag}.scala")
+    val scalaTagName = element.tag.head.toUpper + element.tag.tail
+    val file = new File(path, s"$scalaTagName.scala")
     printToFile(file) { p =>
-      writeHeaderTrait(p)
-      val scalaTagName = escapeScalaName(element.tag)
+      writeHeader(p)
+      val className = escapeScalaName(scalaTagName)
 
       // TODO Use absolute URLs
       val description = escapeScalaComment(element.description)
@@ -118,7 +102,7 @@ object MDNParser {
       p.println( s"""/**""")
       p.println( s""" * $description""")
       p.println( s""" */""")
-      p.println(s"""trait $scalaTagName extends state.Tag with HTMLTag {""")
+      p.println(s"""class $className extends state.Tag("${element.tag}") with HTMLTag {""")
 
       val uniqueAttrs = element.attributes.filter { attr =>
         val exists = globalAttributes.exists(_.name == attr.name)
@@ -128,23 +112,6 @@ object MDNParser {
 
       writeAttributes(p, uniqueAttrs)
       p.println("}")
-      p.println()
-    }
-    file
-  }
-
-  def writeElement(path: File,
-                   namespace: String,
-                   globalAttributes: Seq[Attribute],
-                   element: Element): File = {
-    val file = new File(path, s"${element.tag}.scala")
-    printToFile(file) { p =>
-      writeHeader(p, namespace)
-      val scalaTagName = escapeScalaName(element.tag)
-
-      p.println(s"""class $scalaTagName extends state.$namespace.Tag("${element.tag}") with tag.$scalaTagName""")
-      p.println()
-      p.println(s"""object $scalaTagName { def apply() = new $scalaTagName }""")
     }
     file
   }
@@ -180,8 +147,7 @@ object MDNParser {
         p.println( s"""  /**""")
         p.println( s"""   * $description""")
         p.println( s"""   */""")
-        p.println( s"""  def $attrName: Option[$attrType] = getAttribute("${attribute.name}").asInstanceOf[Option[$attrType]]""")
-        p.println( s"""  def $attrName(value: $attrType) = setAttribute("${attribute.name}", value)""")
+        p.println( s"""  def $attrName: StateChannel[$attrType] = attribute("${attribute.name}").asInstanceOf[StateChannel[$attrType]]""")
       }
     }
   }
@@ -340,26 +306,9 @@ object MDNParser {
 
     val parsedElements = (elements ++ AdditionalTagUrls).flatMap(processElement)
     val globalAttrs = globalAttributes()
+    val elemsFiles = parsedElements.map(writeElement(tagsPath, globalAttrs, _))
+    val attrsFile = writeGlobalAttrs(tagsPath, parsedElements, globalAttrs)
 
-    val traitFiles = parsedElements.map(
-      writeElementTrait(tagsPath, globalAttrs, _))
-    val traitAttrsFile = writeGlobalAttrsTrait(
-      tagsPath, parsedElements, globalAttrs)
-
-    def generateFiles(namespace: String): Seq[File] = {
-      val namespacePath = new File(tagsPath, namespace)
-      namespacePath.mkdir()
-
-      val elemsFiles = parsedElements.map(
-        writeElement(namespacePath, namespace, globalAttrs, _))
-
-      val attrsFile = writeGlobalAttrs(
-        namespacePath, namespace, parsedElements, globalAttrs)
-
-      elemsFiles.toSeq :+ attrsFile
-    }
-
-    (traitFiles.toSeq :+ traitAttrsFile) ++
-      generateFiles("reactive") ++ generateFiles("zeroway")
+    elemsFiles.toSeq :+ attrsFile
   }
 }
