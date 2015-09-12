@@ -2,6 +2,8 @@ import sbt._
 import sbt.Keys._
 import spray.revolver.RevolverPlugin.Revolver
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+import pl.metastack.metaweb.MetaWeb
+import pl.metastack.metaweb.MetaWeb.autoImport._
 
 object Build extends sbt.Build {
   val SharedSettings = Seq(
@@ -19,8 +21,11 @@ object Build extends sbt.Build {
   lazy val root = project.in(file("."))
     .aggregate(js, jvm)
     .settings(SharedSettings: _*)
+    .settings(MetaWeb.projectSettings: _*)
     .settings(
-      publishArtifact := false
+      publishArtifact := false,
+      metawebTargetPackage := "pl.metastack.metaweb.view",
+      metawebSubProjects := Seq("js", "jvm", "shared")
     )
 
   lazy val example = crossProject.in(file("."))

@@ -7,10 +7,10 @@ import org.hyperscala.web.Webpage
 
 import pl.metastack.metaweb._
 
-import pl.metastack.metaweb.numberguess.ViewBase
+import pl.metastack.metaweb
 
 class NumberGuess extends Webpage {
-  val view = new ViewBase{}.view
+  val view = new metaweb.view.NumberGuess
 
   val b = view.byTag[state.Tag]("body")
   b += html"""<script type="text/javascript" src="/sjs/example-fastopt.js"></script>"""
