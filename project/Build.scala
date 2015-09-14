@@ -41,7 +41,7 @@ object Build extends sbt.Build {
       publishArtifact := false
     )
 
-  val convertMDN = (sourceManaged in Compile).map(MDNParser.createFiles)
+  val convertMDN = taskKey[Unit]("Generate MDN bindings")
 
   lazy val metaWeb = crossProject.in(file("."))
     .settings(SharedSettings: _*)
@@ -53,7 +53,7 @@ object Build extends sbt.Build {
 
       addCompilerPlugin("org.scalamacros" % "paradise" % Dependencies.Paradise cross CrossVersion.full),
 
-      sourceGenerators in Compile <+= convertMDN
+      convertMDN := MDNParser.createFiles(new File("shared/src/main/scala"))
     )
     .jvmSettings(
       libraryDependencies ++= Seq(

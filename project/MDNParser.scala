@@ -286,8 +286,8 @@ object MDNParser {
     }
   }
 
-  def createFiles(managedPath: File) = {
-    val tagsPath = new File(managedPath, "pl/metastack/metaweb/tag")
+  def createFiles(destPath: File) = {
+    val tagsPath = new File(destPath, "pl/metastack/metaweb/tag")
     tagsPath.mkdirs()
 
     val document = Jsoup.parse(request(ElementsUrl))
