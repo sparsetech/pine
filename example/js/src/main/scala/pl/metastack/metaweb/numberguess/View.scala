@@ -9,7 +9,7 @@ import pl.metastack.metaweb._
 
 class View extends metaweb.View {
   val view = new metaweb.view.NumberGuess
-  val model = new Model
+  val model = new RemoteModel
 
   // TODO These functions must request an `EventContext` implicit, so that
   // dispose() can be called automatically on the channels when the page changes.

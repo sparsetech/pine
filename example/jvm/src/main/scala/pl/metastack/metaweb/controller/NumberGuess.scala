@@ -1,23 +1,61 @@
 package pl.metastack.metaweb.controller
 
-import org.hyperscala.Tag
-import org.hyperscala.html.tag
-import org.hyperscala.ui.dynamic.DynamicTag
-import org.hyperscala.web.Webpage
-
 import pl.metastack.metaweb._
 
 import pl.metastack.metaweb
 
-class NumberGuess extends Webpage {
-  val view = new metaweb.view.NumberGuess
+import scala.collection.mutable
+import scala.util.Random
 
-  val b = view.byTag[state.Tag]("body")
+class SessionManager[T] {
+  private var sessions = mutable.HashMap.empty[String, T]
+
+  def allocateId(default: T) = {
+    val id = System.currentTimeMillis().toString
+    sessions += id -> default
+    id
+  }
+
+  def getData(id: String): T = sessions(id)
+
+  def setData(id: String, data: T) {
+    sessions += id -> data
+  }
+}
+
+case class NumberGuessResult(solution: Int, guesses: Int)
+object NumberGuessSessions extends SessionManager[NumberGuessResult]
+
+class NumberGuess extends Protocol.NumberGuess {
+  val Max = 50
+
+  def guess(session: String, guess: Int): NumberGuessResponse = {
+    val sess = NumberGuessSessions.getData(session)
+    NumberGuessSessions.setData(session, sess.copy(guesses = sess.guesses + 1))
+
+    guess match {
+      case _ if guess < 0 || guess > Max =>
+        NumberGuessResponse(s"Please enter a valid number between 0 and $Max.", solved = false)
+      case _ if guess < sess.solution =>
+        NumberGuessResponse(s"$guess is too low, try a higher number!", solved = false)
+      case _ if guess > sess.solution =>
+        NumberGuessResponse(s"$guess is too high, try a lower number!", solved = false)
+      case _ =>
+        NumberGuessResponse(s"$guess is correct! You got it in ${sess.guesses} tries!", solved = true)
+    }
+  }
+
+  def requestSession(): String =
+    NumberGuessSessions.allocateId(
+      NumberGuessResult(new Random().nextInt(Max), 0))
+}
+
+object NumberGuess {
+  val view = new metaweb.view.NumberGuess
+  val b = view.byTag[tag.Body]("body")
   b += html"""<script type="text/javascript" src="/sjs/example-fastopt.js"></script>"""
   b += html"""<script type="text/javascript" src="/sjs/example-launcher.js"></script>"""
+  val html = view.toHtml
 
-  // TODO Serve static HTML
-  val parsed = DynamicTag.from[tag.HTML](view.toHtml).create()
-  parsed.head.contents.foreach(head.contents += _)
-  parsed.body.contents.foreach(body.contents += _)
+  def render(): String = html
 }

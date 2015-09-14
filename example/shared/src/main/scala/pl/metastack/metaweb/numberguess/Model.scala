@@ -5,7 +5,7 @@ import pl.metastack.metarx.Var
 import scala.util.Random
 
 // Separate business logic from rendering for better testability.
-class Model {
+class LocalModel {
   val Max = 50
 
   val solution = Var(0)

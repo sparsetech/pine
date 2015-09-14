@@ -34,14 +34,18 @@ object Build extends sbt.Build {
     .jvmSettings(
       libraryDependencies ++= Seq(
         "pl.metastack" %% "metaweb" % Dependencies.MetaWeb,
-        "org.hyperscala" %% "hyperscala-web" % Dependencies.Hyperscala,
-        "org.hyperscala" %% "hyperscala-ui" % Dependencies.Hyperscala,
-        "com.outr.net" %% "outrnet-jetty" % Dependencies.OutrNet
+        "io.spray" %% "spray-can" % "1.3.1",
+        "io.spray" %% "spray-routing" % "1.3.1",
+        "com.typesafe.akka" %% "akka-actor" % "2.3.2",
+        "com.lihaoyi" %% "upickle" % "0.2.8",
+        "com.lihaoyi" %% "autowire" % "0.2.5"
       )
     )
     .jsSettings(
       libraryDependencies ++= Seq(
-        "pl.metastack" %%% "metaweb" % Dependencies.MetaWeb
+        "pl.metastack" %%% "metaweb" % Dependencies.MetaWeb,
+        "com.lihaoyi" %%% "upickle" % "0.2.8",
+        "com.lihaoyi" %%% "autowire" % "0.2.5"
       ),
       persistLauncher in Compile := true,
       persistLauncher in Test := false
