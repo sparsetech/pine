@@ -9,6 +9,7 @@ class Tag(val tagName: String) extends metaweb.Tag with Node {
   private val contents = Buffer[metaweb.Node]()
   private val _events = Dict[String, Any => Unit]()
   val eventProvider = Provider[(String, Seq[Any]), Unit]()
+  val nodeProvider = Provider[Unit, Any]()
 
   def attributes: Map[String, Any] = _attributes.toMap.collect {
     case (k, v) => (k, v.get)
@@ -76,6 +77,8 @@ class Tag(val tagName: String) extends metaweb.Tag with Node {
     eventProvider.poll((action, arguments))
     if (_events.isDefinedAt$(action)) _events(action)(arguments)
   }
+
+  def domNode: Option[Any] = nodeProvider.poll(())
 
   def :=(node: metaweb.Node) { set(node) }
   def +=(node: metaweb.Node) { append(node) }

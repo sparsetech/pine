@@ -181,6 +181,8 @@ object DOM extends DOM[Node]
       attrCallbacks -= k
     }
 
+    tag.nodeProvider.register { case () => rendered }
+
     tag.eventProvider.register { case (event, args) =>
       rendered
         .asInstanceOf[js.Dynamic]
