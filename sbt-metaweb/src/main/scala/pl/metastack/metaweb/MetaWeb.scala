@@ -87,23 +87,28 @@ object MetaWeb extends AutoPlugin {
           s"append($c)"
         }.mkString("\n")
 
-        def scalaRep(additional: String = "") =
+        val scalaRep =
           s"""tag.${capitalise(tagName)} {
-            $additional
-            ${if (root) "val base = this" else ""}
             $strTagAttrs
             $tagChildren
           }"""
 
         if (root) {
           val t = tagInstances.mkString("\n")
-          s"""class $objName extends ${scalaRep(t)}"""
+          s"""class $objName {
+            $t
+            ${if (root) "val base = this" else ""}
+            val view = new $scalaRep
+          }
+          """
         } else if (tagAttrs.isDefinedAt("id")) {
           val id = tagAttrs("id")
-          extractedTags += s"""class ${encodeId(id)}(base: $objName) extends ${scalaRep()}"""
+          if (id == "base" || id == "view")
+            throw new RuntimeException(s"ID `$id` is a reserved name")
+          extractedTags += s"""class ${encodeId(id)}(base: $objName) extends $scalaRep"""
           tagInstances += s"""val ${toCamelCase(id)} = new $objName.${encodeId(id)}(this)"""
           "base." + toCamelCase(id)
-        } else s"new ${scalaRep()}"
+        } else s"new $scalaRep"
     }
   }
 
