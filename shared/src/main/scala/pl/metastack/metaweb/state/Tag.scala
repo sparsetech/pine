@@ -31,6 +31,10 @@ class Tag(val tagName: String) extends metaweb.Tag with Node {
     contents.clear()
   }
 
+  def prepend(node: metaweb.Node) {
+    contents.prepend(node)
+  }
+
   def append(node: metaweb.Node) {
     contents += node
   }
