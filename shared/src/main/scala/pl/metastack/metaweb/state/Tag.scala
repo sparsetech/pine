@@ -43,6 +43,10 @@ class Tag(val tagName: String) extends metaweb.Tag with Node {
     contents ++= nodes
   }
 
+  def remove(node: metaweb.Node) {
+    contents.remove(node)
+  }
+
   def set(node: metaweb.Node) {
     clearChildren()
     append(node)
@@ -85,6 +89,7 @@ class Tag(val tagName: String) extends metaweb.Tag with Node {
   def domNode: Option[Any] = nodeProvider.poll(())
 
   def :=(node: metaweb.Node) { set(node) }
+  def -=(node: metaweb.Node) { remove(node) }
   def +=(node: metaweb.Node) { append(node) }
   def ++=(nodes: Seq[metaweb.Node]) { appendAll(nodes) }
 }
