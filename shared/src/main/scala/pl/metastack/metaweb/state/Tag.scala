@@ -47,6 +47,10 @@ class Tag(val tagName: String) extends metaweb.Tag with Node {
     contents.remove(node)
   }
 
+  def replace(reference: metaweb.Node, node: metaweb.Node) {
+    contents.replace(reference, node)
+  }
+
   def set(node: metaweb.Node) {
     clearChildren()
     append(node)
