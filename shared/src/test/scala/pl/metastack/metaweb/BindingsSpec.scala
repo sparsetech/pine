@@ -10,10 +10,10 @@ object BindingsSpec extends SimpleTestSuite {
     assertEquals(a.toHtml, """<a href="http://example.com/"></a>""")
   }
 
-  test("Don't escape <code>") {
-    val code = new tag.Code
-    code += """$("a")"""
+  test("Don't escape <script>") {
+    val script = new tag.Script
+    script += """$("a")"""
 
-    assertEquals(code.toHtml, """<code>$("a")</code>""")
+    assertEquals(script.toHtml, """<script>$("a")</script>""")
   }
 }
