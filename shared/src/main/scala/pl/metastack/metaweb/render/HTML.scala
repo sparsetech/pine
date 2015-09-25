@@ -35,11 +35,14 @@ object HTML extends HTML[Node] with HTMLImplicit {
   }
 
   case object RenderTag extends HTML[Tag] {
-    def render(node: Tag): String =
-      HtmlHelpers.node(
-        node.tagName,
-        node.attributes,
-        node.children.map(_.toHtml))
+    def render(node: Tag): String = {
+      val literal = node.tagName == "code"
+      val children =
+        if (literal) node.children.collect { case t: Text => t.text }
+        else node.children.map(_.toHtml)
+
+      HtmlHelpers.node(node.tagName, node.attributes, children)
+    }
   }
 
   case object RenderText extends HTML[Text] {
