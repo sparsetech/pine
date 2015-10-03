@@ -6,7 +6,7 @@ object Build extends sbt.Build {
   val SharedSettings = Seq(
     name := "MetaWeb",
     organization := "pl.metastack",
-    version := "0.1.1-SNAPSHOT",
+    version := "0.1.2-SNAPSHOT",
     scalaVersion := "2.11.7",
     pomExtra :=
       <url>https://github.com/MetaStack-pl/MetaWeb</url>
