@@ -138,7 +138,7 @@ object MetaWeb extends AutoPlugin {
       if (!file.exists()) Seq.empty
       else {
         val files = file.listFiles().toSeq
-        files.map { file =>
+        files.filter(_.getPath.endsWith(".html")).map { file =>
           val targetPath = this.targetPath(file.getPath, packageName)
           val targetFile = new File(targetPath)
           IO.write(targetFile, htmlToScala(file.getPath, packageName))
