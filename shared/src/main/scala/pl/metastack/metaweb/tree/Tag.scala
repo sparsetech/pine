@@ -8,9 +8,18 @@ case class Tag(tagName: String,
                children: Seq[Node] = Seq.empty) extends metaweb.Tag with Node {
   def getAttribute(attribute: String): Option[Any] = attributes.get(attribute)
 
+  def setAttribute(attribute: String, value: Any): Tag =
+    copy(attributes = attributes + (attribute -> value))
+
+  def clearAttribute(attribute: String): Tag =
+    copy(attributes = attributes - attribute)
+
+  def clearAttributes: Tag =
+    copy(attributes = Map.empty)
+
   def withoutId: Tag = copy(attributes = attributes - "id")
 
-  def instantiateMap(nodes: Map[String, Node]): Node = {
+  def instantiateMap(nodes: Map[String, Node]): Tag = {
     val attrId = attributes.get("id")
 
     if (nodes.exists { case (id, _) => attrId.contains(id) }) {
@@ -27,8 +36,24 @@ case class Tag(tagName: String,
       )
   }
 
-  def instantiate(nodes: (String, Node)*): Node =
+  def instantiate(nodes: (String, Node)*): Tag =
     instantiateMap(nodes.toMap)
+
+  def updateChild(id: String, f: Tag => Node): Node = {
+    val attrId = attributes.get("id")
+
+    if (attrId.contains(id)) f(this)
+    else
+      copy(
+        children = children.map {
+          case tag: Tag => tag.updateChild(id, f)
+          case n => n
+        }
+      )
+  }
+
+  def clearChildren: Tag =
+    copy(children = Seq.empty)
 
   override def state: metaweb.state.Tag = {
     val target = new metaweb.state.Tag(tagName)
