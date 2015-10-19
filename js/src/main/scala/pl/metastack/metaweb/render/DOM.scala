@@ -136,6 +136,7 @@ object DOM extends DOM[Node]
 
     def nonStandard(k: String) =
       k == "style" ||
+        k == "for" ||
         k == "class" ||
         k.startsWith("aria-") ||
         k.startsWith("data-")
