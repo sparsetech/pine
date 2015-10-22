@@ -64,10 +64,40 @@ object MetaWeb extends AutoPlugin {
 
   def capitalise(s: String): String = s.head.toUpper + s.tail
 
-  val extractedTags = ArrayBuffer.empty[String]
-  val tagInstances = ArrayBuffer.empty[String]
+  def collectPaths(node: scala.xml.Node,
+                   path: Seq[String] = Seq.empty): Map[String, Seq[String]] = {
+    node.label match {
+      case "#PCDATA" => Map.empty
+      case tag =>
+        val tagAttrs = node.attributes.asAttrMap
 
-  def convert(node: scala.xml.Node, root: Boolean, objName: String): String = {
+        val fullPath =
+          if (!tagAttrs.isDefinedAt("id")) path
+          else path ++ Seq(toCamelCase(tagAttrs("id")))
+
+        val childrenPaths = node.child.flatMap { n =>
+          collectPaths(n, fullPath)
+        }.toMap
+
+        if (!tagAttrs.isDefinedAt("id")) childrenPaths
+        else Map(toCamelCase(tagAttrs("id")) -> fullPath) ++ childrenPaths
+    }
+  }
+
+  def childAttributes(node: scala.xml.Node, objName: String): Seq[String] =
+    node.child.flatMap { n =>
+      val tagAttrs = n.attributes.asAttrMap
+      if (tagAttrs.isDefinedAt("id")) {
+        val id = tagAttrs("id")
+        Seq(s"""val ${toCamelCase(id)} = new $objName.${encodeId(id)}""")
+      } else childAttributes(n, objName)
+    }
+
+  val extractedTags = ArrayBuffer.empty[String]
+
+  def convert(node: scala.xml.Node,
+              objName: String,
+              root: Boolean = true): String = {
     (node.label, Option(node.prefix)) match {
       case ("#PCDATA", _) => s"tree.Text(${createWrappedString(node.text)})"
       case (tag, prefix) =>
@@ -83,32 +113,36 @@ object MetaWeb extends AutoPlugin {
         }.mkString("\n")
 
         val tagChildren = node.child.map { n =>
-          val c = convert(n, root = false, objName)
+          val c = convert(n, objName, root = false)
           s"append($c)"
         }.mkString("\n")
 
-        val scalaRep =
+        def scalaRep(attrs: Boolean) =
           s"""tag.${capitalise(tagName)} {
+            ${if (attrs) childAttributes(node, objName).mkString("\n") else ""}
             $strTagAttrs
             $tagChildren
           }"""
 
         if (root) {
-          val t = tagInstances.mkString("\n")
+          val paths = collectPaths(node)
+          val formattedPaths = paths
+            .filter { case (id, path) => path.size > 1 }
+            .map { case (id, path) => s"val $id = " + path.mkString(".") }
+            .mkString("\n")
+
           s"""class $objName {
-            $t
-            ${if (root) "val base = this" else ""}
-            val view = new $scalaRep
+            ${childAttributes(node, objName).mkString("\n")}
+            $formattedPaths
+            val view = new ${scalaRep(false)}
           }
           """
         } else if (tagAttrs.isDefinedAt("id")) {
           val id = tagAttrs("id")
-          if (id == "base" || id == "view")
-            throw new RuntimeException(s"ID `$id` is a reserved name")
-          extractedTags += s"""class ${encodeId(id)}(base: $objName) extends $scalaRep"""
-          tagInstances += s"""val ${toCamelCase(id)} = new $objName.${encodeId(id)}(this)"""
-          "base." + toCamelCase(id)
-        } else s"new $scalaRep"
+          if (id == "view") throw new RuntimeException(s"ID `$id` is a reserved name")
+          extractedTags += s"""class ${encodeId(id)} extends ${scalaRep(true)}"""
+          toCamelCase(id)
+        } else s"new ${scalaRep(false)}"
     }
   }
 
@@ -116,11 +150,10 @@ object MetaWeb extends AutoPlugin {
 
   def htmlToScala(htmlFile: String, packageName: String): String = {
     extractedTags.clear()
-    tagInstances.clear()
 
     val xml = XML.loadFile(htmlFile)
     val objName = (fileName _).andThen(base)(htmlFile)
-    val scala = convert(xml, root = true, objName)
+    val scala = convert(xml, objName)
 
     s"""
     package $packageName
