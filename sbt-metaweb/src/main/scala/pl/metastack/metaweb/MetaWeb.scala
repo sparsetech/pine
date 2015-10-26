@@ -117,9 +117,9 @@ object MetaWeb extends AutoPlugin {
           s"append($c)"
         }.mkString("\n")
 
-        def scalaRep(attrs: Boolean) =
-          s"""tag.${capitalise(tagName)} {
-            ${if (attrs) childAttributes(node, objName).mkString("\n") else ""}
+        def scalaRep(inline: Boolean) =
+          s"""tag.${capitalise(tagName)} {${if (inline) "" else " self =>"}
+            ${if (!inline) childAttributes(node, objName).mkString("\n") else ""}
             $strTagAttrs
             $tagChildren
           }"""
@@ -131,18 +131,18 @@ object MetaWeb extends AutoPlugin {
             .map { case (id, path) => s"val $id = " + path.mkString(".") }
             .mkString("\n")
 
-          s"""class $objName {
+          s"""class $objName { self =>
             ${childAttributes(node, objName).mkString("\n")}
             $formattedPaths
-            val view = new ${scalaRep(false)}
+            val view = new ${scalaRep(true)}
           }
           """
         } else if (tagAttrs.isDefinedAt("id")) {
           val id = tagAttrs("id")
           if (id == "view") throw new RuntimeException(s"ID `$id` is a reserved name")
-          extractedTags += s"""class ${encodeId(id)} extends ${scalaRep(true)}"""
-          toCamelCase(id)
-        } else s"new ${scalaRep(false)}"
+          extractedTags += s"""class ${encodeId(id)} extends ${scalaRep(false)}"""
+          "self." + toCamelCase(id)
+        } else s"new ${scalaRep(true)}"
     }
   }
 
