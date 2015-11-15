@@ -4,7 +4,7 @@ import pl.metastack.metaweb
 
 case class Tag(tagName: String,
                attributes: Map[String, Any] = Map.empty,
-               events: Map[String, Any => Unit],
+               events: Map[String, Any => Unit] = Map.empty,
                children: Seq[Node] = Seq.empty) extends metaweb.Tag with Node {
   def getAttribute(attribute: String): Option[Any] = attributes.get(attribute)
 
