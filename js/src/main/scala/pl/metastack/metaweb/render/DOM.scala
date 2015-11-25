@@ -136,8 +136,7 @@ object DOM extends DOM[Node]
     }
   }
 
-  def renderTag(tag: state.Tag): dom.Element = {
-    val rendered = dom.document.createElement(tag.tagName)
+  def linkNode(element: dom.Element, tag: state.Tag): Unit = {
     val attrCallbacks = mutable.Map.empty[String, dom.Event => Unit]
 
     def nonStandard(k: String) =
@@ -147,7 +146,7 @@ object DOM extends DOM[Node]
         k.startsWith("aria-") ||
         k.startsWith("data-")
 
-    val renderedDyn = rendered.asInstanceOf[js.Dynamic]
+    val renderedDyn = element.asInstanceOf[js.Dynamic]
 
     def setAttr(k: String, v: Any) {
       if (nonStandard(k)) renderedDyn.setAttribute(k, v.asInstanceOf[js.Any])
@@ -163,7 +162,7 @@ object DOM extends DOM[Node]
           v.produce(getAttr(k), ignore))
 
         events.foreach { event =>
-          rendered.addEventListener(event,
+          element.addEventListener(event,
             attrCallbacks(k),
             useCapture = false)
         }
@@ -175,11 +174,11 @@ object DOM extends DOM[Node]
       else renderedDyn.selectDynamic(k)
 
     def remAttr(k: String) {
-      rendered.removeAttribute(k)
+      element.removeAttribute(k)
 
       DOMObserverRules.resolveEvents(tag.tagName, k).foreach { events =>
         events.foreach { event =>
-          rendered.removeEventListener(event,
+          element.removeEventListener(event,
             attrCallbacks(k),
             useCapture = false)
         }
@@ -188,10 +187,10 @@ object DOM extends DOM[Node]
       attrCallbacks -= k
     }
 
-    tag.nodeProvider.register { case () => rendered }
+    tag.nodeProvider.register { case () => element }
 
     tag.eventProvider.register { case (event, args) =>
-      rendered
+      element
         .asInstanceOf[js.Dynamic]
         .applyDynamic(event)(args.map(_.asInstanceOf[js.Any]): _*)
     }
@@ -207,19 +206,24 @@ object DOM extends DOM[Node]
     }
 
     tag.watchEvents.attach {
-      case Dict.Delta.Insert(k, v) => rendered.addEventListener(k, v)
+      case Dict.Delta.Insert(k, v) => element.addEventListener(k, v)
       case Dict.Delta.Update(k, v) =>
-        rendered.removeEventListener(k, tag.events(k))
-        rendered.addEventListener(k, v)
+        element.removeEventListener(k, tag.events(k))
+        element.addEventListener(k, v)
       case Dict.Delta.Remove(k) =>
-        rendered.removeEventListener(k, tag.events(k))
+        element.removeEventListener(k, tag.events(k))
       case Dict.Delta.Clear() =>
         tag.events.foreach { case (k, v) =>
-          rendered.removeEventListener(k, v)
+          element.removeEventListener(k, v)
         }
     }
 
-    renderBuffer(rendered, tag.watchChildren)
+    renderBuffer(element, tag.watchChildren)
+  }
+
+  def renderTag(tag: state.Tag): dom.Element = {
+    val rendered = dom.document.createElement(tag.tagName)
+    linkNode(rendered, tag)
     rendered
   }
 
