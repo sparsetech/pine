@@ -13,7 +13,7 @@ object Build extends sbt.Build {
   )
 
   object Dependencies {
-    val MetaWeb    = "0.1.1-SNAPSHOT"
+    val MetaWeb    = "0.1.2-SNAPSHOT"
     val Hyperscala = "0.10.2-SNAPSHOT"
     val OutrNet    = "1.1.6-SNAPSHOT"
   }

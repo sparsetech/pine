@@ -2,56 +2,66 @@
     package pl.metastack.metaweb.view
     import pl.metastack.metaweb._
     object NumberGuess {
-      class Message(base: NumberGuess) extends tag.H5 {
+      class Message extends tag.H5 { self =>
+            
             attribute("id") := "message"
             
           }
-class Input(base: NumberGuess) extends tag.Input {
+class Input extends tag.Input { self =>
+            
             attribute("id") := "input"
 attribute("type") := "number"
             
           }
-class Guess(base: NumberGuess) extends tag.Button {
+class Guess extends tag.Button { self =>
+            
             attribute("id") := "guess"
 attribute("type") := "submit"
             append(tree.Text("Guess"))
           }
-class Reset(base: NumberGuess) extends tag.Button {
+class Reset extends tag.Button { self =>
+            
             attribute("id") := "reset"
 attribute("type") := "button"
             append(tree.Text("Reset"))
           }
-class Form(base: NumberGuess) extends tag.Form {
+class Form extends tag.Form { self =>
+            val input = new NumberGuess.Input
+val guess = new NumberGuess.Guess
+val reset = new NumberGuess.Reset
             attribute("onsubmit") := "return false"
 attribute("id") := "form"
             append(tree.Text(" "))
-append(base.input)
+append(self.input)
 append(tree.Text(" "))
-append(base.guess)
+append(self.guess)
 append(tree.Text(" "))
-append(base.reset)
+append(self.reset)
 append(tree.Text(" "))
           }
     }
-    class NumberGuess {
-            val message = new NumberGuess.Message(this)
-val input = new NumberGuess.Input(this)
-val guess = new NumberGuess.Guess(this)
-val reset = new NumberGuess.Reset(this)
-val form = new NumberGuess.Form(this)
-            val base = this
+    class NumberGuess { self =>
+            val message = new NumberGuess.Message
+val form = new NumberGuess.Form
+            val reset = form.reset
+val guess = form.guess
+val input = form.input
             val view = new tag.Html {
+            
             
             append(tree.Text(" "))
 append(new tag.Head {
             
+            
             append(tree.Text(" "))
 append(new tag.Meta {
+            
             attribute("charset") := "utf-8"
             
           })
 append(tree.Text(" "))
 append(new tag.Title {
+            
             
             append(tree.Text("MetaWeb example"))
           })
@@ -60,15 +70,17 @@ append(tree.Text(" "))
 append(tree.Text(" "))
 append(new tag.Body {
             
+            
             append(tree.Text(" "))
 append(new tag.H1 {
+            
             
             append(tree.Text("Number Guess Example"))
           })
 append(tree.Text(" "))
-append(base.message)
+append(self.message)
 append(tree.Text(" "))
-append(base.form)
+append(self.form)
 append(tree.Text(" "))
           })
 append(tree.Text(" "))
