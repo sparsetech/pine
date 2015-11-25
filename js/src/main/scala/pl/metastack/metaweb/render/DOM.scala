@@ -1,5 +1,7 @@
 package pl.metastack.metaweb.render
 
+import pl.metastack.metaweb.tag.HTMLTag
+
 import scala.collection.mutable
 
 import scala.scalajs.js
@@ -16,6 +18,10 @@ trait DOM[N] extends Render[N, Seq[dom.Element]]
 trait DOMImplicit {
   implicit class NodeToDom(node: Node) {
     def toDom: Seq[dom.Element] = DOM.render(node)
+  }
+
+  implicit class DomToNode(domNode: dom.Node) {
+    def toState: state.Node = DOM.toState(domNode)
   }
 }
 
@@ -260,6 +266,31 @@ object DOM extends DOM[Node]
 
           Seq(rendered)
       }
+    }
+  }
+
+  def toState(node: dom.Node): state.Node = {
+    node match {
+      case t: dom.raw.Text =>
+        val text = new state.Text
+        text.set(t.textContent)
+        text
+
+      case e: dom.Element =>
+        // TODO domNode must point to `node`
+        val element = HTMLTag.fromTag(e.tagName.toLowerCase)
+
+        (0 until node.attributes.length).map(node.attributes(_))
+          .foreach { attr =>
+            // TODO Cast may be needed for `value`
+            element.setAttribute(attr.name, attr.value)
+          }
+
+        (0 until e.childNodes.length).map(e.childNodes(_)).foreach { child =>
+          element.append(child.toState)
+        }
+
+        element
     }
   }
 }

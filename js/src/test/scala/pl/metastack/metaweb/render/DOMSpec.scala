@@ -204,4 +204,21 @@ object DOMSpec extends SimpleTestSuite
 
     assertEquals(options(selectedIndex).value, "opt2")
   }
+
+  test("Convert DOM node") {
+    val node = dom.document.createElement("span")
+    node.setAttribute("id", "test")
+    node.appendChild(dom.document.createTextNode("Hello world"))
+
+    node.toState match {
+      case s: tag.Span =>
+        assertEquals(s.children.size, 1)
+        s.children.head match {
+          case t: state.Text => assertEquals(t.text, "Hello world")
+          case _ => fail()
+        }
+
+      case _ => fail()
+    }
+  }
 }
