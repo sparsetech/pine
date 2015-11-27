@@ -225,7 +225,6 @@ object DOMSpec extends SimpleTestSuite
   test("Attach to DOM node") {
     val node = dom.document.createElement("span")
     node.setAttribute("id", "test")
-    node.setAttribute("id", "test")
 
     val node2 = dom.document.createElement("input")
     node2.setAttribute("checked", "checked")
@@ -240,5 +239,17 @@ object DOMSpec extends SimpleTestSuite
 
     assertEquals(node.childNodes.length, 1)
     assertEquals(node2.childNodes.length, 0)
+  }
+
+  test("Attach to DOM node (2)") {
+    val node = dom.document.createElement("span")
+    val node2 = dom.document.createTextNode("Hello world")
+    node.appendChild(node2)
+
+    val test = render.DOM.proxy[tag.Span](node)
+    assertEquals(test.children.nonEmpty, true)
+
+    val text = test.children.head.asInstanceOf[state.Text]
+    assertEquals(text.text, "Hello world")
   }
 }

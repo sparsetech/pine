@@ -233,25 +233,32 @@ object DOM extends DOM[Node]
   def isBooleanAttribute(name: String): Boolean =
     name == "checked"
 
-  def proxy[T <: state.Tag](x: dom.Element): T = {
-    val tag = HTMLTag.fromTag(x.tagName.toLowerCase)
+  def proxy[T <: state.Node](node: dom.Node): T =
+    node match {
+      case t: dom.raw.Text =>
+        val text = new state.Text
+        text.set(t.textContent)
+        text.asInstanceOf[T]
 
-    (0 until x.attributes.length).map(x.attributes(_)).foreach { attr =>
-      if (!isBooleanAttribute(attr.name))
-        tag.setAttribute(attr.name, attr.value)
-      else {
-        val checked = attr.value != ""
-        tag.setAttribute(attr.name, checked)
-      }
+      case e: dom.Element =>
+        val tag = HTMLTag.fromTag(e.tagName.toLowerCase)
+
+        (0 until e.attributes.length).map(e.attributes(_)).foreach { attr =>
+          if (!isBooleanAttribute(attr.name))
+            tag.setAttribute(attr.name, attr.value)
+          else {
+            val checked = attr.value != ""
+            tag.setAttribute(attr.name, checked)
+          }
+        }
+
+        (0 until e.childNodes.length).map(e.childNodes(_)).foreach { child =>
+          tag.append(proxy[state.Node](child))
+        }
+
+        linkNode(e, tag, flush = false)
+        tag.asInstanceOf[T]
     }
-
-    (0 until x.childNodes.length).map(x.childNodes(_)).foreach { child =>
-      tag.append(child.toState)
-    }
-
-    linkNode(x, tag, flush = false)
-    tag.asInstanceOf[T]
-  }
 
   def proxy[T <: state.Tag](id: String): T = {
     val x = dom.document.getElementById(id)
