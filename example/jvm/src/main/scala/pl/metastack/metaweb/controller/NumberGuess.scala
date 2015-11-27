@@ -1,8 +1,7 @@
 package pl.metastack.metaweb.controller
 
-import pl.metastack.metaweb._
-
 import pl.metastack.metaweb
+import pl.metastack.metaweb._
 
 import scala.collection.mutable
 import scala.util.Random
@@ -50,11 +49,6 @@ class NumberGuess extends Protocol.NumberGuess {
       NumberGuessResult(new Random().nextInt(Max), 0))
 }
 
-object NumberGuess extends metaweb.view.NumberGuess {
-  val b = view.byTag[tag.Body]("body")
-  b += html"""<script type="text/javascript" src="/sjs/example-fastopt.js"></script>"""
-  b += html"""<script type="text/javascript" src="/sjs/example-launcher.js"></script>"""
-  val html = view.toHtml
-
-  def render(): String = html
-}
+object NumberGuess
+  extends metaweb.view.NumberGuessRender
+  with Controller

@@ -1,9 +1,7 @@
-package pl.metastack.metaweb.numberguess
+package pl.metastack.metaweb.model
 
 import pl.metastack.metarx.Var
-
-import pl.metastack.metaweb.ServerOps
-import pl.metastack.metaweb.NumberGuessResponse
+import pl.metastack.metaweb.{NumberGuessResponse, ServerOps}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 

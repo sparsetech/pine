@@ -221,6 +221,17 @@ object DOM extends DOM[Node]
     renderBuffer(element, tag.watchChildren)
   }
 
+  def proxy[T <: state.Tag](x: dom.Element): T = {
+    val tag = HTMLTag.fromTag(x.tagName.toLowerCase)
+    linkNode(x, tag)
+    tag.asInstanceOf[T]
+  }
+
+  def proxy[T <: state.Tag](id: String): T = {
+    val x = dom.document.getElementById(id)
+    proxy[T](x)
+  }
+
   def renderTag(tag: state.Tag): dom.Element = {
     val rendered = dom.document.createElement(tag.tagName)
     linkNode(rendered, tag)

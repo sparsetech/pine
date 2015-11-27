@@ -42,6 +42,12 @@ object Server extends SimpleRoutingApp {
         pathSingleSlash {
           complete {
             HttpEntity(`text/html`,
+              controller.HelloWorld.render()
+            )
+          }
+        } ~ path("numberguess") {
+          complete {
+            HttpEntity(`text/html`,
               controller.NumberGuess.render()
             )
           }

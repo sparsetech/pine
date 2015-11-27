@@ -64,6 +64,22 @@ object MetaWeb extends AutoPlugin {
 
   def capitalise(s: String): String = s.head.toUpper + s.tail
 
+  def collectIds(node: scala.xml.Node): Map[String, String] = {
+    node.label match {
+      case "#PCDATA" => Map.empty
+      case tag =>
+        val tagAttrs = node.attributes.asAttrMap
+
+        val childrenPaths = node.child.flatMap { n =>
+          collectIds(n)
+        }.toMap
+
+        if (!tagAttrs.isDefinedAt("id")) childrenPaths
+        else Map(tagAttrs("id") -> capitalise(node.label)) ++
+          childrenPaths
+    }
+  }
+
   def collectPaths(node: scala.xml.Node,
                    path: Seq[String] = Seq.empty): Map[String, Seq[String]] = {
     node.label match {
@@ -95,54 +111,86 @@ object MetaWeb extends AutoPlugin {
 
   val extractedTags = ArrayBuffer.empty[String]
 
+  def tagName(node: scala.xml.Node): String = {
+    val tag = node.label
+    Option(node.prefix).map(pfx => s"$pfx:$tag").getOrElse(tag)
+  }
+
+  def rootAttributes(root: Boolean,
+                     node: scala.xml.Node): Map[String, String] =
+    if (root) namespaceBinding(node.scope)
+    else Map.empty
+
+  def tagAttrs(root: Boolean, node: scala.xml.Node) =
+    node.attributes.asAttrMap ++ rootAttributes(root, node)
+
+  def strTagAttrs(root: Boolean, node: scala.xml.Node) =
+    tagAttrs(root, node).map { case (k, v) =>
+      s"""attribute("$k") := ${createWrappedString(v)}"""
+    }.mkString("\n")
+
+  def tagChildren(node: scala.xml.Node, objName: String): String =
+    node.child.map { n =>
+      val c = convert(n, objName, root = false)
+      s"append($c)"
+    }.mkString("\n")
+
+  def scalaRep(node: scala.xml.Node,
+               objName: String,
+               root: Boolean,
+               inline: Boolean): String =
+    s"""tag.${capitalise(tagName(node))} {${if (inline) "" else " self =>"}
+      ${if (!inline) childAttributes(node, objName).mkString("\n") else ""}
+      ${strTagAttrs(root, node)}
+      ${tagChildren(node, objName)}
+    }"""
+
+  def findNode(node: scala.xml.Node, tagName: String): Option[scala.xml.Node] = {
+    if (node.label == tagName) Some(node)
+    else node.child.collectFirst {
+      case x if findNode(x, tagName).nonEmpty => findNode(x, tagName).get
+    }
+  }
+
   def convert(node: scala.xml.Node,
               objName: String,
               root: Boolean = true): String = {
     (node.label, Option(node.prefix)) match {
       case ("#PCDATA", _) => s"tree.Text(${createWrappedString(node.text)})"
       case (tag, prefix) =>
-        val tagName = prefix.map(pfx => s"$pfx:$tag").getOrElse(tag)
-        val rootAttributes: Map[String, String] =
-          if (root) namespaceBinding(node.scope)
-          else Map.empty
-
-        val tagAttrs = node.attributes.asAttrMap ++ rootAttributes
-
-        val strTagAttrs = tagAttrs.map { case (k, v) =>
-          s"""attribute("$k") := ${createWrappedString(v)}"""
-        }.mkString("\n")
-
-        val tagChildren = node.child.map { n =>
-          val c = convert(n, objName, root = false)
-          s"append($c)"
-        }.mkString("\n")
-
-        def scalaRep(inline: Boolean) =
-          s"""tag.${capitalise(tagName)} {${if (inline) "" else " self =>"}
-            ${if (!inline) childAttributes(node, objName).mkString("\n") else ""}
-            $strTagAttrs
-            $tagChildren
-          }"""
-
         if (root) {
-          val paths = collectPaths(node)
-          val formattedPaths = paths
+          val extractedIds = collectIds(node)
+            .map { case (id, tpe) => s"def ${toCamelCase(id)}: tag.$tpe" }
+            .mkString("\n")
+
+          val formattedPaths = collectPaths(node)
             .filter { case (id, path) => path.size > 1 }
             .map { case (id, path) => s"val $id = " + path.mkString(".") }
             .mkString("\n")
 
-          s"""class $objName { self =>
+          val headNode = findNode(node, "head").get
+          val bodyNode = findNode(node, "body").get
+
+          s"""
+          trait $objName {
+            $extractedIds
+            def head: tag.Head
+            def body: tag.Body
+          }
+          class ${objName}Render extends $objName { self =>
             ${childAttributes(node, objName).mkString("\n")}
             $formattedPaths
-            val view = new ${scalaRep(true)}
+            override val head = new ${scalaRep(headNode, objName, root, true)}
+            override val body = new ${scalaRep(bodyNode, objName, root, true)}
           }
           """
-        } else if (tagAttrs.isDefinedAt("id")) {
-          val id = tagAttrs("id")
-          if (id == "view") throw new RuntimeException(s"ID `$id` is a reserved name")
-          extractedTags += s"""class ${encodeId(id)} extends ${scalaRep(false)}"""
+        } else if (tagAttrs(root, node).isDefinedAt("id")) {
+          val id = tagAttrs(root, node)("id")
+          if (id == "head" || id == "body")
+            throw new RuntimeException(s"ID `$id` is a reserved name")
+          extractedTags += s"""class ${encodeId(id)} extends ${scalaRep(node, objName, root, false)}"""
           "self." + toCamelCase(id)
-        } else s"new ${scalaRep(true)}"
+        } else s"new ${scalaRep(node, objName, root, true)}"
     }
   }
 
@@ -165,7 +213,30 @@ object MetaWeb extends AutoPlugin {
     """
   }
 
-  def generate(subProjects: Seq[String], packageName: String, log: Logger): Seq[File] = {
+  def htmlToScalaJs(htmlFile: String,
+                    packageName: String): (String, String) = {
+    val xml = XML.loadFile(htmlFile)
+    val objName = (fileName _).andThen(base)(htmlFile)
+
+    val extracted = collectIds(xml).map { case (id, tpe) =>
+      s"""override val ${toCamelCase(id)} = render.DOM.proxy[tag.$tpe]("$id")"""
+    }.mkString("\n")
+
+    (objName, s"""
+    package $packageName
+    import org.scalajs.dom
+    import pl.metastack.metaweb._
+    class ${objName}Attach extends $objName {
+      override val head = render.DOM.proxy[tag.Head](dom.document.head)
+      override val body = render.DOM.proxy[tag.Body](dom.document.body)
+      $extracted
+    }
+    """)
+  }
+
+  def generate(subProjects: Seq[String],
+               packageName: String,
+               log: Logger): Seq[File] = {
     subProjects.flatMap { subProject =>
       val file = new File(subProject, "src/main/html")
       if (!file.exists()) Seq.empty
@@ -174,8 +245,21 @@ object MetaWeb extends AutoPlugin {
         files.filter(_.getPath.endsWith(".html")).map { file =>
           val targetPath = this.targetPath(file.getPath, packageName)
           val targetFile = new File(targetPath)
+
           IO.write(targetFile, htmlToScala(file.getPath, packageName))
           log.info(s"Written $targetPath")
+
+          val (objName, code) = htmlToScalaJs(file.getPath, packageName)
+
+          val jsAttachPath =
+            new File("js/src/main/scala/" +
+              packageName.replaceAllLiterally(".", "/"))
+          jsAttachPath.mkdirs()
+          val jsAttachFile = new File(jsAttachPath, objName + "Attach.scala")
+
+          IO.write(jsAttachFile, code)
+          log.info(s"Written ${jsAttachFile.getPath}")
+
           targetFile
         }
       }
