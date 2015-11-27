@@ -84,10 +84,15 @@ object DOM extends DOM[Node]
   }
 
   def renderBuffer(rendered: dom.Element,
-                   deltas: ReadChannel[Buffer.Delta[Node]]) {
+                   deltas: ReadChannel[Buffer.Delta[Node]],
+                   flush: Boolean): Unit = {
     val mapping = mutable.Map.empty[Node, Seq[dom.Node]]
 
-    deltas.attach {
+    val attach =
+      if (flush) deltas.attach(_)
+      else deltas.silentAttach(_)
+
+    attach {
       case Buffer.Delta.Insert(Position.Head(), element) =>
         mapping += element -> element.toDom
         mapping(element).reverse.foreach(rendered.prependChild)
@@ -124,19 +129,18 @@ object DOM extends DOM[Node]
   }
 
   case object RenderContainer extends DOM[Container] {
-    def render(node: Container): Seq[dom.Element] = {
+    def render(node: Container): Seq[dom.Element] =
       node match {
         case n: tree.Container => n.nodes.flatMap(_.toDom)
         case n: state.Container =>
           // TODO Don't create <span>
           val rendered = dom.document.createElement("span")
-          renderBuffer(rendered, n.deltas)
+          renderBuffer(rendered, n.deltas, flush = true)
           Seq(rendered)
       }
-    }
   }
 
-  def linkNode(element: dom.Element, tag: state.Tag): Unit = {
+  def linkNode(element: dom.Element, tag: state.Tag, flush: Boolean): Unit = {
     val attrCallbacks = mutable.Map.empty[String, dom.Event => Unit]
 
     def nonStandard(k: String) =
@@ -195,7 +199,11 @@ object DOM extends DOM[Node]
         .applyDynamic(event)(args.map(_.asInstanceOf[js.Any]): _*)
     }
 
-    tag.watchAttributes.attach {
+    val attrsWatch =
+      if (flush) tag.watchAttributes.attach(_)
+      else tag.watchAttributes.silentAttach(_)
+
+    attrsWatch {
       case Dict.Delta.Insert(k, v) => setAttrCh(k, v)
       case Dict.Delta.Update(k, v) => setAttrCh(k, v)
       case Dict.Delta.Remove(k) => remAttr(k)
@@ -218,12 +226,30 @@ object DOM extends DOM[Node]
         }
     }
 
-    renderBuffer(element, tag.watchChildren)
+    renderBuffer(element, tag.watchChildren, flush)
   }
+
+  // TODO Generate list of Boolean attributes
+  def isBooleanAttribute(name: String): Boolean =
+    name == "checked"
 
   def proxy[T <: state.Tag](x: dom.Element): T = {
     val tag = HTMLTag.fromTag(x.tagName.toLowerCase)
-    linkNode(x, tag)
+
+    (0 until x.attributes.length).map(x.attributes(_)).foreach { attr =>
+      if (!isBooleanAttribute(attr.name))
+        tag.setAttribute(attr.name, attr.value)
+      else {
+        val checked = attr.value != ""
+        tag.setAttribute(attr.name, checked)
+      }
+    }
+
+    (0 until x.childNodes.length).map(x.childNodes(_)).foreach { child =>
+      tag.append(child.toState)
+    }
+
+    linkNode(x, tag, flush = false)
     tag.asInstanceOf[T]
   }
 
@@ -234,7 +260,7 @@ object DOM extends DOM[Node]
 
   def renderTag(tag: state.Tag): dom.Element = {
     val rendered = dom.document.createElement(tag.tagName)
-    linkNode(rendered, tag)
+    linkNode(rendered, tag, flush = true)
     rendered
   }
 
@@ -297,8 +323,12 @@ object DOM extends DOM[Node]
 
         (0 until node.attributes.length).map(node.attributes(_))
           .foreach { attr =>
-            // TODO Cast may be needed for `value`
-            element.setAttribute(attr.name, attr.value)
+            if (!isBooleanAttribute(attr.name))
+              element.setAttribute(attr.name, attr.value)
+            else {
+              val checked = attr.value != ""
+              element.setAttribute(attr.name, checked)
+            }
           }
 
         (0 until e.childNodes.length).map(e.childNodes(_)).foreach { child =>

@@ -221,4 +221,24 @@ object DOMSpec extends SimpleTestSuite
       case _ => fail()
     }
   }
+
+  test("Attach to DOM node") {
+    val node = dom.document.createElement("span")
+    node.setAttribute("id", "test")
+    node.setAttribute("id", "test")
+
+    val node2 = dom.document.createElement("input")
+    node2.setAttribute("checked", "checked")
+    node.appendChild(node2)
+
+    val test = render.DOM.proxy[tag.Span](node)
+    assertEquals(test.id.get, "test")
+    assertEquals(test.children.nonEmpty, true)
+
+    val input = test.children.head.asInstanceOf[tag.Input]
+    assertEquals(input.checked.get, true)
+
+    assertEquals(node.childNodes.length, 1)
+    assertEquals(node2.childNodes.length, 0)
+  }
 }
