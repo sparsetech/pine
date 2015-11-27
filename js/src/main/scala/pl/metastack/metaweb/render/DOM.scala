@@ -258,6 +258,9 @@ object DOM extends DOM[Node]
 
         linkNode(e, tag, flush = false)
         tag.asInstanceOf[T]
+
+      case c: dom.Comment =>
+        (new state.Null).asInstanceOf[T]
     }
 
   def proxy[T <: state.Tag](id: String): T = {
