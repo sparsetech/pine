@@ -5,6 +5,6 @@
     class HelloWorldAttach extends HelloWorld {
       override val head = render.DOM.proxy[tag.Head](dom.document.head)
       override val body = render.DOM.proxy[tag.Body](dom.document.body)
-      override val numberguess = render.DOM.proxy[tag.Button]("numberguess")
+      override val numberguess = body.byId[tag.Button]("numberguess")
     }
     
