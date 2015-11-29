@@ -14,7 +14,8 @@ trait Tag extends Node {
     }
   }
 
-  def byId[T <: Tag](id: String): T = byIdOpt(id).get
+  def byId[T <: Tag](id: String): T = byIdOpt(id)
+    .getOrElse(throw new IllegalArgumentException(s"Invalid node ID '$id'"))
 
   def byTagOpt[T <: Tag](tag: String): Option[T] = {
     if (tagName == tag) Some(this.asInstanceOf[T])
@@ -23,5 +24,7 @@ trait Tag extends Node {
     }
   }
 
-  def byTag[T <: Tag](tagName: String): T = byTagOpt(tagName).get
+  def byTag[T <: Tag](tagName: String): T =
+    byTagOpt(tagName).getOrElse(
+      throw new IllegalArgumentException(s"Invalid tag name '$tagName'"))
 }
