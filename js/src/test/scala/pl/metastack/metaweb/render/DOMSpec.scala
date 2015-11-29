@@ -252,4 +252,16 @@ object DOMSpec extends SimpleTestSuite
     val text = test.children.head.asInstanceOf[state.Text]
     assertEquals(text.text, "Hello world")
   }
+
+  test("Remove child from attached DOM node") {
+    val node = dom.document.createElement("span")
+    val node2 = dom.document.createTextNode("Hello world")
+    node.appendChild(node2)
+
+    val test = render.DOM.proxy[tag.Span](node)
+    assertEquals(test.toHtml, "<span>Hello world</span>")
+    test -= test.children.head
+
+    assertEquals(node.outerHTML, "<span></span>")
+  }
 }

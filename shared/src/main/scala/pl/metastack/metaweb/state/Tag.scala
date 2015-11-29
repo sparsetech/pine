@@ -4,9 +4,9 @@ import pl.metastack.metarx._
 import pl.metastack.metaweb
 import pl.metastack.metaweb.Provider
 
-class Tag(val tagName: String) extends metaweb.Tag with Node {
+class Tag(val tagName: String) extends metaweb.Tag with Node with Children {
   protected val _attributes = Dict[String, Var[Any]]()
-  private val contents = Buffer[metaweb.Node]()
+  private[metaweb] val contents = Buffer[metaweb.Node]()
   private val _events = Dict[String, Any => Unit]()
   val eventProvider = Provider[(String, Seq[Any]), Unit]()
   val nodeProvider = Provider[Unit, Any]()
@@ -25,7 +25,8 @@ class Tag(val tagName: String) extends metaweb.Tag with Node {
 
   def children: Seq[metaweb.Node] = contents.get
 
-  def watchChildren: ReadChannel[Buffer.Delta[metaweb.Node]] = contents.changes
+  override def watchChildren: ReadChannel[Buffer.Delta[metaweb.Node]] =
+    contents.changes
 
   def clearChildren() {
     contents.clear()
@@ -39,24 +40,21 @@ class Tag(val tagName: String) extends metaweb.Tag with Node {
     contents += node
   }
 
-  def appendAll(nodes: Seq[metaweb.Node]) {
+  def appendAll(nodes: Seq[metaweb.Node]): Unit =
     contents ++= nodes
-  }
 
-  def remove(node: metaweb.Node) {
+  def remove(node: metaweb.Node): Unit =
     contents.remove(node)
-  }
 
-  def replace(reference: metaweb.Node, node: metaweb.Node) {
+  def replace(reference: metaweb.Node, node: metaweb.Node): Unit =
     contents.replace(reference, node)
-  }
 
-  def set(node: metaweb.Node) {
+  def set(node: metaweb.Node): Unit = {
     clearChildren()
     append(node)
   }
 
-  def setChildren(nodes: Seq[metaweb.Node]) {
+  def setChildren(nodes: Seq[metaweb.Node]): Unit = {
     clearChildren()
     appendAll(nodes)
   }
@@ -92,8 +90,8 @@ class Tag(val tagName: String) extends metaweb.Tag with Node {
 
   def domNode: Option[Any] = nodeProvider.poll(())
 
-  def :=(node: metaweb.Node) { set(node) }
-  def -=(node: metaweb.Node) { remove(node) }
-  def +=(node: metaweb.Node) { append(node) }
-  def ++=(nodes: Seq[metaweb.Node]) { appendAll(nodes) }
+  def :=(node: metaweb.Node): Unit = set(node)
+  def -=(node: metaweb.Node): Unit = remove(node)
+  def +=(node: metaweb.Node): Unit = append(node)
+  def ++=(nodes: Seq[metaweb.Node]): Unit = appendAll(nodes)
 }

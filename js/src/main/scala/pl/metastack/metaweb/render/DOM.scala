@@ -1,5 +1,6 @@
 package pl.metastack.metaweb.render
 
+import pl.metastack.metaweb.state.Children
 import pl.metastack.metaweb.tag.HTMLTag
 
 import scala.collection.mutable
@@ -84,13 +85,21 @@ object DOM extends DOM[Node]
   }
 
   def renderBuffer(rendered: dom.Element,
-                   deltas: ReadChannel[Buffer.Delta[Node]],
+                   tag: Children,
                    flush: Boolean): Unit = {
     val mapping = mutable.Map.empty[Node, Seq[dom.Node]]
 
+    if (!flush)
+      (0 until rendered.childNodes.length)
+        .map(rendered.childNodes(_))
+        .zip(tag.contents)
+        .foreach { case (domNode, element) =>
+          mapping += element -> Seq(domNode)
+        }
+
     val attach =
-      if (flush) deltas.attach(_)
-      else deltas.silentAttach(_)
+      if (flush) tag.watchChildren.attach(_)
+      else tag.watchChildren.silentAttach(_)
 
     attach {
       case Buffer.Delta.Insert(Position.Head(), element) =>
@@ -135,7 +144,7 @@ object DOM extends DOM[Node]
         case n: state.Container =>
           // TODO Don't create <span>
           val rendered = dom.document.createElement("span")
-          renderBuffer(rendered, n.deltas, flush = true)
+          renderBuffer(rendered, n, flush = true)
           Seq(rendered)
       }
   }
@@ -152,12 +161,11 @@ object DOM extends DOM[Node]
 
     val renderedDyn = element.asInstanceOf[js.Dynamic]
 
-    def setAttr(k: String, v: Any) {
+    def setAttr(k: String, v: Any): Unit =
       if (nonStandard(k)) renderedDyn.setAttribute(k, v.asInstanceOf[js.Any])
       else renderedDyn.updateDynamic(k)(v.asInstanceOf[js.Any])
-    }
 
-    def setAttrCh(k: String, v: Var[Any]) {
+    def setAttrCh(k: String, v: Var[Any]): Unit = {
       val ignore = v.attach(setAttr(k, _))
 
       // TODO Only register in DOM when there are subscribers in `ch`
@@ -226,7 +234,7 @@ object DOM extends DOM[Node]
         }
     }
 
-    renderBuffer(element, tag.watchChildren, flush)
+    renderBuffer(element, tag, flush)
   }
 
   // TODO Generate list of Boolean attributes
