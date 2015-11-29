@@ -219,7 +219,7 @@ object MetaWeb extends AutoPlugin {
     val objName = (fileName _).andThen(base)(htmlFile)
 
     val extracted = collectIds(xml).map { case (id, tpe) =>
-      s"""override val ${toCamelCase(id)} = body.byId[tag.$tpe]("$id")"""
+      s"""override lazy val ${toCamelCase(id)} = body.byId[tag.$tpe]("$id")"""
     }.mkString("\n")
 
     (objName, s"""
