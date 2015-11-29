@@ -166,7 +166,11 @@ object DOM extends DOM[Node]
       else renderedDyn.updateDynamic(k)(v.asInstanceOf[js.Any])
 
     def setAttrCh(k: String, v: Var[Any]): Unit = {
-      val ignore = v.attach(setAttr(k, _))
+      val watch =
+        if (flush) v.attach(_)
+        else v.silentAttach(_)
+
+      val ignore = watch(setAttr(k, _))
 
       // TODO Only register in DOM when there are subscribers in `ch`
       DOMObserverRules.resolveEvents(tag.tagName, k).foreach { events =>
@@ -207,11 +211,7 @@ object DOM extends DOM[Node]
         .applyDynamic(event)(args.map(_.asInstanceOf[js.Any]): _*)
     }
 
-    val attrsWatch =
-      if (flush) tag.watchAttributes.attach(_)
-      else tag.watchAttributes.silentAttach(_)
-
-    attrsWatch {
+    tag.watchAttributes.attach {
       case Dict.Delta.Insert(k, v) => setAttrCh(k, v)
       case Dict.Delta.Update(k, v) => setAttrCh(k, v)
       case Dict.Delta.Remove(k) => remAttr(k)

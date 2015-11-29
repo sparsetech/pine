@@ -264,4 +264,17 @@ object DOMSpec extends SimpleTestSuite
 
     assertEquals(node.outerHTML, "<span></span>")
   }
+
+  test("Set attribute on attached DOM node") {
+    val node = dom.document.createElement("span")
+    val node2 = dom.document.createElement("div")
+    node2.setAttribute("id", "node2")
+    node2.setAttribute("class", "test")
+    node.appendChild(node2)
+
+    val test = render.DOM.proxy[tag.Span](node)
+    test.byId[tag.Div]("node2").`class` := "changed"
+
+    assertEquals(node2.asInstanceOf[js.Dynamic].className, "changed")
+  }
 }
