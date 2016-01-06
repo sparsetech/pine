@@ -29,9 +29,10 @@ object Build extends sbt.Build {
   )
 
   object Dependencies {
-    val MetaRx   = "0.1.3"
-    val MiniTest = "0.14"
-    val Paradise = "2.1.0-M5"
+    val MetaRx     = "0.1.3"
+    val MiniTest   = "0.14"
+    val Paradise   = "2.1.0-M5"
+    val ScalaJsDom = "0.8.2"
   }
 
   lazy val root = project.in(file("."))
@@ -63,7 +64,7 @@ object Build extends sbt.Build {
     )
     .jsSettings(
       libraryDependencies ++= Seq(
-        "org.scala-js" %%% "scalajs-dom" % "0.8.1",
+        "org.scala-js" %%% "scalajs-dom" % Dependencies.ScalaJsDom,
         "pl.metastack" %%% "metarx" % Dependencies.MetaRx,
         "org.monifu" %%% "minitest" % Dependencies.MiniTest % "test"
       ),
