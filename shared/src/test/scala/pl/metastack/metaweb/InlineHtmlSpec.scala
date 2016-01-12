@@ -1,8 +1,6 @@
 package pl.metastack.metaweb
 
-import scala.collection.mutable.ArrayBuffer
-
-import pl.metastack.metarx.{Opt, StateChannel, Buffer, Var}
+import pl.metastack.metarx.{StateChannel, Buffer, Var}
 
 import minitest._
 
@@ -90,10 +88,35 @@ object InlineHtmlSpec extends SimpleTestSuite {
     assertEquals(clicked, 1)
   }
 
-  test("Function as event handler") {
+  test("Inline event handler (2)") {
+    var eventTriggered = 0
+    val input = html"""<input type="text" onfocus=${eventTriggered += 1} />"""
+
+    input.triggerAction("focus")
+    assertEquals(eventTriggered, 1)
+  }
+
+  test("Function as inline event handler") {
     var clicked = 0
-    def click(event: Any) { clicked += 1 }
+    def click(event: Any): Unit = clicked += 1
+    val btn = html"""<button onclick="${click _}">Test</button>"""
+    btn.click()
+    assertEquals(clicked, 1)
+  }
+
+  test("Function as inline event handler (2)") {
+    var clicked = 0
+    def click(event: Any): Unit = clicked += 1
     val btn = html"""<button onclick="${click(_: Any)}">Test</button>"""
+    btn.click()
+    assertEquals(clicked, 1)
+  }
+
+  test("Function as inline event handler (3)") {
+    var clicked = 0
+    def f(): Unit = clicked += 1
+    val btn = html"""<button onclick="$f">Test</button>"""
+
     btn.click()
     assertEquals(clicked, 1)
   }

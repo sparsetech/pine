@@ -70,14 +70,17 @@ object InlineHtml {
 
         (node.attributes.asAttrMap ++ rootAttributes).foreach { case (k, v) =>
           if (!v.startsWith("${") || !v.endsWith("}")) {
-            if (k.startsWith("on")) tagEvents += c.Expr(q"${k.drop(2)} -> $v.asInstanceOf[Any => Unit]")
+            if (k.startsWith("on")) tagEvents += c.Expr(q"${k.drop(2)} -> ((_: Any) => { $v; () })")
             else tagAttrs += c.Expr(q"Some($k -> $v)")
           } else {
             val index = v.drop(2).init.toInt
 
-            if (k.startsWith("on"))
-              tagEvents += c.Expr(q"${k.drop(2)} -> ${args(index)}.asInstanceOf[Any => Unit]")
-            else {
+            if (k.startsWith("on")) {
+              if (args(index).actualType.toString == "Any => Unit")  // TODO Don't rely on string comparison
+                tagEvents += c.Expr(q"${k.drop(2)} -> ${args(index)}")
+              else  // Enforce lazy evaluation
+                tagEvents += c.Expr(q"${k.drop(2)} -> ((_: Any) => { ${args(index)}; () })")
+            } else {
               args(index) match {
                 case a: c.Expr[String]
                   if a.tree.tpe.toString == "String" =>
