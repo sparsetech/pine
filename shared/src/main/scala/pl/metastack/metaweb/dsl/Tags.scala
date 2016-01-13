@@ -12,7 +12,8 @@ object Tags {
         if (state) Display.None.property
         else showDisplay.map(_.property).getOrElse(""))
 
-    def show(state: Boolean, cssTags: String*): Unit = {
+    /** Toggle `cssTags` depending on `state` */
+    def css(state: Boolean, cssTags: String*): Unit = {
       tag.`class`.update { cur =>
         val currentTags = cur.split(' ')
 
