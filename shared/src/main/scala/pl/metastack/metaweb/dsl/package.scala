@@ -1,8 +1,8 @@
-package pl.metastack.metaweb.dsl
+package pl.metastack.metaweb
 
 import pl.metastack.metaweb.tag.HTMLTag
 
-object Tags {
+package object dsl {
   implicit class HTMLTagExtensions(tag: HTMLTag) {
     /** Sets `style` to `display: none` if `state` is true, otherwise
       * sets `style` to `showDisplay` (empty string if None).
