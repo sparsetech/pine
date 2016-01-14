@@ -6,7 +6,7 @@ case class Tag(tagName: String,
                attributes: Map[String, Any] = Map.empty,
                events: Map[String, Any => Unit] = Map.empty,
                children: Seq[Node] = Seq.empty) extends metaweb.Tag with Node {
-  def setEvent[T](event: String, f: Any => Unit): Unit =
+  def setEvent(event: String, f: Any => Unit): Unit =
     copy(events = events + (event -> f))
 
   def getAttribute(attribute: String): Option[Any] = attributes.get(attribute)

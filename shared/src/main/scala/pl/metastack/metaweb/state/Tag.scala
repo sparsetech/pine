@@ -79,9 +79,8 @@ class Tag(val tagName: String) extends metaweb.Tag with Node with Children {
   def getAttribute(attr: String): Option[Any] = Some(attribute(attr).get)
   def setAttribute[T](attr: String, value: T) = attribute(attr) := value
 
-  def setEvent[T](event: String, f: Any => Unit) {
+  def setEvent(event: String, f: Any => Unit): Unit =
     _events.insertOrUpdate(event, f)
-  }
 
   def triggerAction(action: String, arguments: Any*) {
     eventProvider.poll((action, arguments))
