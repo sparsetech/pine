@@ -25,4 +25,17 @@ package object dsl {
       }
     }
   }
+
+  implicit class TagExtensions(tag: state.Tag) {
+    def byClassOpt[T <: state.Tag](clazz: String): Option[T] = {
+      if (tag.attribute("class").get != null &&
+        tag.attribute("class").get.toString.split(' ').toSet.contains(clazz))
+        Some(tag.asInstanceOf[T])
+      else tag.children.collectFirst {
+        case t: state.Tag if t.byClassOpt(clazz).isDefined => t.byClassOpt(clazz).get  // TODO optimise
+      }
+    }
+
+    def byClass[T <: state.Tag](clazz: String): T = tag.byClassOpt(clazz).get
+  }
 }
