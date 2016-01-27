@@ -267,13 +267,50 @@ object DOM extends DOM[Node]
         linkNode(e, tag, flush = false)
         tag.asInstanceOf[T]
 
-      case c: dom.Comment =>
+      case _: dom.Comment =>
         (new state.Null).asInstanceOf[T]
     }
 
   def proxy[T <: state.Tag](id: String): T = {
     val x = dom.document.getElementById(id)
     proxy[T](x)
+  }
+
+  def proxyTree[T <: tree.Node](node: dom.Node): T =
+    node match {
+      case t: dom.raw.Text =>
+        tree.Text(t.textContent).asInstanceOf[T]
+
+      case e: dom.Element =>
+        val attributes = (0 until e.attributes.length)
+          .map(e.attributes(_))
+          .map { attr =>
+            if (!isBooleanAttribute(attr.name))
+              attr.name -> attr.value
+            else {
+              val checked = attr.value != ""
+              attr.name -> checked
+            }
+          }.toMap
+
+        val children = (0 until e.childNodes.length)
+          .map(e.childNodes(_))
+          .map { child =>
+            proxyTree[tree.Node](child)
+          }
+
+        tree.Tag(
+          tagName    = e.tagName.toLowerCase,
+          attributes = attributes,
+          children   = children
+        ).asInstanceOf[T]
+
+      case _: dom.Comment => tree.Null.asInstanceOf[T]
+    }
+
+  def proxyTree[T <: tree.Tag](id: String): T = {
+    val x = dom.document.getElementById(id)
+    proxyTree[T](x)
   }
 
   def renderTag(tag: state.Tag): dom.Element = {
