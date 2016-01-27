@@ -13,11 +13,11 @@ trait HTMLImplicit {
 object HTML extends HTML[Node] with HTMLImplicit {
   override def render(node: Node): String =
     node match {
-      case n: Null => RenderNull.render(n)
-      case n: Placeholder => RenderPlaceholder.render(n)
-      case n: Container => RenderContainer.render(n)
-      case n: Text => RenderText.render(n)
       case n: Tag => RenderTag.render(n)
+      case n: Null => RenderNull.render(n)
+      case n: Text => RenderText.render(n)
+      case n: Container => RenderContainer.render(n)
+      case n: Placeholder => RenderPlaceholder.render(n)
     }
 
   case object RenderNull extends HTML[Null] {
@@ -31,7 +31,7 @@ object HTML extends HTML[Node] with HTMLImplicit {
 
   case object RenderContainer extends HTML[Container] {
     def render(node: Container): String =
-      node.nodes.map(_.toHtml).mkString
+      node.children.map(_.toHtml).mkString
   }
 
   case object RenderTag extends HTML[Tag] {

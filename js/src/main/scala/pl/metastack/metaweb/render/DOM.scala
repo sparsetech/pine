@@ -49,11 +49,11 @@ object DOM extends DOM[Node]
 {
   override def render(node: Node): Seq[dom.Element] =
     node match {
-      case n: Null => RenderNull.render(n)
-      case n: Placeholder => RenderPlaceholder.render(n)
-      case n: Container => RenderContainer.render(n)
-      case n: Text => RenderText.render(n)
       case n: Tag => RenderTag.render(n)
+      case n: Null => RenderNull.render(n)
+      case n: Text => RenderText.render(n)
+      case n: Container => RenderContainer.render(n)
+      case n: Placeholder => RenderPlaceholder.render(n)
     }
 
   def nullNode(): dom.Element =
@@ -140,7 +140,7 @@ object DOM extends DOM[Node]
   case object RenderContainer extends DOM[Container] {
     def render(node: Container): Seq[dom.Element] =
       node match {
-        case n: tree.Container => n.nodes.flatMap(_.toDom)
+        case n: tree.Container => n.children.flatMap(_.toDom)
         case n: state.Container =>
           // TODO Don't create <span>
           val rendered = dom.document.createElement("span")

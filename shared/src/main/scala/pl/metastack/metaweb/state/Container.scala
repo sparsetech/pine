@@ -10,7 +10,7 @@ class Container extends metaweb.Container with Node with Children {
   def set(value: Seq[metaweb.Node]): Unit =
     contents.set(value)
 
-  def nodes: Seq[metaweb.Node] = contents.get
+  def children: Seq[metaweb.Node] = contents.get
 
   override def watchChildren: ReadChannel[Buffer.Delta[metaweb.Node]] =
     contents.changes

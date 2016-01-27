@@ -80,6 +80,15 @@ object InlineHtmlSpec extends SimpleTestSuite {
       """<div><div>Title c</div><div>Subtitle c</div></div>""")
   }
 
+  test("Look up by ID") {
+    val root = html"""<div></div>"""
+    root += tree.Container(Seq(
+      htmlT"""<div id="a"></div>""",
+      htmlT"""<div id="b"></div>""")).state
+
+    assertEquals(root.byIdOpt[state.Tag]("b").nonEmpty, true)
+  }
+
   test("Inline event handler") {
     var clicked = 0
     val btn = html"""<button onclick="${(_: Any) => clicked += 1}">Test</button>"""
