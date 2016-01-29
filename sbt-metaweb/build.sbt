@@ -2,8 +2,6 @@ name := "sbt-metaweb"
 
 organization := "pl.metastack"
 
-version := "0.1.2-SNAPSHOT"
-
 scalaVersion in Global := "2.10.5"
 
 sbtPlugin := true
