@@ -6,7 +6,6 @@ object Build extends sbt.Build {
   val SharedSettings = Seq(
     name := "MetaWeb",
     organization := "pl.metastack",
-    version := "0.1.2-SNAPSHOT",
     scalaVersion := "2.11.7",
     pomExtra :=
       <url>https://github.com/MetaStack-pl/MetaWeb</url>
@@ -29,9 +28,9 @@ object Build extends sbt.Build {
   )
 
   object Dependencies {
-    val MetaRx     = "0.1.5-SNAPSHOT"
+    val MetaRx     = "0.1.6"
     val MiniTest   = "0.14"
-    val Paradise   = "2.1.0-M5"
+    val Paradise   = "2.1.0"
     val ScalaJsDom = "0.8.2"
   }
 
@@ -50,7 +49,7 @@ object Build extends sbt.Build {
       testFrameworks += new TestFramework("minitest.runner.Framework"),
 
       libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.11.7",
-      libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.11" % "1.0.5",
+      libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.0.5",
 
       addCompilerPlugin("org.scalamacros" % "paradise" % Dependencies.Paradise cross CrossVersion.full),
 
