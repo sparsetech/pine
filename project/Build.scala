@@ -69,7 +69,10 @@ object Build extends sbt.Build {
       ),
 
       requiresDOM := true,  // For test cases
-      scalaJSStage in Global := FastOptStage  // Use Node.js
+      scalaJSStage in Global := FastOptStage,
+
+      /* Use io.js for faster compilation of test cases */
+      scalaJSUseRhino in Global := false
     )
 
   lazy val js = metaWeb.js
