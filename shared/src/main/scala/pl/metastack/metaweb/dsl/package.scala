@@ -27,14 +27,13 @@ package object dsl {
   }
 
   implicit class TagExtensions(tag: state.Tag) {
-    def byClassOpt[T <: state.Tag](clazz: String): Option[T] = {
+    def byClassOpt[T <: state.Tag](clazz: String): Option[T] =
       tag.find {
-        case t: Tag =>
-          val cls = tag.attribute("class").get
+        case t: state.Tag =>
+          val cls = t.attribute("class").get
           cls != null && cls.toString.split(' ').toSet.contains(clazz)
-        case _      => false
+        case _ => false
       }.map(_.asInstanceOf[T])
-    }
 
     def byClass[T <: state.Tag](clazz: String): T = tag.byClassOpt(clazz).get
   }
