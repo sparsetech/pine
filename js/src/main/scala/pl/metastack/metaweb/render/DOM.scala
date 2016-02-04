@@ -161,9 +161,14 @@ object DOM extends DOM[Node]
 
     val renderedDyn = element.asInstanceOf[js.Dynamic]
 
-    def setAttr(k: String, v: Any): Unit =
+    def setAttr(k: String, v: Any): Unit = try {
       if (nonStandard(k)) renderedDyn.setAttribute(k, v.asInstanceOf[js.Any])
       else renderedDyn.updateDynamic(k)(v.asInstanceOf[js.Any])
+    } catch {
+      case e: Throwable =>
+        println(s"Cannot set attribute `$k` to `$v`")
+        println(e)
+    }
 
     def setAttrCh(k: String, v: Var[Any]): Unit = {
       val watch =
