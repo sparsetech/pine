@@ -1,5 +1,6 @@
 package pl.metastack.metaweb.render
 
+import scala.collection.mutable.ArrayBuffer
 import scala.scalajs.js
 
 import org.scalajs.dom
@@ -125,6 +126,21 @@ object DOMSpec extends SimpleTestSuite
     node.dispatchEvent(event)
 
     assertEquals(eventTriggered, 1)
+  }
+
+  test("Override event handler") {
+    val input = html"""<button />"""
+    val node = input.toDom.head.asInstanceOf[dom.html.Input]
+
+    val eventTriggered = ArrayBuffer.empty[Int]
+    input.setEvent("click", (event: Any) => eventTriggered += 23)
+    input.setEvent("click", (event: Any) => eventTriggered += 42)
+
+    val event = js.Dynamic.newInstance(js.Dynamic.global.Event)("click")
+      .asInstanceOf[dom.raw.Event]
+    node.dispatchEvent(event)
+
+    assertEquals(eventTriggered, Seq(42))
   }
 
   test("Listen to child channel on `span` node") {

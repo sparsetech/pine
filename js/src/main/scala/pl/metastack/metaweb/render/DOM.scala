@@ -226,17 +226,28 @@ object DOM extends DOM[Node]
         }
     }
 
+    val events = mutable.HashMap.empty[String, js.Function1[Any, _]]
+
     tag.watchEvents.attach {
-      case Dict.Delta.Insert(k, v) => element.addEventListener(k, v)
+      case Dict.Delta.Insert(k, v) =>
+        events += k -> (v: js.Function1[Any, _])
+        element.addEventListener(k, events(k))
+
       case Dict.Delta.Update(k, v) =>
-        element.removeEventListener(k, tag.events(k))
-        element.addEventListener(k, v)
+        element.removeEventListener(k, events(k))
+        events += k -> (v: js.Function1[Any, _])
+        element.addEventListener(k, events(k))
+
       case Dict.Delta.Remove(k) =>
-        element.removeEventListener(k, tag.events(k))
+        element.removeEventListener(k, events(k))
+        events -= k
+
       case Dict.Delta.Clear() =>
         tag.events.foreach { case (k, v) =>
-          element.removeEventListener(k, v)
+          element.removeEventListener(k, events(k))
         }
+
+        events.clear()
     }
 
     renderBuffer(element, tag, flush)
