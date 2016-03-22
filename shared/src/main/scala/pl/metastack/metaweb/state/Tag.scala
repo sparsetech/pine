@@ -82,6 +82,8 @@ class Tag(val tagName: String) extends metaweb.Tag with Node with Children {
   def setEvent(event: String, f: Any => Unit): Unit =
     _events.insertOrUpdate(event, f)
 
+  def removeEvent(event: String): Unit = _events.removeIfExists(event)
+
   def triggerAction(action: String, arguments: Any*) {
     eventProvider.poll((action, arguments))
     if (_events.isDefinedAt$(action)) _events(action)(arguments)
