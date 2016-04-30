@@ -1,6 +1,7 @@
 package pl.metastack.metaweb.tree
 
 import pl.metastack.metaweb
+import pl.metastack.metaweb.tag.HTMLTag
 
 case class Tag(tagName: String,
                attributes: Map[String, Any] = Map.empty,
@@ -59,7 +60,7 @@ case class Tag(tagName: String,
     copy(children = Seq.empty)
 
   override def state: metaweb.state.Tag = {
-    val target = new metaweb.state.Tag(tagName)
+    val target = HTMLTag.fromTag(tagName)
 
     attributes.foreach { case (k, v) => target.setAttribute(k, v) }
     events.foreach { case (k, v) => target.setEvent(k, v) }
