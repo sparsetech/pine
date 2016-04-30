@@ -8,4 +8,10 @@ object HtmlParserSpec extends SimpleTestSuite {
     val node = HtmlParser.fromString(html)
     assertEquals(node.toHtml, html)
   }
+
+  test("Don't ignore DOCTYPE") {
+    val html = """<!DOCTYPE html><html><head lang="en"></head><body><span>42</span></body></html>"""
+    val node = HtmlParser.fromString(html)
+    assertEquals(node.toHtml, html)
+  }
 }
