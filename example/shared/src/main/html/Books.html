@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>Book listing</title>
+</head>
+<body>
+	<div id="page">
+		<h1>Book listing</h1>
+		<ul id="books">
+			<li id="book">
+				<a id="title" href="/book/0">Book title</a>
+				<button id="rename-toggle">Rename</button>
+				<button id="remove">Remove</button>
+				<div id="rename-box">
+					Rename to: <input type="text" id="rename-text" />
+					<button id="rename-save">Rename</button>
+				</div>
+			</li>
+		</ul>
+
+		<input type="text" id="add-book-title" />
+		<button id="add-book">Add book</button>
+
+		<hr />
+
+		<button id="revert">Revert</button>
+	</div>
+</body>
+</html>

@@ -1,69 +1,81 @@
 package pl.metastack.metaweb
 
-import scala.concurrent.Future
+import java.io.File
+
+import cats.data.Xor
+import com.twitter.finagle
+import com.twitter.finagle.{Http, http}
+import com.twitter.io.{Buf, Reader}
+import com.twitter.util.{Await, Future}
+import io.circe._
+import io.circe.generic.auto._
+import io.circe.parser._
+import io.circe.syntax._
+import io.finch._
+import pl.metastack.metaweb.TwitterUtils._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import akka.actor.ActorSystem
-
-import spray.http.HttpEntity
-import spray.http.MediaTypes._
-import spray.routing.SimpleRoutingApp
-
-class Controllers extends Protocol {
-  val numberGuess = new controller.NumberGuess()
-}
-
-object AutowireServer extends autowire.Server[upickle.Js.Value, upickle.Reader, upickle.Writer] {
-  def read[Result: upickle.Reader](p: upickle.Js.Value) = upickle.readJs[Result](p)
-  def write[Result: upickle.Writer](r: Result) = upickle.writeJs(r)
-}
-
-object Server extends SimpleRoutingApp {
-  import upickle._
-
-  val impl = new Controllers()
-  val router = AutowireServer.route[Protocol](impl)
-
-  def dispatch(path: List[String], args: String): Future[String] =
-    upickle.json.read(args) match {
-      case Js.Obj(args @ _*) =>
-        val fullPath = Protocol.Namespace ++ path
-        router(autowire.Core.Request(fullPath, args.toMap))
-          .map(upickle.json.write)
-      case _ =>
-        Future.failed(new Exception("Arguments need to be a valid JSON object"))
+object Server extends App {
+  def fileEndpoint(uri: String, path: String, contentType: String): Endpoint[Buf] =
+    get(uri / string) { fileName: String =>
+      val file = new File(path, fileName)
+      val reader = Reader.fromFile(file)
+      Ok(Reader.readAll(reader)).withContentType(Some(contentType))
     }
 
-  def main(args: Array[String]): Unit = {
-    implicit val system = ActorSystem()
-
-    startServer("0.0.0.0", port = 8080) {
-      get {
-        pathSingleSlash {
-          complete {
-            HttpEntity(`text/html`,
-              controller.HelloWorld.render()
-            )
-          }
-        } ~ path("numberguess") {
-          complete {
-            HttpEntity(`text/html`,
-              controller.NumberGuess.render()
-            )
-          }
-        } ~ pathPrefix("sjs") {
-          getFromDirectory("js/target/scala-2.11/")
-        }
-      } ~
-        post {
-          path("api" / Segments) { segments =>
-            extract(_.request.entity.asString) { entity =>
-              complete {
-                dispatch(segments, entity)
-              }
-            }
-          }
-        }
+  def serviceEndpoint[Req, Resp](srv: Service[Req, Resp],
+                                 uri: String
+                                )(implicit decoder: Decoder[Req],
+                                           encoder: Encoder[Resp]): Endpoint[String] = {
+    post(uri :: body) { request: String =>
+      decode[Req](request) match {
+        case Xor.Left(error) => Future.value(BadRequest(error))
+        case Xor.Right(req) => (srv ? req).map(x => Ok(x.asJson.noSpaces)).asTwitter
+      }
     }
   }
+
+  def renderView(page: Page): scala.concurrent.Future[String] =
+    for {
+      pageNode   <- page.toTree
+      layoutNode <- Templates.Layout
+    } yield layoutNode.map {
+      case h: tag.Head =>
+        val jsState = s"var State = ${page.saveState()};"
+
+        h.map {
+          case t: tag.Title => html"<title>${page.title}</title>"
+          case n => n
+        }.asInstanceOf[tag.Head] ++ Seq(
+          html"""<script type="text/javascript">$jsState</script>""",
+          html"""<script type="text/javascript" src="/sjs/example-fastopt.js"></script>""",
+          html"""<script type="text/javascript" src="/sjs/example-launcher.js"></script>"""
+        )
+
+      case h: tag.Body => html"<body>$pageNode</body>"
+      case n => n
+    }.toHtml
+
+  val index: Endpoint[String] = / {
+    renderView(new page.Index).asTwitter.map(Ok(_).withContentType(Some("text/html")))
+  }
+
+  val numberGuess: Endpoint[String] = get("numberguess") {
+    renderView(new page.NumberGuess).asTwitter.map(Ok(_).withContentType(Some("text/html")))
+  }
+
+  val books: Endpoint[String] = get("books") {
+    renderView(new page.Books).asTwitter.map(Ok(_).withContentType(Some("text/html")))
+  }
+
+  val sjsFile = fileEndpoint("sjs", "js/target/scala-2.11", "text/javascript")
+  val tplFile = fileEndpoint("tpl", "shared/src/main/html", "text/html")
+  val api     = serviceEndpoint(MyService, "api")
+
+  val server: finagle.Service[http.Request, http.Response] = (
+    index :+: numberGuess :+: books :+: sjsFile :+: tplFile :+: api
+  ).toService
+
+  Await.ready(Http.server.serve(":8080", server))
 }

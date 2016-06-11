@@ -8,12 +8,11 @@ import scala.reflect.macros.blackbox.Context
 import scala.xml.XML
 
 import pl.metastack.metaweb.tree
-import pl.metastack.metaweb.state
 
 object ExternalHtml {
-  trait Import {
-    def html(fileName: String): state.Tag = macro HtmlImpl
-    def htmlT(fileName: String): tree.Tag = macro HtmlImplT
+  trait Method {
+    /** Expose `html` as a global method */
+    def html(fileName: String): tree.Tag = macro HtmlImpl
   }
 
   def convert(c: Context)(node: scala.xml.Node,
@@ -28,20 +27,23 @@ object ExternalHtml {
           if (root) Helpers.namespaceBinding(node.scope)
           else Map.empty
 
+        val tagType = TypeName(tag.capitalize)
         val tagAttrs = node.attributes.asAttrMap ++ rootAttributes
         val tagChildren = node.child.map(convert(c)(_, root = false))
-        c.Expr(q"new pl.metastack.metaweb.tree.Tag($tagName, $tagAttrs, Map.empty, Seq(..$tagChildren))")
+
+        try {
+          c.typecheck(q"val x: pl.metastack.metaweb.tag.$tagType")
+          c.Expr(q"new pl.metastack.metaweb.tag.$tagType($tagAttrs, Seq(..$tagChildren))")
+        } catch { case t: Throwable =>
+          c.Expr(q"pl.metastack.metaweb.tag.HTMLTag.fromTag($tagName, $tagAttrs, Seq(..$tagChildren))")
+        }
     }
   }
 
-  def HtmlImplT(c: Context)(fileName: c.Expr[String]): c.Expr[tree.Tag] = {
+  def HtmlImpl(c: Context)(fileName: c.Expr[String]): c.Expr[tree.Tag] = {
     val fileNameValue = Helpers.literalValueExpr(c)(fileName)
     val xml = XML.loadFile(fileNameValue)
     convert(c)(xml, root = true)
       .asInstanceOf[c.Expr[tree.Tag]]
   }
-
-  def HtmlImpl(c: Context)(fileName: c.Expr[String]): c.Expr[state.Tag] =
-    Helpers.treeToState(c)(HtmlImplT(c)(fileName))
-      .asInstanceOf[c.Expr[state.Tag]]
 }

@@ -10,19 +10,17 @@ import scala.reflect.macros.blackbox.Context
 import scala.xml.XML
 
 import pl.metastack.metaweb.tree
-import pl.metastack.metaweb.state
 
 object InlineHtml {
-  trait Import {
-    implicit class Html(sc: StringContext) {
-      def html(args: Any*): state.Tag = macro HtmlImpl
-      def htmlT(args: Any*): tree.Tag = macro HtmlImplT
+  trait Implicit {
+    implicit class HtmlString(sc: StringContext) {
+      def html(args: Any*): tree.Tag = macro HtmlImpl
     }
   }
 
   def iter(c: Context)(node: scala.xml.Node,
                        args: Seq[c.Expr[Any]],
-                       root: Boolean): Seq[c.Expr[tree.Node]] = {
+                       root: Boolean): Seq[c.Expr[Seq[tree.Node]]] = {
     import c.universe._
 
     (node.label, Option(node.prefix)) match {
@@ -31,29 +29,33 @@ object InlineHtml {
         val parts = node.text.replaceAll("""\$\{\d+\}""", "_$0_").split("_").toSeq
 
         parts.map { v =>
-          if (!v.startsWith("${") || !v.endsWith("}")) c.Expr(q"pl.metastack.metaweb.tree.Text($v)")
+          if (!v.startsWith("${") || !v.endsWith("}"))
+            c.Expr(q"Seq(pl.metastack.metaweb.tree.Text($v))")
           else {
             val index = v.drop(2).init.toInt
 
             args(index) match {
-              // TODO proper type-check
+              // TODO Do proper type checking
               case n: c.Expr[tree.Node]
-                if n.tree.tpe.toString == "pl.metastack.metaweb.tree.Node" => n
+                if n.tree.tpe.toString == "pl.metastack.metaweb.tree.Node" =>
+                c.Expr(q"Seq($n)")
               case n: c.Expr[tree.Tag]
-                if n.tree.tpe.toString == "pl.metastack.metaweb.tree.Tag" => n
+                if n.tree.tpe.toString == "pl.metastack.metaweb.tree.Tag" =>
+                c.Expr(q"Seq($n)")
 
               case n: c.Expr[Seq[tree.Node]]
                 if n.tree.tpe.toString == "Seq[pl.metastack.metaweb.tree.Node]" =>
-                  c.Expr(q"pl.metastack.metaweb.tree.Container($n)")
+                n
               case n: c.Expr[Seq[tree.Tag]]
                 if n.tree.tpe.toString == "Seq[pl.metastack.metaweb.tree.Tag]" =>
-                c.Expr(q"pl.metastack.metaweb.tree.Container($n)")
+                n
 
               case n: c.Expr[String]
                 if n.tree.tpe.toString == "String" =>
-                  c.Expr(q"pl.metastack.metaweb.tree.Text($n)")
+                  c.Expr(q"Seq(pl.metastack.metaweb.tree.Text($n))")
+
               case n =>
-                c.error(c.enclosingPosition, s"Type of $n not supported")
+                c.error(c.enclosingPosition, s"Type ${n.tree.tpe} (${n.tree.symbol}) not supported")
                 null
             }
           }
@@ -65,6 +67,7 @@ object InlineHtml {
           if (root) Helpers.namespaceBinding(node.scope)
           else Map.empty
 
+        val tagType = TypeName(tag.capitalize)
         val tagAttrs = mutable.ArrayBuffer.empty[c.Expr[Option[(String, Any)]]]
         val tagEvents = mutable.ArrayBuffer.empty[c.Expr[(String, Seq[Any] => Unit)]]
 
@@ -101,15 +104,14 @@ object InlineHtml {
         }
 
         val tagChildren = node.child.flatMap(n => iter(c)(n, args, root = false))
+        val qAttrs = q"Seq[Option[(String, String)]](..$tagAttrs).collect { case Some(x) => x }.toMap"
 
-        Seq(c.Expr(
-          q"""new pl.metastack.metaweb.tree.Tag(
-            $tagName,
-            Seq[Option[(String, String)]](..$tagAttrs).collect { case Some(x) => x }.toMap,
-            Seq(..$tagEvents).toMap,
-            Seq(..$tagChildren)
-          )
-        """))
+        try {
+          c.typecheck(q"val x: pl.metastack.metaweb.tag.$tagType")
+          Seq(c.Expr(q"Seq(new pl.metastack.metaweb.tag.$tagType($qAttrs, Seq(..$tagChildren).flatten))"))
+        } catch { case t: Throwable =>
+          Seq(c.Expr(q"Seq(pl.metastack.metaweb.tag.HTMLTag.fromTag($tagName, $qAttrs, Seq(..$tagChildren).flatten))"))
+        }
     }
   }
 
@@ -125,13 +127,14 @@ object InlineHtml {
 
   def convert(c: Context)(parts: Seq[c.universe.Tree],
                           args: Seq[c.Expr[Any]]): c.Expr[tree.Tag] = {
+    import c.universe._
     val html = insertPlaceholders(c)(parts)
     val xml = XML.loadString(html)
-    iter(c)(xml, args, root = true).head
-      .asInstanceOf[c.Expr[tree.Tag]]
+    val nodes = iter(c)(xml, args, root = true).head
+    c.Expr(q"$nodes.head").asInstanceOf[c.Expr[tree.Tag]]
   }
 
-  def HtmlImplT(c: Context)(args: c.Expr[Any]*): c.Expr[tree.Tag] = {
+  def HtmlImpl(c: Context)(args: c.Expr[Any]*): c.Expr[tree.Tag] = {
     import c.universe._
 
     c.prefix.tree match {
@@ -139,8 +142,4 @@ object InlineHtml {
         convert(c)(parts, args)
     }
   }
-
-  def HtmlImpl(c: Context)(args: c.Expr[Any]*): c.Expr[state.Tag] =
-    Helpers.treeToState(c)(HtmlImplT(c)(args: _*))
-      .asInstanceOf[c.Expr[state.Tag]]
 }

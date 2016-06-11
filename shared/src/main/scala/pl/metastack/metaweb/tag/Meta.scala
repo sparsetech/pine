@@ -1,7 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * The <em><a href="/en-US/docs/Glossary/HTML" class="glossaryLink" title="HTML: HTML (HyperText Markup Language) is a descriptive language that specifies webpage structure.">HTML</a> Meta Element </em>(<strong>&lt;meta&gt;</strong>) represents any metadata information that cannot be represented by one of the other HTML meta-related elements (<a href="/en-US/docs/Web/HTML/Element/base" title="The HTML Base Element (<base>) specifies the base URL to use for all relative URLs contained within a document. There can be only one <base> element in a document."><code>&lt;base&gt;</code></a>, <a href="/en-US/docs/Web/HTML/Element/link" title="The HTML Link Element (<link>) specifies relationships between the current document and an external resource. Possible uses for this element include defining a relational framework for navigation. This Element is most used to link to style sheets."><code>&lt;link&gt;</code></a>, <a href="/en-US/docs/Web/HTML/Element/script" title="The HTML Script Element (<script>) is used to embed or reference an executable script within an HTML or XHTML document."><code>&lt;script&gt;</code></a>, <a href="/en-US/docs/Web/HTML/Element/style" title="The HTML Style Element (<style>) contains style information for a document, or part of a document. By default, the style instructions written inside that element are expected to be CSS."><code>&lt;style&gt;</code></a> or <a href="/en-US/docs/Web/HTML/Element/title" title="The HTML Title Element (<title>) defines the title of the document, shown in a browser's title bar or on the page's tab. It can only contain text and any contained tags are not interpreted."><code>&lt;title&gt;</code></a>).
@@ -11,7 +10,9 @@ Depending on the attributes set, the kind of metadata can be one of the followin
 <li>If <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-charset">charset</a></code> is set, it is a&nbsp;<em>charset declaration</em>, i.e. the charset used for the serialized form of the webpage.&nbsp;<span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML/HTML5">HTML5</a></span></li> 
 <li>If <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-itemprop">itemprop</a></code> is set, it is <em>user-defined metadata</em>, transparent for the user-agent as the semantics of the metadata is user-specific. <span class="spec-Living">Living Standard</span> <span class="inlineIndicator unimplemented unimplementedInline">Unimplemented</span></li>
  */
-class Meta extends state.Tag("meta") with HTMLTag {
+case class Meta(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "meta"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Meta = Meta(attributes, children)
   /**
    * This attribute declares the character encoding used of the page. It can be locally overridden using the 
 <strong>lang</strong> attribute on any element. This attribute is a literal string and must be one of the 
@@ -34,13 +35,13 @@ class Meta extends state.Tag("meta") with HTMLTag {
  </ul> 
 </div>
    */
-  def charset: StateChannel[String] = attribute("charset").asInstanceOf[StateChannel[String]]
+  def charset: scala.Option[String] = attributes.get("charset").asInstanceOf[scala.Option[String]]
   /**
    * This attribute gives the value associated with the 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-http-equiv">http-equiv</a></code> or 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-name">name</a></code> attribute, depending of the context.
    */
-  def content: StateChannel[String] = attribute("content").asInstanceOf[StateChannel[String]]
+  def content: scala.Option[String] = attributes.get("content").asInstanceOf[scala.Option[String]]
   /**
    * This enumerated attribute defines the pragma that can alter servers and user-agents behavior. The value of the pragma is defined using the 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-content">content</a></code> and can be one of the following: 
@@ -124,7 +125,7 @@ class Meta extends state.Tag("meta") with HTMLTag {
  </dd> 
 </dl>
    */
-  def `http-equiv`: StateChannel[String] = attribute("http-equiv").asInstanceOf[StateChannel[String]]
+  def `http-equiv`: scala.Option[String] = attributes.get("http-equiv").asInstanceOf[scala.Option[String]]
   /**
    * This attribute defines the name of document-level metadata. It should not be set if one of the attributes 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-itemprop">itemprop</a></code>, 
@@ -343,7 +344,7 @@ class Meta extends state.Tag("meta") with HTMLTag {
   </div> </li> 
 </ul>
    */
-  def name: StateChannel[String] = attribute("name").asInstanceOf[StateChannel[String]]
+  def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
   /**
    * This attribute defines the scheme in which the metadata is described. A scheme is a context leading to the correct interpretations of the 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-content">content</a></code> value, like a format. 
@@ -351,5 +352,5 @@ class Meta extends state.Tag("meta") with HTMLTag {
  <strong>Notes:</strong> Do not use this attribute as it is obsolete. There is no replacement for it as there was no real usage for it. Omit it altogether.
 </div>
    */
-  def scheme: StateChannel[String] = attribute("scheme").asInstanceOf[StateChannel[String]]
+  def scheme: scala.Option[String] = attributes.get("scheme").asInstanceOf[scala.Option[String]]
 }

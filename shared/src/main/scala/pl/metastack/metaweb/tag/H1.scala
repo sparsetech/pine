@@ -1,10 +1,11 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * <strong>Heading</strong> elements implement six levels of document headings, <code>&lt;h1&gt;</code> is the most important and <code>&lt;h6&gt;</code> is the least. A heading element briefly describes the topic of the section it introduces. Heading information may be used by user agents, for example, to construct a table of contents for a document automatically.
  */
-class H1 extends state.Tag("h1") with HTMLTag {
+case class H1(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "h1"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): H1 = H1(attributes, children)
 }

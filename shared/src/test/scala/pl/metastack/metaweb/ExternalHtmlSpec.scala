@@ -1,19 +1,17 @@
 package pl.metastack.metaweb
 
-import minitest._
+import org.scalatest.FunSuite
 
-object ExternalHtmlSpec extends SimpleTestSuite {
-  def checkTestHtml(value: String) {
-    assertEquals(value,
+class ExternalHtmlSpec extends FunSuite {
+  def checkTestHtml(value: String): Unit =
+    assert(value ==
       """<!DOCTYPE html><html>
 <body>
 	<b>Hello World</b>
 	<div id="div1">Div 1 contents</div>
 	<div id="div2">Div 2 contents</div>
 </body>
-</html>"""
-    )
-  }
+</html>""")
 
   test("Load immutable template") {
     val tpl = html("shared/src/test/html/test.html")
@@ -31,31 +29,31 @@ object ExternalHtmlSpec extends SimpleTestSuite {
     checkTestHtml(tplOneWay.toHtml)
   }
 
-  test("Replace nodes") {
+  test("Replacing nodes") {
     val tpl = html("shared/src/test/html/test2.html")
 
-    val div2 = tpl.byId[state.Tag]("div2")
-    assertEquals(div2.toHtml, """<div id="div2">Div 2 contents</div>""")
+    val div2 = tpl.byId[tree.Tag]("div2")
+    assert(div2.toHtml == """<div id="div2">Div 2 contents</div>""")
 
-    div2 := tree.Text("42").state
-    assertEquals(div2.toHtml, """<div id="div2">42</div>""")
+    val updated = div2.set(tree.Text("42"))
+    assert(updated.toHtml == """<div id="div2">42</div>""")
   }
 
   test("Instantiate template") {
-    val tpl = htmlT("shared/src/test/html/list.html")
+    val tpl = html("shared/src/test/html/list.html")
     val listItem = tpl.byId[tree.Tag]("list-item")
 
-    val html = listItem.instantiate(
+    val inst = listItem.instantiate(
       "list-item-title" -> tree.Text(s"Title"),
       "list-item-subtitle" -> tree.Text(s"Subtitle")
-    ).state.toHtml
+    ).toHtml
 
-    assertEquals(html, """<div id="list-item"><div>Title</div><div>Subtitle</div></div>""")
+    assert(inst == """<div id="list-item"><div>Title</div><div>Subtitle</div></div>""")
   }
 
   test("Bind list item from template") {
     // Obtain tree without creating a state object
-    val tpl = htmlT("shared/src/test/html/list.html")
+    val tpl = html("shared/src/test/html/list.html")
 
     // When embedding list items, we need to drop the ID attribute
     val listItem = tpl.byId[tree.Tag]("list-item").withoutId
@@ -64,16 +62,16 @@ object ExternalHtmlSpec extends SimpleTestSuite {
       listItem.instantiate(
         "list-item-title" -> tree.Text(s"Title $i"),
         "list-item-subtitle" -> tree.Text(s"Subtitle $i")
-      ).state
+      )
     }
 
     // Instantiate template and replace list
-    val tplState = tpl.state
-    tplState.byId[state.Tag]("list").setChildren(items)
+    val replaced = tpl.updateChild[tree.Tag]("list", _.set(items))
+      .asInstanceOf[tree.Tag]
 
-    val list = tplState.byId[state.Tag]("list")
-    assertEquals(list.children.size, 3)
-    assertEquals(list.children.last.toHtml,
+    val list = replaced.byId[tree.Tag]("list")
+    assert(list.children.size == 3)
+    assert(list.children.last.toHtml ==
       """<div><div>Title c</div><div>Subtitle c</div></div>""")
   }
 }

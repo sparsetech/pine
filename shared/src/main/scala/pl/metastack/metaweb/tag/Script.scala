@@ -1,25 +1,26 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * The <em>HTML Script Element</em> (<strong><code>&lt;script&gt;</code></strong>) is used to embed or reference an executable script within an <abbr title="Hypertext Markup Language">HTML</abbr> or <abbr title="Extensible Hypertext Markup Language">XHTML</abbr> document.
 Scripts without <code>async</code> or <code>defer</code> attributes, as well as inline scripts, are fetched and executed immediately, before the browser continues to parse the page.
  */
-class Script extends state.Tag("script") with HTMLTag {
+case class Script(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "script"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Script = Script(attributes, children)
   /**
    * Set this Boolean attribute to indicate that the browser should, if possible, execute the script asynchronously. It has no effect on inline scripts (i.e., scripts that don't have the 
 <strong>src</strong> attribute).
    */
-  def async: StateChannel[String] = attribute("async").asInstanceOf[StateChannel[String]]
+  def async: scala.Option[String] = attributes.get("async").asInstanceOf[scala.Option[String]]
   /**
    * This attribute specifies the 
 <abbr>URI</abbr> of an external script; this can be used as an alternative to embedding a script directly within a document. 
 <code>script</code> elements with an 
 <code>src</code> attribute specified should not have a script embedded within its tags.
    */
-  def src: StateChannel[String] = attribute("src").asInstanceOf[StateChannel[String]]
+  def src: scala.Option[String] = attributes.get("src").asInstanceOf[scala.Option[String]]
   /**
    * This attribute identifies the scripting language of code embedded within a 
 <code>script</code> element or referenced via the element’s 
@@ -34,14 +35,14 @@ class Script extends state.Tag("script") with HTMLTag {
 <br> Note that in Firefox you can use advanced features such as let statements and other features in later JS versions, by using 
 <code>type=application/javascript;version=1.8</code>. Beware, however, that&nbsp;as this is a non-standard feature, this will most likely break support for&nbsp;other browsers, in particular Chromium-based browsers.
    */
-  def `type`: StateChannel[String] = attribute("type").asInstanceOf[StateChannel[String]]
+  def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
   /**
    * Like the 
 <code>type</code> attribute, this attribute identifies the scripting language in use. Unlike the 
 <code>type</code> attribute, however, this attribute’s possible values were never standardized. The 
 <code>type</code> attribute should be used instead.
    */
-  def language: StateChannel[String] = attribute("language").asInstanceOf[StateChannel[String]]
+  def language: scala.Option[String] = attributes.get("language").asInstanceOf[scala.Option[String]]
   /**
    * This Boolean attribute is set to indicate to a browser that the script is meant to be executed after the document has been parsed. Since this feature hasn't yet been implemented by all other major browsers, authors should not assume that the script’s execution will actually be deferred. The 
 <code>defer</code> attribute shouldn't be used on scripts that don't have the 
@@ -50,7 +51,7 @@ class Script extends state.Tag("script") with HTMLTag {
 <code>src</code> attribute. However, in Gecko 1.9.1 even inline scripts are deferred if the 
 <code>defer</code> attribute is set.
    */
-  def defer: StateChannel[String] = attribute("defer").asInstanceOf[StateChannel[String]]
+  def defer: scala.Option[String] = attributes.get("defer").asInstanceOf[scala.Option[String]]
   /**
    * Normal 
 <code>script</code> tags will pass minimal information to the 
@@ -60,9 +61,9 @@ class Script extends state.Tag("script") with HTMLTag {
 <code><a href="/en-US/docs/Web/HTML/Element/img#attr-crossorigin">crossorigin</a></code> attribute. Efforts to standardize this attribute are underway on the 
 <a href="http://lists.whatwg.org/pipermail/whatwg-whatwg.org/2012-February/034969.html" class="external">WHATWG mailing list</a>.
    */
-  def crossorigin: StateChannel[String] = attribute("crossorigin").asInstanceOf[StateChannel[String]]
+  def crossorigin: scala.Option[String] = attributes.get("crossorigin").asInstanceOf[scala.Option[String]]
   /**
    * Contains inline metadata that a user agent can use to verify that a fetched resource has been delivered free of unexpected manipulation.&nbsp;
    */
-  def integrity: StateChannel[String] = attribute("integrity").asInstanceOf[StateChannel[String]]
+  def integrity: scala.Option[String] = attributes.get("integrity").asInstanceOf[scala.Option[String]]
 }

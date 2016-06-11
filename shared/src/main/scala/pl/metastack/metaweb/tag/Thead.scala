@@ -1,12 +1,13 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * The <em>HTML Table Head Element</em> (<code>&lt;thead&gt;</code>) defines a set of rows defining the head of the columns of the table.
  */
-class Thead extends state.Tag("thead") with HTMLTag {
+case class Thead(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "thead"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Thead = Thead(attributes, children)
   /**
    * This enumerated attribute specifies how horizontal alignment of each cell content will be handled. Possible values are: 
 <ul> 
@@ -25,7 +26,7 @@ class Thead extends state.Tag("thead") with HTMLTag {
  </ul> 
 </div>
    */
-  def align: StateChannel[String] = attribute("align").asInstanceOf[StateChannel[String]]
+  def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
   /**
    * This attribute defines the background color of each cell of the column. It is one of the 6-digit hexadecimal code as defined in 
 <a class="external" href="http://www.w3.org/Graphics/Color/sRGB" title="http://www.w3.org/Graphics/Color/sRGB">sRGB</a>, prefixed by a '#'. One of the sixteen predefined color strings may be used: 
@@ -92,7 +93,7 @@ class Thead extends state.Tag("thead") with HTMLTag {
  <a href="/en-US/docs/Web/HTML/Element/th" title="Editorial review completed."><code>&lt;th&gt;</code></a> elements.
 </div>
    */
-  def bgcolor: StateChannel[String] = attribute("bgcolor").asInstanceOf[StateChannel[String]]
+  def bgcolor: scala.Option[String] = attributes.get("bgcolor").asInstanceOf[scala.Option[String]]
   /**
    * This attribute is used to set the character to align the cells in a column on. Typical values for this include a period (.) when attempting to align numbers or monetary values. If 
 <code><a href="/en-US/docs/Web/HTML/Element/tr#attr-align">align</a></code> is not set to 
@@ -105,7 +106,7 @@ class Thead extends state.Tag("thead") with HTMLTag {
  <span class="inlineIndicator unimplemented unimplementedInline">Unimplemented</span>.
 </div>
    */
-  def char: StateChannel[String] = attribute("char").asInstanceOf[StateChannel[String]]
+  def char: scala.Option[String] = attributes.get("char").asInstanceOf[scala.Option[String]]
   /**
    * This attribute is used to indicate the number of characters to offset the column data from the alignment characters specified by the 
 <strong>char</strong> attribute. 
@@ -113,7 +114,7 @@ class Thead extends state.Tag("thead") with HTMLTag {
  <strong>Note: </strong>Do not use this attribute as it is obsolete (and not supported) in the latest standard.
 </div>
    */
-  def charoff: StateChannel[String] = attribute("charoff").asInstanceOf[StateChannel[String]]
+  def charoff: scala.Option[String] = attributes.get("charoff").asInstanceOf[scala.Option[String]]
   /**
    * This attribute specifies the vertical alignment of the text within each row of cells of the table header. Possible values for this attribute are: 
 <ul> 
@@ -127,5 +128,5 @@ class Thead extends state.Tag("thead") with HTMLTag {
  <a href="/en-US/docs/Web/CSS/vertical-align" title="The vertical-align CSS property specifies the vertical alignment of an inline or table-cell box."><code>vertical-align</code></a> property on it.
 </div>
    */
-  def valign: StateChannel[String] = attribute("valign").asInstanceOf[StateChannel[String]]
+  def valign: scala.Option[String] = attributes.get("valign").asInstanceOf[scala.Option[String]]
 }

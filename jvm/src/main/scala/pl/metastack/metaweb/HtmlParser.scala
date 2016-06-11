@@ -1,6 +1,7 @@
 package pl.metastack.metaweb
 
 import pl.metastack.metaweb.macros.Helpers
+import pl.metastack.metaweb.tag.HTMLTag
 
 import scala.xml.XML
 
@@ -16,7 +17,7 @@ object HtmlParser {
 
         val tagAttrs = node.attributes.asAttrMap ++ rootAttributes
         val tagChildren = node.child.map(convert(_, root = false))
-        tree.Tag(tagName, tagAttrs, Map.empty, tagChildren)
+        HTMLTag.fromTag(tagName, tagAttrs, tagChildren)
     }
 
   def fromString(html: String): tree.Tag = {

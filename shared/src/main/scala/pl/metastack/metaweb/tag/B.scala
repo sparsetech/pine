@@ -1,7 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * The <strong>HTML <code>&lt;b&gt;</code> Element</strong> represents a span of text stylistically different from normal text, without conveying any special importance or relevance. It is typically used for keywords in a summary, product names in a review, or other spans of text whose typical presentation would be boldfaced. Another example of its use is to mark the lead sentence of each paragraph of an article.
@@ -14,5 +13,7 @@ import pl.metastack.metaweb.state
  <li>If there is no semantic purpose on using the &lt;b&gt; element, using css property <a href="/en-US/docs/CSS/font-weight" title="font-weight">font-weight</a> with bold value would be a better choice for making text bold.</li> 
 </ul>
  */
-class B extends state.Tag("b") with HTMLTag {
+case class B(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "b"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): B = B(attributes, children)
 }

@@ -18,6 +18,6 @@ object HtmlParser {
       node.firstChild
     }
 
-    render.DOM.proxyTree[tree.Tag](node)
+    DOM.toTree[tree.Tag](node)
   }
 }

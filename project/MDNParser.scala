@@ -62,17 +62,18 @@ object MDNParser {
     val file = new File(path, "HTMLTag.scala")
     printToFile(file) { p =>
       writeHeader(p)
-      p.println(s"""trait HTMLTag { self: state.Tag =>""")
+      p.println(s"""trait HTMLTag { self: tree.Tag =>""")
       writeAttributes(p, attributes)
       p.println("}")
       p.println("""object HTMLTag {""")
-      p.println(s"""  def fromTag(tag: String): state.Tag =""")
-      p.println("""    tag match {""")
+      p.println(s"""  def fromTag(tagName: String, attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty): tree.Tag =""")
+      p.println("""    tagName.toLowerCase match {""")
       elements.toList.sortBy(_.tag).foreach { element =>
         val scalaTagName = element.tag.head.toUpper + element.tag.tail
         val className = escapeScalaName(scalaTagName)
-        p.println(s"""      case "${element.tag}" => new $className""")
+        p.println(s"""      case "${element.tag}" => $className(attributes, children)""")
       }
+      p.println("""      case _ => tree.CustomTag(tagName, attributes, children)""")
       p.println("""    }""")
       p.println("""}""")
     }
@@ -82,8 +83,7 @@ object MDNParser {
   def writeHeader(p: PrintWriter) {
     p.println(s"package pl.metastack.metaweb.tag")
     p.println()
-    p.println("import pl.metastack.metarx._")
-    p.println("import pl.metastack.metaweb.state")
+    p.println("import pl.metastack.metaweb.tree")
     p.println()
   }
 
@@ -102,7 +102,9 @@ object MDNParser {
       p.println( s"""/**""")
       p.println( s""" * $description""")
       p.println( s""" */""")
-      p.println(s"""class $className extends state.Tag("${element.tag}") with HTMLTag {""")
+      p.println(s"""case class $className(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {""")
+      p.println(s"""  override def tagName = "${element.tag}"""")
+      p.println(s"""  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): $className = $className(attributes, children)""")
 
       val uniqueAttrs = element.attributes.filter { attr =>
         val exists = globalAttributes.exists(_.name == attr.name)
@@ -133,7 +135,7 @@ object MDNParser {
       case "long" => "Long"
       case "double" => "Double"
       case "boolean" => "Boolean"
-      case _ if tpe.startsWith("HTML") => "state.Node"  // TODO Generate interfaces
+      case _ if tpe.startsWith("HTML") => "tree.Node"  // TODO Generate interfaces
       case _ => tpe
     }
 
@@ -147,7 +149,7 @@ object MDNParser {
         p.println( s"""  /**""")
         p.println( s"""   * $description""")
         p.println( s"""   */""")
-        p.println( s"""  def $attrName: StateChannel[$attrType] = attribute("${attribute.name}").asInstanceOf[StateChannel[$attrType]]""")
+        p.println( s"""  def $attrName: scala.Option[$attrType] = attributes.get("${attribute.name}").asInstanceOf[scala.Option[$attrType]]""")
       }
     }
   }

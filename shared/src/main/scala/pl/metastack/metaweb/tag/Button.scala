@@ -1,16 +1,17 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * The <strong>HTML <em><code>&lt;button&gt;</code></em> Element</strong> represents a clickable button.
  */
-class Button extends state.Tag("button") with HTMLTag {
+case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "button"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Button = Button(attributes, children)
   /**
    * This Boolean attribute lets you specify that the button should have input focus when the page loads, unless the user overrides it, for example by typing in a different control. Only one form-associated element in a document can have this attribute specified.
    */
-  def autofocus: StateChannel[Boolean] = attribute("autofocus").asInstanceOf[StateChannel[Boolean]]
+  def autofocus: scala.Option[Boolean] = attributes.get("autofocus").asInstanceOf[scala.Option[Boolean]]
   /**
    * The use of this attribute on a 
 <a href="/en-US/docs/Web/HTML/Element/button" title="The HTML <button> Element represents a clickable button."><code>&lt;button&gt;</code></a> is nonstandard and Firefox-specific. By default, unlike other browsers, 
@@ -20,12 +21,12 @@ class Button extends state.Tag("button") with HTMLTag {
 <code>autocomplete="off"</code>) disables this feature. See 
 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=654072" class="external" title="if disabled state is changed with javascript, the normal state doesn't return after refreshing the page">bug&nbsp;654072</a>.
    */
-  def autocomplete: StateChannel[String] = attribute("autocomplete").asInstanceOf[StateChannel[String]]
+  def autocomplete: scala.Option[String] = attributes.get("autocomplete").asInstanceOf[scala.Option[String]]
   /**
    * <p>This Boolean attribute indicates that the user cannot interact with the button. If this attribute is not specified, the button inherits its setting from the containing element, for example <a href="/en-US/docs/Web/HTML/Element/fieldset" title="The HTML <fieldset> element is used to group several controls as well as labels (<label>) within a web form."><code>&lt;fieldset&gt;</code></a>; if there is no containing element with the <strong>disabled</strong> attribute set, then the button is enabled.</p> 
 <p>Firefox will, unlike other browsers, by default, <a href="http://stackoverflow.com/questions/5985839/bug-with-firefox-disabled-attribute-of-input-not-resetting-when-refreshing" class="external">persist the dynamic disabled state</a> of a <a href="/en-US/docs/Web/HTML/Element/button" title="The HTML <button> Element represents a clickable button."><code>&lt;button&gt;</code></a> across page loads. Use the <code><a href="/en-US/docs/Web/HTML/Element/button#attr-autocomplete">autocomplete</a></code> attribute to control this feature.</p>
    */
-  def disabled: StateChannel[Boolean] = attribute("disabled").asInstanceOf[StateChannel[Boolean]]
+  def disabled: scala.Option[Boolean] = attributes.get("disabled").asInstanceOf[scala.Option[Boolean]]
   /**
    * The form element that the button is associated with (its 
 <em>form owner</em>). The value of the attribute must be the 
@@ -35,12 +36,12 @@ class Button extends state.Tag("button") with HTMLTag {
 <code>&lt;button&gt;</code> elements anywhere within a document, not just as descendants of their 
 <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML <form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> elements.
    */
-  def form: StateChannel[state.Node] = attribute("form").asInstanceOf[StateChannel[state.Node]]
+  def form: scala.Option[tree.Node] = attributes.get("form").asInstanceOf[scala.Option[tree.Node]]
   /**
    * The URI of a program that processes the information submitted by the button. If specified, it overrides the 
 <code><a href="/en-US/docs/Web/HTML/Element/form#attr-action">action</a></code> attribute of the button's form owner.
    */
-  def formaction: StateChannel[String] = attribute("formaction").asInstanceOf[StateChannel[String]]
+  def formaction: scala.Option[String] = attributes.get("formaction").asInstanceOf[scala.Option[String]]
   /**
    * If the button is a submit button, this attribute specifies the type of content that is used to submit the form to the server. Possible values are: 
 <ul> 
@@ -50,7 +51,7 @@ class Button extends state.Tag("button") with HTMLTag {
 </ul> 
 <p>If this attribute is specified, it overrides the <code><a href="/en-US/docs/Web/HTML/Element/form#attr-enctype">enctype</a></code> attribute of the button's form owner.</p>
    */
-  def formenctype: StateChannel[String] = attribute("formenctype").asInstanceOf[StateChannel[String]]
+  def formenctype: scala.Option[String] = attributes.get("formenctype").asInstanceOf[scala.Option[String]]
   /**
    * If the button is a submit button, this attribute specifies the HTTP method that the browser uses to submit the form. Possible values are: 
 <ul> 
@@ -59,12 +60,12 @@ class Button extends state.Tag("button") with HTMLTag {
 </ul> 
 <p>If specified, this attribute overrides the <code><a href="/en-US/docs/Web/HTML/Element/form#attr-method">method</a></code> attribute of the button's form owner.</p>
    */
-  def formmethod: StateChannel[String] = attribute("formmethod").asInstanceOf[StateChannel[String]]
+  def formmethod: scala.Option[String] = attributes.get("formmethod").asInstanceOf[scala.Option[String]]
   /**
    * If the button is a submit button, this Boolean attribute specifies that the form is not to be validated when it is submitted. If this attribute is specified, it overrides the 
 <code><a href="/en-US/docs/Web/HTML/Element/form#attr-novalidate">novalidate</a></code> attribute of the button's form owner.
    */
-  def formnovalidate: StateChannel[String] = attribute("formnovalidate").asInstanceOf[StateChannel[String]]
+  def formnovalidate: scala.Option[String] = attributes.get("formnovalidate").asInstanceOf[scala.Option[String]]
   /**
    * If the button is a submit button, this attribute is a name or keyword indicating where to display the response that is received after submitting the form. This is a name of, or keyword for, a 
 <em>browsing context</em> (for example, tab, window, or inline frame). If this attribute is specified, it overrides the 
@@ -76,11 +77,11 @@ class Button extends state.Tag("button") with HTMLTag {
  <li><code>_top</code>: Load the response into the top-level browsing context (that is, the browsing context that is an ancestor of the current one, and has no parent). If there is no parent, this option behaves the same way as <code>_self</code>.</li> 
 </ul>
    */
-  def formtarget: StateChannel[String] = attribute("formtarget").asInstanceOf[StateChannel[String]]
+  def formtarget: scala.Option[String] = attributes.get("formtarget").asInstanceOf[scala.Option[String]]
   /**
    * The name of the button, which is submitted with the form data.
    */
-  def name: StateChannel[String] = attribute("name").asInstanceOf[StateChannel[String]]
+  def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
   /**
    * The type of the button. Possible values are: 
 <ul> 
@@ -89,9 +90,9 @@ class Button extends state.Tag("button") with HTMLTag {
  <li><code>button</code>: The button has no default behavior. It can have client-side scripts associated with the element's events, which are triggered when the events occur.</li> 
 </ul>
    */
-  def `type`: StateChannel[String] = attribute("type").asInstanceOf[StateChannel[String]]
+  def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
   /**
    * The initial value of the button.
    */
-  def value: StateChannel[String] = attribute("value").asInstanceOf[StateChannel[String]]
+  def value: scala.Option[String] = attributes.get("value").asInstanceOf[scala.Option[String]]
 }

@@ -1,7 +1,6 @@
 package pl.metastack.metaweb
 
-import pl.metastack.metarx.{Buffer, Var}
-
+/*
 import minitest._
 
 object ImplicitsSpec extends SimpleTestSuite {
@@ -82,3 +81,4 @@ object ImplicitsSpec extends SimpleTestSuite {
     assertEquals(span.toHtml, "<span>Hello world</span>")
   }
 }
+*/

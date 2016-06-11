@@ -1,7 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * This element includes the <a href="/en-US/docs/HTML/Global_attributes">global attributes</a>.
@@ -36,12 +35,14 @@ import pl.metastack.metaweb.state
  </div> 
 </dd>
  */
-class Fieldset extends state.Tag("fieldset") with HTMLTag {
+case class Fieldset(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "fieldset"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Fieldset = Fieldset(attributes, children)
   /**
    * If this Boolean attribute is set, the form controls that are its descendants, except descendants of its first optional 
 <a href="/en-US/docs/Web/HTML/Element/legend" title="The HTML <legend> Element (or HTML Legend Field Element) represents a caption for the content of its parent <fieldset>."><code>&lt;legend&gt;</code></a> element, are disabled, i.e., not editable. They won't receive any browsing events, like mouse clicks or focus-related ones. Often browsers display such controls as gray.
    */
-  def disabled: StateChannel[String] = attribute("disabled").asInstanceOf[StateChannel[String]]
+  def disabled: scala.Option[String] = attributes.get("disabled").asInstanceOf[scala.Option[String]]
   /**
    * This attribute has the value of the 
 <strong>id </strong>attribute of the 
@@ -49,7 +50,7 @@ class Fieldset extends state.Tag("fieldset") with HTMLTag {
 <strong>id</strong> of the nearest 
 <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML <form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> element it is a descendant of.
    */
-  def form: StateChannel[String] = attribute("form").asInstanceOf[StateChannel[String]]
+  def form: scala.Option[String] = attributes.get("form").asInstanceOf[scala.Option[String]]
   /**
    * The name associated with the group, which is submitted with the form data. 
 <div class="note">
@@ -57,5 +58,5 @@ class Fieldset extends state.Tag("fieldset") with HTMLTag {
  <a href="/en-US/docs/Web/HTML/Element/legend" title="The HTML <legend> Element (or HTML Legend Field Element) represents a caption for the content of its parent <fieldset>."><code>&lt;legend&gt;</code></a> element that is a child of this field set.
 </div>
    */
-  def name: StateChannel[String] = attribute("name").asInstanceOf[StateChannel[String]]
+  def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
 }

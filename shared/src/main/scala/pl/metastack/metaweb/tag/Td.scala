@@ -1,12 +1,13 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * The <em>Table cell</em> <a href="/en-US/docs/Web/HTML">HTML</a> element (<strong><code>&lt;td&gt;</code></strong>) defines a cell of a table that contains data. It participates in the <em>table model</em>.
  */
-class Td extends state.Tag("td") with HTMLTag {
+case class Td(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "td"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Td = Td(attributes, children)
   /**
    * This attribute contains a short abbreviated description of the content of the cell. Some user-agents, such as speech readers, may present this description before the content itself. 
 <div class="note">
@@ -14,7 +15,7 @@ class Td extends state.Tag("td") with HTMLTag {
  <strong>title</strong> attribute.
 </div>
    */
-  def abbr: StateChannel[String] = attribute("abbr").asInstanceOf[StateChannel[String]]
+  def abbr: scala.Option[String] = attributes.get("abbr").asInstanceOf[scala.Option[String]]
   /**
    * This enumerated attribute specifies how horizontal alignment of each cell content will be handled. Possible values are: 
 <ul> 
@@ -33,7 +34,7 @@ class Td extends state.Tag("td") with HTMLTag {
  </ul> 
 </div>
    */
-  def align: StateChannel[String] = attribute("align").asInstanceOf[StateChannel[String]]
+  def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
   /**
    * This attribute contains a list of space-separated strings. Each string is the ID of a group of cells that this header applies to. 
 <div class="note">
@@ -41,7 +42,7 @@ class Td extends state.Tag("td") with HTMLTag {
  <code><a href="/en-US/docs/Web/HTML/Element/td#attr-scope">scope</a></code> attribute.
 </div>
    */
-  def axis: StateChannel[String] = attribute("axis").asInstanceOf[StateChannel[String]]
+  def axis: scala.Option[String] = attributes.get("axis").asInstanceOf[scala.Option[String]]
   /**
    * This attribute defines the background color of each cell of the column. It is one of the 6-digit hexadecimal codes as defined in 
 <a href="http://www.w3.org/Graphics/Color/sRGB" class="external">sRGB</a>, prefixed by a '#'. One of the sixteen predefined color strings may be used: 
@@ -106,7 +107,7 @@ class Td extends state.Tag("td") with HTMLTag {
  <a href="/en-US/docs/Web/CSS/background-color" title="The background-color CSS property sets the background color of an element, either through a color value or the keyword transparent."><code>background-color</code></a> instead.
 </div>
    */
-  def bgcolor: StateChannel[String] = attribute("bgcolor").asInstanceOf[StateChannel[String]]
+  def bgcolor: scala.Option[String] = attributes.get("bgcolor").asInstanceOf[scala.Option[String]]
   /**
    * This attribute is used to set the character to align the cells in a column. Typical values for this include a period (.) when attempting to align numbers or monetary values. If 
 <code><a href="/en-US/docs/Web/HTML/Element/td#attr-align">align</a></code> is not set to 
@@ -119,7 +120,7 @@ class Td extends state.Tag("td") with HTMLTag {
  <span class="inlineIndicator unimplemented unimplementedInline">Unimplemented</span>.
 </div>
    */
-  def char: StateChannel[String] = attribute("char").asInstanceOf[StateChannel[String]]
+  def char: scala.Option[String] = attributes.get("char").asInstanceOf[scala.Option[String]]
   /**
    * This attribute is used to indicate the number of characters to offset the column data from the alignment characters specified by the 
 <strong>char</strong> attribute. 
@@ -127,7 +128,7 @@ class Td extends state.Tag("td") with HTMLTag {
  <strong>Note: </strong>Do not use this attribute as it is obsolete (and not supported) in the latest standard.
 </div>
    */
-  def charoff: StateChannel[String] = attribute("charoff").asInstanceOf[StateChannel[String]]
+  def charoff: scala.Option[String] = attributes.get("charoff").asInstanceOf[scala.Option[String]]
   /**
    * This attribute contains a non-negative integer value that indicates for how many columns the cell extends. Its default value is 
 <code>1</code>; if its value is set to 
@@ -140,13 +141,13 @@ class Td extends state.Tag("td") with HTMLTag {
  <span class="inlineIndicator htmlVer htmlVerInline">HTML 4.01</span> specification.
 </div>
    */
-  def colspan: StateChannel[String] = attribute("colspan").asInstanceOf[StateChannel[String]]
+  def colspan: scala.Option[String] = attributes.get("colspan").asInstanceOf[scala.Option[String]]
   /**
    * This attribute contains a list of space-separated strings, each corresponding to the 
 <strong>id</strong> attribute of the 
 <a href="/en-US/docs/Web/HTML/Element/th" title="The HTML Table Header Cell Element (<th>) defines a cell that is a header for a group of cells of a table. The group of cells that the header refers to is defined by the scope and headers attribute."><code>&lt;th&gt;</code></a> elements that apply to this element.
    */
-  def headers: StateChannel[String] = attribute("headers").asInstanceOf[StateChannel[String]]
+  def headers: scala.Option[String] = attributes.get("headers").asInstanceOf[scala.Option[String]]
   /**
    * This attribute contains a non-negative integer value that indicates for how many rows the cell extends. Its default value is 
 <code>1</code>; if its value is set to 
@@ -155,11 +156,11 @@ class Td extends state.Tag("td") with HTMLTag {
 <a href="/en-US/docs/Web/HTML/Element/tbody" title="The HTML Table Body Element () defines one or more <tr> element data-rows to be the body of its parent <table> element (as long as no <tr> elements are immediate children of that table element.)&nbsp; In conjunction with a preceding <thead> and/or <tfoot> element, <tbody> provides additional semantic information for devices such as printers and displays. Of the parent table's child elements, <tbody> represents the content which, when longer than a page, will most likely differ for each page printed; while the content of <thead> and <tfoot> will be the same or similar for each page printed. For displays, <tbody> will enable separate scrolling of the <thead>, <tfoot>, and <caption> elements of the same parent <table> element.&nbsp; Note that unlike the <thead>, <tfoot>, and <caption> elements however, multiple&nbsp;<tbody> elements are permitted (if consecutive), allowing the data-rows in long tables to be divided into different sections, each separately formatted as needed."><code>&lt;tbody&gt;</code></a>, 
 <a href="/en-US/docs/Web/HTML/Element/tfoot" title="The HTML Table Foot Element (<tfoot>) defines a set of rows summarizing the columns of the table."><code>&lt;tfoot&gt;</code></a>, even if implicitly defined, that the cell belongs to. Values higher than 65534 are clipped down to 65534.
    */
-  def rowspan: StateChannel[String] = attribute("rowspan").asInstanceOf[StateChannel[String]]
+  def rowspan: scala.Option[String] = attributes.get("rowspan").asInstanceOf[scala.Option[String]]
   /**
    * &nbsp;
    */
-  def scope: StateChannel[String] = attribute("scope").asInstanceOf[StateChannel[String]]
+  def scope: scala.Option[String] = attributes.get("scope").asInstanceOf[scala.Option[String]]
   /**
    * This attribute specifies the vertical alignment of the text within each row of cells of the table header. Possible values for this attribute are: 
 <ul> 
@@ -173,7 +174,7 @@ class Td extends state.Tag("td") with HTMLTag {
  <a href="/en-US/docs/Web/CSS/vertical-align" title="The vertical-align CSS property specifies the vertical alignment of an inline or table-cell box."><code>vertical-align</code></a> property on it.
 </div>
    */
-  def valign: StateChannel[String] = attribute("valign").asInstanceOf[StateChannel[String]]
+  def valign: scala.Option[String] = attributes.get("valign").asInstanceOf[scala.Option[String]]
   /**
    * This attribute is used to define a recommended cell width. &nbsp;Properties&nbsp;
 <a href="/en-US/docs/Web/API/HTMLTableElement/cellSpacing">cellspacing</a> and 
@@ -184,5 +185,5 @@ class Td extends state.Tag("td") with HTMLTag {
  <a href="/en-US/docs/Web/CSS/width" title="The width CSS property specifies the width of the content area of an element. The content area is inside the padding, border, and margin of the element."><code>width</code></a> property.
 </div>
    */
-  def width: StateChannel[String] = attribute("width").asInstanceOf[StateChannel[String]]
+  def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
 }

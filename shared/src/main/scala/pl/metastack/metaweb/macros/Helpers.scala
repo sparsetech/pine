@@ -5,8 +5,6 @@ import scala.language.reflectiveCalls
 
 import scala.reflect.macros.blackbox.Context
 
-import pl.metastack.metaweb.{Tag, tree, state}
-
 import scala.xml.NamespaceBinding
 
 object Helpers {
@@ -27,13 +25,4 @@ object Helpers {
 
   def literalValueExpr[T](c: Context)(expr: c.Expr[T]): T =
     literalValueTree[T](c)(expr.tree)
-
-  def treeToState(c: Context)(node: c.Expr[tree.Tag]): c.Expr[Tag] = {
-    import c.universe._
-
-    c.Expr(q"""
-      import pl.metastack.metaweb
-      $node.state
-    """)
-  }
 }

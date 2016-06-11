@@ -1,17 +1,18 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * <span class="seoSummary">The&nbsp;<em>HTML Image Element</em>&nbsp;(<strong>&lt;img&gt;</strong>) represents an image of the document.</span>
 <p><strong>Usage note:</strong><br> Browsers do not always display the image referenced by the element. This is the case for non-graphical browsers (including those used by people with vision impairments), if the user chooses not to display images, or if the browser is unable to display the image because it is invalid or an <a href="#Supported_image_formats" title="HTML/Element/Img#Supported_Image_Formats">unsupported type</a>. In these cases, the browser may replace the image with the text defined in this element's <strong>alt</strong> attribute.</p>
  */
-class Img extends state.Tag("img") with HTMLTag {
+case class Img(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "img"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Img = Img(attributes, children)
   /**
    * The alignment of the image with respect to its surrounding context.
    */
-  def `align vertical-align`: StateChannel[String] = attribute("align vertical-align").asInstanceOf[StateChannel[String]]
+  def `align vertical-align`: scala.Option[String] = attributes.get("align vertical-align").asInstanceOf[scala.Option[String]]
   /**
    * This attribute defines the alternative text describing the image. Users will see this displayed if the image URL is wrong, the image is not in one of the 
 <a href="#Supported_image_formats" title="HTML/Element/Img#Supported image formats">supported formats</a>, or if the image is not yet downloaded. 
@@ -19,11 +20,11 @@ class Img extends state.Tag("img") with HTMLTag {
  <p><strong>Usage note: </strong>Omitting this attribute indicates that the image <em>is</em> a key part of the content, but no textual equivalent is available. Setting this attribute to the empty string indicates that this image is <em>not</em> a key part of the content; non-visual browsers may omit it from rendering.</p> 
 </div>
    */
-  def alt: StateChannel[String] = attribute("alt").asInstanceOf[StateChannel[String]]
+  def alt: scala.Option[String] = attributes.get("alt").asInstanceOf[scala.Option[String]]
   /**
    * The width of a border around the image.
    */
-  def border: StateChannel[String] = attribute("border").asInstanceOf[StateChannel[String]]
+  def border: scala.Option[String] = attributes.get("border").asInstanceOf[scala.Option[String]]
   /**
    * This enumerated attribute indicates if the fetching of the related image must be done using CORS or not. 
 <a href="/en-US/docs/CORS_Enabled_Image" title="CORS_Enabled_Image">CORS-enabled images</a> can be reused in the 
@@ -54,35 +55,35 @@ class Img extends state.Tag("img") with HTMLTag {
 <strong>anonymous</strong> was used. See 
 <a href="/en-US/docs/HTML/CORS_settings_attributes" title="CORS settings attributes">CORS settings attributes</a> for additional information.
    */
-  def crossorigin: StateChannel[String] = attribute("crossorigin").asInstanceOf[StateChannel[String]]
+  def crossorigin: scala.Option[String] = attributes.get("crossorigin").asInstanceOf[scala.Option[String]]
   /**
    * The intrinsic height of the image in 
 <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML/HTML5">HTML5</a></span> CSS pixels, or 
 <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML">HTML 4</a></span> in pixels or as a percentage.
    */
-  def height: StateChannel[String] = attribute("height").asInstanceOf[StateChannel[String]]
+  def height: scala.Option[String] = attributes.get("height").asInstanceOf[scala.Option[String]]
   /**
    * The number of pixels of white space to insert to the left and right of the image.
    */
-  def hspace: StateChannel[String] = attribute("hspace").asInstanceOf[StateChannel[String]]
+  def hspace: scala.Option[String] = attributes.get("hspace").asInstanceOf[scala.Option[String]]
   /**
    * This Boolean attribute indicates that the image is part of a server-side map. If so, the precise coordinates of a click are sent to the server. 
 <div class="note"> 
  <p><strong>Usage note: </strong>This attribute is allowed only if the <code>&lt;img&gt;</code> element is a descendant of an <a href="/en-US/docs/Web/HTML/Element/a" title="The HTML <a> Element (or the HTML Anchor Element) defines a hyperlink, the named target destination for a hyperlink, or both."><code>&lt;a&gt;</code></a> element with a valid <code><a href="/en-US/docs/Web/HTML/Element/a#attr-href">href</a></code> attribute.</p> 
 </div>
    */
-  def ismap: StateChannel[String] = attribute("ismap").asInstanceOf[StateChannel[String]]
+  def ismap: scala.Option[String] = attributes.get("ismap").asInstanceOf[scala.Option[String]]
   /**
    * The URL of a description of the image to be displayed, which supplements the 
 <strong>alt</strong> text.
    */
-  def longdesc: StateChannel[String] = attribute("longdesc").asInstanceOf[StateChannel[String]]
+  def longdesc: scala.Option[String] = attributes.get("longdesc").asInstanceOf[scala.Option[String]]
   /**
    * A name for the element. It is supported in 
 <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML">HTML 4</a></span> only for backward compatibility. Use the 
 <strong>id</strong> attribute instead.
    */
-  def name: StateChannel[String] = attribute("name").asInstanceOf[StateChannel[String]]
+  def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
   /**
    * A&nbsp;list of one or more strings separated by commas indicating a set of source sizes. Each source size consists of: 
 <ol> 
@@ -91,7 +92,7 @@ class Img extends state.Tag("img") with HTMLTag {
 </ol> 
 <p>Source size values specify the intended display size of the image. User agents use the current source size to select one of the sources supplied by the <code>srcset</code> attribute, when those sources are described using width ('<code>w</code>') descriptors. The selected source size affects the intrinsic size of the image (the image’s display size if no CSS styling is applied). If the <code>srcset</code> attribute is absent, or contains no values with a width descriptor, then the <code>sizes</code> attribute has no effect.</p>
    */
-  def sizes: StateChannel[String] = attribute("sizes").asInstanceOf[StateChannel[String]]
+  def sizes: scala.Option[String] = attributes.get("sizes").asInstanceOf[scala.Option[String]]
   /**
    * The image URL. This attribute is mandatory for the 
 <code>&lt;img&gt;</code> element. On browsers supporting 
@@ -102,7 +103,7 @@ class Img extends state.Tag("img") with HTMLTag {
 <code>srcset</code> contains '
 <code>w</code>' descriptors.
    */
-  def src: StateChannel[String] = attribute("src").asInstanceOf[StateChannel[String]]
+  def src: scala.Option[String] = attributes.get("src").asInstanceOf[scala.Option[String]]
   /**
    * A list of one or more strings separated by commas indicating a set of possible image sources for the user agent to use. Each string is composed of: 
 <ol> 
@@ -117,13 +118,13 @@ class Img extends state.Tag("img") with HTMLTag {
 <p>It is invalid to mix width descriptors and pixel density descriptors in the same <code>srcset</code> attribute. Duplicate descriptors (for instance, two sources in the same <code>srcset</code>&nbsp;which are both&nbsp;described with&nbsp;'<code style="font-style: normal;">2x</code>')&nbsp;are invalid, too.</p> 
 <p>User agents are given discretion to choose any one of the available sources. This provides them with significant leeway to tailor their selection based on things like user preferences or bandwidth conditions.</p>
    */
-  def srcset: StateChannel[String] = attribute("srcset").asInstanceOf[StateChannel[String]]
+  def srcset: scala.Option[String] = attributes.get("srcset").asInstanceOf[scala.Option[String]]
   /**
    * The intrinsic width of the image in 
 <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML/HTML5">HTML5</a></span> CSS pixels, or 
 <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML">HTML 4</a></span> in pixels or as a percentage.
    */
-  def width: StateChannel[String] = attribute("width").asInstanceOf[StateChannel[String]]
+  def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
   /**
    * The partial URL (starting with '#') of an 
 <a href="/en-US/docs/HTML/Element/map" title="HTML/Element/Map">image map</a> associated with the element. 
@@ -131,9 +132,9 @@ class Img extends state.Tag("img") with HTMLTag {
  <p><strong>Usage note: </strong>You cannot use this attribute if the <code>&lt;img&gt;</code> element is a descendant of an <a href="/en-US/docs/Web/HTML/Element/a" title="The HTML <a> Element (or the HTML Anchor Element) defines a hyperlink, the named target destination for a hyperlink, or both."><code>&lt;a&gt;</code></a> or <a href="/en-US/docs/Web/HTML/Element/button" title="The HTML <button> Element represents a clickable button."><code>&lt;button&gt;</code></a> element.</p> 
 </div>
    */
-  def usemap: StateChannel[String] = attribute("usemap").asInstanceOf[StateChannel[String]]
+  def usemap: scala.Option[String] = attributes.get("usemap").asInstanceOf[scala.Option[String]]
   /**
    * The number of pixels of white space to insert above and below the image.
    */
-  def vspace: StateChannel[String] = attribute("vspace").asInstanceOf[StateChannel[String]]
+  def vspace: scala.Option[String] = attributes.get("vspace").asInstanceOf[scala.Option[String]]
 }

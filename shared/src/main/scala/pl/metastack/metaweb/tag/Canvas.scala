@@ -1,7 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * This element includes the <a href="https://developer.mozilla.org/en-US/docs/HTML/Global_attributes">global attributes</a>.
@@ -25,17 +24,19 @@ import pl.metastack.metaweb.state
  The width of the coordinate space in CSS pixels. Defaults to 300.
 </dd>
  */
-class Canvas extends state.Tag("canvas") with HTMLTag {
+case class Canvas(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "canvas"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Canvas = Canvas(attributes, children)
   /**
    * The height of the coordinate space in CSS pixels. Defaults to 150.
    */
-  def height: StateChannel[String] = attribute("height").asInstanceOf[StateChannel[String]]
+  def height: scala.Option[String] = attributes.get("height").asInstanceOf[scala.Option[String]]
   /**
    * Lets the canvas know whether or not translucency will be a factor. If the canvas knows there's no translucency, painting performance can be optimized.
    */
-  def `moz-opaque`: StateChannel[String] = attribute("moz-opaque").asInstanceOf[StateChannel[String]]
+  def `moz-opaque`: scala.Option[String] = attributes.get("moz-opaque").asInstanceOf[scala.Option[String]]
   /**
    * The width of the coordinate space in CSS pixels. Defaults to 300.
    */
-  def width: StateChannel[String] = attribute("width").asInstanceOf[StateChannel[String]]
+  def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
 }

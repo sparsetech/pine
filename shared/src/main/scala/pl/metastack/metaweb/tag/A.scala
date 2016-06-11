@@ -1,7 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * <span style="line-height: 21px;">This element includes the&nbsp;</span><a href="https://developer.mozilla.org/en-US/docs/HTML/Global_attributes" title="HTML/Global attributes" style="line-height: 21px;">global attributes</a><span style="line-height: 21px;">.</span>
@@ -261,7 +260,9 @@ Non standard
  <a href="http://msdn.microsoft.com/en-us/library/ms534710(VS.85).aspx" class="external">urn Property (MSDN)</a>
 </dd>
  */
-class A extends state.Tag("a") with HTMLTag {
+case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "a"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): A = A(attributes, children)
   /**
    * This attribute, if present, indicates that the author intends the hyperlink to be used for downloading a resource so that when the user clicks on the link they will be prompted to save it as a local file. If the attribute has a value, the value will be used as the pre-filled file name in the Save prompt that opens when the user clicks on the link (the user can change the name before actually saving the file of course). There are no restrictions on allowed values (though 
 <code>/</code> and 
@@ -276,7 +277,7 @@ class A extends state.Tag("a") with HTMLTag {
  </ul> 
 </div>
    */
-  def download: StateChannel[String] = attribute("download").asInstanceOf[StateChannel[String]]
+  def download: scala.Option[String] = attributes.get("download").asInstanceOf[scala.Option[String]]
   /**
    * This was the single required attribute for anchors defining a hypertext source link, but is no longer required in HTML5. Omitting this attribute creates a placeholder link. The 
 <code>href</code> attribute indicates the link target, either a URL or a URL fragment. A URL fragment is a name preceded by a hash mark (#), which specifies an internal target location (an 
@@ -288,14 +289,14 @@ class A extends state.Tag("a") with HTMLTag {
  <p><strong>Note:</strong> You can use the special fragment "top" to create a link back to the top of the page; for example <code>&lt;a href="#top"&gt;Return to top&lt;/a&gt;</code>. <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/history.html#scroll-to-fragid" class="external" lang="en" title="http://www.whatwg.org/specs/web-apps/current-work/multipage/history.html#scroll-to-fragid">This behavior is specified by HTML5</a>.</p> 
 </div>
    */
-  def href: StateChannel[String] = attribute("href").asInstanceOf[StateChannel[String]]
+  def href: scala.Option[String] = attributes.get("href").asInstanceOf[scala.Option[String]]
   /**
    * This attribute indicates the language of the linked resource. It is purely advisory. Allowed values are determined by 
 <a href="http://www.ietf.org/rfc/bcp/bcp47.txt" class="external" title="http://www.ietf.org/rfc/bcp/bcp47.txt">BCP47</a> for HTML5 and by 
 <a href="http://www.ietf.org/rfc/rfc1766.txt" class="external" title="http://www.ietf.org/rfc/rfc1766.txt">RFC1766</a> for HTML4. Use this attribute only if the 
 <code><a href="/en-US/docs/Web/HTML/Element/a#attr-href">href</a></code> attribute is present.
    */
-  def hreflang: StateChannel[String] = attribute("hreflang").asInstanceOf[StateChannel[String]]
+  def hreflang: scala.Option[String] = attributes.get("hreflang").asInstanceOf[scala.Option[String]]
   /**
    * This attribute specifies the media which the linked resource applies to. Its value must be a 
 <a href="/en-US/docs/CSS/Media_queries" title="CSS/Media queries">media query</a>. This attribute is mainly useful when linking to external stylesheets by allowing the user agent to pick the best adapted one for the device it runs on. 
@@ -307,18 +308,18 @@ class A extends state.Tag("a") with HTMLTag {
  </ul> 
 </div>
    */
-  def media: StateChannel[String] = attribute("media").asInstanceOf[StateChannel[String]]
+  def media: scala.Option[String] = attributes.get("media").asInstanceOf[scala.Option[String]]
   /**
    * The 'ping' attribute, if present, sends the URLs of the resources a notification/ping if the user follows the hyperlink.
    */
-  def ping: StateChannel[String] = attribute("ping").asInstanceOf[StateChannel[String]]
+  def ping: scala.Option[String] = attributes.get("ping").asInstanceOf[scala.Option[String]]
   /**
    * For anchors containing the 
 <strong>href</strong> attribute, this attribute specifies the relationship of the target object to the link object. The value is a comma-separated list of 
 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types">link types values</a>. The values and their semantics will be registered by some authority that might have meaning to the document author. The default relationship, if no other is given, is void. Use this attribute only if the 
 <strong>href</strong> attribute is present.
    */
-  def rel: StateChannel[String] = attribute("rel").asInstanceOf[StateChannel[String]]
+  def rel: scala.Option[String] = attributes.get("rel").asInstanceOf[scala.Option[String]]
   /**
    * This attribute specifies where to display the linked resource. In HTML4, this is the name of, or a keyword for, a frame. In HTML5, it is a name of, or keyword for, a 
 <em>browsing context</em> (for example, tab, window, or inline frame). The following keywords have special meanings: 
@@ -330,14 +331,14 @@ class A extends state.Tag("a") with HTMLTag {
 </ul> Use this attribute only if the 
 <strong>href</strong> attribute is present.
    */
-  def target: StateChannel[String] = attribute("target").asInstanceOf[StateChannel[String]]
+  def target: scala.Option[String] = attributes.get("target").asInstanceOf[scala.Option[String]]
   /**
    * This attribute specifies the media type in the form of a 
 <a href="/en-US/docs/Glossary/MIME_type" class="glossaryLink" title="MIME type: A&nbsp;MIME type&nbsp;(now properly called &quot;media type&quot;, but&nbsp;also sometimes &quot;content type&quot;) is a string sent along&nbsp;with a file indicating the file&nbsp;type (for example, a sound file might be labeled&nbsp;audio/ogg, or an image file&nbsp;image/png). It serves the same purpose as filename&nbsp;extensions traditionally do on Windows.">MIME type</a> for the link target. Generally, this is provided strictly as advisory information; however, in the future a browser might add a small icon for multimedia types. For example, a browser might add a small speaker icon when type is set to audio/wav. For a complete list of recognized MIME types, see 
 <a href="http://www.w3.org/TR/html4/references.html#ref-MIMETYPES" class="external linkification-ext" title="Linkification: http://www.w3.org/TR/html4/references.html#ref-MIMETYPES">http://www.w3.org/TR/html4/references.html#ref-MIMETYPES</a>. Use this attribute only if the 
 <code>href</code> attribute is present.
    */
-  def `type`: StateChannel[String] = attribute("type").asInstanceOf[StateChannel[String]]
+  def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
   /**
    * This attribute defines the character encoding of the linked resource. The value is a space- and/or comma-delimited list of character sets as defined in 
 <a href="http://tools.ietf.org/html/rfc2045" class="external" title="http://tools.ietf.org/html/rfc2045">RFC 2045</a>. The default value is ISO-8859-1. 
@@ -345,11 +346,11 @@ class A extends state.Tag("a") with HTMLTag {
  <p><strong>Usage note: </strong>This attribute is obsolete in HTML5 and <strong>should not be used by authors</strong>. To achieve its effect, use the HTTP Content-Type header on the linked resource.</p> 
 </div>
    */
-  def charset: StateChannel[String] = attribute("charset").asInstanceOf[StateChannel[String]]
+  def charset: scala.Option[String] = attributes.get("charset").asInstanceOf[scala.Option[String]]
   /**
    * For use with object shapes, this attribute uses a comma-separated list of numbers to define the coordinates of the object on the page.
    */
-  def coords: StateChannel[String] = attribute("coords").asInstanceOf[StateChannel[String]]
+  def coords: scala.Option[String] = attributes.get("coords").asInstanceOf[scala.Option[String]]
   /**
    * This attribute is required in an anchor defining a target location within a page. A value for 
 <strong>name</strong> is similar to a value for the 
@@ -360,12 +361,12 @@ class A extends state.Tag("a") with HTMLTag {
  <p><strong>Usage note:</strong> This attribute is obsolete in HTML5, use <a href="/en-US/docs/HTML/Global_attributes#attr-id" title="HTML/Global attributes#id">global attribute <strong>id</strong></a> instead.</p> 
 </div>
    */
-  def name: StateChannel[String] = attribute("name").asInstanceOf[StateChannel[String]]
+  def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
   /**
    * This attribute specifies a reverse link, the inverse relationship of the 
 <strong>rel</strong> attribute. It is useful for indicating where an object came from, such as the author of a document.
    */
-  def rev: StateChannel[String] = attribute("rev").asInstanceOf[StateChannel[String]]
+  def rev: scala.Option[String] = attributes.get("rev").asInstanceOf[scala.Option[String]]
   /**
    * This attribute is used to define a selectable region for hypertext source links associated with a figure to create an image map. The values for the attribute are 
 <code>circle</code>, 
@@ -398,7 +399,7 @@ class A extends state.Tag("a") with HTMLTag {
  <code>shape</code> attribute.
 </div>
    */
-  def shape: StateChannel[String] = attribute("shape").asInstanceOf[StateChannel[String]]
+  def shape: scala.Option[String] = attributes.get("shape").asInstanceOf[scala.Option[String]]
   /**
    * This attribute specifies the column name from that data source object that supplies the bound data. 
 <div class="note"> 
@@ -426,7 +427,7 @@ class A extends state.Tag("a") with HTMLTag {
  </tbody> 
 </table>
    */
-  def datafld: StateChannel[String] = attribute("datafld").asInstanceOf[StateChannel[String]]
+  def datafld: scala.Option[String] = attributes.get("datafld").asInstanceOf[scala.Option[String]]
   /**
    * This attribute indicates the ID of the data source object that supplies the data that is bound to this element. 
 <div class="note"> 
@@ -454,15 +455,15 @@ class A extends state.Tag("a") with HTMLTag {
  </tbody> 
 </table>
    */
-  def datasrc: StateChannel[String] = attribute("datasrc").asInstanceOf[StateChannel[String]]
+  def datasrc: scala.Option[String] = attributes.get("datasrc").asInstanceOf[scala.Option[String]]
   /**
    * The value of this attribute provides information about the functions that might be performed on an object. The values generally are given by the HTTP protocol when it is used, but it might (for similar reasons as for the title attribute) be useful to include advisory information in advance in the link. For example, the browser might choose a different rendering of a link as a function of the methods specified; something that is searchable might get a different icon, or an outside link might render with an indication of leaving the current site. This attribute is not well understood nor supported, even by the defining browser, Internet Explorer 4. 
 <a href="http://msdn.microsoft.com/en-us/library/ms534168(VS.85).aspx" class="external">Methods Property (MSDN)</a>
    */
-  def methods: StateChannel[String] = attribute("methods").asInstanceOf[StateChannel[String]]
+  def methods: scala.Option[String] = attributes.get("methods").asInstanceOf[scala.Option[String]]
   /**
    * This supposedly Microsoft-supported attribute relates a uniform resource name (URN) with the link. While it is based on standards work years back, the meaning of URNs is still not well defined, so this attribute is meaningless. 
 <a href="http://msdn.microsoft.com/en-us/library/ms534710(VS.85).aspx" class="external">urn Property (MSDN)</a>
    */
-  def urn: StateChannel[String] = attribute("urn").asInstanceOf[StateChannel[String]]
+  def urn: scala.Option[String] = attributes.get("urn").asInstanceOf[scala.Option[String]]
 }

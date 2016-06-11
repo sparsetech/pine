@@ -1,12 +1,13 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * The&nbsp;<em>HTML Table Column Group Element</em>&nbsp;(<strong>&lt;colgroup&gt;</strong>) defines a group of columns within a table.
  */
-class Colgroup extends state.Tag("colgroup") with HTMLTag {
+case class Colgroup(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "colgroup"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Colgroup = Colgroup(attributes, children)
   /**
    * This enumerated attribute specifies how horizontal alignment of each column cell content will be handled. Possible values are: 
 <ul> 
@@ -30,7 +31,7 @@ class Colgroup extends state.Tag("colgroup") with HTMLTag {
  </ul> 
 </div>
    */
-  def align: StateChannel[String] = attribute("align").asInstanceOf[StateChannel[String]]
+  def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
   /**
    * This attribute defines the background color of each cell of the columns member of the column group. It is one of the 6-digit hexadecimal code as defined in 
 <a href="http://www.w3.org/Graphics/Color/sRGB" class="external" title="http://www.w3.org/Graphics/Color/sRGB">sRGB</a>, prefixed by a '#'. One of the sixteen predefined color strings, as mentioned below, may be used: 
@@ -96,7 +97,7 @@ class Colgroup extends state.Tag("colgroup") with HTMLTag {
  <a href="/en-US/docs/Web/HTML/Element/td" title="The Table cell HTML element (<td>) defines a cell of a table that contains data. It participates in the table model."><code>&lt;td&gt;</code></a> elements.
 </div>
    */
-  def bgcolor: StateChannel[String] = attribute("bgcolor").asInstanceOf[StateChannel[String]]
+  def bgcolor: scala.Option[String] = attributes.get("bgcolor").asInstanceOf[scala.Option[String]]
   /**
    * This attribute specifies the 
 <span id="c80j9f_6" class="c80j9f">alignment</span> of the content in a column group to a character. Typical values for this include a period (.) when attempting to align numbers or monetary values. If 
@@ -112,7 +113,7 @@ class Colgroup extends state.Tag("colgroup") with HTMLTag {
  <span class="inlineIndicator unimplemented unimplementedInline">Unimplemented</span>.
 </div>
    */
-  def char: StateChannel[String] = attribute("char").asInstanceOf[StateChannel[String]]
+  def char: scala.Option[String] = attributes.get("char").asInstanceOf[scala.Option[String]]
   /**
    * This attribute is used to indicate the number of characters to offset the column data from the alignment character specified by the 
 <strong>char</strong> attribute. 
@@ -120,7 +121,7 @@ class Colgroup extends state.Tag("colgroup") with HTMLTag {
  <strong>Note: </strong>Do not use this attribute as it is obsolete (and not supported) in the latest standard.
 </div>
    */
-  def charoff: StateChannel[String] = attribute("charoff").asInstanceOf[StateChannel[String]]
+  def charoff: scala.Option[String] = attributes.get("charoff").asInstanceOf[scala.Option[String]]
   /**
    * This attribute contains a positive integer indicating the number of consecutive columns the 
 <code>&lt;colgroup&gt;</code> element spans. If not present, its default value is 
@@ -132,7 +133,7 @@ class Colgroup extends state.Tag("colgroup") with HTMLTag {
  </ul> 
 </div>
    */
-  def span: StateChannel[Long] = attribute("span").asInstanceOf[StateChannel[Long]]
+  def span: scala.Option[Long] = attributes.get("span").asInstanceOf[scala.Option[Long]]
   /**
    * This attribute specifies the vertical alignment of the text within each cell of the column. Possible values for this attribute are: 
 <ul> 
@@ -150,11 +151,11 @@ class Colgroup extends state.Tag("colgroup") with HTMLTag {
  </ul> 
 </div>
    */
-  def valign: StateChannel[String] = attribute("valign").asInstanceOf[StateChannel[String]]
+  def valign: scala.Option[String] = attributes.get("valign").asInstanceOf[scala.Option[String]]
   /**
    * This attribute specifies a default width for each column in the current column group. In addition to the standard pixel and percentage values, this attribute might take the special form 
 <code>0*</code>, which means that the width of each column in the group should be the minimum width necessary to hold the column's contents. Relative widths such as 
 <code>0.5*</code> also can be used.
    */
-  def width: StateChannel[String] = attribute("width").asInstanceOf[StateChannel[String]]
+  def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
 }

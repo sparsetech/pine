@@ -1,7 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * The <em>HTML Table Element </em>(<code>&lt;table&gt;</code>) represents data in two dimensions or more.
@@ -12,7 +11,9 @@ import pl.metastack.metaweb.state
 <strong style="font-weight: bold;">should</strong>
 <strong> not</strong> be used for layout purposes. However, HTML emails are an&nbsp;exception, where tables are still commonly used for layout purposes.
  */
-class Table extends state.Tag("table") with HTMLTag {
+case class Table(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "table"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Table = Table(attributes, children)
   /**
    * &nbsp;This enumerated attribute indicates how the table must be aligned in regard of the containing document. It may have the following values: 
 <ul> 
@@ -28,7 +29,7 @@ class Table extends state.Tag("table") with HTMLTag {
  </ul> 
 </div>
    */
-  def align: StateChannel[String] = attribute("align").asInstanceOf[StateChannel[String]]
+  def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
   /**
    * This attribute defines the background color of the table and its content. It is one of the 6-digit hexadecimal code as defined in 
 <a href="http://www.w3.org/Graphics/Color/sRGB" class="external" title="http://www.w3.org/Graphics/Color/sRGB">sRGB</a>, prefixed by a '#'. One of the sixteen predefined color strings may be used: 
@@ -93,7 +94,7 @@ class Table extends state.Tag("table") with HTMLTag {
  <a href="/en-US/docs/Web/CSS/background-color" title="The background-color CSS property sets the background color of an element, either through a color value or the keyword transparent."><code>background-color</code></a> should be used.
 </div>
    */
-  def bgcolor: StateChannel[String] = attribute("bgcolor").asInstanceOf[StateChannel[String]]
+  def bgcolor: scala.Option[String] = attributes.get("bgcolor").asInstanceOf[scala.Option[String]]
   /**
    * This integer attribute defines, in pixels, the size of the frame surrounding the table. If set to 
 <span>0</span>, it implies that the 
@@ -111,7 +112,7 @@ class Table extends state.Tag("table") with HTMLTag {
  <a href="/en-US/docs/Web/CSS/border-style" title="The border-style property is a shorthand property for setting the line style for all four sides of the elements border."><code>border-style</code></a> should be used.
 </div>
    */
-  def border: StateChannel[String] = attribute("border").asInstanceOf[StateChannel[String]]
+  def border: scala.Option[String] = attributes.get("border").asInstanceOf[scala.Option[String]]
   /**
    * This attribute defines the space between the content of a cell and the border, displayed or not, of it. If it is a pixel length, this pixel-sized space will be applied on all four sides; if it is a percentage length, the content will be centered and the total vertical space (top and bottom) will represent this percentage. The same is true for the total horizontal space (left and right). 
 <div class="note">
@@ -126,7 +127,7 @@ class Table extends state.Tag("table") with HTMLTag {
  <a href="/en-US/docs/Web/HTML/Element/td" title="The Table cell HTML element (<td>) defines a cell of a table that contains data. It participates in the table model."><code>&lt;td&gt;</code></a>.
 </div>
    */
-  def cellpadding: StateChannel[String] = attribute("cellpadding").asInstanceOf[StateChannel[String]]
+  def cellpadding: scala.Option[String] = attributes.get("cellpadding").asInstanceOf[scala.Option[String]]
   /**
    * This attribute defines the size, in percentage or in pixels, of the space between two cells (both horizontally and vertically), between the top of the table and the cells of the first row, the left of the table and the first column, the right of the table and the last column and the bottom of the table and the last row. 
 <div class="note">
@@ -138,7 +139,7 @@ class Table extends state.Tag("table") with HTMLTag {
  <span style="line-height: 1.5;">&nbsp;on the <a href="/en-US/docs/Web/HTML/Element/table" title="The HTML Table Element (<table>) represents data in two dimensions or more."><code>&lt;table&gt;</code></a> element itself.</span>
 </div>
    */
-  def cellspacing: StateChannel[String] = attribute("cellspacing").asInstanceOf[StateChannel[String]]
+  def cellspacing: scala.Option[String] = attributes.get("cellspacing").asInstanceOf[scala.Option[String]]
   /**
    * This enumerated attribute defines which side of the frame surrounding the table must be displayed. It may have the following values: 
 <table style="width: 668px;"> 
@@ -183,7 +184,7 @@ class Table extends state.Tag("table") with HTMLTag {
  <a href="/en-US/docs/Web/CSS/border-width" title="The border-width property sets the width of the border of a box. Using the shorthand property border is often more convenient."><code>border-width</code></a>.
 </div>
    */
-  def frame: StateChannel[String] = attribute("frame").asInstanceOf[StateChannel[String]]
+  def frame: scala.Option[String] = attributes.get("frame").asInstanceOf[scala.Option[String]]
   /**
    * This enumerated attribute defines where rules, i.e. lines, should appear in a table. It can have the following values: 
 <ul> 
@@ -201,7 +202,7 @@ class Table extends state.Tag("table") with HTMLTag {
  </ul> 
 </div>
    */
-  def rules: StateChannel[String] = attribute("rules").asInstanceOf[StateChannel[String]]
+  def rules: scala.Option[String] = attributes.get("rules").asInstanceOf[scala.Option[String]]
   /**
    * This attribute defines an alternative text use to describe the table in user-agent unable to display it. Typically, it contents a description of it to allow visually impaired people, like blind people browsing the web using Braille screen, to get the information in it. If the information added in this attribute may also be useful for non-visually impaired people, consider using the 
 <a href="/en-US/docs/Web/HTML/Element/caption" title="The HTML <caption> Element (or HTML Table Caption Element) represents the title of a table. Though it is always the first descendant of a <table>, its styling, using CSS, may place it elsewhere, relative to the table."><code>&lt;caption&gt;</code></a> instead. The summary attribute is not mandatory and may be omitted when a 
@@ -218,7 +219,7 @@ class Table extends state.Tag("table") with HTMLTag {
  </ul> 
 </div>
    */
-  def summary: StateChannel[String] = attribute("summary").asInstanceOf[StateChannel[String]]
+  def summary: scala.Option[String] = attributes.get("summary").asInstanceOf[scala.Option[String]]
   /**
    * This attribute defines the width of the table. It may either be a pixel length or a percentage value, representing the percentage of the width of its container that the table should use. 
 <div class="note">
@@ -228,5 +229,5 @@ class Table extends state.Tag("table") with HTMLTag {
  <a href="/en-US/docs/Web/CSS/width" title="The width CSS property specifies the width of the content area of an element. The content area is inside the padding, border, and margin of the element."><code>width</code></a> instead.
 </div>
    */
-  def width: StateChannel[String] = attribute("width").asInstanceOf[StateChannel[String]]
+  def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
 }

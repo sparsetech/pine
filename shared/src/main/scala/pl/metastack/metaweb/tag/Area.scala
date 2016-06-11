@@ -1,17 +1,18 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * The <em>HTML <code>&lt;area&gt;</code> element</em> defines a hot-spot region on an image, and optionally associates it with a <a class="glossaryLink" href="/en-US/docs/Glossary/Hyperlink" title="hypertext link: Hyperlinks connect web pages, or data items, to one another. In HTML, anchor elements define the hyperlinks from a part of a Web page, such as a text string or image, to another site, page or even a particular point within a page.">hypertext link</a>. This element is used only within a <a href="/en-US/docs/Web/HTML/Element/map" title="The HTML <map> element is used with <area> elements to define an image map (a clickable link area)."><code>&lt;map&gt;</code></a> element.
  */
-class Area extends state.Tag("area") with HTMLTag {
+case class Area(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "area"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Area = Area(attributes, children)
   /**
    * A text string alternative to display on browsers that do not display images. The text should be phrased so that it presents the user with the same kind of choice as the image would offer when displayed without the alternative text. In HTML4, this attribute is required, but may be the empty string (""). In HTML5, this attribute is required only if the 
 <strong>href</strong> attribute is used.
    */
-  def alt: StateChannel[String] = attribute("alt").asInstanceOf[StateChannel[String]]
+  def alt: scala.Option[String] = attributes.get("alt").asInstanceOf[scala.Option[String]]
   /**
    * A set of values specifying the coordinates of the hot-spot region. The number and meaning of the values depend upon the value specified for the 
 <strong>shape</strong> attribute. For a 
@@ -24,35 +25,35 @@ class Area extends state.Tag("area") with HTMLTag {
 <code>poly</code> or polygon&lt; shape, the value is a set of x,y pairs for each point in the polygon: 
 <code>x1,y1,x2,y2,x3,y3,</code> and so on. In HTML4, the values are numbers of pixels or percentages, if a percent sign (%) is appended; in HTML5, the values are numbers of CSS&nbsp;pixels.
    */
-  def coords: StateChannel[String] = attribute("coords").asInstanceOf[StateChannel[String]]
+  def coords: scala.Option[String] = attributes.get("coords").asInstanceOf[scala.Option[String]]
   /**
    * This attribute, if present, indicates that the author intends the hyperlink to be used for downloading a resource. See 
 <a href="/en-US/docs/Web/HTML/Element/a" title="The HTML <a> Element (or the HTML Anchor Element) defines a hyperlink, the named target destination for a hyperlink, or both."><code>&lt;a&gt;</code></a> for a full description of the 
 <code><a href="/en-US/docs/Web/HTML/Element/a#attr-download">download</a></code> attribute.
    */
-  def download: StateChannel[String] = attribute("download").asInstanceOf[StateChannel[String]]
+  def download: scala.Option[String] = attributes.get("download").asInstanceOf[scala.Option[String]]
   /**
    * The hyperlink target for the area. Its value is a valid URL. In HTML4, either this attribute or the 
 <strong>nohref</strong> attribute must be present in the element. In HTML5, this attribute may be omitted; if so, the area element does not represent a hyperlink.
    */
-  def href: StateChannel[String] = attribute("href").asInstanceOf[StateChannel[String]]
+  def href: scala.Option[String] = attributes.get("href").asInstanceOf[scala.Option[String]]
   /**
    * Indicates the language of the linked resource. Allowed values are determined by 
 <a class="external" href="http://www.ietf.org/rfc/bcp/bcp47.txt" title="http://www.ietf.org/rfc/bcp/bcp47.txt">BCP47</a>. Use this attribute only if the 
 <strong>href</strong> attribute is present.
    */
-  def hreflang: StateChannel[String] = attribute("hreflang").asInstanceOf[StateChannel[String]]
+  def hreflang: scala.Option[String] = attributes.get("hreflang").asInstanceOf[scala.Option[String]]
   /**
    * Define a names for the clickable area so that it can be scripted by older browsers.
    */
-  def name: StateChannel[String] = attribute("name").asInstanceOf[StateChannel[String]]
+  def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
   /**
    * A hint of the media for which the linked resource was designed, for example 
 <code>print and screen</code>. If omitted, it defaults to 
 <code>all</code>. Use this attribute only if the 
 <strong>href</strong> attribute is present.
    */
-  def media: StateChannel[String] = attribute("media").asInstanceOf[StateChannel[String]]
+  def media: scala.Option[String] = attributes.get("media").asInstanceOf[scala.Option[String]]
   /**
    * Indicates that no hyperlink exists for the associated area. Either this attribute or the 
 <strong>href</strong> attribute must be present in the element. 
@@ -60,14 +61,14 @@ class Area extends state.Tag("area") with HTMLTag {
  <p><strong>Usage note: </strong>This attribute is obsolete in HTML5, instead omitting the <strong>href</strong> attribute is sufficient.</p> 
 </div>
    */
-  def nohref: StateChannel[String] = attribute("nohref").asInstanceOf[StateChannel[String]]
+  def nohref: scala.Option[String] = attributes.get("nohref").asInstanceOf[scala.Option[String]]
   /**
    * For anchors containing the 
 <strong>href</strong> attribute, this attribute specifies the relationship of the target object to the link object. The value is a comma-separated list of 
 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types">link types values</a>. The values and their semantics will be registered by some authority that might have meaning to the document author. The default relationship, if no other is given, is void. Use this attribute only if the 
 <strong>href</strong> attribute is present.
    */
-  def rel: StateChannel[String] = attribute("rel").asInstanceOf[StateChannel[String]]
+  def rel: scala.Option[String] = attributes.get("rel").asInstanceOf[scala.Option[String]]
   /**
    * The shape of the associated hot spot. The specifications for HTML 5 and HTML 4 define the values 
 <code>rect</code>, which defines a rectangular region; 
@@ -80,7 +81,7 @@ class Area extends state.Tag("area") with HTMLTag {
 <strong>shape</strong>; these values are 
 <span title="This API has not been standardized."><i class="icon-warning-sign"> </i></span>.
    */
-  def shape: StateChannel[String] = attribute("shape").asInstanceOf[StateChannel[String]]
+  def shape: scala.Option[String] = attributes.get("shape").asInstanceOf[scala.Option[String]]
   /**
    * This attribute specifies where to display the linked resource. In HTML4, this is the name of, or a keyword for, a frame. In HTML5, it is a name of, or keyword for, a 
 <em>browsing context</em> (for example, tab, window, or inline frame). The following keywords have special meanings: 
@@ -92,11 +93,11 @@ class Area extends state.Tag("area") with HTMLTag {
 </ul> Use this attribute only if the 
 <strong>href</strong> attribute is present.
    */
-  def target: StateChannel[String] = attribute("target").asInstanceOf[StateChannel[String]]
+  def target: scala.Option[String] = attributes.get("target").asInstanceOf[scala.Option[String]]
   /**
    * This attribute specifies the media type in the form of a MIME type for the link target. Generally, this is provided strictly as advisory information; however, in the future a browser might add a small icon for multimedia types. For example, a browser might add a small speaker icon when type is set to audio/wav. For a complete list of recognized MIME types, see 
 <a class="external linkification-ext" href="http://www.w3.org/TR/html4/references.html#ref-MIMETYPES" title="Linkification: http://www.w3.org/TR/html4/references.html#ref-MIMETYPES">http://www.w3.org/TR/html4/references.html#ref-MIMETYPES</a>. Use this attribute only if the 
 <strong>href</strong> attribute is present.
    */
-  def `type`: StateChannel[String] = attribute("type").asInstanceOf[StateChannel[String]]
+  def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
 }

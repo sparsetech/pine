@@ -1,7 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * <tbody> 
@@ -27,12 +26,14 @@ import pl.metastack.metaweb.state
  </tr> 
 </tbody>
  */
-class Track extends state.Tag("track") with HTMLTag {
+case class Track(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "track"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Track = Track(attributes, children)
   /**
    * This attribute indicates that the track should be enabled unless the user's preferences indicate that another track is more appropriate. This may only be used on one 
 <code>track</code> element per media element.
    */
-  def default: StateChannel[String] = attribute("default").asInstanceOf[StateChannel[String]]
+  def default: scala.Option[String] = attributes.get("default").asInstanceOf[scala.Option[String]]
   /**
    * How the text track is meant to be used. If omitted the default kind is 
 <code>subtitles</code>. The following keywords are allowed: 
@@ -63,16 +64,16 @@ class Track extends state.Tag("track") with HTMLTag {
   </ul> </li> 
 </ul>
    */
-  def kind: StateChannel[String] = attribute("kind").asInstanceOf[StateChannel[String]]
+  def kind: scala.Option[String] = attributes.get("kind").asInstanceOf[scala.Option[String]]
   /**
    * A user-readable title of the text track which is used by the browser when listing available text tracks.
    */
-  def label: StateChannel[String] = attribute("label").asInstanceOf[StateChannel[String]]
+  def label: scala.Option[String] = attributes.get("label").asInstanceOf[scala.Option[String]]
   /**
    * Address of the track (
 <code>.vtt</code> file). Must be a valid URL. This attribute must be defined.
    */
-  def src: StateChannel[String] = attribute("src").asInstanceOf[StateChannel[String]]
+  def src: scala.Option[String] = attributes.get("src").asInstanceOf[scala.Option[String]]
   /**
    * Language of the track text data. It must be a valid 
 <a href="http://people.w3.org/rishida/utils/subtags/" class="external">BCP 47</a> language tag. If the 
@@ -80,5 +81,5 @@ class Track extends state.Tag("track") with HTMLTag {
 <code>subtitles,</code> then 
 <code>srclang</code> must be defined.
    */
-  def srclang: StateChannel[String] = attribute("srclang").asInstanceOf[StateChannel[String]]
+  def srclang: scala.Option[String] = attributes.get("srclang").asInstanceOf[scala.Option[String]]
 }

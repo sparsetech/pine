@@ -1,33 +1,53 @@
 package pl.metastack.metaweb
 
-import org.scalajs.dom
-
-import pl.metastack.metaweb._
-import pl.metastack.metaweb.view._
-
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExport
+import scala.concurrent.ExecutionContext.Implicits.global
+import org.scalajs.dom
+import pl.metastack.metaweb.diff.Diff
+import pl.metastack.metaweb.macros.Js
 
-object Router extends js.JSApp {
-  def render(pageBody: tag.Body): Unit = {
-    val body = dom.document.body
-    body.clear()
-    pageBody.toDom.foreach(body.appendChild)
-  }
+import scala.scalajs.js.JSON
 
-  def replaceUrl(route: String): Unit = {
-    dom.document.body.scrollTop = 0
-    dom.window.history.pushState("", "", route)
-  }
+@Js object Router extends js.JSApp {
+  def pageNode(): dom.Element = dom.document.getElementById(Templates.PageId)
 
-  @JSExport
-  def main(): Unit = {
+  def renderPage(page: Page): Diff =
+    Diff.Async {
+      page.toDom.map { node =>
+        dom.document.title = page.title
+        dom.document.body.appendChild(node)
+        Diff.Noop()
+      }
+    }
+
+  def attachPage(page: Page): Diff =
+    page.register() :+
+    page.loadState(JSON.stringify(js.Dynamic.global.State))
+
+  def replaceUrl(route: String): Diff =
+    Diff.Effect {
+      dom.document.body.scrollTop = 0
+      dom.window.history.pushState("", "", route)
+    }
+
+  def resolvePage(): Page = {
     val href = dom.window.location.href
     val uri = href.split('/').drop(3).toSeq.mkString("/").split('?')
     val path = uri.head
     path match {
-      case "numberguess" => new controller.NumberGuess(new NumberGuessAttach)
-      case _ => new controller.HelloWorld(new HelloWorldAttach)
+      case "numberguess" => new page.NumberGuess
+      case "books" => new page.Books
+      // case "books/details" => new page.BooksDetails
+      case _ => new page.Index
     }
   }
+
+  @JSExport
+  def main(): Unit =
+    dom.window.onload = { (e: dom.Event) =>
+      import diff.Render._
+      import diff.render.DOM._
+      logFailingFuture(render(pageNode(): dom.Node, attachPage(resolvePage())))
+    }
 }

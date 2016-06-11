@@ -1,18 +1,11 @@
 package pl.metastack.metaweb.render
 
-import scala.collection.mutable.ArrayBuffer
-import scala.scalajs.js
-
 import org.scalajs.dom
-
-import minitest._
-
-import pl.metastack.metarx.{StateChannel, Channel, Var}
-
+import org.scalatest.FunSuite
 import pl.metastack.metaweb._
 
-object DOMSpec extends SimpleTestSuite
-  with PlatformSupport {  // For IntelliJ
+class DOMSpec extends FunSuite {
+  /*
   test("Render node with one-way binding") {
     val title = Var("test")
 
@@ -20,41 +13,41 @@ object DOMSpec extends SimpleTestSuite
     span.setChildren(Seq(title))
 
     val html = span.toDom.map(_.outerHTML).mkString
-    assertEquals(html, """<div id="text">test</div>""")
+    assert(html, """<div id="text">test</div>""")
 
     title := "test2"
     val html2 = span.toDom.map(_.outerHTML).mkString
-    assertEquals(html2, """<div id="text">test2</div>""")
+    assert(html2, """<div id="text">test2</div>""")
   }
 
   test("Update `value` attribute of `input` node") {
     val input = html"""<input type="text" />"""
     val node = input.toDom.head.asInstanceOf[dom.html.Input]
 
-    assertEquals(node.value, "")
+    assert(node.value, "")
     input.setAttribute("value", "Hello world")
 
-    assertEquals(node.value, "Hello world")
+    assert(node.value, "Hello world")
   }
 
   test("Update `href` attribute of `a` node") {
     val input = html"""<a>Action</a>"""
     val node = input.toDom.head.asInstanceOf[dom.html.Anchor]
 
-    assertEquals(node.href, "")
+    assert(node.href, "")
     input.attribute("href") := "http://github.com/"
 
-    assertEquals(node.href, "http://github.com/")
+    assert(node.href, "http://github.com/")
   }
 
   test("Update `disabled` attribute of `input` node") {
     val input = html"""<input type="text" />"""
     val node = input.toDom.head.asInstanceOf[dom.html.Input]
 
-    assertEquals(node.disabled, false)
+    assert(node.disabled, false)
     input.attribute("disabled") := true
 
-    assertEquals(node.disabled, true)
+    assert(node.disabled, true)
   }
 
   test("Get updated `value` attribute of `input` node") {
@@ -62,10 +55,10 @@ object DOMSpec extends SimpleTestSuite
     val input = html"""<input type="text" />"""
     val node = input.toDom.head.asInstanceOf[dom.html.Input]
 
-    assertEquals(input.attribute("value").get, ())
+    assert(input.attribute("value").get, ())
 
     node.value = "Hello world"
-    assertEquals(input.attribute("value").get, "Hello world")
+    assert(input.attribute("value").get, "Hello world")
   }
 
   test("Listen to attribute `value` on `input` node") {
@@ -75,12 +68,12 @@ object DOMSpec extends SimpleTestSuite
     val value = Var("")
     input.attribute("value").asInstanceOf[StateChannel[String]].subscribe(value)
 
-    assertEquals(node.value, "")
-    assertEquals(input.attribute("value").get, "")
+    assert(node.value, "")
+    assert(input.attribute("value").get, "")
 
     value := "Hello world"
-    assertEquals(node.value, "Hello world")
-    assertEquals(input.attribute("value").get, "Hello world")
+    assert(node.value, "Hello world")
+    assert(input.attribute("value").get, "Hello world")
   }
 
   test("Listen to attribute `disabled` on `input` node") {
@@ -90,13 +83,13 @@ object DOMSpec extends SimpleTestSuite
     val value = Var(false)
     input.attribute("disabled").asInstanceOf[StateChannel[Boolean]].subscribe(value)
 
-    assertEquals(node.disabled, false)
+    assert(node.disabled, false)
 
     value := true
-    assertEquals(node.disabled, true)
+    assert(node.disabled, true)
 
     value := false
-    assertEquals(node.disabled, false)
+    assert(node.disabled, false)
   }
 
   test("Call `focus` on `input` node") {
@@ -107,10 +100,10 @@ object DOMSpec extends SimpleTestSuite
     input.setEvent("focus", (event: Any) => eventTriggered += 1)
 
     node.focus()  // Should not trigger event
-    assertEquals(eventTriggered, 0)
+    assert(eventTriggered, 0)
 
     input.triggerAction("focus")
-    assertEquals(eventTriggered, 1)
+    assert(eventTriggered, 1)
   }
 
   test("Listen to `onclick` on `button` node") {
@@ -125,14 +118,14 @@ object DOMSpec extends SimpleTestSuite
       .asInstanceOf[dom.raw.Event]
     node.dispatchEvent(event)
 
-    assertEquals(eventTriggered, 1)
+    assert(eventTriggered, 1)
   }
 
   test("Override event handler") {
     val input = html"""<button />"""
     val node = input.toDom.head.asInstanceOf[dom.html.Input]
 
-    val eventTriggered = ArrayBuffer.empty[Int]
+    val eventTriggered = ListBuffer.empty[Int]
     input.setEvent("click", (event: Any) => eventTriggered += 23)
     input.setEvent("click", (event: Any) => eventTriggered += 42)
 
@@ -140,7 +133,7 @@ object DOMSpec extends SimpleTestSuite
       .asInstanceOf[dom.raw.Event]
     node.dispatchEvent(event)
 
-    assertEquals(eventTriggered, Seq(42))
+    assert(eventTriggered, Seq(42))
   }
 
   test("Listen to child channel on `span` node") {
@@ -150,10 +143,10 @@ object DOMSpec extends SimpleTestSuite
     val text = Var("Hello world")
     span.subscribe(text)
 
-    assertEquals(node.outerHTML, "<span>Hello world</span>")
+    assert(node.outerHTML, "<span>Hello world</span>")
 
     text := "42"
-    assertEquals(node.outerHTML, "<span>42</span>")
+    assert(node.outerHTML, "<span>42</span>")
   }
 
   test("Render node with two-way binding") {
@@ -165,23 +158,23 @@ object DOMSpec extends SimpleTestSuite
     val domElement = input.toDom.head.asInstanceOf[dom.html.Input]
     domElement.value = "Hello World"
 
-    assertEquals(text.get, "")
+    assert(text.get, "")
 
     val event = js.Dynamic.newInstance(js.Dynamic.global.Event)("change")
       .asInstanceOf[dom.raw.Event]
     domElement.dispatchEvent(event)
 
-    assertEquals(text.get, "Hello World")
+    assert(text.get, "Hello World")
 
     text := "42"
-    assertEquals(domElement.value, "42")
+    assert(domElement.value, "42")
   }
 
   test("Set `class` attribute on nodes") {
     val div = html"""<div id="a" class="b c"></div>"""
     val node = div.toDom.head
 
-    assertEquals(node.outerHTML, """<div class="b c" id="a"></div>""")
+    assert(node.outerHTML, """<div class="b c" id="a"></div>""")
   }
 
   test("Set `style` attribute on nodes") {
@@ -190,7 +183,7 @@ object DOMSpec extends SimpleTestSuite
 
     div.attribute("style") := "display: none"
 
-    assertEquals(node.outerHTML, """<div style="display: none"></div>""")
+    assert(node.outerHTML, """<div style="display: none"></div>""")
   }
 
   test("Listen to text value changes") {
@@ -200,10 +193,10 @@ object DOMSpec extends SimpleTestSuite
     div.setChildren(Seq(text))
 
     val node = div.toDom.head
-    assertEquals(node.outerHTML, """<div>Initial value</div>""")
+    assert(node.outerHTML, """<div>Initial value</div>""")
 
     text := "Changed value"
-    assertEquals(node.outerHTML, """<div>Changed value</div>""")
+    assert(node.outerHTML, """<div>Changed value</div>""")
   }
 
   test("Obtain `options` from `select` node") {
@@ -218,67 +211,65 @@ object DOMSpec extends SimpleTestSuite
     val options = select.attribute("options").get.asInstanceOf[js.Dynamic]
     val selectedIndex = select.attribute("selectedIndex").get.asInstanceOf[Int]
 
-    assertEquals(options(selectedIndex).value, "opt2")
-  }
+    assert(options(selectedIndex).value, "opt2")
+  }*/
 
   test("Convert DOM node") {
     val node = dom.document.createElement("span")
     node.setAttribute("id", "test")
     node.appendChild(dom.document.createTextNode("Hello world"))
 
-    node.toState match {
-      case s: tag.Span =>
-        assertEquals(s.children.size, 1)
-        s.children.head match {
-          case t: state.Text => assertEquals(t.text, "Hello world")
-          case _ => fail()
-        }
-
+    val s = DOM.toTree[tag.Span](node)
+    assert(s.isInstanceOf[tag.Span])
+    assert(s.children.size == 1)
+    s.children.head match {
+      case t: tree.Text => assert(t.text == "Hello world")
       case _ => fail()
     }
   }
 
-  test("Attach to DOM node") {
-    val node = dom.document.createElement("span")
-    node.setAttribute("id", "test")
-
-    val node2 = dom.document.createElement("input")
-    node2.setAttribute("checked", "checked")
-    node.appendChild(node2)
-
-    val test = render.DOM.proxy[tag.Span](node)
-    assertEquals(test.id.get, "test")
-    assertEquals(test.children.nonEmpty, true)
-
-    val input = test.children.head.asInstanceOf[tag.Input]
-    assertEquals(input.checked.get, true)
-
-    assertEquals(node.childNodes.length, 1)
-    assertEquals(node2.childNodes.length, 0)
-  }
-
-  test("Attach to DOM node (2)") {
+  test("Convert DOM node (2)") {
     val node = dom.document.createElement("span")
     val node2 = dom.document.createTextNode("Hello world")
     node.appendChild(node2)
 
-    val test = render.DOM.proxy[tag.Span](node)
-    assertEquals(test.children.nonEmpty, true)
+    val test = DOM.toTree[tag.Span](node)
+    assert(test.children.nonEmpty, true)
 
-    val text = test.children.head.asInstanceOf[state.Text]
-    assertEquals(text.text, "Hello world")
+    val text = test.children.head.asInstanceOf[tree.Text]
+    assert(text.text == "Hello world")
   }
 
+  test("Convert DOM node with Boolean attribute") {
+    val node = dom.document.createElement("span")
+    node.setAttribute("id", "test")
+
+    val node2 = dom.document.createElement("input")
+    node2.setAttribute("checked", "")
+    node.appendChild(node2)
+
+    val test = DOM.toTree[tag.Span](node)
+    assert(test.id.get == "test")
+    assert(test.children.nonEmpty, true)
+
+    val input = test.children.head.asInstanceOf[tag.Input]
+    assert(input.checked.get, true)
+
+    assert(node.childNodes.length == 1)
+    assert(node2.childNodes.length == 0)
+  }
+
+  /*
   test("Remove child from attached DOM node") {
     val node = dom.document.createElement("span")
     val node2 = dom.document.createTextNode("Hello world")
     node.appendChild(node2)
 
-    val test = render.DOM.proxy[tag.Span](node)
-    assertEquals(test.toHtml, "<span>Hello world</span>")
+    val test = DOM.toTree[tag.Span](node)
+    assert(test.toHtml == "<span>Hello world</span>")
     test -= test.children.head
 
-    assertEquals(node.outerHTML, "<span></span>")
+    assert(node.outerHTML, "<span></span>")
   }
 
   test("Set attribute on attached DOM node") {
@@ -288,9 +279,9 @@ object DOMSpec extends SimpleTestSuite
     node2.setAttribute("class", "test")
     node.appendChild(node2)
 
-    val test = render.DOM.proxy[tag.Span](node)
+    val test = DOM.toTree[tag.Span](node)
     test.byId[tag.Div]("node2").`class` := "changed"
 
-    assertEquals(node2.asInstanceOf[js.Dynamic].className, "changed")
-  }
+    assert(node2.asInstanceOf[js.Dynamic].className, "changed")
+  }*/
 }

@@ -1,7 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * The <strong>HTML <code>&lt;caption&gt;</code> Element</strong> (or <em>HTML Table Caption Element</em>) represents the title of a table. Though it is always the first descendant of a <a href="/en-US/docs/Web/HTML/Element/table" title="The HTML Table Element (<table>) represents data in two dimensions or more."><code>&lt;table&gt;</code></a>, its styling, using CSS, may place it elsewhere, relative to the table.
@@ -11,7 +10,9 @@ import pl.metastack.metaweb.state
 <a href="/en-US/docs/Web/HTML/Element/figure" title="The HTML <figure> Element represents self-contained content, frequently with a caption&nbsp;(<figcaption>), and is&nbsp;typically referenced as a single unit. While it is related to the main flow, its position is independent of the main flow. Usually this is an image, an illustration, a diagram, a code snippet, or a schema that is referenced in the main text, but that can be moved to another page or to an appendix without affecting the main flow."><code>&lt;figure&gt;</code></a> element, use the 
 <a href="/en-US/docs/Web/HTML/Element/figcaption" title="The HTML <figcaption> Element represents a caption or a legend associated with a figure or an illustration described by the rest of the data of the <figure> element which is its immediate ancestor which means <figcaption> can be the first or last element inside a <figure> block.&nbsp;Also, the HTML Figcaption Element&nbsp;is optional; if not provided, then the parent figure element will have no caption."><code>&lt;figcaption&gt;</code></a> element instead.
  */
-class Caption extends state.Tag("caption") with HTMLTag {
+case class Caption(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "caption"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Caption = Caption(attributes, children)
   /**
    * This enumerated attribute indicates how the caption must be aligned with respect to the table. It may have the following values: 
 <ul> 
@@ -30,5 +31,5 @@ class Caption extends state.Tag("caption") with HTMLTag {
  <a href="/en-US/docs/Web/CSS/text-align" title="The text-align CSS property describes how inline content like text is aligned in its parent block element. text-align does not control the alignment of block elements itself, only their inline content."><code>text-align</code></a>.
 </div>
    */
-  def align: StateChannel[String] = attribute("align").asInstanceOf[StateChannel[String]]
+  def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
 }

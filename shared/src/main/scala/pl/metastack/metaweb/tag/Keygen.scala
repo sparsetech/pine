@@ -1,7 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * <span style="line-height: 21px;">This element includes the&nbsp;</span><a href="https://developer.mozilla.org/en-US/docs/HTML/Global_attributes" title="HTML/Global attributes" style="line-height: 21px;">global attributes</a><span style="line-height: 21px;">.</span>
@@ -71,20 +70,22 @@ commonname=John+Doe&amp;email=doe@foo.com&amp;org=Foobar+Computing+Corp.&amp;
    orgunit=Bureau+of+Bureaucracy&amp;locality=Anytown&amp;state=California&amp;country=US&amp;
    key=MIHFMHEwXDANBgkqhkiG9w0BAQEFAANLADBIAkEAnX0TILJrOMUue%2BPtwBRE6XfV%0AWtKQbsshxk5ZhcUwcwyvcnIq9b82QhJdoACdD34rqfCAIND46fXKQUnb0mvKzQID%0AAQABFhFNb3ppbGxhSXNNeUZyaWVuZDANBgkqhkiG9w0BAQQFAANBAAKv2Eex2n%2FS%0Ar%2F7iJNroWlSzSMtTiQTEB%2BADWHGj9u1xrUrOilq%2Fo2cuQxIfZcNZkYAkWP4DubqW%0Ai0%2F%2FrgBvmco%3D
  */
-class Keygen extends state.Tag("keygen") with HTMLTag {
+case class Keygen(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "keygen"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Keygen = Keygen(attributes, children)
   /**
    * This Boolean attribute lets you specify that the control should have input focus when the page loads, unless the user overrides it, for example by typing in a different control. Only one form element in a document can have the 
 <code>autofocus</code> attribute, which is a Boolean.
    */
-  def autofocus: StateChannel[String] = attribute("autofocus").asInstanceOf[StateChannel[String]]
+  def autofocus: scala.Option[String] = attributes.get("autofocus").asInstanceOf[scala.Option[String]]
   /**
    * A challenge string that is submitted along with the public key. Defaults to an empty string if not specified.
    */
-  def challenge: StateChannel[String] = attribute("challenge").asInstanceOf[StateChannel[String]]
+  def challenge: scala.Option[String] = attributes.get("challenge").asInstanceOf[scala.Option[String]]
   /**
    * This Boolean attribute indicates that the form control is not available for interaction.
    */
-  def disabled: StateChannel[String] = attribute("disabled").asInstanceOf[StateChannel[String]]
+  def disabled: scala.Option[String] = attributes.get("disabled").asInstanceOf[scala.Option[String]]
   /**
    * The form element that this element is associated with (its 
 <em>form owner</em>). The value of the attribute must be an 
@@ -93,14 +94,14 @@ class Keygen extends state.Tag("keygen") with HTMLTag {
 <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML <form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> element. This attribute enables you to place 
 <code>&lt;keygen&gt; </code>elements anywhere within a document, not just as descendants of their form elements.
    */
-  def form: StateChannel[String] = attribute("form").asInstanceOf[StateChannel[String]]
+  def form: scala.Option[String] = attributes.get("form").asInstanceOf[scala.Option[String]]
   /**
    * The type of key generated. The default value is 
 <code>RSA</code>.
    */
-  def keytype: StateChannel[String] = attribute("keytype").asInstanceOf[StateChannel[String]]
+  def keytype: scala.Option[String] = attributes.get("keytype").asInstanceOf[scala.Option[String]]
   /**
    * The name of the control, which is submitted with the form data.
    */
-  def name: StateChannel[String] = attribute("name").asInstanceOf[StateChannel[String]]
+  def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
 }

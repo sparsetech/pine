@@ -1,17 +1,23 @@
 package pl.metastack.metaweb
 
-import minitest._
+import org.scalatest.FunSuite
 
-object HtmlParserSpec extends SimpleTestSuite {
+class HtmlParserSpec extends FunSuite {
   test("Parse HTML") {
     val html = """<div id="a"><span>42</span></div>"""
     val node = HtmlParser.fromString(html)
-    assertEquals(node.toHtml, html)
+    assert(node.toHtml == html)
+  }
+
+  test("Resolve node") {
+    val html = """<div id="a"><b>test</b><span id="b"></span></div>"""
+    val div = HtmlParser.fromString(html)
+    assert(div.byId[tree.Tag]("b") == html"""<span id="b"></span>""")
   }
 
   test("Don't ignore DOCTYPE") {
     val html = """<!DOCTYPE html><html><head lang="en"></head><body><span>42</span></body></html>"""
     val node = HtmlParser.fromString(html)
-    assertEquals(node.toHtml, html)
+    assert(node.toHtml == html)
   }
 }

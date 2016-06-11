@@ -1,7 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * The <em>HTML Strikethrough Element</em> (<code>&lt;strike&gt;</code>) renders text with a strikethrough, or a line through it.
@@ -14,5 +13,7 @@ import pl.metastack.metaweb.state
 <a href="/en-US/docs/Web/CSS/text-decoration" title=""><code>text-decoration</code></a> property, with the 
 <code>line-through</code> value.
  */
-class Strike extends state.Tag("strike") with HTMLTag {
+case class Strike(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "strike"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Strike = Strike(attributes, children)
 }

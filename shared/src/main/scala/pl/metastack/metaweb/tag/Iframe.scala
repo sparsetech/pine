@@ -1,65 +1,66 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * The&nbsp;<em>HTML Inline Frame Element</em>&nbsp;(<code><strong>&lt;iframe&gt;</strong></code>) represents a nested browsing context, effectively embedding another HTML page into the current page. In HTML 4.01, a document may contain a <code>head</code> and a <code>body</code> or a <code>head</code> and a <code>frame-set</code>, but not both a <code>body</code> and a <code>frame-set</code>. However, an <code>&lt;iframe&gt;</code> can be used within a normal document body. Each browsing context has its own session history and active document. The browsing context that contains the embedded content is called the <dfn>parent</dfn> browsing context. The <dfn>top-level</dfn> browsing context (which has no parent) is typically the browser window.
  */
-class Iframe extends state.Tag("iframe") with HTMLTag {
+case class Iframe(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "iframe"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Iframe = Iframe(attributes, children)
   /**
    * The alignment of this element with respect to the surrounding context.
    */
-  def align: StateChannel[String] = attribute("align").asInstanceOf[StateChannel[String]]
+  def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
   /**
    * This attribute can be set to 
 <code>true</code> if the frame is allowed to be placed into full screen mode by calling its 
 <a href="/en-US/docs/Web/API/Element/mozRequestFullScreen" title="{{ APIRef }}"><code>element.mozRequestFullScreen()</code></a> method. If this isn't set, the element can't be placed into full screen mode.
    */
-  def allowfullscreen: StateChannel[String] = attribute("allowfullscreen").asInstanceOf[StateChannel[String]]
+  def allowfullscreen: scala.Option[String] = attributes.get("allowfullscreen").asInstanceOf[scala.Option[String]]
   /**
    * The value 1 (the default) tells the browser to draw a border between this frame and every other frame. The value 0 tells the browser not to draw a border between this frame and other frames.
    */
-  def frameborder: StateChannel[String] = attribute("frameborder").asInstanceOf[StateChannel[String]]
+  def frameborder: scala.Option[String] = attributes.get("frameborder").asInstanceOf[scala.Option[String]]
   /**
    * Indicates the height of the frame 
 <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML/HTML5">HTML5</a></span> in CSS pixels, or 
 <span class="inlineIndicator htmlVer htmlVerInline">HTML 4.01</span> in pixels or as a percentage.
    */
-  def height: StateChannel[String] = attribute("height").asInstanceOf[StateChannel[String]]
+  def height: scala.Option[String] = attributes.get("height").asInstanceOf[scala.Option[String]]
   /**
    * A URI of a long description of the frame. Due to widespread misuse, this is not helpful for non-visual browsers.
    */
-  def longdesc: StateChannel[String] = attribute("longdesc").asInstanceOf[StateChannel[String]]
+  def longdesc: scala.Option[String] = attributes.get("longdesc").asInstanceOf[scala.Option[String]]
   /**
    * The amount of space in pixels between the frame's content and its top and bottom margins.
    */
-  def marginheight: StateChannel[String] = attribute("marginheight").asInstanceOf[StateChannel[String]]
+  def marginheight: scala.Option[String] = attributes.get("marginheight").asInstanceOf[scala.Option[String]]
   /**
    * The amount of space in pixels between the frame's content and its left and right margins.
    */
-  def marginwidth: StateChannel[String] = attribute("marginwidth").asInstanceOf[StateChannel[String]]
+  def marginwidth: scala.Option[String] = attributes.get("marginwidth").asInstanceOf[scala.Option[String]]
   /**
    * Use 
 <code><strong>allowfullscreen</strong></code> instead. In Gecko 9.0 or later, this attribute can be set to 
 <code>true</code> if the frame is allowed to be placed into full screen mode by calling its 
 <a href="/en-US/docs/Web/API/Element/mozRequestFullScreen" title="{{ APIRef }}"><code>element.mozRequestFullScreen()</code></a> method. If this isn't set, the element can't be placed into full screen mode.
    */
-  def mozallowfullscreen: StateChannel[String] = attribute("mozallowfullscreen").asInstanceOf[StateChannel[String]]
+  def mozallowfullscreen: scala.Option[String] = attributes.get("mozallowfullscreen").asInstanceOf[scala.Option[String]]
   /**
    * Use 
 <code><strong>allowfullscreen</strong></code> instead. In Chrome 17 or later (and maybe earlier), this attribute can be set to 
 <code>true</code> if the frame is allowed to be placed into full screen mode by calling its 
 <a href="/en-US/docs/Web/API/Element/webkitRequestFullScreen" class="new" title="The documentation about this has not yet been written; please consider contributing!"><code>element.webkitRequestFullScreen()</code></a> method. If this isn't set, the element can't be placed into full screen mode.
    */
-  def webkitallowfullscreen: StateChannel[String] = attribute("webkitallowfullscreen").asInstanceOf[StateChannel[String]]
+  def webkitallowfullscreen: scala.Option[String] = attributes.get("webkitallowfullscreen").asInstanceOf[scala.Option[String]]
   /**
    * For frames hosting an 
 <a href="/en-US/docs/Apps" title="OpenWebApps">open web app</a>, this specifies the URL of the 
 <a href="/en-US/docs/Apps/Manifest" title="Apps/Manifest">app manifest</a>. This ensures that the app is loaded with the right permissions. See 
 <a href="/en-US/docs/DOM/Using_the_Browser_API" title="DOM/Using_the_Browser_API">Using the Browser API</a> for details. Available in Gecko 13.0 and later.
    */
-  def mozapp: StateChannel[String] = attribute("mozapp").asInstanceOf[StateChannel[String]]
+  def mozapp: scala.Option[String] = attributes.get("mozapp").asInstanceOf[scala.Option[String]]
   /**
    * Indicates that the frame is to appear like a top-level browser window to the embedded content. This means that 
 <a href="/en-US/docs/Web/API/Window/top" title="Returns a reference to the topmost window in the window hierarchy."><code>window.top</code></a>
@@ -70,7 +71,7 @@ class Iframe extends state.Tag("iframe") with HTMLTag {
 <span id="summary_alias_container"><span id="short_desc_nonedit_display"> etc. will <em>not</em> reflect the frame hierarchy. This allows for a web browser UI to be implemented entirely with web technology, given the right permissions.</span></span> See 
 <a href="/en-US/docs/DOM/Using_the_Browser_API" title="DOM/Using_the_Browser_API">Using the Browser API</a> for details. Available in Gecko 13.0 and later.
    */
-  def mozbrowser: StateChannel[String] = attribute("mozbrowser").asInstanceOf[StateChannel[String]]
+  def mozbrowser: scala.Option[String] = attributes.get("mozbrowser").asInstanceOf[scala.Option[String]]
   /**
    * A name for the embedded browsing context (or frame). This can be used as the value of the 
 <code><strong>target</strong></code> attribute of an 
@@ -79,11 +80,11 @@ class Iframe extends state.Tag("iframe") with HTMLTag {
 <a href="/en-US/docs/Web/HTML/Element/input" title="The HTML <input> element is used to create interactive controls for web-based forms in order to accept data from the user. How an <input> works varies considerably depending on the value of its type attribute."><code>&lt;input&gt;</code></a> or 
 <a href="/en-US/docs/Web/HTML/Element/button" title="The HTML <button> Element represents a clickable button."><code>&lt;button&gt;</code></a> element.
    */
-  def name: StateChannel[String] = attribute("name").asInstanceOf[StateChannel[String]]
+  def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
   /**
    * Load the frame's page in a separate content process.
    */
-  def remote: StateChannel[String] = attribute("remote").asInstanceOf[StateChannel[String]]
+  def remote: scala.Option[String] = attributes.get("remote").asInstanceOf[scala.Option[String]]
   /**
    * Enumerated attribute indicating when the browser should provide a scroll bar (or other scrolling device) for the frame: 
 <ul> 
@@ -92,7 +93,7 @@ class Iframe extends state.Tag("iframe") with HTMLTag {
  <li><code>no</code>: Never provide a scoll bar.</li> 
 </ul>
    */
-  def scrolling: StateChannel[String] = attribute("scrolling").asInstanceOf[StateChannel[String]]
+  def scrolling: scala.Option[String] = attributes.get("scrolling").asInstanceOf[scala.Option[String]]
   /**
    * If specified as an empty string, this attribute enables extra restrictions on the content that can appear in the inline frame. The value of the attribute can either be an empty string (all the restrictions are applied), or a space-separated list of tokens that lift particular restrictions. Valid tokens are: 
 <ul> 
@@ -113,18 +114,18 @@ class Iframe extends state.Tag("iframe") with HTMLTag {
  </ul> 
 </div>
    */
-  def sandbox: StateChannel[String] = attribute("sandbox").asInstanceOf[StateChannel[String]]
+  def sandbox: scala.Option[String] = attributes.get("sandbox").asInstanceOf[scala.Option[String]]
   /**
    * This 
 <strong>Boolean attribute</strong> indicates that the browser should render the inline frame in a way that makes it appear to be part of the containing document, for example by applying CSS styles that apply to the 
 <code>&lt;iframe&gt;</code>&nbsp;to the contained document before styles specified in that document, and by opening links in the contained documents in the parent browsing context (unless another setting prevents this). In XHTML, attribute minimization is forbidden, and the seamless attribute must be defined as 
 <code>&lt;iframe seamless="seamless"&gt;</code>.
    */
-  def seamless: StateChannel[String] = attribute("seamless").asInstanceOf[StateChannel[String]]
+  def seamless: scala.Option[String] = attributes.get("seamless").asInstanceOf[scala.Option[String]]
   /**
    * The URL of the page to embed.
    */
-  def src: StateChannel[String] = attribute("src").asInstanceOf[StateChannel[String]]
+  def src: scala.Option[String] = attributes.get("src").asInstanceOf[scala.Option[String]]
   /**
    * The content of the page that the embedded context is to contain. This attribute is expected to be used together with the sandbox and seamless attributes. If a browser supports the 
 <code>srcdoc</code> attribute, it will override the content specified in the 
@@ -132,11 +133,11 @@ class Iframe extends state.Tag("iframe") with HTMLTag {
 <code>srcdoc</code> attribute, it will show the file specified in the 
 <code>src</code> attribute instead (if present).
    */
-  def srcdoc: StateChannel[String] = attribute("srcdoc").asInstanceOf[StateChannel[String]]
+  def srcdoc: scala.Option[String] = attributes.get("srcdoc").asInstanceOf[scala.Option[String]]
   /**
    * Indicates the width of the frame 
 <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML/HTML5">HTML5</a></span> in CSS pixels, or 
 <span class="inlineIndicator htmlVer htmlVerInline">HTML 4.01</span> in pixels or as a percentage.
    */
-  def width: StateChannel[String] = attribute("width").asInstanceOf[StateChannel[String]]
+  def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
 }

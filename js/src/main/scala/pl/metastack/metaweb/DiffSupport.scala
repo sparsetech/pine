@@ -1,0 +1,142 @@
+package pl.metastack.metaweb
+
+import scala.scalajs.js
+import org.scalajs.dom.ext.KeyCode
+import pl.metastack.metaweb.diff._
+
+trait DiffSupportLowPrio {
+  trait JS[T <: tree.Tag] { type X <: org.scalajs.dom.html.Element }
+  implicit object Tag extends JS[tree.Tag] { override type X = org.scalajs.dom.html.Element }
+}
+
+trait DiffSupport extends DiffSupportLowPrio {
+  implicit object A extends JS[tag.A] { override type X = org.scalajs.dom.html.Anchor }
+  implicit object Applet extends JS[tag.Applet] { override type X = org.scalajs.dom.html.Applet }
+  implicit object Area extends JS[tag.Area] { override type X = org.scalajs.dom.html.Area }
+  implicit object Audio extends JS[tag.Audio] { override type X = org.scalajs.dom.html.Audio }
+  implicit object BR extends JS[tag.Br] { override type X = org.scalajs.dom.html.BR }
+  implicit object Base extends JS[tag.Base] { override type X = org.scalajs.dom.html.Base }
+  implicit object BaseFont extends JS[tag.Basefont] { override type X = org.scalajs.dom.html.BaseFont }
+  implicit object Body extends JS[tag.Body] { override type X = org.scalajs.dom.html.Body }
+  implicit object Button extends JS[tag.Button] { override type X = org.scalajs.dom.html.Button }
+  implicit object Canvas extends JS[tag.Canvas] { override type X = org.scalajs.dom.html.Canvas }
+  // implicit object Collection extends JS[tag.Col] { override type X = org.scalajs.dom.html.Collection }
+  implicit object DD extends JS[tag.Dd] { override type X = org.scalajs.dom.html.DD }
+  implicit object DList extends JS[tag.Dl] { override type X = org.scalajs.dom.html.DList }
+  implicit object DT extends JS[tag.Dt] { override type X = org.scalajs.dom.html.DT }
+  implicit object DataList extends JS[tag.Datalist] { override type X = org.scalajs.dom.html.DataList }
+  implicit object Directory extends JS[tag.Dir] { override type X = org.scalajs.dom.html.Directory }
+  implicit object Div extends JS[tag.Div] { override type X = org.scalajs.dom.html.Div }
+  implicit object Element extends JS[tag.Element] { override type X = org.scalajs.dom.html.Element }
+  implicit object Embed extends JS[tag.Embed] { override type X = org.scalajs.dom.html.Embed }
+  implicit object FieldSet extends JS[tag.Fieldset] { override type X = org.scalajs.dom.html.FieldSet }
+  implicit object Form extends JS[tag.Form] { override type X = org.scalajs.dom.html.Form }
+  implicit object Frame extends JS[tag.Frame] { override type X = org.scalajs.dom.html.Frame }
+  implicit object FrameSet extends JS[tag.Frameset] { override type X = org.scalajs.dom.html.FrameSet }
+  implicit object HR extends JS[tag.Hr] { override type X = org.scalajs.dom.html.HR }
+  implicit object Head extends JS[tag.Head] { override type X = org.scalajs.dom.html.Head }
+  implicit object Html extends JS[tag.Html] { override type X = org.scalajs.dom.html.Html }
+  implicit object IFrame extends JS[tag.Iframe] { override type X = org.scalajs.dom.html.IFrame }
+  implicit object Image extends JS[tag.Img] { override type X = org.scalajs.dom.html.Image }
+  implicit object Input extends JS[tag.Input] { override type X = org.scalajs.dom.html.Input }
+  implicit object IsIndex extends JS[tag.Isindex] { override type X = org.scalajs.dom.html.IsIndex }
+  implicit object Label extends JS[tag.Label] { override type X = org.scalajs.dom.html.Label }
+  implicit object Legend extends JS[tag.Legend] { override type X = org.scalajs.dom.html.Legend }
+  implicit object Li extends JS[tag.Li] { override type X = org.scalajs.dom.html.LI }
+  implicit object Link extends JS[tag.Link] { override type X = org.scalajs.dom.html.Link }
+  implicit object Map extends JS[tag.Map] { override type X = org.scalajs.dom.html.Map }
+  implicit object Menu extends JS[tag.Menu] { override type X = org.scalajs.dom.html.Menu }
+  implicit object Meta extends JS[tag.Meta] { override type X = org.scalajs.dom.html.Meta }
+  implicit object OList extends JS[tag.Ol] { override type X = org.scalajs.dom.html.OList }
+  implicit object Object extends JS[tag.Object] { override type X = org.scalajs.dom.html.Object }
+  implicit object OptGroup extends JS[tag.Optgroup] { override type X = org.scalajs.dom.html.OptGroup }
+  implicit object Opt extends JS[tag.Option] { override type X = org.scalajs.dom.html.Option }
+  implicit object Paragraph extends JS[tag.P] { override type X = org.scalajs.dom.html.Paragraph }
+  implicit object Param extends JS[tag.Param] { override type X = org.scalajs.dom.html.Param }
+  implicit object Pre extends JS[tag.Pre] { override type X = org.scalajs.dom.html.Pre }
+  implicit object Progress extends JS[tag.Progress] { override type X = org.scalajs.dom.html.Progress }
+  implicit object Script extends JS[tag.Script] { override type X = org.scalajs.dom.html.Script }
+  implicit object Select extends JS[tag.Select] { override type X = org.scalajs.dom.html.Select }
+  implicit object Source extends JS[tag.Source] { override type X = org.scalajs.dom.html.Source }
+  implicit object Span extends JS[tag.Span] { override type X = org.scalajs.dom.html.Span }
+  implicit object Style extends JS[tag.Style] { override type X = org.scalajs.dom.html.Style }
+  implicit object Table extends JS[tag.Table] { override type X = org.scalajs.dom.html.Table }
+  implicit object TextArea extends JS[tag.Textarea] { override type X = org.scalajs.dom.html.TextArea }
+  implicit object Title extends JS[tag.Title] { override type X = org.scalajs.dom.html.Title }
+  implicit object Track extends JS[tag.Track] { override type X = org.scalajs.dom.html.Track }
+  implicit object Ul extends JS[tag.Ul] { override type X = org.scalajs.dom.html.UList }
+  implicit object Video extends JS[tag.Video] { override type X = org.scalajs.dom.html.Video }
+
+  object DiffDom {
+    case class SubscribeEvent[T <: org.scalajs.dom.Event](set: js.Function1[T, _] => Unit, f: T => Diff) extends Diff
+    case class UnsubscribeEvent[T <: org.scalajs.dom.Event](set: js.Function1[T, _] => Unit) extends Diff
+  }
+
+  object Window {
+    def load: DomEventHandler[org.scalajs.dom.Event] =
+      new DomEventHandler(org.scalajs.dom.window.onload = _)
+    def popState: DomEventHandler[org.scalajs.dom.PopStateEvent] =
+      new DomEventHandler(org.scalajs.dom.window.onpopstate = _)
+  }
+
+  class DomEventHandler[T <: org.scalajs.dom.Event](set: js.Function1[T, _] => Unit) {
+    import DiffDom._
+
+    def subscribe(f: T => Diff): Diff = SubscribeEvent(set, f)
+    def unsubscribe(): Diff = UnsubscribeEvent(set)
+  }
+
+  /** TODO Introduce BooleanAttribute and StringAttribute for better type-safety? */
+  implicit class AttributeExtensions[T <: tree.Tag, G, S](attribute: Attribute[T, G, S]) {
+    def get(implicit js: JS[T]): G =
+      if (HtmlHelpers.BooleanAttributes.contains(attribute.name))
+        attribute.parent.dom.hasAttribute(attribute.name).asInstanceOf[G]
+      else Option(attribute.parent.dom.getAttribute(attribute.name)).asInstanceOf[G]
+
+    def update(f: G => G)(implicit js: JS[T]): Diff =
+      if (HtmlHelpers.BooleanAttributes.contains(attribute.name))
+        attribute := f(get).asInstanceOf[S]
+      else f(get).asInstanceOf[Option[Any]] match {
+        case None    => attribute.remove()
+        case Some(s) => attribute := s.asInstanceOf[S]
+      }
+  }
+
+  implicit class NodeRefExtensions[T <: tree.Tag](nodeRef: NodeRef[T]) {
+    def onEnter(f: String => Diff)(implicit js: JS[T], ev: T <:< tag.Input): Diff =
+      nodeRef.keyPress.subscribe { e =>
+        if (e.keyCode == KeyCode.Enter) f(nodeRef.dom.asInstanceOf[org.scalajs.dom.html.Input].value)
+        else Diff.Noop()
+      }
+
+    /** Toggle `cssTags` depending on `state` */
+    def css(state: Boolean, cssTags: String*)(implicit js: JS[T]): Diff = Diff.Effect {
+      val cur = nodeRef.dom.className
+      val currentTags = cur.split(' ')
+
+      val updated =
+        if (state) currentTags ++ cssTags
+        else currentTags.diff(cssTags)
+
+      nodeRef.dom.className = updated.distinct.mkString(" ")
+    }
+
+    /** Underlying DOM node */
+    def dom(implicit js: JS[T]): js.X =
+      nodeRef.idMap.f(nodeRef.id).getOrElse(
+        throw new Exception(s"Node with ID '${nodeRef.id}' not found")
+      ).asInstanceOf[js.X]
+
+    def click(implicit js: JS[T]): DomEventHandler[org.scalajs.dom.MouseEvent] =
+      new DomEventHandler(dom.onclick = _)
+
+    def keyPress(implicit js: JS[T]): DomEventHandler[org.scalajs.dom.KeyboardEvent] =
+      new DomEventHandler(dom.onkeypress = _)
+
+    def submit(implicit js: JS[T]): DomEventHandler[org.scalajs.dom.Event] =
+      new DomEventHandler(dom.onsubmit = _)
+
+    def change(implicit js: JS[T]): DomEventHandler[org.scalajs.dom.Event] =
+      new DomEventHandler(dom.onchange = _)
+  }
+}

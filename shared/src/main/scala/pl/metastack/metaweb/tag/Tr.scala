@@ -1,12 +1,13 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * The <em>HTML Table Row Element</em> (<code>&lt;tr&gt;</code>) defines a row of cells in a table. Those can be a mix of <a href="/en-US/docs/Web/HTML/Element/td" title="The Table cell HTML element (<td>) defines a cell of a table that contains data. It participates in the table model."><code>&lt;td&gt;</code></a> and <a href="/en-US/docs/Web/HTML/Element/th" title="The HTML Table Header Cell Element (<th>) defines a cell that is a header for a group of cells of a table. The group of cells that the header refers to is defined by the scope and headers attribute."><code>&lt;th&gt;</code></a> elements.
  */
-class Tr extends state.Tag("tr") with HTMLTag {
+case class Tr(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "tr"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Tr = Tr(attributes, children)
   /**
    * This enumerated attribute specifies how horizontal alignment of each cell content will be handled. Possible values are: 
 <ul> 
@@ -25,7 +26,7 @@ class Tr extends state.Tag("tr") with HTMLTag {
  </ul> 
 </div>
    */
-  def align: StateChannel[String] = attribute("align").asInstanceOf[StateChannel[String]]
+  def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
   /**
    * This attribute defines the background color of each cell of the row. It can be either an 
 <a href="/en-US/docs/CSS/color_value#HTML.2fSVG.2fX11.c2.a0_Color_Keywords" title="CSS/color value#HTML.2fSVG.2fX11.c2.a0 Color Keywords">#RRGGBB code</a> or an 
@@ -39,7 +40,7 @@ class Tr extends state.Tag("tr") with HTMLTag {
  <a href="/en-US/docs/Web/CSS/background-color" title=""><code>background-color</code></a>.
 </div>
    */
-  def bgcolor: StateChannel[String] = attribute("bgcolor").asInstanceOf[StateChannel[String]]
+  def bgcolor: scala.Option[String] = attributes.get("bgcolor").asInstanceOf[scala.Option[String]]
   /**
    * This attribute is used to set the character to align the cells in a column on. Typical values for this include a period (.) when attempting to align numbers or monetary values. If 
 <code><a href="/en-US/docs/Web/HTML/Element/tr#attr-align">align</a></code> is not set to 
@@ -52,7 +53,7 @@ class Tr extends state.Tag("tr") with HTMLTag {
  <span class="inlineIndicator unimplemented unimplementedInline">Unimplemented</span>.
 </div>
    */
-  def char: StateChannel[String] = attribute("char").asInstanceOf[StateChannel[String]]
+  def char: scala.Option[String] = attributes.get("char").asInstanceOf[scala.Option[String]]
   /**
    * This attribute is used to indicate the number of characters to offset the column data from the alignment characters specified by the 
 <strong>char</strong> attribute. 
@@ -60,7 +61,7 @@ class Tr extends state.Tag("tr") with HTMLTag {
  <strong>Note: </strong>Do not use this attribute as it is obsolete (and not supported) in the latest standard.
 </div>
    */
-  def charoff: StateChannel[String] = attribute("charoff").asInstanceOf[StateChannel[String]]
+  def charoff: scala.Option[String] = attributes.get("charoff").asInstanceOf[scala.Option[String]]
   /**
    * This attribute specifies the vertical alignment of the text within each row of cells of the table header. Possible values for this attribute are: 
 <ul> 
@@ -74,5 +75,5 @@ class Tr extends state.Tag("tr") with HTMLTag {
  <a href="/en-US/docs/Web/CSS/vertical-align" title=""><code>vertical-align</code></a> property on it.
 </div>
    */
-  def valign: StateChannel[String] = attribute("valign").asInstanceOf[StateChannel[String]]
+  def valign: scala.Option[String] = attributes.get("valign").asInstanceOf[scala.Option[String]]
 }

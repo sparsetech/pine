@@ -1,7 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metarx._
-import pl.metastack.metaweb.state
+import pl.metastack.metaweb.tree
 
 /**
  * The <em>HTML Plaintext Element</em> (<code>&lt;plaintext&gt;</code>) renders everything following the start tag as raw text, without interpreting any HTML. There is no closing tag, since everything after it is considered raw text.
@@ -13,5 +12,7 @@ import pl.metastack.metaweb.state
  <li>A monospaced font can also be applied to a simple <a href="/en-US/docs/Web/HTML/Element/div" title="The HTML <div> element (or HTML Document Division Element) is the generic container for flow content, which does not inherently represent anything. It can be used to group elements for styling purposes (using the class or id attributes), or because they share attribute values, such as lang. It should be used only when no other semantic element (such as <article> or <nav>) is appropriate."><code>&lt;div&gt;</code></a> element by applying an adequate <a href="/en-US/docs/Web/CSS">CSS</a> style using <code>monospace</code> as the generic-font value in a <a href="/en-US/docs/Web/CSS/font-family" title=""><code>font-family</code></a> property.</li> 
 </ul>
  */
-class Plaintext extends state.Tag("plaintext") with HTMLTag {
+case class Plaintext(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+  override def tagName = "plaintext"
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Plaintext = Plaintext(attributes, children)
 }
