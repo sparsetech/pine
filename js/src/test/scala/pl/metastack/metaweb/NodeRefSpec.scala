@@ -23,7 +23,7 @@ class NodeRefSpec extends FunSuite with DiffSupport {
     node.setAttribute("id", "test")
     node.setAttribute("type", "checkbox")
 
-    val nodeRef = NodeRef[tag.A]("test", idMap = new IdMap {
+    val nodeRef = NodeRef[tag.Input]("test", idMap = new IdMap {
       f = Predef.Map("test" -> node).get(_)
     })
 
@@ -36,7 +36,7 @@ class NodeRefSpec extends FunSuite with DiffSupport {
     node.setAttribute("type", "checkbox")
     node.setAttribute("checked", "")
 
-    val nodeRef = NodeRef[tag.A]("test", idMap = new IdMap {
+    val nodeRef = NodeRef[tag.Input]("test", idMap = new IdMap {
       f = Predef.Map("test" -> node).get(_)
     })
 
@@ -48,7 +48,7 @@ class NodeRefSpec extends FunSuite with DiffSupport {
     node.setAttribute("id", "test")
     node.setAttribute("type", "checkbox")
 
-    val nodeRef = NodeRef[tag.A]("test", idMap = new IdMap {
+    val nodeRef = NodeRef[tag.Input]("test", idMap = new IdMap {
       f = Predef.Map("test" -> node).get(_)
     })
 
@@ -101,7 +101,7 @@ class NodeRefSpec extends FunSuite with DiffSupport {
     node.setAttribute("id", "test")
     node.setAttribute("type", "checkbox")
 
-    val nodeRef = NodeRef[tag.A]("test", idMap = new IdMap {
+    val nodeRef = NodeRef[tag.Input]("test", idMap = new IdMap {
       f = Predef.Map("test" -> node).get(_)
     })
 

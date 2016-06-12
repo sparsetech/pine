@@ -39,8 +39,8 @@ case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <code>&lt;button&gt;</code> elements anywhere within a document, not just as descendants of their 
 <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML <form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> elements.
    */
-  def form: scala.Option[tree.Node] = attributes.get("form").asInstanceOf[scala.Option[tree.Node]]
-  def form(value: tree.Node): Button = copy(attributes = attributes + ("form" -> value.toString)).asInstanceOf[Button]
+  def form: scala.Option[String] = attributes.get("form").asInstanceOf[scala.Option[String]]
+  def form(value: String): Button = copy(attributes = attributes + ("form" -> value.toString)).asInstanceOf[Button]
   /**
    * The URI of a program that processes the information submitted by the button. If specified, it overrides the 
 <code><a href="/en-US/docs/Web/HTML/Element/form#attr-action">action</a></code> attribute of the button's form owner.

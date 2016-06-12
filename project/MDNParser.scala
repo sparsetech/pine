@@ -21,13 +21,13 @@ object MDNParser {
   val AdditionalTagUrls = Set("a", "b", "i", "br", "span", "em", "strong", "small", "code")
     .map(ElementsUrl + "/" + _)
 
-  def encodeFileName(url: String) =
+  def encodeFileName(url: String): String =
     url.flatMap {
       case ':' | '/' => Seq('_')
       case c => Seq(c)
     } + ".html"
 
-  def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) {
+  def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit): Unit = {
     val p = new java.io.PrintWriter(f)
     try op(p) finally p.close()
   }
@@ -69,8 +69,7 @@ object MDNParser {
       p.println(s"""  def fromTag(tagName: String, attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty): tree.Tag =""")
       p.println("""    tagName.toLowerCase match {""")
       elements.toList.sortBy(_.tag).foreach { element =>
-        val scalaTagName = element.tag.head.toUpper + element.tag.tail
-        val className = escapeScalaName(scalaTagName)
+        val className = escapeScalaName(element.tag.capitalize)
         p.println(s"""      case "${element.tag}" => $className(attributes, children)""")
       }
       p.println("""      case _ => tree.CustomTag(tagName, attributes, children)""")
@@ -88,9 +87,9 @@ object MDNParser {
   }
 
   def writeElement(path: File,
-                        globalAttributes: Seq[Attribute],
-                        element: Element): File = {
-    val scalaTagName = element.tag.head.toUpper + element.tag.tail
+                   globalAttributes: Seq[Attribute],
+                   element: Element): File = {
+    val scalaTagName = element.tag.capitalize
     val file = new File(path, s"$scalaTagName.scala")
     printToFile(file) { p =>
       writeHeader(p)
@@ -135,33 +134,73 @@ object MDNParser {
       case "long" => "Long"
       case "double" => "Double"
       case "boolean" => "Boolean"
-      case _ if tpe.startsWith("HTML") => "tree.Node"  // TODO Generate interfaces
+      case _ if tpe.startsWith("HTML") => "String"  // TODO Generate interfaces
       case _ => tpe
     }
 
-  def writeAttributes(p: PrintWriter, className: String, attributes: Seq[Attribute]) {
-    attributes.foreach { attribute =>
-      if (attribute.name != "data-*") {
-        val attrName = escapeScalaName(attribute.name)
-        val attrType = attribute.tpe.map(mapDomType).getOrElse("String")
-        val description = escapeScalaComment(attribute.description)
+  def writeNodeRefAttributesClass(p: PrintWriter,
+                                  className: String,
+                                  attributes: Seq[Attribute]): Unit = {
+    p.println(s"  implicit class NodeRefAttributes$className(nodeRef: NodeRef[$className]) {")
+    attributes.filter(_.name != "data-*").foreach { attribute =>
+      val attrName = escapeScalaName(attribute.name)
+      val attrType = attribute.tpe.map(mapDomType).getOrElse("String")
 
-        p.println( s"""  /**""")
-        p.println( s"""   * $description""")
-        p.println( s"""   */""")
-
-        if (attrType == "Boolean")
-          p.println( s"""  def $attrName: $attrType = attributes.contains("${attribute.name}")""")
-        else
-          p.println( s"""  def $attrName: scala.Option[$attrType] = attributes.get("${attribute.name}").asInstanceOf[scala.Option[$attrType]]""")
-
-        if (attrType == "Boolean")
-          p.println( s"""  def $attrName(value: $attrType): $className = (if (value) copy(attributes = attributes + ("${attribute.name}" -> "")) else copy(attributes = attributes - "${attribute.name}")).asInstanceOf[$className]""")
-        else
-          p.println( s"""  def $attrName(value: $attrType): $className = copy(attributes = attributes + ("${attribute.name}" -> value.toString)).asInstanceOf[$className]""")
-      }
+      if (attrType == "Boolean")
+        p.println(s"""    val $attrName = new Attribute[$className, Boolean, Boolean](nodeRef, "${attribute.name}")""")
+      else
+        p.println(s"""    val $attrName = new Attribute[$className, scala.Option[$attrType], $attrType](nodeRef, "${attribute.name}")""")
     }
+    p.println("  }")
+    p.println()
   }
+
+  def writeNodeRefAttributs(path: File,
+                            elements: Set[Element],
+                            globalAttributes: Seq[Attribute]): File = {
+    val file = new File(path, "NodeRefAttributes.scala")
+
+    printToFile(file) { p =>
+      p.println("package pl.metastack.metaweb.tag")
+      p.println()
+      p.println("import pl.metastack.metaweb.diff.{Attribute, NodeRef}")
+      p.println()
+      p.println("trait NodeRefAttributes {")
+      writeNodeRefAttributesClass(p, "HTMLTag[_]", globalAttributes)
+
+      elements.toList.sortBy(_.tag).foreach { element =>
+        if (element.attributes.nonEmpty) {
+          val className = escapeScalaName(element.tag.capitalize)
+          writeNodeRefAttributesClass(p, className, element.attributes)
+        }
+      }
+
+      p.println("}")
+    }
+
+    file
+  }
+
+  def writeAttributes(p: PrintWriter, className: String, attributes: Seq[Attribute]): Unit =
+    attributes.filter(_.name != "data-*").foreach { attribute =>
+      val attrName = escapeScalaName(attribute.name)
+      val attrType = attribute.tpe.map(mapDomType).getOrElse("String")
+      val description = escapeScalaComment(attribute.description)
+
+      p.println( s"""  /**""")
+      p.println( s"""   * $description""")
+      p.println( s"""   */""")
+
+      if (attrType == "Boolean")
+        p.println( s"""  def $attrName: $attrType = attributes.contains("${attribute.name}")""")
+      else
+        p.println( s"""  def $attrName: scala.Option[$attrType] = attributes.get("${attribute.name}").asInstanceOf[scala.Option[$attrType]]""")
+
+      if (attrType == "Boolean")
+        p.println( s"""  def $attrName(value: $attrType): $className = (if (value) copy(attributes = attributes + ("${attribute.name}" -> "")) else copy(attributes = attributes - "${attribute.name}")).asInstanceOf[$className]""")
+      else
+        p.println( s"""  def $attrName(value: $attrType): $className = copy(attributes = attributes + ("${attribute.name}" -> value.toString)).asInstanceOf[$className]""")
+    }
 
   def globalAttributes(): Seq[Attribute] = {
     val document = Jsoup.parse(request(GlobalAttributesUrl))
@@ -319,7 +358,8 @@ object MDNParser {
     val globalAttrs = globalAttributes()
     val elemsFiles = parsedElements.map(writeElement(tagsPath, globalAttrs, _))
     val attrsFile = writeGlobalAttrs(tagsPath, parsedElements, globalAttrs)
+    val attrsNodeRefFile = writeNodeRefAttributs(tagsPath, parsedElements, globalAttrs)
 
-    elemsFiles.toSeq :+ attrsFile
+    elemsFiles.toSeq :+ attrsFile :+ attrsNodeRefFile
   }
 }

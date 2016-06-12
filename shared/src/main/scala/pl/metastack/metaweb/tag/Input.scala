@@ -133,8 +133,8 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML <form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> element. This attribute enables you to place 
 <code>&lt;input&gt;</code> elements anywhere within a document, not just as descendants of their form elements. An input can only be associated with one form.
    */
-  def form: scala.Option[tree.Node] = attributes.get("form").asInstanceOf[scala.Option[tree.Node]]
-  def form(value: tree.Node): Input = copy(attributes = attributes + ("form" -> value.toString)).asInstanceOf[Input]
+  def form: scala.Option[String] = attributes.get("form").asInstanceOf[scala.Option[String]]
+  def form(value: String): Input = copy(attributes = attributes + ("form" -> value.toString)).asInstanceOf[Input]
   /**
    * The URI of a program that processes the information submitted by the input element, if it is a submit button or image. If specified, it overrides the 
 <code><a href="/en-US/docs/Web/HTML/Element/form#attr-action">action</a></code> attribute of the element's form owner.
@@ -228,8 +228,8 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <code>radio</code>, 
 <code>file</code>, or a button type.
    */
-  def list: scala.Option[tree.Node] = attributes.get("list").asInstanceOf[scala.Option[tree.Node]]
-  def list(value: tree.Node): Input = copy(attributes = attributes + ("list" -> value.toString)).asInstanceOf[Input]
+  def list: scala.Option[String] = attributes.get("list").asInstanceOf[scala.Option[String]]
+  def list(value: String): Input = copy(attributes = attributes + ("list" -> value.toString)).asInstanceOf[Input]
   /**
    * The maximum (numeric or date-time) value for this item, which must not be less than its minimum (
 <strong>min</strong> attribute) value.

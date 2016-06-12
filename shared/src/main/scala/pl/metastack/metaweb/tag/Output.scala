@@ -16,8 +16,8 @@ case class Output(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
   /**
    * The form element that this element is associated with (its "form owner"). The value of the attribute must be an ID of a form element in the same document. If this attribute is not specified, the output element must be a descendant of a form element. This attribute enables you to place output elements anywhere within a document, not just as descendants of their form elements.
    */
-  def form: scala.Option[tree.Node] = attributes.get("form").asInstanceOf[scala.Option[tree.Node]]
-  def form(value: tree.Node): Output = copy(attributes = attributes + ("form" -> value.toString)).asInstanceOf[Output]
+  def form: scala.Option[String] = attributes.get("form").asInstanceOf[scala.Option[String]]
+  def form(value: String): Output = copy(attributes = attributes + ("form" -> value.toString)).asInstanceOf[Output]
   /**
    * The name of the element.
    */
