@@ -5,7 +5,7 @@ import pl.metastack.metaweb.tree
 /**
  * The HTML <strong><code>&lt;input&gt;</code> element</strong> is used to create interactive controls for web-based forms in order to accept data from the user. How an <code>&lt;input&gt;</code> works varies considerably depending on the value of its <code>type</code> attribute.
  */
-case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Input] {
   override def tagName = "input"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Input = Input(attributes, children)
   /**
@@ -43,6 +43,7 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </ul>
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
+  def `type`(value: String): Input = copy(attributes = attributes + ("type" -> value.toString)).asInstanceOf[Input]
   /**
    * If the value of the 
 <strong>type</strong> attribute is 
@@ -56,6 +57,7 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </ul>
    */
   def accept: scala.Option[String] = attributes.get("accept").asInstanceOf[scala.Option[String]]
+  def accept(value: String): Input = copy(attributes = attributes + ("accept" -> value.toString)).asInstanceOf[Input]
   /**
    * Specifies an "action hint" used to determine how to label the enter key on mobile devices with virtual keyboards. Supported values are 
 <code>go</code>, 
@@ -65,6 +67,7 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <code>send</code>; these automatically get mapped to the appropriate string (and are case-insensitive).
    */
   def mozactionhint: scala.Option[String] = attributes.get("mozactionhint").asInstanceOf[scala.Option[String]]
+  def mozactionhint(value: String): Input = copy(attributes = attributes + ("mozactionhint" -> value.toString)).asInstanceOf[Input]
   /**
    * This is a nonstandard attribute used by iOS Safari Mobile which controls whether and how the text value should be automatically capitalized as it is entered/edited by the user. The non-deprecated values are available in iOS 5 and later. Possible values are: 
 <ul> 
@@ -78,10 +81,12 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <a href="https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/Attributes.html#//apple_ref/doc/uid/TP40008058-autocapitalize" class="external"><code>autocapitalize</code> documentation in the Safari HTML Reference</a>
    */
   def autocapitalize: scala.Option[String] = attributes.get("autocapitalize").asInstanceOf[scala.Option[String]]
+  def autocapitalize(value: String): Input = copy(attributes = attributes + ("autocapitalize" -> value.toString)).asInstanceOf[Input]
   /**
    * This attribute indicates whether the value of the control can be automatically completed by the browser.
    */
   def autocomplete: scala.Option[String] = attributes.get("autocomplete").asInstanceOf[scala.Option[String]]
+  def autocomplete(value: String): Input = copy(attributes = attributes + ("autocomplete" -> value.toString)).asInstanceOf[Input]
   /**
    * This is a nonstandard attribute supported by Safari that is used to control whether autocorrection should be enabled when the user is entering/editing the text value of the 
 <a href="/en-US/docs/Web/HTML/Element/input" title="The HTML <input> element is used to create interactive controls for web-based forms in order to accept data from the user. How an <input> works varies considerably depending on the value of its type attribute."><code>&lt;input&gt;</code></a>. Possible attribute values are: 
@@ -92,28 +97,33 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <a href="https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/Attributes.html#//apple_ref/doc/uid/TP40008058-autocorrect" class="external"><code>autocorrect</code> documentation in the Safari HTML Reference</a>
    */
   def autocorrect: scala.Option[String] = attributes.get("autocorrect").asInstanceOf[scala.Option[String]]
+  def autocorrect(value: String): Input = copy(attributes = attributes + ("autocorrect" -> value.toString)).asInstanceOf[Input]
   /**
    * This Boolean attribute lets you specify that a form control should have input focus when the page loads, unless the user overrides it, for example by typing in a different control. Only one form element in a document can have the 
 <strong>autofocus</strong> attribute, which is a Boolean. It cannot be applied if the 
 <strong>type</strong> attribute is set to 
 <code>hidden</code> (that is, you cannot automatically set focus to a hidden control).
    */
-  def autofocus: scala.Option[Boolean] = attributes.get("autofocus").asInstanceOf[scala.Option[Boolean]]
+  def autofocus: Boolean = attributes.contains("autofocus")
+  def autofocus(value: Boolean): Input = (if (value) copy(attributes = attributes + ("autofocus" -> "")) else copy(attributes = attributes - "autofocus")).asInstanceOf[Input]
   /**
    * This attribute should be defined as a unique value. If the value of the type attribute is 
 <code>search</code>, previous search term values will persist in the dropdown across page load.
    */
   def autosave: scala.Option[String] = attributes.get("autosave").asInstanceOf[scala.Option[String]]
+  def autosave(value: String): Input = copy(attributes = attributes + ("autosave" -> value.toString)).asInstanceOf[Input]
   /**
    * <p>When the value of the <strong>type</strong> attribute is <code>radio</code> or <code>checkbox</code>, the presence of this Boolean attribute indicates that the control is selected by default; otherwise it is ignored.</p> 
 <p>Firefox will, unlike other browsers, by default, <a href="http://stackoverflow.com/questions/5985839/bug-with-firefox-disabled-attribute-of-input-not-resetting-when-refreshing" class="external">persist the dynamic checked state</a> of an <a href="/en-US/docs/Web/HTML/Element/input" title="The HTML <input> element is used to create interactive controls for web-based forms in order to accept data from the user. How an <input> works varies considerably depending on the value of its type attribute."><code>&lt;input&gt;</code></a> across page loads. Use the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-autocomplete">autocomplete</a></code> attribute to control this feature.</p>
    */
-  def checked: scala.Option[Boolean] = attributes.get("checked").asInstanceOf[scala.Option[Boolean]]
+  def checked: Boolean = attributes.contains("checked")
+  def checked(value: Boolean): Input = (if (value) copy(attributes = attributes + ("checked" -> "")) else copy(attributes = attributes - "checked")).asInstanceOf[Input]
   /**
    * <p>This Boolean attribute indicates that the form control is not available for interaction. In particular, the <code>click</code> event <a href="https://html.spec.whatwg.org/multipage/forms.html#enabling-and-disabling-form-controls:-the-disabled-attribute" class="external">will not be dispatched</a> on disabled controls. Also, a disabled control's value isn't submitted with the form.</p> 
 <p>Firefox will, unlike other browsers, by default, <a href="http://stackoverflow.com/questions/5985839/bug-with-firefox-disabled-attribute-of-input-not-resetting-when-refreshing" class="external">persist the dynamic disabled state</a> of an <a href="/en-US/docs/Web/HTML/Element/input" title="The HTML <input> element is used to create interactive controls for web-based forms in order to accept data from the user. How an <input> works varies considerably depending on the value of its type attribute."><code>&lt;input&gt;</code></a> across page loads. Use the <code><a href="/en-US/docs/Web/HTML/Element/input#attr-autocomplete">autocomplete</a></code> attribute to control this feature.</p>
    */
-  def disabled: scala.Option[Boolean] = attributes.get("disabled").asInstanceOf[scala.Option[Boolean]]
+  def disabled: Boolean = attributes.contains("disabled")
+  def disabled(value: Boolean): Input = (if (value) copy(attributes = attributes + ("disabled" -> "")) else copy(attributes = attributes - "disabled")).asInstanceOf[Input]
   /**
    * The form element that the input element is associated with (its 
 <em>form owner</em>). The value of the attribute must be an 
@@ -124,11 +134,13 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <code>&lt;input&gt;</code> elements anywhere within a document, not just as descendants of their form elements. An input can only be associated with one form.
    */
   def form: scala.Option[tree.Node] = attributes.get("form").asInstanceOf[scala.Option[tree.Node]]
+  def form(value: tree.Node): Input = copy(attributes = attributes + ("form" -> value.toString)).asInstanceOf[Input]
   /**
    * The URI of a program that processes the information submitted by the input element, if it is a submit button or image. If specified, it overrides the 
 <code><a href="/en-US/docs/Web/HTML/Element/form#attr-action">action</a></code> attribute of the element's form owner.
    */
   def formaction: scala.Option[String] = attributes.get("formaction").asInstanceOf[scala.Option[String]]
+  def formaction(value: String): Input = copy(attributes = attributes + ("formaction" -> value.toString)).asInstanceOf[Input]
   /**
    * If the input element is a submit button or image, this attribute specifies the type of content that is used to submit the form to the server. Possible values are: 
 <ul> 
@@ -139,6 +151,7 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <p>If this attribute is specified, it overrides the <code><a href="/en-US/docs/Web/HTML/Element/form#attr-enctype">enctype</a></code> attribute of the element's form owner.</p>
    */
   def formenctype: scala.Option[String] = attributes.get("formenctype").asInstanceOf[scala.Option[String]]
+  def formenctype(value: String): Input = copy(attributes = attributes + ("formenctype" -> value.toString)).asInstanceOf[Input]
   /**
    * If the input element is a submit button or image, this attribute specifies the HTTP method that the browser uses to submit the form. Possible values are: 
 <ul> 
@@ -148,11 +161,13 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <p>If specified, this attribute overrides the <code><a href="/en-US/docs/Web/HTML/Element/form#attr-method">method</a></code> attribute of the element's form owner.</p>
    */
   def formmethod: scala.Option[String] = attributes.get("formmethod").asInstanceOf[scala.Option[String]]
+  def formmethod(value: String): Input = copy(attributes = attributes + ("formmethod" -> value.toString)).asInstanceOf[Input]
   /**
    * If the input element is a submit button or image, this Boolean attribute specifies that the form is not to be validated when it is submitted. If this attribute is specified, it overrides the 
 <code><a href="/en-US/docs/Web/HTML/Element/form#attr-novalidate">novalidate</a></code> attribute of the element's form owner.
    */
   def formnovalidate: scala.Option[String] = attributes.get("formnovalidate").asInstanceOf[scala.Option[String]]
+  def formnovalidate(value: String): Input = copy(attributes = attributes + ("formnovalidate" -> value.toString)).asInstanceOf[Input]
   /**
    * If the input element is a submit button or image, this attribute is a name or keyword indicating where to display the response that is received after submitting the form. This is a name of, or keyword for, a 
 <em>browsing context</em> (for example, tab, window, or inline frame). If this attribute is specified, it overrides the 
@@ -165,12 +180,14 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </ul>
    */
   def formtarget: scala.Option[String] = attributes.get("formtarget").asInstanceOf[scala.Option[String]]
+  def formtarget(value: String): Input = copy(attributes = attributes + ("formtarget" -> value.toString)).asInstanceOf[Input]
   /**
    * If the value of the 
 <strong>type</strong> attribute is 
 <code>image</code>, this attribute defines the height of the image displayed for the button.
    */
   def height: scala.Option[String] = attributes.get("height").asInstanceOf[scala.Option[String]]
+  def height(value: String): Input = copy(attributes = attributes + ("height" -> value.toString)).asInstanceOf[Input]
   /**
    * This is a nonstandard attribute supported by Safari that only applies when the 
 <strong>type</strong> is 
@@ -181,6 +198,7 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <a href="https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/Attributes.html#//apple_ref/doc/uid/TP40008058-incremental" class="external"><code>incremental</code> documentation in the Safari HTML Reference</a>
    */
   def incremental: scala.Option[String] = attributes.get("incremental").asInstanceOf[scala.Option[String]]
+  def incremental(value: String): Input = copy(attributes = attributes + ("incremental" -> value.toString)).asInstanceOf[Input]
   /**
    * A hint to the browser for which keyboard to display. This attribute applies when the value of the 
 <strong>type</strong> attribute is text, password, email, or url. Possible values are: 
@@ -199,6 +217,7 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </ul>
    */
   def inputmode: scala.Option[String] = attributes.get("inputmode").asInstanceOf[scala.Option[String]]
+  def inputmode(value: String): Input = copy(attributes = attributes + ("inputmode" -> value.toString)).asInstanceOf[Input]
   /**
    * Identifies a list of pre-defined options to suggest to the user. The value must be the 
 <strong>id</strong> of a 
@@ -210,11 +229,13 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <code>file</code>, or a button type.
    */
   def list: scala.Option[tree.Node] = attributes.get("list").asInstanceOf[scala.Option[tree.Node]]
+  def list(value: tree.Node): Input = copy(attributes = attributes + ("list" -> value.toString)).asInstanceOf[Input]
   /**
    * The maximum (numeric or date-time) value for this item, which must not be less than its minimum (
 <strong>min</strong> attribute) value.
    */
   def max: scala.Option[String] = attributes.get("max").asInstanceOf[scala.Option[String]]
+  def max(value: String): Input = copy(attributes = attributes + ("max" -> value.toString)).asInstanceOf[Input]
   /**
    * If the value of the 
 <strong>type</strong> attribute is 
@@ -227,11 +248,13 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <strong>size</strong> attribute. If it is not specified, the user can enter an unlimited number of characters. Specifying a negative number results in the default behavior; that is, the user can enter an unlimited number of characters. The constraint is evaluated only when the value of the attribute has been changed.
    */
   def maxlength: scala.Option[String] = attributes.get("maxlength").asInstanceOf[scala.Option[String]]
+  def maxlength(value: String): Input = copy(attributes = attributes + ("maxlength" -> value.toString)).asInstanceOf[Input]
   /**
    * The minimum (numeric or date-time) value for this item, which must not be greater than its maximum (
 <strong>max</strong> attribute) value.
    */
   def min: scala.Option[String] = attributes.get("min").asInstanceOf[scala.Option[String]]
+  def min(value: String): Input = copy(attributes = attributes + ("min" -> value.toString)).asInstanceOf[Input]
   /**
    * If the value of the 
 <strong>type</strong> attribute is 
@@ -243,6 +266,7 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <code>url</code>, this attribute specifies the minimum number of characters (in Unicode code points) that the user can enter; for other control types, it is ignored.
    */
   def minlength: scala.Option[String] = attributes.get("minlength").asInstanceOf[scala.Option[String]]
+  def minlength(value: String): Input = copy(attributes = attributes + ("minlength" -> value.toString)).asInstanceOf[Input]
   /**
    * This Boolean attribute indicates whether the user can enter more than one value. This attribute applies when the 
 <strong>type</strong> attribute is set to 
@@ -250,10 +274,12 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <code>file</code>; otherwise it is ignored.
    */
   def multiple: scala.Option[String] = attributes.get("multiple").asInstanceOf[scala.Option[String]]
+  def multiple(value: String): Input = copy(attributes = attributes + ("multiple" -> value.toString)).asInstanceOf[Input]
   /**
    * The name of the control, which is submitted with the form data.
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
+  def name(value: String): Input = copy(attributes = attributes + ("name" -> value.toString)).asInstanceOf[Input]
   /**
    * A regular expression that the control's value is checked against. The pattern must match the entire value, not just some subset. Use the 
 <strong>title</strong> attribute to describe the pattern to help the user. This attribute applies when the value of the 
@@ -265,6 +291,7 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <code>email</code>; otherwise it is ignored. The regular expression language is the same as JavaScript's. The pattern is not surrounded by forward slashes.
    */
   def pattern: scala.Option[String] = attributes.get("pattern").asInstanceOf[scala.Option[String]]
+  def pattern(value: String): Input = copy(attributes = attributes + ("pattern" -> value.toString)).asInstanceOf[Input]
   /**
    * A hint to the user of what can be entered in the control . The placeholder text must not contain carriage returns or line-feeds. This attribute applies when the value of the 
 <strong>type</strong> attribute is 
@@ -283,6 +310,7 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def placeholder: scala.Option[String] = attributes.get("placeholder").asInstanceOf[scala.Option[String]]
+  def placeholder(value: String): Input = copy(attributes = attributes + ("placeholder" -> value.toString)).asInstanceOf[Input]
   /**
    * This Boolean attribute indicates that the user cannot modify the value of the control. It is ignored if the value of the 
 <strong>type</strong> attribute is 
@@ -296,6 +324,7 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <code>submit</code>).
    */
   def readonly: scala.Option[String] = attributes.get("readonly").asInstanceOf[scala.Option[String]]
+  def readonly(value: String): Input = copy(attributes = attributes + ("readonly" -> value.toString)).asInstanceOf[Input]
   /**
    * This attribute specifies that the user must fill in a value before submitting a form. It cannot be used when the 
 <strong>type</strong> attribute is 
@@ -307,7 +336,8 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <a href="/en-US/docs/Web/CSS/:optional" title="The :optional CSS pseudo-class represents any <input>&nbsp;element that does not have the required attribute set on it. This allows forms to easily indicate optional fields, and to style them accordingly."><code>:optional</code></a> and 
 <a href="/en-US/docs/Web/CSS/:required" title="The :required CSS pseudo-class represents any <input>&nbsp;element that has the required attribute set on it. This allows forms to easily indicate which fields must have valid data before the form can be submitted."><code>:required</code></a> CSS pseudo-classes will be applied to the field as appropriate.
    */
-  def required: scala.Option[Boolean] = attributes.get("required").asInstanceOf[scala.Option[Boolean]]
+  def required: Boolean = attributes.contains("required")
+  def required(value: Boolean): Input = (if (value) copy(attributes = attributes + ("required" -> "")) else copy(attributes = attributes - "required")).asInstanceOf[Input]
   /**
    * This is a nonstandard attribute supported by Safari that only applies when the 
 <strong>type</strong> is 
@@ -315,10 +345,12 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <a href="/en-US/docs/Web/HTML/Element/input" title="The HTML <input> element is used to create interactive controls for web-based forms in order to accept data from the user. How an <input> works varies considerably depending on the value of its type attribute."><code>&lt;input&gt;</code></a>'s native dropdown list of past search queries. Its value should be a nonnegative decimal integer.
    */
   def results: scala.Option[String] = attributes.get("results").asInstanceOf[scala.Option[String]]
+  def results(value: String): Input = copy(attributes = attributes + ("results" -> value.toString)).asInstanceOf[Input]
   /**
    * The direction in which selection occurred. This is "forward" if the selection was made from left-to-right in an LTR locale or right-to-left in an RTL locale, or "backward" if the selection was made in the opposite direction. This can be "none" if the selection direction is unknown.
    */
   def selectionDirection: scala.Option[String] = attributes.get("selectionDirection").asInstanceOf[scala.Option[String]]
+  def selectionDirection(value: String): Input = copy(attributes = attributes + ("selectionDirection" -> value.toString)).asInstanceOf[Input]
   /**
    * The initial size of the control. This value is in pixels unless the value of the 
 <strong>type</strong> attribute is 
@@ -333,12 +365,14 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <code>password</code>; otherwise it is ignored. In addition, the size must be greater than zero. If you don't specify a size, a default value of 20 is used.
    */
   def size: scala.Option[Long] = attributes.get("size").asInstanceOf[scala.Option[Long]]
+  def size(value: Long): Input = copy(attributes = attributes + ("size" -> value.toString)).asInstanceOf[Input]
   /**
    * If the value of the 
 <strong>type</strong> attribute is 
 <code>image</code>, this attribute specifies a URI for the location of an image to display on the graphical submit button; otherwise it is ignored.
    */
   def src: scala.Option[String] = attributes.get("src").asInstanceOf[scala.Option[String]]
+  def src(value: String): Input = copy(attributes = attributes + ("src" -> value.toString)).asInstanceOf[Input]
   /**
    * Works with the 
 <strong>min</strong> and 
@@ -347,11 +381,13 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <code>any</code>, the control accepts only values at multiples of the step value greater than the minimum.
    */
   def step: scala.Option[String] = attributes.get("step").asInstanceOf[scala.Option[String]]
+  def step(value: String): Input = copy(attributes = attributes + ("step" -> value.toString)).asInstanceOf[Input]
   /**
    * The name of a 
 <a href="/en-US/docs/Web/HTML/Element/map" title="The HTML <map> element is used with <area> elements to define an image map (a clickable link area)."><code>&lt;map&gt;</code></a> element to be used as an image map.
    */
   def usemap: scala.Option[String] = attributes.get("usemap").asInstanceOf[scala.Option[String]]
+  def usemap(value: String): Input = copy(attributes = attributes + ("usemap" -> value.toString)).asInstanceOf[Input]
   /**
    * The initial value of the control. This attribute is optional except when the value of the 
 <strong>type</strong> attribute is 
@@ -361,14 +397,17 @@ case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=46845#c186" class="external link-https">will ignore the value specified in the HTML source</a>, if the value was changed before the reload.
    */
   def value: scala.Option[String] = attributes.get("value").asInstanceOf[scala.Option[String]]
+  def value(value: String): Input = copy(attributes = attributes + ("value" -> value.toString)).asInstanceOf[Input]
   /**
    * If the value of the 
 <strong>type</strong> attribute is 
 <code>image</code>, this attribute defines the width of the image displayed for the button.
    */
   def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
+  def width(value: String): Input = copy(attributes = attributes + ("width" -> value.toString)).asInstanceOf[Input]
   /**
    * This Mozilla extension allows you to specify the error message to display when a field doesn't successfully validate.
    */
   def `x-moz-errormessage`: scala.Option[String] = attributes.get("x-moz-errormessage").asInstanceOf[scala.Option[String]]
+  def `x-moz-errormessage`(value: String): Input = copy(attributes = attributes + ("x-moz-errormessage" -> value.toString)).asInstanceOf[Input]
 }

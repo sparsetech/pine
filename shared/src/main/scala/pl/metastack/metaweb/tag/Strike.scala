@@ -13,7 +13,7 @@ import pl.metastack.metaweb.tree
 <a href="/en-US/docs/Web/CSS/text-decoration" title=""><code>text-decoration</code></a> property, with the 
 <code>line-through</code> value.
  */
-case class Strike(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Strike(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Strike] {
   override def tagName = "strike"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Strike = Strike(attributes, children)
 }

@@ -26,7 +26,7 @@ import pl.metastack.metaweb.tree
  </tr> 
 </tbody>
  */
-case class Track(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Track(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Track] {
   override def tagName = "track"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Track = Track(attributes, children)
   /**
@@ -34,6 +34,7 @@ case class Track(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <code>track</code> element per media element.
    */
   def default: scala.Option[String] = attributes.get("default").asInstanceOf[scala.Option[String]]
+  def default(value: String): Track = copy(attributes = attributes + ("default" -> value.toString)).asInstanceOf[Track]
   /**
    * How the text track is meant to be used. If omitted the default kind is 
 <code>subtitles</code>. The following keywords are allowed: 
@@ -65,15 +66,18 @@ case class Track(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </ul>
    */
   def kind: scala.Option[String] = attributes.get("kind").asInstanceOf[scala.Option[String]]
+  def kind(value: String): Track = copy(attributes = attributes + ("kind" -> value.toString)).asInstanceOf[Track]
   /**
    * A user-readable title of the text track which is used by the browser when listing available text tracks.
    */
   def label: scala.Option[String] = attributes.get("label").asInstanceOf[scala.Option[String]]
+  def label(value: String): Track = copy(attributes = attributes + ("label" -> value.toString)).asInstanceOf[Track]
   /**
    * Address of the track (
 <code>.vtt</code> file). Must be a valid URL. This attribute must be defined.
    */
   def src: scala.Option[String] = attributes.get("src").asInstanceOf[scala.Option[String]]
+  def src(value: String): Track = copy(attributes = attributes + ("src" -> value.toString)).asInstanceOf[Track]
   /**
    * Language of the track text data. It must be a valid 
 <a href="http://people.w3.org/rishida/utils/subtags/" class="external">BCP 47</a> language tag. If the 
@@ -82,4 +86,5 @@ case class Track(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <code>srclang</code> must be defined.
    */
   def srclang: scala.Option[String] = attributes.get("srclang").asInstanceOf[scala.Option[String]]
+  def srclang(value: String): Track = copy(attributes = attributes + ("srclang" -> value.toString)).asInstanceOf[Track]
 }

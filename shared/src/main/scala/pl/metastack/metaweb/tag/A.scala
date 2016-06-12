@@ -260,7 +260,7 @@ Non standard
  <a href="http://msdn.microsoft.com/en-us/library/ms534710(VS.85).aspx" class="external">urn Property (MSDN)</a>
 </dd>
  */
-case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[A] {
   override def tagName = "a"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): A = A(attributes, children)
   /**
@@ -278,6 +278,7 @@ case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: S
 </div>
    */
   def download: scala.Option[String] = attributes.get("download").asInstanceOf[scala.Option[String]]
+  def download(value: String): A = copy(attributes = attributes + ("download" -> value.toString)).asInstanceOf[A]
   /**
    * This was the single required attribute for anchors defining a hypertext source link, but is no longer required in HTML5. Omitting this attribute creates a placeholder link. The 
 <code>href</code> attribute indicates the link target, either a URL or a URL fragment. A URL fragment is a name preceded by a hash mark (#), which specifies an internal target location (an 
@@ -290,6 +291,7 @@ case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: S
 </div>
    */
   def href: scala.Option[String] = attributes.get("href").asInstanceOf[scala.Option[String]]
+  def href(value: String): A = copy(attributes = attributes + ("href" -> value.toString)).asInstanceOf[A]
   /**
    * This attribute indicates the language of the linked resource. It is purely advisory. Allowed values are determined by 
 <a href="http://www.ietf.org/rfc/bcp/bcp47.txt" class="external" title="http://www.ietf.org/rfc/bcp/bcp47.txt">BCP47</a> for HTML5 and by 
@@ -297,6 +299,7 @@ case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: S
 <code><a href="/en-US/docs/Web/HTML/Element/a#attr-href">href</a></code> attribute is present.
    */
   def hreflang: scala.Option[String] = attributes.get("hreflang").asInstanceOf[scala.Option[String]]
+  def hreflang(value: String): A = copy(attributes = attributes + ("hreflang" -> value.toString)).asInstanceOf[A]
   /**
    * This attribute specifies the media which the linked resource applies to. Its value must be a 
 <a href="/en-US/docs/CSS/Media_queries" title="CSS/Media queries">media query</a>. This attribute is mainly useful when linking to external stylesheets by allowing the user agent to pick the best adapted one for the device it runs on. 
@@ -309,10 +312,12 @@ case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: S
 </div>
    */
   def media: scala.Option[String] = attributes.get("media").asInstanceOf[scala.Option[String]]
+  def media(value: String): A = copy(attributes = attributes + ("media" -> value.toString)).asInstanceOf[A]
   /**
    * The 'ping' attribute, if present, sends the URLs of the resources a notification/ping if the user follows the hyperlink.
    */
   def ping: scala.Option[String] = attributes.get("ping").asInstanceOf[scala.Option[String]]
+  def ping(value: String): A = copy(attributes = attributes + ("ping" -> value.toString)).asInstanceOf[A]
   /**
    * For anchors containing the 
 <strong>href</strong> attribute, this attribute specifies the relationship of the target object to the link object. The value is a comma-separated list of 
@@ -320,6 +325,7 @@ case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: S
 <strong>href</strong> attribute is present.
    */
   def rel: scala.Option[String] = attributes.get("rel").asInstanceOf[scala.Option[String]]
+  def rel(value: String): A = copy(attributes = attributes + ("rel" -> value.toString)).asInstanceOf[A]
   /**
    * This attribute specifies where to display the linked resource. In HTML4, this is the name of, or a keyword for, a frame. In HTML5, it is a name of, or keyword for, a 
 <em>browsing context</em> (for example, tab, window, or inline frame). The following keywords have special meanings: 
@@ -332,6 +338,7 @@ case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: S
 <strong>href</strong> attribute is present.
    */
   def target: scala.Option[String] = attributes.get("target").asInstanceOf[scala.Option[String]]
+  def target(value: String): A = copy(attributes = attributes + ("target" -> value.toString)).asInstanceOf[A]
   /**
    * This attribute specifies the media type in the form of a 
 <a href="/en-US/docs/Glossary/MIME_type" class="glossaryLink" title="MIME type: A&nbsp;MIME type&nbsp;(now properly called &quot;media type&quot;, but&nbsp;also sometimes &quot;content type&quot;) is a string sent along&nbsp;with a file indicating the file&nbsp;type (for example, a sound file might be labeled&nbsp;audio/ogg, or an image file&nbsp;image/png). It serves the same purpose as filename&nbsp;extensions traditionally do on Windows.">MIME type</a> for the link target. Generally, this is provided strictly as advisory information; however, in the future a browser might add a small icon for multimedia types. For example, a browser might add a small speaker icon when type is set to audio/wav. For a complete list of recognized MIME types, see 
@@ -339,6 +346,7 @@ case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: S
 <code>href</code> attribute is present.
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
+  def `type`(value: String): A = copy(attributes = attributes + ("type" -> value.toString)).asInstanceOf[A]
   /**
    * This attribute defines the character encoding of the linked resource. The value is a space- and/or comma-delimited list of character sets as defined in 
 <a href="http://tools.ietf.org/html/rfc2045" class="external" title="http://tools.ietf.org/html/rfc2045">RFC 2045</a>. The default value is ISO-8859-1. 
@@ -347,10 +355,12 @@ case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: S
 </div>
    */
   def charset: scala.Option[String] = attributes.get("charset").asInstanceOf[scala.Option[String]]
+  def charset(value: String): A = copy(attributes = attributes + ("charset" -> value.toString)).asInstanceOf[A]
   /**
    * For use with object shapes, this attribute uses a comma-separated list of numbers to define the coordinates of the object on the page.
    */
   def coords: scala.Option[String] = attributes.get("coords").asInstanceOf[scala.Option[String]]
+  def coords(value: String): A = copy(attributes = attributes + ("coords" -> value.toString)).asInstanceOf[A]
   /**
    * This attribute is required in an anchor defining a target location within a page. A value for 
 <strong>name</strong> is similar to a value for the 
@@ -362,11 +372,13 @@ case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: S
 </div>
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
+  def name(value: String): A = copy(attributes = attributes + ("name" -> value.toString)).asInstanceOf[A]
   /**
    * This attribute specifies a reverse link, the inverse relationship of the 
 <strong>rel</strong> attribute. It is useful for indicating where an object came from, such as the author of a document.
    */
   def rev: scala.Option[String] = attributes.get("rev").asInstanceOf[scala.Option[String]]
+  def rev(value: String): A = copy(attributes = attributes + ("rev" -> value.toString)).asInstanceOf[A]
   /**
    * This attribute is used to define a selectable region for hypertext source links associated with a figure to create an image map. The values for the attribute are 
 <code>circle</code>, 
@@ -400,6 +412,7 @@ case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: S
 </div>
    */
   def shape: scala.Option[String] = attributes.get("shape").asInstanceOf[scala.Option[String]]
+  def shape(value: String): A = copy(attributes = attributes + ("shape" -> value.toString)).asInstanceOf[A]
   /**
    * This attribute specifies the column name from that data source object that supplies the bound data. 
 <div class="note"> 
@@ -428,6 +441,7 @@ case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: S
 </table>
    */
   def datafld: scala.Option[String] = attributes.get("datafld").asInstanceOf[scala.Option[String]]
+  def datafld(value: String): A = copy(attributes = attributes + ("datafld" -> value.toString)).asInstanceOf[A]
   /**
    * This attribute indicates the ID of the data source object that supplies the data that is bound to this element. 
 <div class="note"> 
@@ -456,14 +470,17 @@ case class A(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: S
 </table>
    */
   def datasrc: scala.Option[String] = attributes.get("datasrc").asInstanceOf[scala.Option[String]]
+  def datasrc(value: String): A = copy(attributes = attributes + ("datasrc" -> value.toString)).asInstanceOf[A]
   /**
    * The value of this attribute provides information about the functions that might be performed on an object. The values generally are given by the HTTP protocol when it is used, but it might (for similar reasons as for the title attribute) be useful to include advisory information in advance in the link. For example, the browser might choose a different rendering of a link as a function of the methods specified; something that is searchable might get a different icon, or an outside link might render with an indication of leaving the current site. This attribute is not well understood nor supported, even by the defining browser, Internet Explorer 4. 
 <a href="http://msdn.microsoft.com/en-us/library/ms534168(VS.85).aspx" class="external">Methods Property (MSDN)</a>
    */
   def methods: scala.Option[String] = attributes.get("methods").asInstanceOf[scala.Option[String]]
+  def methods(value: String): A = copy(attributes = attributes + ("methods" -> value.toString)).asInstanceOf[A]
   /**
    * This supposedly Microsoft-supported attribute relates a uniform resource name (URN) with the link. While it is based on standards work years back, the meaning of URNs is still not well defined, so this attribute is meaningless. 
 <a href="http://msdn.microsoft.com/en-us/library/ms534710(VS.85).aspx" class="external">urn Property (MSDN)</a>
    */
   def urn: scala.Option[String] = attributes.get("urn").asInstanceOf[scala.Option[String]]
+  def urn(value: String): A = copy(attributes = attributes + ("urn" -> value.toString)).asInstanceOf[A]
 }

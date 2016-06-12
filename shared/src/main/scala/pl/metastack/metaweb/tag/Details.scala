@@ -5,7 +5,7 @@ import pl.metastack.metaweb.tree
 /**
  * The <em>HTML Details&nbsp;Element</em>&nbsp;(<code><strong>&lt;details&gt;</strong></code>) is used as a disclosure widget from which the user can retrieve additional information.
  */
-case class Details(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Details(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Details] {
   override def tagName = "details"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Details = Details(attributes, children)
   /**
@@ -13,4 +13,5 @@ case class Details(attributes: Predef.Map[String, Any] = Predef.Map.empty, child
 <code>false</code> and so details will be hidden.
    */
   def open: scala.Option[String] = attributes.get("open").asInstanceOf[scala.Option[String]]
+  def open(value: String): Details = copy(attributes = attributes + ("open" -> value.toString)).asInstanceOf[Details]
 }

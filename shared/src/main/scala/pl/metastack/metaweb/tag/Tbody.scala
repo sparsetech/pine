@@ -6,7 +6,7 @@ import pl.metastack.metaweb.tree
  * The HTML Table Body Element (&lt;tbody&gt;) defines one or more <a href="/en-US/docs/Web/HTML/Element/tr" title="The HTML Table Row Element (<tr>) defines a row of cells in a table. Those can be a mix of <td> and <th> elements."><code>&lt;tr&gt;</code></a> element data-rows to be the body of its parent <a href="/en-US/docs/Web/HTML/Element/table" title="The HTML Table Element (<table>) represents data in two dimensions or more."><code>&lt;table&gt;</code></a> element (as long as no &lt;tr&gt; elements are immediate children of that table element.)&nbsp; In conjunction with a preceding <a href="/en-US/docs/Web/HTML/Element/thead" title="The HTML Table Head Element (<thead>) defines a set of rows defining the head of the columns of the table."><code>&lt;thead&gt;</code></a> and/or <a href="/en-US/docs/Web/HTML/Element/tfoot" title="The HTML Table Foot Element (<tfoot>) defines a set of rows summarizing the columns of the table."><code>&lt;tfoot&gt;</code></a> element, &lt;tbody&gt; provides additional semantic information for devices such as printers and displays. Of the parent table's child elements, &lt;tbody&gt; represents the content which, when longer than a page, will most likely differ for each page printed; while the content of <a href="/en-US/docs/Web/HTML/Element/thead" title="The HTML Table Head Element (<thead>) defines a set of rows defining the head of the columns of the table."><code>&lt;thead&gt;</code></a> and <a href="/en-US/docs/Web/HTML/Element/tfoot" title="The HTML Table Foot Element (<tfoot>) defines a set of rows summarizing the columns of the table."><code>&lt;tfoot&gt;</code></a> will be the same or similar for each page printed. For displays, &lt;tbody&gt; will enable separate scrolling of the <a href="/en-US/docs/Web/HTML/Element/thead" title="The HTML Table Head Element (<thead>) defines a set of rows defining the head of the columns of the table."><code>&lt;thead&gt;</code></a>, <a href="/en-US/docs/Web/HTML/Element/tfoot" title="The HTML Table Foot Element (<tfoot>) defines a set of rows summarizing the columns of the table."><code>&lt;tfoot&gt;</code></a>, and <a href="/en-US/docs/Web/HTML/Element/caption" title="The HTML <caption> Element (or HTML Table Caption Element) represents the title of a table. Though it is always the first descendant of a <table>, its styling, using CSS, may place it elsewhere, relative to the table."><code>&lt;caption&gt;</code></a> elements of the same parent <a href="/en-US/docs/Web/HTML/Element/table" title="The HTML Table Element (<table>) represents data in two dimensions or more."><code>&lt;table&gt;</code></a> element.&nbsp; Note that unlike the &lt;thead&gt;, &lt;tfoot&gt;, and &lt;caption&gt; elements however, multiple<strong>&nbsp;</strong><span style="font-family: consolas,monaco,andale mono,monospace;">&lt;tbody&gt; </span>elements are permitted (if consecutive), allowing the data-rows in long tables to be divided into different sections, each separately formatted as needed.
 &nbsp;
  */
-case class Tbody(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Tbody(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Tbody] {
   override def tagName = "tbody"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Tbody = Tbody(attributes, children)
   /**
@@ -28,6 +28,7 @@ case class Tbody(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
+  def align(value: String): Tbody = copy(attributes = attributes + ("align" -> value.toString)).asInstanceOf[Tbody]
   /**
    * This attribute defines the background color of each cell of the column. It is one of the 6-digit hexadecimal code as defined in 
 <a class="external" href="http://www.w3.org/Graphics/Color/sRGB" title="http://www.w3.org/Graphics/Color/sRGB">sRGB</a>, prefixed by a '#'. One of the sixteen predefined color strings may be used: 
@@ -95,6 +96,7 @@ case class Tbody(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def bgcolor: scala.Option[String] = attributes.get("bgcolor").asInstanceOf[scala.Option[String]]
+  def bgcolor(value: String): Tbody = copy(attributes = attributes + ("bgcolor" -> value.toString)).asInstanceOf[Tbody]
   /**
    * This attribute is used to set the character to align the cells in a column on. Typical values for this include a period (.) when attempting to align numbers or monetary values. If 
 <code><a href="/en-US/docs/Web/HTML/Element/tbody#attr-align">align</a></code> is not set to 
@@ -108,6 +110,7 @@ case class Tbody(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def char: scala.Option[String] = attributes.get("char").asInstanceOf[scala.Option[String]]
+  def char(value: String): Tbody = copy(attributes = attributes + ("char" -> value.toString)).asInstanceOf[Tbody]
   /**
    * This attribute is used to indicate the number of characters to offset the column data from the alignment characters specified by the 
 <strong>char</strong> attribute. 
@@ -116,6 +119,7 @@ case class Tbody(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def charoff: scala.Option[String] = attributes.get("charoff").asInstanceOf[scala.Option[String]]
+  def charoff(value: String): Tbody = copy(attributes = attributes + ("charoff" -> value.toString)).asInstanceOf[Tbody]
   /**
    * This attribute specifies the vertical alignment of the text within each row of cells of the table header. Possible values for this attribute are: 
 <ul> 
@@ -130,4 +134,5 @@ case class Tbody(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def valign: scala.Option[String] = attributes.get("valign").asInstanceOf[scala.Option[String]]
+  def valign(value: String): Tbody = copy(attributes = attributes + ("valign" -> value.toString)).asInstanceOf[Tbody]
 }

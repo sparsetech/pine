@@ -70,7 +70,7 @@ commonname=John+Doe&amp;email=doe@foo.com&amp;org=Foobar+Computing+Corp.&amp;
    orgunit=Bureau+of+Bureaucracy&amp;locality=Anytown&amp;state=California&amp;country=US&amp;
    key=MIHFMHEwXDANBgkqhkiG9w0BAQEFAANLADBIAkEAnX0TILJrOMUue%2BPtwBRE6XfV%0AWtKQbsshxk5ZhcUwcwyvcnIq9b82QhJdoACdD34rqfCAIND46fXKQUnb0mvKzQID%0AAQABFhFNb3ppbGxhSXNNeUZyaWVuZDANBgkqhkiG9w0BAQQFAANBAAKv2Eex2n%2FS%0Ar%2F7iJNroWlSzSMtTiQTEB%2BADWHGj9u1xrUrOilq%2Fo2cuQxIfZcNZkYAkWP4DubqW%0Ai0%2F%2FrgBvmco%3D
  */
-case class Keygen(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Keygen(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Keygen] {
   override def tagName = "keygen"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Keygen = Keygen(attributes, children)
   /**
@@ -78,14 +78,17 @@ case class Keygen(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <code>autofocus</code> attribute, which is a Boolean.
    */
   def autofocus: scala.Option[String] = attributes.get("autofocus").asInstanceOf[scala.Option[String]]
+  def autofocus(value: String): Keygen = copy(attributes = attributes + ("autofocus" -> value.toString)).asInstanceOf[Keygen]
   /**
    * A challenge string that is submitted along with the public key. Defaults to an empty string if not specified.
    */
   def challenge: scala.Option[String] = attributes.get("challenge").asInstanceOf[scala.Option[String]]
+  def challenge(value: String): Keygen = copy(attributes = attributes + ("challenge" -> value.toString)).asInstanceOf[Keygen]
   /**
    * This Boolean attribute indicates that the form control is not available for interaction.
    */
   def disabled: scala.Option[String] = attributes.get("disabled").asInstanceOf[scala.Option[String]]
+  def disabled(value: String): Keygen = copy(attributes = attributes + ("disabled" -> value.toString)).asInstanceOf[Keygen]
   /**
    * The form element that this element is associated with (its 
 <em>form owner</em>). The value of the attribute must be an 
@@ -95,13 +98,16 @@ case class Keygen(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <code>&lt;keygen&gt; </code>elements anywhere within a document, not just as descendants of their form elements.
    */
   def form: scala.Option[String] = attributes.get("form").asInstanceOf[scala.Option[String]]
+  def form(value: String): Keygen = copy(attributes = attributes + ("form" -> value.toString)).asInstanceOf[Keygen]
   /**
    * The type of key generated. The default value is 
 <code>RSA</code>.
    */
   def keytype: scala.Option[String] = attributes.get("keytype").asInstanceOf[scala.Option[String]]
+  def keytype(value: String): Keygen = copy(attributes = attributes + ("keytype" -> value.toString)).asInstanceOf[Keygen]
   /**
    * The name of the control, which is submitted with the form data.
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
+  def name(value: String): Keygen = copy(attributes = attributes + ("name" -> value.toString)).asInstanceOf[Keygen]
 }

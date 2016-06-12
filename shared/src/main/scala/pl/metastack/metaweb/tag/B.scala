@@ -13,7 +13,7 @@ import pl.metastack.metaweb.tree
  <li>If there is no semantic purpose on using the &lt;b&gt; element, using css property <a href="/en-US/docs/CSS/font-weight" title="font-weight">font-weight</a> with bold value would be a better choice for making text bold.</li> 
 </ul>
  */
-case class B(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class B(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[B] {
   override def tagName = "b"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): B = B(attributes, children)
 }

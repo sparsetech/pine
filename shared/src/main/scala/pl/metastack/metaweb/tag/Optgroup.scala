@@ -8,15 +8,17 @@ import pl.metastack.metaweb.tree
 <strong>Note:</strong>&nbsp;Optgroup elements may not be nested.
 
  */
-case class Optgroup(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Optgroup(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Optgroup] {
   override def tagName = "optgroup"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Optgroup = Optgroup(attributes, children)
   /**
    * If this Boolean attribute is set, none of the items in this option group is selectable. Often browsers grey out such control and it won't receive any browsing events, like mouse clicks or focus-related ones.
    */
-  def disabled: scala.Option[Boolean] = attributes.get("disabled").asInstanceOf[scala.Option[Boolean]]
+  def disabled: Boolean = attributes.contains("disabled")
+  def disabled(value: Boolean): Optgroup = (if (value) copy(attributes = attributes + ("disabled" -> "")) else copy(attributes = attributes - "disabled")).asInstanceOf[Optgroup]
   /**
    * The name of the group of options, which the browser can use when labeling the options in the user interface. This attribute is mandatory if this element is used.
    */
   def label: scala.Option[String] = attributes.get("label").asInstanceOf[scala.Option[String]]
+  def label(value: String): Optgroup = copy(attributes = attributes + ("label" -> value.toString)).asInstanceOf[Optgroup]
 }

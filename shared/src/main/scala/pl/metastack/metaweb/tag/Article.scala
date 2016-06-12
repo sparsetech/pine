@@ -11,7 +11,7 @@ import pl.metastack.metaweb.tree
  <li>The publication date and time of an <code>&lt;article&gt;</code> element can be described using the <code><a href="/en-US/docs/Web/HTML/Element/time#attr-datetime">datetime</a></code> attribute of a <a href="/en-US/docs/Web/HTML/Element/time" title="The HTML <time> element represents either a time on a 24-hour clock or a precise date in the Gregorian calendar (with optional time and timezone information)."><code>&lt;time&gt;</code></a> element. <em>Note that the&nbsp;<code><a href="/en-US/docs/Web/HTML/Element/time#attr-pubdate">pubdate</a></code> attribute of <a href="/en-US/docs/Web/HTML/Element/time" title="The HTML <time> element represents either a time on a 24-hour clock or a precise date in the Gregorian calendar (with optional time and timezone information)."><code>&lt;time&gt;</code></a> is no longer a part of the W3C HTML 5 standard.</em></li> 
 </ul>
  */
-case class Article(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Article(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Article] {
   override def tagName = "article"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Article = Article(attributes, children)
 }

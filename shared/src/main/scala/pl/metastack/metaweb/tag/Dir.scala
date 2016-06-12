@@ -8,7 +8,7 @@ import pl.metastack.metaweb.tree
 <a href="/en-US/docs/Web/Guide/HTML/HTML5" title="/en-US/docs/Web/Guide/HTML/HTML5">HTML5</a>. Use the 
 <a href="/en-US/docs/Web/HTML/Element/ul" title="The HTML unordered list element (<ul>) represents an unordered list of items, namely a collection of items that do not have a numerical ordering, and their order in the list is meaningless. Typically, unordered-list items are displayed with a bullet, which can be of several forms, like a dot, a circle or a squared. The bullet style is not defined in the HTML description of the page, but in its associated CSS, using the list-style-type property."><code>&lt;ul&gt;</code></a> instead.
  */
-case class Dir(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Dir(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Dir] {
   override def tagName = "dir"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Dir = Dir(attributes, children)
   /**
@@ -24,4 +24,5 @@ case class Dir(attributes: Predef.Map[String, Any] = Predef.Map.empty, children:
 </div>
    */
   def compact: scala.Option[String] = attributes.get("compact").asInstanceOf[scala.Option[String]]
+  def compact(value: String): Dir = copy(attributes = attributes + ("compact" -> value.toString)).asInstanceOf[Dir]
 }

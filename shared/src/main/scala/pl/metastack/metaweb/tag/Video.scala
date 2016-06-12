@@ -6,13 +6,14 @@ import pl.metastack.metaweb.tree
  * The <strong>HTML <code>&lt;video&gt;</code> element</strong> is used to embed video content. It may contain several video sources, represented using the <code>src</code> attribute or the <a href="/en-US/docs/Web/HTML/Element/source" title="The HTML <source> element is used to specify multiple media resources for <picture>, <audio> and <video> elements. It is an empty element. It is commonly used to serve the same media in multiple formats supported by different browsers."><code>&lt;source&gt;</code></a> element; the browser will choose the most suitable one.
 For a list of supported formats, see <a href="/en-US/docs/Media_formats_supported_by_the_audio_and_video_elements" title="Media formats supported by the audio and video elements">Media formats supported by the audio and video elements</a>.
  */
-case class Video(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Video(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Video] {
   override def tagName = "video"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Video = Video(attributes, children)
   /**
    * A Boolean attribute; if specified, the video will automatically begin to play back as soon as it can do so without stopping to finish loading the data.
    */
   def autoplay: scala.Option[String] = attributes.get("autoplay").asInstanceOf[scala.Option[String]]
+  def autoplay(value: String): Video = copy(attributes = attributes + ("autoplay" -> value.toString)).asInstanceOf[Video]
   /**
    * A Boolean attribute; if specified, the video will automatically begin buffering even if it's not set to automatically play. This should be used for cases in which it is considered likely that the video will be played (for example, if the user navigated to the page specifically to play the video, not if there happens to be a video embedded along with other content). The video is buffered until the media cache is full. 
 <div class="note">
@@ -24,15 +25,18 @@ case class Video(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def autobuffer: scala.Option[String] = attributes.get("autobuffer").asInstanceOf[scala.Option[String]]
+  def autobuffer(value: String): Video = copy(attributes = attributes + ("autobuffer" -> value.toString)).asInstanceOf[Video]
   /**
    * An attribute you can read to determine which time ranges of the media have been buffered. This attribute contains a 
 <a href="/en-US/docs/Web/API/TimeRanges" title="The TimeRanges interface is used to represent a set of time ranges, primarily for the purpose of tracking which portions of media have been buffered when loading it for use by the <audio> and <video>&nbsp;elements."><code>TimeRanges</code></a> object.
    */
   def buffered: scala.Option[String] = attributes.get("buffered").asInstanceOf[scala.Option[String]]
+  def buffered(value: String): Video = copy(attributes = attributes + ("buffered" -> value.toString)).asInstanceOf[Video]
   /**
    * If this attribute is present, Gecko will offer controls to allow the user to control video playback, including volume, seeking, and pause/resume playback.
    */
   def controls: scala.Option[String] = attributes.get("controls").asInstanceOf[scala.Option[String]]
+  def controls(value: String): Video = copy(attributes = attributes + ("controls" -> value.toString)).asInstanceOf[Video]
   /**
    * This enumerated attribute indicates if the fetching of the related image must be done using CORS or not. 
 <a href="/en-US/docs/CORS_Enabled_Image" title="CORS_Enabled_Image">CORS-enabled resources</a> can be reused in the 
@@ -64,23 +68,28 @@ case class Video(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <a href="/en-US/docs/HTML/CORS_settings_attributes" title="CORS settings attributes">CORS settings attributes</a> for additional information.
    */
   def crossorigin: scala.Option[String] = attributes.get("crossorigin").asInstanceOf[scala.Option[String]]
+  def crossorigin(value: String): Video = copy(attributes = attributes + ("crossorigin" -> value.toString)).asInstanceOf[Video]
   /**
    * The height of the video's display area, in CSS pixels.
    */
   def height: scala.Option[String] = attributes.get("height").asInstanceOf[scala.Option[String]]
+  def height(value: String): Video = copy(attributes = attributes + ("height" -> value.toString)).asInstanceOf[Video]
   /**
    * A Boolean attribute; if specified, we will, upon reaching the end of the video, automatically seek back to the start.
    */
   def loop: scala.Option[String] = attributes.get("loop").asInstanceOf[scala.Option[String]]
+  def loop(value: String): Video = copy(attributes = attributes + ("loop" -> value.toString)).asInstanceOf[Video]
   /**
    * A Boolean attribute which indicates the default setting of the audio contained in the video. If set, the audio will be initially silenced. Its default value is false, meaning that the audio will be played when the video is played.
    */
   def muted: scala.Option[String] = attributes.get("muted").asInstanceOf[scala.Option[String]]
+  def muted(value: String): Video = copy(attributes = attributes + ("muted" -> value.toString)).asInstanceOf[Video]
   /**
    * A 
 <a href="/en-US/docs/Web/API/TimeRanges" title="The TimeRanges interface is used to represent a set of time ranges, primarily for the purpose of tracking which portions of media have been buffered when loading it for use by the <audio> and <video>&nbsp;elements."><code>TimeRanges</code></a> object indicating all the ranges of the video that have been played.
    */
   def played: scala.Option[String] = attributes.get("played").asInstanceOf[scala.Option[String]]
+  def played(value: String): Video = copy(attributes = attributes + ("played" -> value.toString)).asInstanceOf[Video]
   /**
    * This enumerated attribute is intended to provide a hint to the browser about what the author thinks will lead to the best user experience. It may have one of the following values: 
 <ul> 
@@ -99,17 +108,21 @@ case class Video(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def preload: scala.Option[String] = attributes.get("preload").asInstanceOf[scala.Option[String]]
+  def preload(value: String): Video = copy(attributes = attributes + ("preload" -> value.toString)).asInstanceOf[Video]
   /**
    * A URL indicating a poster frame to show until the user plays or seeks. If this attribute isn't specified, nothing is displayed until the first frame is available; then the first frame is displayed as the poster frame.
    */
   def poster: scala.Option[String] = attributes.get("poster").asInstanceOf[scala.Option[String]]
+  def poster(value: String): Video = copy(attributes = attributes + ("poster" -> value.toString)).asInstanceOf[Video]
   /**
    * The URL of the video to embed. This is optional; you may instead use the 
 <a href="/en-US/docs/Web/HTML/Element/source" title="The HTML <source> element is used to specify multiple media resources for <picture>, <audio> and <video> elements. It is an empty element. It is commonly used to serve the same media in multiple formats supported by different browsers."><code>&lt;source&gt;</code></a> element within the video block to specify the video to embed.
    */
   def src: scala.Option[String] = attributes.get("src").asInstanceOf[scala.Option[String]]
+  def src(value: String): Video = copy(attributes = attributes + ("src" -> value.toString)).asInstanceOf[Video]
   /**
    * The width of the video's display area, in CSS pixels.
    */
   def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
+  def width(value: String): Video = copy(attributes = attributes + ("width" -> value.toString)).asInstanceOf[Video]
 }

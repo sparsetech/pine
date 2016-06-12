@@ -8,7 +8,7 @@ import pl.metastack.metaweb.tree
 <a href="/en-US/docs/Web/HTML/Element/cite" title="The&nbsp;HTML Citation Element&nbsp;(<cite>) represents a reference to a creative work. It must include the title of a work or a URL reference,&nbsp;which may be in an abbreviated form according to the conventions used for the addition of citation metadata."><code>&lt;cite&gt;</code></a> element to mark the title of a work (book, play, song, etc.); it is also typically styled with italic type, but carries different meaning. Use the 
 <a href="/en-US/docs/Web/HTML/Element/strong" title="The HTML Strong Element (<strong>) gives text strong importance, and is typically displayed in bold."><code>&lt;strong&gt;</code></a> element to mark text that has greater importance than surrounding text.
  */
-case class Em(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Em(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Em] {
   override def tagName = "em"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Em = Em(attributes, children)
 }

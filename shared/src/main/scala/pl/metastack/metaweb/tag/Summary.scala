@@ -7,7 +7,7 @@ import pl.metastack.metaweb.tree
 <strong>Note:</strong> If the 
 <code>&lt;summary&gt;</code> element is omitted, the heading "details" will be used.
  */
-case class Summary(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Summary(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Summary] {
   override def tagName = "summary"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Summary = Summary(attributes, children)
 }

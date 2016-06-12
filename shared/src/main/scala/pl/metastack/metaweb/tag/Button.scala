@@ -5,13 +5,14 @@ import pl.metastack.metaweb.tree
 /**
  * The <strong>HTML <em><code>&lt;button&gt;</code></em> Element</strong> represents a clickable button.
  */
-case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Button] {
   override def tagName = "button"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Button = Button(attributes, children)
   /**
    * This Boolean attribute lets you specify that the button should have input focus when the page loads, unless the user overrides it, for example by typing in a different control. Only one form-associated element in a document can have this attribute specified.
    */
-  def autofocus: scala.Option[Boolean] = attributes.get("autofocus").asInstanceOf[scala.Option[Boolean]]
+  def autofocus: Boolean = attributes.contains("autofocus")
+  def autofocus(value: Boolean): Button = (if (value) copy(attributes = attributes + ("autofocus" -> "")) else copy(attributes = attributes - "autofocus")).asInstanceOf[Button]
   /**
    * The use of this attribute on a 
 <a href="/en-US/docs/Web/HTML/Element/button" title="The HTML <button> Element represents a clickable button."><code>&lt;button&gt;</code></a> is nonstandard and Firefox-specific. By default, unlike other browsers, 
@@ -22,11 +23,13 @@ case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=654072" class="external" title="if disabled state is changed with javascript, the normal state doesn't return after refreshing the page">bug&nbsp;654072</a>.
    */
   def autocomplete: scala.Option[String] = attributes.get("autocomplete").asInstanceOf[scala.Option[String]]
+  def autocomplete(value: String): Button = copy(attributes = attributes + ("autocomplete" -> value.toString)).asInstanceOf[Button]
   /**
    * <p>This Boolean attribute indicates that the user cannot interact with the button. If this attribute is not specified, the button inherits its setting from the containing element, for example <a href="/en-US/docs/Web/HTML/Element/fieldset" title="The HTML <fieldset> element is used to group several controls as well as labels (<label>) within a web form."><code>&lt;fieldset&gt;</code></a>; if there is no containing element with the <strong>disabled</strong> attribute set, then the button is enabled.</p> 
 <p>Firefox will, unlike other browsers, by default, <a href="http://stackoverflow.com/questions/5985839/bug-with-firefox-disabled-attribute-of-input-not-resetting-when-refreshing" class="external">persist the dynamic disabled state</a> of a <a href="/en-US/docs/Web/HTML/Element/button" title="The HTML <button> Element represents a clickable button."><code>&lt;button&gt;</code></a> across page loads. Use the <code><a href="/en-US/docs/Web/HTML/Element/button#attr-autocomplete">autocomplete</a></code> attribute to control this feature.</p>
    */
-  def disabled: scala.Option[Boolean] = attributes.get("disabled").asInstanceOf[scala.Option[Boolean]]
+  def disabled: Boolean = attributes.contains("disabled")
+  def disabled(value: Boolean): Button = (if (value) copy(attributes = attributes + ("disabled" -> "")) else copy(attributes = attributes - "disabled")).asInstanceOf[Button]
   /**
    * The form element that the button is associated with (its 
 <em>form owner</em>). The value of the attribute must be the 
@@ -37,11 +40,13 @@ case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML <form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> elements.
    */
   def form: scala.Option[tree.Node] = attributes.get("form").asInstanceOf[scala.Option[tree.Node]]
+  def form(value: tree.Node): Button = copy(attributes = attributes + ("form" -> value.toString)).asInstanceOf[Button]
   /**
    * The URI of a program that processes the information submitted by the button. If specified, it overrides the 
 <code><a href="/en-US/docs/Web/HTML/Element/form#attr-action">action</a></code> attribute of the button's form owner.
    */
   def formaction: scala.Option[String] = attributes.get("formaction").asInstanceOf[scala.Option[String]]
+  def formaction(value: String): Button = copy(attributes = attributes + ("formaction" -> value.toString)).asInstanceOf[Button]
   /**
    * If the button is a submit button, this attribute specifies the type of content that is used to submit the form to the server. Possible values are: 
 <ul> 
@@ -52,6 +57,7 @@ case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <p>If this attribute is specified, it overrides the <code><a href="/en-US/docs/Web/HTML/Element/form#attr-enctype">enctype</a></code> attribute of the button's form owner.</p>
    */
   def formenctype: scala.Option[String] = attributes.get("formenctype").asInstanceOf[scala.Option[String]]
+  def formenctype(value: String): Button = copy(attributes = attributes + ("formenctype" -> value.toString)).asInstanceOf[Button]
   /**
    * If the button is a submit button, this attribute specifies the HTTP method that the browser uses to submit the form. Possible values are: 
 <ul> 
@@ -61,11 +67,13 @@ case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <p>If specified, this attribute overrides the <code><a href="/en-US/docs/Web/HTML/Element/form#attr-method">method</a></code> attribute of the button's form owner.</p>
    */
   def formmethod: scala.Option[String] = attributes.get("formmethod").asInstanceOf[scala.Option[String]]
+  def formmethod(value: String): Button = copy(attributes = attributes + ("formmethod" -> value.toString)).asInstanceOf[Button]
   /**
    * If the button is a submit button, this Boolean attribute specifies that the form is not to be validated when it is submitted. If this attribute is specified, it overrides the 
 <code><a href="/en-US/docs/Web/HTML/Element/form#attr-novalidate">novalidate</a></code> attribute of the button's form owner.
    */
   def formnovalidate: scala.Option[String] = attributes.get("formnovalidate").asInstanceOf[scala.Option[String]]
+  def formnovalidate(value: String): Button = copy(attributes = attributes + ("formnovalidate" -> value.toString)).asInstanceOf[Button]
   /**
    * If the button is a submit button, this attribute is a name or keyword indicating where to display the response that is received after submitting the form. This is a name of, or keyword for, a 
 <em>browsing context</em> (for example, tab, window, or inline frame). If this attribute is specified, it overrides the 
@@ -78,10 +86,12 @@ case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 </ul>
    */
   def formtarget: scala.Option[String] = attributes.get("formtarget").asInstanceOf[scala.Option[String]]
+  def formtarget(value: String): Button = copy(attributes = attributes + ("formtarget" -> value.toString)).asInstanceOf[Button]
   /**
    * The name of the button, which is submitted with the form data.
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
+  def name(value: String): Button = copy(attributes = attributes + ("name" -> value.toString)).asInstanceOf[Button]
   /**
    * The type of the button. Possible values are: 
 <ul> 
@@ -91,8 +101,10 @@ case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 </ul>
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
+  def `type`(value: String): Button = copy(attributes = attributes + ("type" -> value.toString)).asInstanceOf[Button]
   /**
    * The initial value of the button.
    */
   def value: scala.Option[String] = attributes.get("value").asInstanceOf[scala.Option[String]]
+  def value(value: String): Button = copy(attributes = attributes + ("value" -> value.toString)).asInstanceOf[Button]
 }

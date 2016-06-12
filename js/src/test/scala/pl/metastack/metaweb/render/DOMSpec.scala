@@ -234,7 +234,7 @@ class DOMSpec extends FunSuite {
     node.appendChild(node2)
 
     val test = DOM.toTree[tag.Span](node)
-    assert(test.children.nonEmpty, true)
+    assert(test.children.nonEmpty)
 
     val text = test.children.head.asInstanceOf[tree.Text]
     assert(text.text == "Hello world")
@@ -250,10 +250,10 @@ class DOMSpec extends FunSuite {
 
     val test = DOM.toTree[tag.Span](node)
     assert(test.id.get == "test")
-    assert(test.children.nonEmpty, true)
+    assert(test.children.nonEmpty)
 
     val input = test.children.head.asInstanceOf[tag.Input]
-    assert(input.checked.get, true)
+    assert(input.checked)
 
     assert(node.childNodes.length == 1)
     assert(node2.childNodes.length == 0)

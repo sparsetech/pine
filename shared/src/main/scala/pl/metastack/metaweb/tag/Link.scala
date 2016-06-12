@@ -6,7 +6,7 @@ import pl.metastack.metaweb.tree
  * The <em>HTML Link Element</em> (<strong>&lt;link&gt;</strong>) specifies relationships between the current document and an external resource. Possible uses for this element include defining a relational framework for navigation. This Element is most used to link to style sheets.
 &lt;link href="style.css" rel="stylesheet"&gt;
  */
-case class Link(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Link(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Link] {
   override def tagName = "link"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Link = Link(attributes, children)
   /**
@@ -20,6 +20,7 @@ case class Link(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </div>
    */
   def charset: scala.Option[String] = attributes.get("charset").asInstanceOf[scala.Option[String]]
+  def charset(value: String): Link = copy(attributes = attributes + ("charset" -> value.toString)).asInstanceOf[Link]
   /**
    * This enumerated attribute indicates if the fetching of the related image must be done using CORS or not. 
 <a href="/en-US/docs/CORS_Enabled_Image">CORS-enabled images</a> can be reused in the 
@@ -51,6 +52,7 @@ case class Link(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <a href="/en-US/docs/Web/HTML/CORS_settings_attributes">CORS settings attributes</a> for additional information.
    */
   def crossorigin: scala.Option[String] = attributes.get("crossorigin").asInstanceOf[scala.Option[String]]
+  def crossorigin(value: String): Link = copy(attributes = attributes + ("crossorigin" -> value.toString)).asInstanceOf[Link]
   /**
    * This attribute is used to disable a link relationship. In conjunction with scripting, this attribute could be used to turn on and off various style sheet relationships. 
 <div class="note"> 
@@ -63,11 +65,13 @@ case class Link(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </div>
    */
   def disabled: scala.Option[String] = attributes.get("disabled").asInstanceOf[scala.Option[String]]
+  def disabled(value: String): Link = copy(attributes = attributes + ("disabled" -> value.toString)).asInstanceOf[Link]
   /**
    * This attribute specifies the 
 <a href="/en-US/docs/URIs_and_URLs">URL</a> of the linked resource. A URL might be absolute or relative.
    */
   def href: scala.Option[String] = attributes.get("href").asInstanceOf[scala.Option[String]]
+  def href(value: String): Link = copy(attributes = attributes + ("href" -> value.toString)).asInstanceOf[Link]
   /**
    * This attribute indicates the language of the linked resource. It is purely advisory. Allowed values are determined by 
 <a href="http://www.ietf.org/rfc/bcp/bcp47.txt" class="external">BCP47</a> for HTML5 and by 
@@ -75,6 +79,7 @@ case class Link(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <code><a href="/en-US/docs/Web/HTML/Element/a#attr-href">href</a></code> attribute is present.
    */
   def hreflang: scala.Option[String] = attributes.get("hreflang").asInstanceOf[scala.Option[String]]
+  def hreflang(value: String): Link = copy(attributes = attributes + ("hreflang" -> value.toString)).asInstanceOf[Link]
   /**
    * This attribute specifies the media which the linked resource applies to. Its value must be a 
 <a href="/en-US/docs/CSS/Media_queries">media query</a>. This attribute is mainly useful when linking to external stylesheets by allowing the user agent to pick the best adapted one for the device it runs on. 
@@ -87,12 +92,14 @@ case class Link(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </div>
    */
   def media: scala.Option[String] = attributes.get("media").asInstanceOf[scala.Option[String]]
+  def media(value: String): Link = copy(attributes = attributes + ("media" -> value.toString)).asInstanceOf[Link]
   /**
    * The value of this attribute provides information about the functions that might be performed on an object. The values generally are given by the HTTP protocol when it is used, but it might (for similar reasons as for the 
 <strong>title</strong> attribute) be useful to include advisory information in advance in the link. For example, the browser might choose a different rendering of a link as a function of the methods specified; something that is searchable might get a different icon, or an outside link might render with an indication of leaving the current site. This attribute is not well understood nor supported, even by the defining browser, Internet Explorer 4. See 
 <a href="http://msdn.microsoft.com/en-us/library/ms534168%28VS.85%29.aspx" rel="external nofollow" class="external">Methods Property (MSDN)</a>.
    */
   def methods: scala.Option[String] = attributes.get("methods").asInstanceOf[scala.Option[String]]
+  def methods(value: String): Link = copy(attributes = attributes + ("methods" -> value.toString)).asInstanceOf[Link]
   /**
    * This attribute names a relationship of the linked document to the current document. The attribute must be a space-separated list of the 
 <a href="/en-US/docs/Web/HTML/Link_types">link types values</a>. The most common use of this attribute is to specify a link to an external style sheet: the 
@@ -103,6 +110,7 @@ case class Link(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <strong>rel</strong> to preload the next page in a document series.
    */
   def rel: scala.Option[String] = attributes.get("rel").asInstanceOf[scala.Option[String]]
+  def rel(value: String): Link = copy(attributes = attributes + ("rel" -> value.toString)).asInstanceOf[Link]
   /**
    * The value of this attribute shows the relationship of the current document to the linked document, as defined by the 
 <code><a href="/en-US/docs/Web/HTML/Element/link#attr-href">href</a></code> attribute. The attribute thus defines the reverse relationship compared to the value of the 
@@ -120,6 +128,7 @@ case class Link(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </div>
    */
   def rev: scala.Option[String] = attributes.get("rev").asInstanceOf[scala.Option[String]]
+  def rev(value: String): Link = copy(attributes = attributes + ("rev" -> value.toString)).asInstanceOf[Link]
   /**
    * This attribute defines the sizes of the icons for visual media contained in the resource. It must be present only if the 
 <code><a href="/en-US/docs/Web/HTML/Element/link#attr-rel">rel</a></code> contains the 
@@ -138,10 +147,12 @@ case class Link(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </div>
    */
   def sizes: scala.Option[String] = attributes.get("sizes").asInstanceOf[scala.Option[String]]
+  def sizes(value: String): Link = copy(attributes = attributes + ("sizes" -> value.toString)).asInstanceOf[Link]
   /**
    * Defines the frame or window name that has the defined linking relationship or that will show the rendering of any linked resource.
    */
   def target: scala.Option[String] = attributes.get("target").asInstanceOf[scala.Option[String]]
+  def target(value: String): Link = copy(attributes = attributes + ("target" -> value.toString)).asInstanceOf[Link]
   /**
    * This attribute is used to define the type of the content linked to. The value of the attribute should be a MIME type such as 
 <strong>text/html</strong>, 
@@ -149,8 +160,10 @@ case class Link(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <strong>text/css</strong>, which indicates a Cascading Style Sheet format.
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
+  def `type`(value: String): Link = copy(attributes = attributes + ("type" -> value.toString)).asInstanceOf[Link]
   /**
    * Contains inline metadata that a user agent can use to verify that a fetched resource has been delivered free of unexpected manipulation.&nbsp;
    */
   def integrity: scala.Option[String] = attributes.get("integrity").asInstanceOf[scala.Option[String]]
+  def integrity(value: String): Link = copy(attributes = attributes + ("integrity" -> value.toString)).asInstanceOf[Link]
 }

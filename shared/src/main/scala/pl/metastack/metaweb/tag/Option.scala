@@ -42,7 +42,7 @@ import pl.metastack.metaweb.tree
  The content of this attribute represents the value to be submitted with the form, should this option be selected.&nbsp;If this attribute is omitted, the value is taken from the text content of the option element.
 </dd>
  */
-case class Option(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Option(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Option] {
   override def tagName = "option"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Option = Option(attributes, children)
   /**
@@ -50,6 +50,7 @@ case class Option(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <a href="/en-US/docs/Web/HTML/Element/optgroup" title="In a Web form, the HTML <optgroup> element&nbsp; creates a grouping of options within a <select> element."><code>&lt;optgroup&gt;</code></a> element.
    */
   def disabled: scala.Option[String] = attributes.get("disabled").asInstanceOf[scala.Option[String]]
+  def disabled(value: String): Option = copy(attributes = attributes + ("disabled" -> value.toString)).asInstanceOf[Option]
   /**
    * This attribute is text for the label indicating the meaning of the option. If the 
 <code><strong>label</strong></code> attribute isn't defined, its value is that of the element text content. 
@@ -60,6 +61,7 @@ case class Option(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 </div>
    */
   def label: scala.Option[String] = attributes.get("label").asInstanceOf[scala.Option[String]]
+  def label(value: String): Option = copy(attributes = attributes + ("label" -> value.toString)).asInstanceOf[Option]
   /**
    * If present, this Boolean attribute indicates that the option is initially selected. If the 
 <code>&lt;option&gt;</code> element is the descendant of a
@@ -70,8 +72,10 @@ case class Option(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <strong>selected</strong> attribute.
    */
   def selected: scala.Option[String] = attributes.get("selected").asInstanceOf[scala.Option[String]]
+  def selected(value: String): Option = copy(attributes = attributes + ("selected" -> value.toString)).asInstanceOf[Option]
   /**
    * The content of this attribute represents the value to be submitted with the form, should this option be selected.&nbsp;If this attribute is omitted, the value is taken from the text content of the option element.
    */
   def value: scala.Option[String] = attributes.get("value").asInstanceOf[scala.Option[String]]
+  def value(value: String): Option = copy(attributes = attributes + ("value" -> value.toString)).asInstanceOf[Option]
 }

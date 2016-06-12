@@ -6,13 +6,14 @@ import pl.metastack.metaweb.tree
  * <span class="seoSummary">The&nbsp;<em>HTML Image Element</em>&nbsp;(<strong>&lt;img&gt;</strong>) represents an image of the document.</span>
 <p><strong>Usage note:</strong><br> Browsers do not always display the image referenced by the element. This is the case for non-graphical browsers (including those used by people with vision impairments), if the user chooses not to display images, or if the browser is unable to display the image because it is invalid or an <a href="#Supported_image_formats" title="HTML/Element/Img#Supported_Image_Formats">unsupported type</a>. In these cases, the browser may replace the image with the text defined in this element's <strong>alt</strong> attribute.</p>
  */
-case class Img(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Img(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Img] {
   override def tagName = "img"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Img = Img(attributes, children)
   /**
    * The alignment of the image with respect to its surrounding context.
    */
   def `align vertical-align`: scala.Option[String] = attributes.get("align vertical-align").asInstanceOf[scala.Option[String]]
+  def `align vertical-align`(value: String): Img = copy(attributes = attributes + ("align vertical-align" -> value.toString)).asInstanceOf[Img]
   /**
    * This attribute defines the alternative text describing the image. Users will see this displayed if the image URL is wrong, the image is not in one of the 
 <a href="#Supported_image_formats" title="HTML/Element/Img#Supported image formats">supported formats</a>, or if the image is not yet downloaded. 
@@ -21,10 +22,12 @@ case class Img(attributes: Predef.Map[String, Any] = Predef.Map.empty, children:
 </div>
    */
   def alt: scala.Option[String] = attributes.get("alt").asInstanceOf[scala.Option[String]]
+  def alt(value: String): Img = copy(attributes = attributes + ("alt" -> value.toString)).asInstanceOf[Img]
   /**
    * The width of a border around the image.
    */
   def border: scala.Option[String] = attributes.get("border").asInstanceOf[scala.Option[String]]
+  def border(value: String): Img = copy(attributes = attributes + ("border" -> value.toString)).asInstanceOf[Img]
   /**
    * This enumerated attribute indicates if the fetching of the related image must be done using CORS or not. 
 <a href="/en-US/docs/CORS_Enabled_Image" title="CORS_Enabled_Image">CORS-enabled images</a> can be reused in the 
@@ -56,16 +59,19 @@ case class Img(attributes: Predef.Map[String, Any] = Predef.Map.empty, children:
 <a href="/en-US/docs/HTML/CORS_settings_attributes" title="CORS settings attributes">CORS settings attributes</a> for additional information.
    */
   def crossorigin: scala.Option[String] = attributes.get("crossorigin").asInstanceOf[scala.Option[String]]
+  def crossorigin(value: String): Img = copy(attributes = attributes + ("crossorigin" -> value.toString)).asInstanceOf[Img]
   /**
    * The intrinsic height of the image in 
 <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML/HTML5">HTML5</a></span> CSS pixels, or 
 <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML">HTML 4</a></span> in pixels or as a percentage.
    */
   def height: scala.Option[String] = attributes.get("height").asInstanceOf[scala.Option[String]]
+  def height(value: String): Img = copy(attributes = attributes + ("height" -> value.toString)).asInstanceOf[Img]
   /**
    * The number of pixels of white space to insert to the left and right of the image.
    */
   def hspace: scala.Option[String] = attributes.get("hspace").asInstanceOf[scala.Option[String]]
+  def hspace(value: String): Img = copy(attributes = attributes + ("hspace" -> value.toString)).asInstanceOf[Img]
   /**
    * This Boolean attribute indicates that the image is part of a server-side map. If so, the precise coordinates of a click are sent to the server. 
 <div class="note"> 
@@ -73,17 +79,20 @@ case class Img(attributes: Predef.Map[String, Any] = Predef.Map.empty, children:
 </div>
    */
   def ismap: scala.Option[String] = attributes.get("ismap").asInstanceOf[scala.Option[String]]
+  def ismap(value: String): Img = copy(attributes = attributes + ("ismap" -> value.toString)).asInstanceOf[Img]
   /**
    * The URL of a description of the image to be displayed, which supplements the 
 <strong>alt</strong> text.
    */
   def longdesc: scala.Option[String] = attributes.get("longdesc").asInstanceOf[scala.Option[String]]
+  def longdesc(value: String): Img = copy(attributes = attributes + ("longdesc" -> value.toString)).asInstanceOf[Img]
   /**
    * A name for the element. It is supported in 
 <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML">HTML 4</a></span> only for backward compatibility. Use the 
 <strong>id</strong> attribute instead.
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
+  def name(value: String): Img = copy(attributes = attributes + ("name" -> value.toString)).asInstanceOf[Img]
   /**
    * A&nbsp;list of one or more strings separated by commas indicating a set of source sizes. Each source size consists of: 
 <ol> 
@@ -93,6 +102,7 @@ case class Img(attributes: Predef.Map[String, Any] = Predef.Map.empty, children:
 <p>Source size values specify the intended display size of the image. User agents use the current source size to select one of the sources supplied by the <code>srcset</code> attribute, when those sources are described using width ('<code>w</code>') descriptors. The selected source size affects the intrinsic size of the image (the image’s display size if no CSS styling is applied). If the <code>srcset</code> attribute is absent, or contains no values with a width descriptor, then the <code>sizes</code> attribute has no effect.</p>
    */
   def sizes: scala.Option[String] = attributes.get("sizes").asInstanceOf[scala.Option[String]]
+  def sizes(value: String): Img = copy(attributes = attributes + ("sizes" -> value.toString)).asInstanceOf[Img]
   /**
    * The image URL. This attribute is mandatory for the 
 <code>&lt;img&gt;</code> element. On browsers supporting 
@@ -104,6 +114,7 @@ case class Img(attributes: Predef.Map[String, Any] = Predef.Map.empty, children:
 <code>w</code>' descriptors.
    */
   def src: scala.Option[String] = attributes.get("src").asInstanceOf[scala.Option[String]]
+  def src(value: String): Img = copy(attributes = attributes + ("src" -> value.toString)).asInstanceOf[Img]
   /**
    * A list of one or more strings separated by commas indicating a set of possible image sources for the user agent to use. Each string is composed of: 
 <ol> 
@@ -119,12 +130,14 @@ case class Img(attributes: Predef.Map[String, Any] = Predef.Map.empty, children:
 <p>User agents are given discretion to choose any one of the available sources. This provides them with significant leeway to tailor their selection based on things like user preferences or bandwidth conditions.</p>
    */
   def srcset: scala.Option[String] = attributes.get("srcset").asInstanceOf[scala.Option[String]]
+  def srcset(value: String): Img = copy(attributes = attributes + ("srcset" -> value.toString)).asInstanceOf[Img]
   /**
    * The intrinsic width of the image in 
 <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML/HTML5">HTML5</a></span> CSS pixels, or 
 <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML">HTML 4</a></span> in pixels or as a percentage.
    */
   def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
+  def width(value: String): Img = copy(attributes = attributes + ("width" -> value.toString)).asInstanceOf[Img]
   /**
    * The partial URL (starting with '#') of an 
 <a href="/en-US/docs/HTML/Element/map" title="HTML/Element/Map">image map</a> associated with the element. 
@@ -133,8 +146,10 @@ case class Img(attributes: Predef.Map[String, Any] = Predef.Map.empty, children:
 </div>
    */
   def usemap: scala.Option[String] = attributes.get("usemap").asInstanceOf[scala.Option[String]]
+  def usemap(value: String): Img = copy(attributes = attributes + ("usemap" -> value.toString)).asInstanceOf[Img]
   /**
    * The number of pixels of white space to insert above and below the image.
    */
   def vspace: scala.Option[String] = attributes.get("vspace").asInstanceOf[scala.Option[String]]
+  def vspace(value: String): Img = copy(attributes = attributes + ("vspace" -> value.toString)).asInstanceOf[Img]
 }

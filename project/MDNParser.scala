@@ -62,8 +62,8 @@ object MDNParser {
     val file = new File(path, "HTMLTag.scala")
     printToFile(file) { p =>
       writeHeader(p)
-      p.println(s"""trait HTMLTag { self: tree.Tag =>""")
-      writeAttributes(p, attributes)
+      p.println(s"""trait HTMLTag[T <: tree.Tag] extends tree.Tag { self: T =>""")
+      writeAttributes(p, "T", attributes)
       p.println("}")
       p.println("""object HTMLTag {""")
       p.println(s"""  def fromTag(tagName: String, attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty): tree.Tag =""")
@@ -102,7 +102,7 @@ object MDNParser {
       p.println( s"""/**""")
       p.println( s""" * $description""")
       p.println( s""" */""")
-      p.println(s"""case class $className(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {""")
+      p.println(s"""case class $className(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[$className] {""")
       p.println(s"""  override def tagName = "${element.tag}"""")
       p.println(s"""  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): $className = $className(attributes, children)""")
 
@@ -112,7 +112,7 @@ object MDNParser {
         !exists
       }
 
-      writeAttributes(p, uniqueAttrs)
+      writeAttributes(p, className, uniqueAttrs)
       p.println("}")
     }
     file
@@ -139,7 +139,7 @@ object MDNParser {
       case _ => tpe
     }
 
-  def writeAttributes(p: PrintWriter, attributes: Seq[Attribute]) {
+  def writeAttributes(p: PrintWriter, className: String, attributes: Seq[Attribute]) {
     attributes.foreach { attribute =>
       if (attribute.name != "data-*") {
         val attrName = escapeScalaName(attribute.name)
@@ -149,7 +149,16 @@ object MDNParser {
         p.println( s"""  /**""")
         p.println( s"""   * $description""")
         p.println( s"""   */""")
-        p.println( s"""  def $attrName: scala.Option[$attrType] = attributes.get("${attribute.name}").asInstanceOf[scala.Option[$attrType]]""")
+
+        if (attrType == "Boolean")
+          p.println( s"""  def $attrName: $attrType = attributes.contains("${attribute.name}")""")
+        else
+          p.println( s"""  def $attrName: scala.Option[$attrType] = attributes.get("${attribute.name}").asInstanceOf[scala.Option[$attrType]]""")
+
+        if (attrType == "Boolean")
+          p.println( s"""  def $attrName(value: $attrType): $className = (if (value) copy(attributes = attributes + ("${attribute.name}" -> "")) else copy(attributes = attributes - "${attribute.name}")).asInstanceOf[$className]""")
+        else
+          p.println( s"""  def $attrName(value: $attrType): $className = copy(attributes = attributes + ("${attribute.name}" -> value.toString)).asInstanceOf[$className]""")
       }
     }
   }

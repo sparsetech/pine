@@ -6,7 +6,7 @@ import pl.metastack.metaweb.tree
  * The <strong>HTML <code>&lt;br&gt;</code> Element</strong> (or <em>HTML </em><em>Line Break Element</em>) produces a line break in text (carriage-return). It is useful for writing a poem or an address, where the division of lines is significant.
 Do not use <code>&lt;br&gt;</code> to increase the gap between lines of text; use the <a href="/en-US/docs/CSS" title="CSS">CSS</a> <a href="/en-US/docs/Web/CSS/margin"><code>margin</code></a> property or the <a href="/en-US/docs/Web/HTML/Element/p" title="The HTML <p> element (or HTML Paragraph Element) represents a paragraph of text."><code>&lt;p&gt;</code></a> element.
  */
-case class Br(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Br(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Br] {
   override def tagName = "br"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Br = Br(attributes, children)
   /**
@@ -16,4 +16,5 @@ case class Br(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def clear: scala.Option[String] = attributes.get("clear").asInstanceOf[scala.Option[String]]
+  def clear(value: String): Br = copy(attributes = attributes + ("clear" -> value.toString)).asInstanceOf[Br]
 }

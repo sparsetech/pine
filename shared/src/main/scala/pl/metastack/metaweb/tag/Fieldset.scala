@@ -35,7 +35,7 @@ import pl.metastack.metaweb.tree
  </div> 
 </dd>
  */
-case class Fieldset(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends tree.Tag with HTMLTag {
+case class Fieldset(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Fieldset] {
   override def tagName = "fieldset"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Fieldset = Fieldset(attributes, children)
   /**
@@ -43,6 +43,7 @@ case class Fieldset(attributes: Predef.Map[String, Any] = Predef.Map.empty, chil
 <a href="/en-US/docs/Web/HTML/Element/legend" title="The HTML <legend> Element (or HTML Legend Field Element) represents a caption for the content of its parent <fieldset>."><code>&lt;legend&gt;</code></a> element, are disabled, i.e., not editable. They won't receive any browsing events, like mouse clicks or focus-related ones. Often browsers display such controls as gray.
    */
   def disabled: scala.Option[String] = attributes.get("disabled").asInstanceOf[scala.Option[String]]
+  def disabled(value: String): Fieldset = copy(attributes = attributes + ("disabled" -> value.toString)).asInstanceOf[Fieldset]
   /**
    * This attribute has the value of the 
 <strong>id </strong>attribute of the 
@@ -51,6 +52,7 @@ case class Fieldset(attributes: Predef.Map[String, Any] = Predef.Map.empty, chil
 <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML <form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> element it is a descendant of.
    */
   def form: scala.Option[String] = attributes.get("form").asInstanceOf[scala.Option[String]]
+  def form(value: String): Fieldset = copy(attributes = attributes + ("form" -> value.toString)).asInstanceOf[Fieldset]
   /**
    * The name associated with the group, which is submitted with the form data. 
 <div class="note">
@@ -59,4 +61,5 @@ case class Fieldset(attributes: Predef.Map[String, Any] = Predef.Map.empty, chil
 </div>
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
+  def name(value: String): Fieldset = copy(attributes = attributes + ("name" -> value.toString)).asInstanceOf[Fieldset]
 }
