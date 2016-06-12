@@ -6,6 +6,7 @@ import io.circe.parser._
 import io.circe.syntax._
 
 import pl.metastack.metaweb._
+import pl.metastack.metaweb.dsl._
 import pl.metastack.metaweb.diff._
 import pl.metastack.metaweb.macros.Js
 import pl.metastack.metaweb.{Books => BK}
