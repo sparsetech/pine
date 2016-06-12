@@ -27,7 +27,7 @@ case class Tr(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
-  def align(value: String): Tr = copy(attributes = attributes + ("align" -> value.toString)).asInstanceOf[Tr]
+  def align(value: String): Tr = copy(attributes = attributes + ("align" -> value)).asInstanceOf[Tr]
   /**
    * This attribute defines the background color of each cell of the row. It can be either an 
 <a href="/en-US/docs/CSS/color_value#HTML.2fSVG.2fX11.c2.a0_Color_Keywords" title="CSS/color value#HTML.2fSVG.2fX11.c2.a0 Color Keywords">#RRGGBB code</a> or an 
@@ -42,7 +42,7 @@ case class Tr(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def bgcolor: scala.Option[String] = attributes.get("bgcolor").asInstanceOf[scala.Option[String]]
-  def bgcolor(value: String): Tr = copy(attributes = attributes + ("bgcolor" -> value.toString)).asInstanceOf[Tr]
+  def bgcolor(value: String): Tr = copy(attributes = attributes + ("bgcolor" -> value)).asInstanceOf[Tr]
   /**
    * This attribute is used to set the character to align the cells in a column on. Typical values for this include a period (.) when attempting to align numbers or monetary values. If 
 <code><a href="/en-US/docs/Web/HTML/Element/tr#attr-align">align</a></code> is not set to 
@@ -56,7 +56,7 @@ case class Tr(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def char: scala.Option[String] = attributes.get("char").asInstanceOf[scala.Option[String]]
-  def char(value: String): Tr = copy(attributes = attributes + ("char" -> value.toString)).asInstanceOf[Tr]
+  def char(value: String): Tr = copy(attributes = attributes + ("char" -> value)).asInstanceOf[Tr]
   /**
    * This attribute is used to indicate the number of characters to offset the column data from the alignment characters specified by the 
 <strong>char</strong> attribute. 
@@ -65,7 +65,7 @@ case class Tr(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def charoff: scala.Option[String] = attributes.get("charoff").asInstanceOf[scala.Option[String]]
-  def charoff(value: String): Tr = copy(attributes = attributes + ("charoff" -> value.toString)).asInstanceOf[Tr]
+  def charoff(value: String): Tr = copy(attributes = attributes + ("charoff" -> value)).asInstanceOf[Tr]
   /**
    * This attribute specifies the vertical alignment of the text within each row of cells of the table header. Possible values for this attribute are: 
 <ul> 
@@ -80,5 +80,5 @@ case class Tr(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def valign: scala.Option[String] = attributes.get("valign").asInstanceOf[scala.Option[String]]
-  def valign(value: String): Tr = copy(attributes = attributes + ("valign" -> value.toString)).asInstanceOf[Tr]
+  def valign(value: String): Tr = copy(attributes = attributes + ("valign" -> value)).asInstanceOf[Tr]
 }

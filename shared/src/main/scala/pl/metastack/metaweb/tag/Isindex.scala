@@ -13,10 +13,10 @@ case class Isindex(attributes: Predef.Map[String, Any] = Predef.Map.empty, child
    * This attribute adds its value as a prompt for text field.
    */
   def prompt: scala.Option[String] = attributes.get("prompt").asInstanceOf[scala.Option[String]]
-  def prompt(value: String): Isindex = copy(attributes = attributes + ("prompt" -> value.toString)).asInstanceOf[Isindex]
+  def prompt(value: String): Isindex = copy(attributes = attributes + ("prompt" -> value)).asInstanceOf[Isindex]
   /**
    * This attribute can be used in the case of needing to send query to a different URL. Action is not defined by W3C.
    */
   def action: scala.Option[String] = attributes.get("action").asInstanceOf[scala.Option[String]]
-  def action(value: String): Isindex = copy(attributes = attributes + ("action" -> value.toString)).asInstanceOf[Isindex]
+  def action(value: String): Isindex = copy(attributes = attributes + ("action" -> value)).asInstanceOf[Isindex]
 }

@@ -12,18 +12,18 @@ case class Object(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
    * A space-separated list of URIs for archives of resources for the object.
    */
   def archive: scala.Option[String] = attributes.get("archive").asInstanceOf[scala.Option[String]]
-  def archive(value: String): Object = copy(attributes = attributes + ("archive" -> value.toString)).asInstanceOf[Object]
+  def archive(value: String): Object = copy(attributes = attributes + ("archive" -> value)).asInstanceOf[Object]
   /**
    * The width of a border around the control, in pixels.
    */
   def border: scala.Option[String] = attributes.get("border").asInstanceOf[scala.Option[String]]
-  def border(value: String): Object = copy(attributes = attributes + ("border" -> value.toString)).asInstanceOf[Object]
+  def border(value: String): Object = copy(attributes = attributes + ("border" -> value)).asInstanceOf[Object]
   /**
    * The URI of the object's implementation. It can be used together with, or in place of, the 
 <strong>data</strong> attribute.
    */
   def classid: scala.Option[String] = attributes.get("classid").asInstanceOf[scala.Option[String]]
-  def classid(value: String): Object = copy(attributes = attributes + ("classid" -> value.toString)).asInstanceOf[Object]
+  def classid(value: String): Object = copy(attributes = attributes + ("classid" -> value)).asInstanceOf[Object]
   /**
    * The base path used to resolve relative URIs specified by 
 <strong>classid</strong>, 
@@ -31,48 +31,48 @@ case class Object(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <strong>archive</strong>. If not specified, the default is the base URI of the current document.
    */
   def codebase: scala.Option[String] = attributes.get("codebase").asInstanceOf[scala.Option[String]]
-  def codebase(value: String): Object = copy(attributes = attributes + ("codebase" -> value.toString)).asInstanceOf[Object]
+  def codebase(value: String): Object = copy(attributes = attributes + ("codebase" -> value)).asInstanceOf[Object]
   /**
    * The content type of the data specified by 
 <strong>classid</strong>.
    */
   def codetype: scala.Option[String] = attributes.get("codetype").asInstanceOf[scala.Option[String]]
-  def codetype(value: String): Object = copy(attributes = attributes + ("codetype" -> value.toString)).asInstanceOf[Object]
+  def codetype(value: String): Object = copy(attributes = attributes + ("codetype" -> value)).asInstanceOf[Object]
   /**
    * The address of the resource as a valid URL. At least one of 
 <strong>data</strong> and 
 <strong>type</strong> must be defined.
    */
   def data: scala.Option[String] = attributes.get("data").asInstanceOf[scala.Option[String]]
-  def data(value: String): Object = copy(attributes = attributes + ("data" -> value.toString)).asInstanceOf[Object]
+  def data(value: String): Object = copy(attributes = attributes + ("data" -> value)).asInstanceOf[Object]
   /**
    * The presence of this Boolean attribute makes this element a declaration only. The object must be instantiated by a subsequent 
 <code>&lt;object&gt;</code> element. In HTML5, repeat the &lt;object&gt; element completely each that that the resource is reused.
    */
   def declare: scala.Option[String] = attributes.get("declare").asInstanceOf[scala.Option[String]]
-  def declare(value: String): Object = copy(attributes = attributes + ("declare" -> value.toString)).asInstanceOf[Object]
+  def declare(value: String): Object = copy(attributes = attributes + ("declare" -> value)).asInstanceOf[Object]
   /**
    * The form element, if any, that the object element is associated with (its 
 <em>form owner</em>). The value of the attribute must be an ID of a 
 <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML <form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> element in the same document.
    */
   def form: scala.Option[String] = attributes.get("form").asInstanceOf[scala.Option[String]]
-  def form(value: String): Object = copy(attributes = attributes + ("form" -> value.toString)).asInstanceOf[Object]
+  def form(value: String): Object = copy(attributes = attributes + ("form" -> value)).asInstanceOf[Object]
   /**
    * The height of the displayed resource, in CSS pixels.
    */
   def height: scala.Option[String] = attributes.get("height").asInstanceOf[scala.Option[String]]
-  def height(value: String): Object = copy(attributes = attributes + ("height" -> value.toString)).asInstanceOf[Object]
+  def height(value: String): Object = copy(attributes = attributes + ("height" -> value)).asInstanceOf[Object]
   /**
    * The name of valid browsing context (HTML5), or the name of the control (HTML 4).
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
-  def name(value: String): Object = copy(attributes = attributes + ("name" -> value.toString)).asInstanceOf[Object]
+  def name(value: String): Object = copy(attributes = attributes + ("name" -> value)).asInstanceOf[Object]
   /**
    * A message that the browser can show while loading the object's implementation and data.
    */
   def standby: scala.Option[String] = attributes.get("standby").asInstanceOf[scala.Option[String]]
-  def standby(value: String): Object = copy(attributes = attributes + ("standby" -> value.toString)).asInstanceOf[Object]
+  def standby(value: String): Object = copy(attributes = attributes + ("standby" -> value)).asInstanceOf[Object]
   /**
    * The 
 <a href="/en-US/docs/Glossary/Content_type">content type</a> of the resource specified by 
@@ -81,24 +81,24 @@ case class Object(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <strong>type</strong> must be defined.
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
-  def `type`(value: String): Object = copy(attributes = attributes + ("type" -> value.toString)).asInstanceOf[Object]
+  def `type`(value: String): Object = copy(attributes = attributes + ("type" -> value)).asInstanceOf[Object]
   /**
    * This Boolean attribute indicates if the 
 <strong>type</strong> and the actual 
 <a href="/en-US/docs/Glossary/Content_type">content type</a> resource must match in order of this one to be used.
    */
   def typemustmatch: scala.Option[String] = attributes.get("typemustmatch").asInstanceOf[scala.Option[String]]
-  def typemustmatch(value: String): Object = copy(attributes = attributes + ("typemustmatch" -> value.toString)).asInstanceOf[Object]
+  def typemustmatch(value: String): Object = copy(attributes = attributes + ("typemustmatch" -> value)).asInstanceOf[Object]
   /**
    * A hash-name reference to a 
 <a href="/en-US/docs/Web/HTML/Element/map" title="The HTML <map> element is used with <area> elements to define an image map (a clickable link area)."><code>&lt;map&gt;</code></a> element; that is a '#' followed by the value of a 
 <code><a href="/en-US/docs/Web/HTML/Element/map#attr-name">name</a></code> of a map element.
    */
   def usemap: scala.Option[String] = attributes.get("usemap").asInstanceOf[scala.Option[String]]
-  def usemap(value: String): Object = copy(attributes = attributes + ("usemap" -> value.toString)).asInstanceOf[Object]
+  def usemap(value: String): Object = copy(attributes = attributes + ("usemap" -> value)).asInstanceOf[Object]
   /**
    * The width of the display resource, in CSS pixels.
    */
   def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
-  def width(value: String): Object = copy(attributes = attributes + ("width" -> value.toString)).asInstanceOf[Object]
+  def width(value: String): Object = copy(attributes = attributes + ("width" -> value)).asInstanceOf[Object]
 }

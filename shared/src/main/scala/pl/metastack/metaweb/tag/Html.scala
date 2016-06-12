@@ -13,15 +13,15 @@ case class Html(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <a href="/en-US/docs/HTML/Using_the_application_cache" title="/en-US/docs/HTML/Using_the_application_cache">Using the application cache</a> for details.
    */
   def manifest: scala.Option[String] = attributes.get("manifest").asInstanceOf[scala.Option[String]]
-  def manifest(value: String): Html = copy(attributes = attributes + ("manifest" -> value.toString)).asInstanceOf[Html]
+  def manifest(value: String): Html = copy(attributes = attributes + ("manifest" -> value)).asInstanceOf[Html]
   /**
    * Specifies the version of the HTML&nbsp;Document Type Definition that governs the current document. This attribute is not needed, because it is redundant with the version information in the document type declaration.
    */
   def version: scala.Option[String] = attributes.get("version").asInstanceOf[scala.Option[String]]
-  def version(value: String): Html = copy(attributes = attributes + ("version" -> value.toString)).asInstanceOf[Html]
+  def version(value: String): Html = copy(attributes = attributes + ("version" -> value)).asInstanceOf[Html]
   /**
    * Specifies the XML Namespace of the document. Default value is "http://www.w3.org/1999/xhtml". This is required in XHTML, and optional in HTML5.
    */
   def xmlns: scala.Option[String] = attributes.get("xmlns").asInstanceOf[scala.Option[String]]
-  def xmlns(value: String): Html = copy(attributes = attributes + ("xmlns" -> value.toString)).asInstanceOf[Html]
+  def xmlns(value: String): Html = copy(attributes = attributes + ("xmlns" -> value)).asInstanceOf[Html]
 }

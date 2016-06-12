@@ -15,26 +15,26 @@ case class Spacer(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <code>block</code>.
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
-  def `type`(value: String): Spacer = copy(attributes = attributes + ("type" -> value.toString)).asInstanceOf[Spacer]
+  def `type`(value: String): Spacer = copy(attributes = attributes + ("type" -> value)).asInstanceOf[Spacer]
   /**
    * This attribute can be used for defining size of spacer in pixels when type is 
 <code>horizontal</code> or 
 <code>vertical</code>.
    */
   def size: scala.Option[String] = attributes.get("size").asInstanceOf[scala.Option[String]]
-  def size(value: String): Spacer = copy(attributes = attributes + ("size" -> value.toString)).asInstanceOf[Spacer]
+  def size(value: String): Spacer = copy(attributes = attributes + ("size" -> value)).asInstanceOf[Spacer]
   /**
    * This attribute can be used for defining width of spacer in pixels when type is 
 <code>block</code>.
    */
   def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
-  def width(value: String): Spacer = copy(attributes = attributes + ("width" -> value.toString)).asInstanceOf[Spacer]
+  def width(value: String): Spacer = copy(attributes = attributes + ("width" -> value)).asInstanceOf[Spacer]
   /**
    * This attribute can be used for defining height of spacer in pixels when type is 
 <code>block</code>.
    */
   def height: scala.Option[String] = attributes.get("height").asInstanceOf[scala.Option[String]]
-  def height(value: String): Spacer = copy(attributes = attributes + ("height" -> value.toString)).asInstanceOf[Spacer]
+  def height(value: String): Spacer = copy(attributes = attributes + ("height" -> value)).asInstanceOf[Spacer]
   /**
    * This attribute determines alignment of spacer. Possible values are 
 <code>left</code>, 
@@ -42,5 +42,5 @@ case class Spacer(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <code>center</code>.
    */
   def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
-  def align(value: String): Spacer = copy(attributes = attributes + ("align" -> value.toString)).asInstanceOf[Spacer]
+  def align(value: String): Spacer = copy(attributes = attributes + ("align" -> value)).asInstanceOf[Spacer]
 }

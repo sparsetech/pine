@@ -13,35 +13,35 @@ case class Frame(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
    * This attribute is specify document which will be displayed by frame.
    */
   def src: scala.Option[String] = attributes.get("src").asInstanceOf[scala.Option[String]]
-  def src(value: String): Frame = copy(attributes = attributes + ("src" -> value.toString)).asInstanceOf[Frame]
+  def src(value: String): Frame = copy(attributes = attributes + ("src" -> value)).asInstanceOf[Frame]
   /**
    * This attribute is used to labeling frames. Without labeling all links will open in the frame that they are in.
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
-  def name(value: String): Frame = copy(attributes = attributes + ("name" -> value.toString)).asInstanceOf[Frame]
+  def name(value: String): Frame = copy(attributes = attributes + ("name" -> value)).asInstanceOf[Frame]
   /**
    * This attribute avoid resizing of frames by users.
    */
   def noresize: scala.Option[String] = attributes.get("noresize").asInstanceOf[scala.Option[String]]
-  def noresize(value: String): Frame = copy(attributes = attributes + ("noresize" -> value.toString)).asInstanceOf[Frame]
+  def noresize(value: String): Frame = copy(attributes = attributes + ("noresize" -> value)).asInstanceOf[Frame]
   /**
    * This attribute defines existence of scrollbar. If this attribute is not used, browser put a scrollbar when necessary. There are two choices; "yes" for showing a scrollbar even when it is not necessary and "no" for do not showing a scrollbar even when it is necessary.
    */
   def scrolling: scala.Option[String] = attributes.get("scrolling").asInstanceOf[scala.Option[String]]
-  def scrolling(value: String): Frame = copy(attributes = attributes + ("scrolling" -> value.toString)).asInstanceOf[Frame]
+  def scrolling(value: String): Frame = copy(attributes = attributes + ("scrolling" -> value)).asInstanceOf[Frame]
   /**
    * This attribute defines how tall the margin between frames will be.
    */
   def marginheight: scala.Option[String] = attributes.get("marginheight").asInstanceOf[scala.Option[String]]
-  def marginheight(value: String): Frame = copy(attributes = attributes + ("marginheight" -> value.toString)).asInstanceOf[Frame]
+  def marginheight(value: String): Frame = copy(attributes = attributes + ("marginheight" -> value)).asInstanceOf[Frame]
   /**
    * This attribute defines how wide the margin between frames will be.
    */
   def marginwidth: scala.Option[String] = attributes.get("marginwidth").asInstanceOf[scala.Option[String]]
-  def marginwidth(value: String): Frame = copy(attributes = attributes + ("marginwidth" -> value.toString)).asInstanceOf[Frame]
+  def marginwidth(value: String): Frame = copy(attributes = attributes + ("marginwidth" -> value)).asInstanceOf[Frame]
   /**
    * This attribute allows you to put borders for frames.
    */
   def frameborder: scala.Option[String] = attributes.get("frameborder").asInstanceOf[scala.Option[String]]
-  def frameborder(value: String): Frame = copy(attributes = attributes + ("frameborder" -> value.toString)).asInstanceOf[Frame]
+  def frameborder(value: String): Frame = copy(attributes = attributes + ("frameborder" -> value)).asInstanceOf[Frame]
 }

@@ -13,5 +13,5 @@ case class Details(attributes: Predef.Map[String, Any] = Predef.Map.empty, child
 <code>false</code> and so details will be hidden.
    */
   def open: scala.Option[String] = attributes.get("open").asInstanceOf[scala.Option[String]]
-  def open(value: String): Details = copy(attributes = attributes + ("open" -> value.toString)).asInstanceOf[Details]
+  def open(value: String): Details = copy(attributes = attributes + ("open" -> value)).asInstanceOf[Details]
 }

@@ -32,5 +32,5 @@ case class Caption(attributes: Predef.Map[String, Any] = Predef.Map.empty, child
 </div>
    */
   def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
-  def align(value: String): Caption = copy(attributes = attributes + ("align" -> value.toString)).asInstanceOf[Caption]
+  def align(value: String): Caption = copy(attributes = attributes + ("align" -> value)).asInstanceOf[Caption]
 }

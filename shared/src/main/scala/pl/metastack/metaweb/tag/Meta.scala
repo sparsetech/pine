@@ -36,14 +36,14 @@ case class Meta(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </div>
    */
   def charset: scala.Option[String] = attributes.get("charset").asInstanceOf[scala.Option[String]]
-  def charset(value: String): Meta = copy(attributes = attributes + ("charset" -> value.toString)).asInstanceOf[Meta]
+  def charset(value: String): Meta = copy(attributes = attributes + ("charset" -> value)).asInstanceOf[Meta]
   /**
    * This attribute gives the value associated with the 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-http-equiv">http-equiv</a></code> or 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-name">name</a></code> attribute, depending of the context.
    */
   def content: scala.Option[String] = attributes.get("content").asInstanceOf[scala.Option[String]]
-  def content(value: String): Meta = copy(attributes = attributes + ("content" -> value.toString)).asInstanceOf[Meta]
+  def content(value: String): Meta = copy(attributes = attributes + ("content" -> value)).asInstanceOf[Meta]
   /**
    * This enumerated attribute defines the pragma that can alter servers and user-agents behavior. The value of the pragma is defined using the 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-content">content</a></code> and can be one of the following: 
@@ -128,7 +128,7 @@ case class Meta(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </dl>
    */
   def `http-equiv`: scala.Option[String] = attributes.get("http-equiv").asInstanceOf[scala.Option[String]]
-  def `http-equiv`(value: String): Meta = copy(attributes = attributes + ("http-equiv" -> value.toString)).asInstanceOf[Meta]
+  def `http-equiv`(value: String): Meta = copy(attributes = attributes + ("http-equiv" -> value)).asInstanceOf[Meta]
   /**
    * This attribute defines the name of document-level metadata. It should not be set if one of the attributes 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-itemprop">itemprop</a></code>, 
@@ -348,7 +348,7 @@ case class Meta(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </ul>
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
-  def name(value: String): Meta = copy(attributes = attributes + ("name" -> value.toString)).asInstanceOf[Meta]
+  def name(value: String): Meta = copy(attributes = attributes + ("name" -> value)).asInstanceOf[Meta]
   /**
    * This attribute defines the scheme in which the metadata is described. A scheme is a context leading to the correct interpretations of the 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-content">content</a></code> value, like a format. 
@@ -357,5 +357,5 @@ case class Meta(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </div>
    */
   def scheme: scala.Option[String] = attributes.get("scheme").asInstanceOf[scala.Option[String]]
-  def scheme(value: String): Meta = copy(attributes = attributes + ("scheme" -> value.toString)).asInstanceOf[Meta]
+  def scheme(value: String): Meta = copy(attributes = attributes + ("scheme" -> value)).asInstanceOf[Meta]
 }

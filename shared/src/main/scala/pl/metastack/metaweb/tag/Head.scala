@@ -12,5 +12,5 @@ case class Head(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
    * The URIs of one or more metadata profiles, separated by white space.
    */
   def profile: scala.Option[String] = attributes.get("profile").asInstanceOf[scala.Option[String]]
-  def profile(value: String): Head = copy(attributes = attributes + ("profile" -> value.toString)).asInstanceOf[Head]
+  def profile(value: String): Head = copy(attributes = attributes + ("profile" -> value)).asInstanceOf[Head]
 }

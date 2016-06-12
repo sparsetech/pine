@@ -28,7 +28,7 @@ case class Ul(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def compact: scala.Option[String] = attributes.get("compact").asInstanceOf[scala.Option[String]]
-  def compact(value: String): Ul = copy(attributes = attributes + ("compact" -> value.toString)).asInstanceOf[Ul]
+  def compact(value: String): Ul = copy(attributes = attributes + ("compact" -> value)).asInstanceOf[Ul]
   /**
    * Used to set the bullet style for the list. The values defined under 
 <a href="/en/HTML3.2" title="en/HTML3.2">HTML3.2</a> and the transitional version of 
@@ -48,5 +48,5 @@ case class Ul(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
-  def `type`(value: String): Ul = copy(attributes = attributes + ("type" -> value.toString)).asInstanceOf[Ul]
+  def `type`(value: String): Ul = copy(attributes = attributes + ("type" -> value)).asInstanceOf[Ul]
 }

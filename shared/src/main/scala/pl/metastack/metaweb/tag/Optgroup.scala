@@ -20,5 +20,5 @@ case class Optgroup(attributes: Predef.Map[String, Any] = Predef.Map.empty, chil
    * The name of the group of options, which the browser can use when labeling the options in the user interface. This attribute is mandatory if this element is used.
    */
   def label: scala.Option[String] = attributes.get("label").asInstanceOf[scala.Option[String]]
-  def label(value: String): Optgroup = copy(attributes = attributes + ("label" -> value.toString)).asInstanceOf[Optgroup]
+  def label(value: String): Optgroup = copy(attributes = attributes + ("label" -> value)).asInstanceOf[Optgroup]
 }

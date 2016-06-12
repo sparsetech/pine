@@ -23,7 +23,7 @@ case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=654072" class="external" title="if disabled state is changed with javascript, the normal state doesn't return after refreshing the page">bug&nbsp;654072</a>.
    */
   def autocomplete: scala.Option[String] = attributes.get("autocomplete").asInstanceOf[scala.Option[String]]
-  def autocomplete(value: String): Button = copy(attributes = attributes + ("autocomplete" -> value.toString)).asInstanceOf[Button]
+  def autocomplete(value: String): Button = copy(attributes = attributes + ("autocomplete" -> value)).asInstanceOf[Button]
   /**
    * <p>This Boolean attribute indicates that the user cannot interact with the button. If this attribute is not specified, the button inherits its setting from the containing element, for example <a href="/en-US/docs/Web/HTML/Element/fieldset" title="The HTML <fieldset> element is used to group several controls as well as labels (<label>) within a web form."><code>&lt;fieldset&gt;</code></a>; if there is no containing element with the <strong>disabled</strong> attribute set, then the button is enabled.</p> 
 <p>Firefox will, unlike other browsers, by default, <a href="http://stackoverflow.com/questions/5985839/bug-with-firefox-disabled-attribute-of-input-not-resetting-when-refreshing" class="external">persist the dynamic disabled state</a> of a <a href="/en-US/docs/Web/HTML/Element/button" title="The HTML <button> Element represents a clickable button."><code>&lt;button&gt;</code></a> across page loads. Use the <code><a href="/en-US/docs/Web/HTML/Element/button#attr-autocomplete">autocomplete</a></code> attribute to control this feature.</p>
@@ -40,13 +40,13 @@ case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <a href="/en-US/docs/Web/HTML/Element/form" title="The HTML <form> element represents a document section that contains interactive controls to submit information to a web server."><code>&lt;form&gt;</code></a> elements.
    */
   def form: scala.Option[String] = attributes.get("form").asInstanceOf[scala.Option[String]]
-  def form(value: String): Button = copy(attributes = attributes + ("form" -> value.toString)).asInstanceOf[Button]
+  def form(value: String): Button = copy(attributes = attributes + ("form" -> value)).asInstanceOf[Button]
   /**
    * The URI of a program that processes the information submitted by the button. If specified, it overrides the 
 <code><a href="/en-US/docs/Web/HTML/Element/form#attr-action">action</a></code> attribute of the button's form owner.
    */
   def formaction: scala.Option[String] = attributes.get("formaction").asInstanceOf[scala.Option[String]]
-  def formaction(value: String): Button = copy(attributes = attributes + ("formaction" -> value.toString)).asInstanceOf[Button]
+  def formaction(value: String): Button = copy(attributes = attributes + ("formaction" -> value)).asInstanceOf[Button]
   /**
    * If the button is a submit button, this attribute specifies the type of content that is used to submit the form to the server. Possible values are: 
 <ul> 
@@ -57,7 +57,7 @@ case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <p>If this attribute is specified, it overrides the <code><a href="/en-US/docs/Web/HTML/Element/form#attr-enctype">enctype</a></code> attribute of the button's form owner.</p>
    */
   def formenctype: scala.Option[String] = attributes.get("formenctype").asInstanceOf[scala.Option[String]]
-  def formenctype(value: String): Button = copy(attributes = attributes + ("formenctype" -> value.toString)).asInstanceOf[Button]
+  def formenctype(value: String): Button = copy(attributes = attributes + ("formenctype" -> value)).asInstanceOf[Button]
   /**
    * If the button is a submit button, this attribute specifies the HTTP method that the browser uses to submit the form. Possible values are: 
 <ul> 
@@ -67,13 +67,13 @@ case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <p>If specified, this attribute overrides the <code><a href="/en-US/docs/Web/HTML/Element/form#attr-method">method</a></code> attribute of the button's form owner.</p>
    */
   def formmethod: scala.Option[String] = attributes.get("formmethod").asInstanceOf[scala.Option[String]]
-  def formmethod(value: String): Button = copy(attributes = attributes + ("formmethod" -> value.toString)).asInstanceOf[Button]
+  def formmethod(value: String): Button = copy(attributes = attributes + ("formmethod" -> value)).asInstanceOf[Button]
   /**
    * If the button is a submit button, this Boolean attribute specifies that the form is not to be validated when it is submitted. If this attribute is specified, it overrides the 
 <code><a href="/en-US/docs/Web/HTML/Element/form#attr-novalidate">novalidate</a></code> attribute of the button's form owner.
    */
   def formnovalidate: scala.Option[String] = attributes.get("formnovalidate").asInstanceOf[scala.Option[String]]
-  def formnovalidate(value: String): Button = copy(attributes = attributes + ("formnovalidate" -> value.toString)).asInstanceOf[Button]
+  def formnovalidate(value: String): Button = copy(attributes = attributes + ("formnovalidate" -> value)).asInstanceOf[Button]
   /**
    * If the button is a submit button, this attribute is a name or keyword indicating where to display the response that is received after submitting the form. This is a name of, or keyword for, a 
 <em>browsing context</em> (for example, tab, window, or inline frame). If this attribute is specified, it overrides the 
@@ -86,12 +86,12 @@ case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 </ul>
    */
   def formtarget: scala.Option[String] = attributes.get("formtarget").asInstanceOf[scala.Option[String]]
-  def formtarget(value: String): Button = copy(attributes = attributes + ("formtarget" -> value.toString)).asInstanceOf[Button]
+  def formtarget(value: String): Button = copy(attributes = attributes + ("formtarget" -> value)).asInstanceOf[Button]
   /**
    * The name of the button, which is submitted with the form data.
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
-  def name(value: String): Button = copy(attributes = attributes + ("name" -> value.toString)).asInstanceOf[Button]
+  def name(value: String): Button = copy(attributes = attributes + ("name" -> value)).asInstanceOf[Button]
   /**
    * The type of the button. Possible values are: 
 <ul> 
@@ -101,10 +101,10 @@ case class Button(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 </ul>
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
-  def `type`(value: String): Button = copy(attributes = attributes + ("type" -> value.toString)).asInstanceOf[Button]
+  def `type`(value: String): Button = copy(attributes = attributes + ("type" -> value)).asInstanceOf[Button]
   /**
    * The initial value of the button.
    */
   def value: scala.Option[String] = attributes.get("value").asInstanceOf[scala.Option[String]]
-  def value(value: String): Button = copy(attributes = attributes + ("value" -> value.toString)).asInstanceOf[Button]
+  def value(value: String): Button = copy(attributes = attributes + ("value" -> value)).asInstanceOf[Button]
 }

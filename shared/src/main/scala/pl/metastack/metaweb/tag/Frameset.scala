@@ -14,10 +14,10 @@ case class Frameset(attributes: Predef.Map[String, Any] = Predef.Map.empty, chil
    * This attribute specifies the number and size of horizontal spaces in a frameset.
    */
   def cols: scala.Option[String] = attributes.get("cols").asInstanceOf[scala.Option[String]]
-  def cols(value: String): Frameset = copy(attributes = attributes + ("cols" -> value.toString)).asInstanceOf[Frameset]
+  def cols(value: String): Frameset = copy(attributes = attributes + ("cols" -> value)).asInstanceOf[Frameset]
   /**
    * This attribute specifies the number and size of vertical spaces in a frameset.
    */
   def rows: scala.Option[String] = attributes.get("rows").asInstanceOf[scala.Option[String]]
-  def rows(value: String): Frameset = copy(attributes = attributes + ("rows" -> value.toString)).asInstanceOf[Frameset]
+  def rows(value: String): Frameset = copy(attributes = attributes + ("rows" -> value)).asInstanceOf[Frameset]
 }

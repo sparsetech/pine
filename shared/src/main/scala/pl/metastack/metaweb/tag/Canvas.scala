@@ -31,15 +31,15 @@ case class Canvas(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
    * The height of the coordinate space in CSS pixels. Defaults to 150.
    */
   def height: scala.Option[String] = attributes.get("height").asInstanceOf[scala.Option[String]]
-  def height(value: String): Canvas = copy(attributes = attributes + ("height" -> value.toString)).asInstanceOf[Canvas]
+  def height(value: String): Canvas = copy(attributes = attributes + ("height" -> value)).asInstanceOf[Canvas]
   /**
    * Lets the canvas know whether or not translucency will be a factor. If the canvas knows there's no translucency, painting performance can be optimized.
    */
   def `moz-opaque`: scala.Option[String] = attributes.get("moz-opaque").asInstanceOf[scala.Option[String]]
-  def `moz-opaque`(value: String): Canvas = copy(attributes = attributes + ("moz-opaque" -> value.toString)).asInstanceOf[Canvas]
+  def `moz-opaque`(value: String): Canvas = copy(attributes = attributes + ("moz-opaque" -> value)).asInstanceOf[Canvas]
   /**
    * The width of the coordinate space in CSS pixels. Defaults to 300.
    */
   def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
-  def width(value: String): Canvas = copy(attributes = attributes + ("width" -> value.toString)).asInstanceOf[Canvas]
+  def width(value: String): Canvas = copy(attributes = attributes + ("width" -> value)).asInstanceOf[Canvas]
 }

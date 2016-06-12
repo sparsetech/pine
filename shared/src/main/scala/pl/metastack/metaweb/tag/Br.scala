@@ -16,5 +16,5 @@ case class Br(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def clear: scala.Option[String] = attributes.get("clear").asInstanceOf[scala.Option[String]]
-  def clear(value: String): Br = copy(attributes = attributes + ("clear" -> value.toString)).asInstanceOf[Br]
+  def clear(value: String): Br = copy(attributes = attributes + ("clear" -> value)).asInstanceOf[Br]
 }

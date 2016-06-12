@@ -24,5 +24,5 @@ case class Dir(attributes: Predef.Map[String, Any] = Predef.Map.empty, children:
 </div>
    */
   def compact: scala.Option[String] = attributes.get("compact").asInstanceOf[scala.Option[String]]
-  def compact(value: String): Dir = copy(attributes = attributes + ("compact" -> value.toString)).asInstanceOf[Dir]
+  def compact(value: String): Dir = copy(attributes = attributes + ("compact" -> value)).asInstanceOf[Dir]
 }

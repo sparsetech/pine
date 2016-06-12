@@ -28,7 +28,7 @@ case class Tbody(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
-  def align(value: String): Tbody = copy(attributes = attributes + ("align" -> value.toString)).asInstanceOf[Tbody]
+  def align(value: String): Tbody = copy(attributes = attributes + ("align" -> value)).asInstanceOf[Tbody]
   /**
    * This attribute defines the background color of each cell of the column. It is one of the 6-digit hexadecimal code as defined in 
 <a class="external" href="http://www.w3.org/Graphics/Color/sRGB" title="http://www.w3.org/Graphics/Color/sRGB">sRGB</a>, prefixed by a '#'. One of the sixteen predefined color strings may be used: 
@@ -96,7 +96,7 @@ case class Tbody(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def bgcolor: scala.Option[String] = attributes.get("bgcolor").asInstanceOf[scala.Option[String]]
-  def bgcolor(value: String): Tbody = copy(attributes = attributes + ("bgcolor" -> value.toString)).asInstanceOf[Tbody]
+  def bgcolor(value: String): Tbody = copy(attributes = attributes + ("bgcolor" -> value)).asInstanceOf[Tbody]
   /**
    * This attribute is used to set the character to align the cells in a column on. Typical values for this include a period (.) when attempting to align numbers or monetary values. If 
 <code><a href="/en-US/docs/Web/HTML/Element/tbody#attr-align">align</a></code> is not set to 
@@ -110,7 +110,7 @@ case class Tbody(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def char: scala.Option[String] = attributes.get("char").asInstanceOf[scala.Option[String]]
-  def char(value: String): Tbody = copy(attributes = attributes + ("char" -> value.toString)).asInstanceOf[Tbody]
+  def char(value: String): Tbody = copy(attributes = attributes + ("char" -> value)).asInstanceOf[Tbody]
   /**
    * This attribute is used to indicate the number of characters to offset the column data from the alignment characters specified by the 
 <strong>char</strong> attribute. 
@@ -119,7 +119,7 @@ case class Tbody(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def charoff: scala.Option[String] = attributes.get("charoff").asInstanceOf[scala.Option[String]]
-  def charoff(value: String): Tbody = copy(attributes = attributes + ("charoff" -> value.toString)).asInstanceOf[Tbody]
+  def charoff(value: String): Tbody = copy(attributes = attributes + ("charoff" -> value)).asInstanceOf[Tbody]
   /**
    * This attribute specifies the vertical alignment of the text within each row of cells of the table header. Possible values for this attribute are: 
 <ul> 
@@ -134,5 +134,5 @@ case class Tbody(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def valign: scala.Option[String] = attributes.get("valign").asInstanceOf[scala.Option[String]]
-  def valign(value: String): Tbody = copy(attributes = attributes + ("valign" -> value.toString)).asInstanceOf[Tbody]
+  def valign(value: String): Tbody = copy(attributes = attributes + ("valign" -> value)).asInstanceOf[Tbody]
 }

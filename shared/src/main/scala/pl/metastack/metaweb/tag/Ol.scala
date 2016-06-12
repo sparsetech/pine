@@ -28,12 +28,12 @@ case class Ol(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def compact: scala.Option[String] = attributes.get("compact").asInstanceOf[scala.Option[String]]
-  def compact(value: String): Ol = copy(attributes = attributes + ("compact" -> value.toString)).asInstanceOf[Ol]
+  def compact(value: String): Ol = copy(attributes = attributes + ("compact" -> value)).asInstanceOf[Ol]
   /**
    * This Boolean attribute specifies that the items of the item are specified in the reverse order, i.e. that the least important one is listed first.
    */
   def reversed: scala.Option[String] = attributes.get("reversed").asInstanceOf[scala.Option[String]]
-  def reversed(value: String): Ol = copy(attributes = attributes + ("reversed" -> value.toString)).asInstanceOf[Ol]
+  def reversed(value: String): Ol = copy(attributes = attributes + ("reversed" -> value)).asInstanceOf[Ol]
   /**
    * This integer attribute specifies the start value for numbering the individual list items. Although the ordering type of list elements might be Roman numerals, such as XXXI, or letters, the value of start is always represented as a number. To start numbering elements from the letter "C", use 
 <code>&lt;ol start="3"&gt;</code>. 
@@ -42,7 +42,7 @@ case class Ol(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def start: scala.Option[String] = attributes.get("start").asInstanceOf[scala.Option[String]]
-  def start(value: String): Ol = copy(attributes = attributes + ("start" -> value.toString)).asInstanceOf[Ol]
+  def start(value: String): Ol = copy(attributes = attributes + ("start" -> value)).asInstanceOf[Ol]
   /**
    * Indicates the numbering type: 
 <ul> 
@@ -59,5 +59,5 @@ case class Ol(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
-  def `type`(value: String): Ol = copy(attributes = attributes + ("type" -> value.toString)).asInstanceOf[Ol]
+  def `type`(value: String): Ol = copy(attributes = attributes + ("type" -> value)).asInstanceOf[Ol]
 }

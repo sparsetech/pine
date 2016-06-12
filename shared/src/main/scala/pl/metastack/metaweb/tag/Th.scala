@@ -16,7 +16,7 @@ case class Th(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def abbr: scala.Option[String] = attributes.get("abbr").asInstanceOf[scala.Option[String]]
-  def abbr(value: String): Th = copy(attributes = attributes + ("abbr" -> value.toString)).asInstanceOf[Th]
+  def abbr(value: String): Th = copy(attributes = attributes + ("abbr" -> value)).asInstanceOf[Th]
   /**
    * This enumerated attribute specifies how horizontal alignment of each cell content will be handled. Possible values are: 
 <ul> 
@@ -36,7 +36,7 @@ case class Th(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
-  def align(value: String): Th = copy(attributes = attributes + ("align" -> value.toString)).asInstanceOf[Th]
+  def align(value: String): Th = copy(attributes = attributes + ("align" -> value)).asInstanceOf[Th]
   /**
    * This attribute contains a list of space-separated strings. Each string is the id of a group of cells that this header apply to. 
 <div class="note">
@@ -45,7 +45,7 @@ case class Th(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def axis: scala.Option[String] = attributes.get("axis").asInstanceOf[scala.Option[String]]
-  def axis(value: String): Th = copy(attributes = attributes + ("axis" -> value.toString)).asInstanceOf[Th]
+  def axis(value: String): Th = copy(attributes = attributes + ("axis" -> value)).asInstanceOf[Th]
   /**
    * This attribute defines the background color of each cell of the column. It is one of the 6-digit hexadecimal code as defined in 
 <a class="external" href="http://www.w3.org/Graphics/Color/sRGB" title="http://www.w3.org/Graphics/Color/sRGB">sRGB</a>, prefixed by a '#'. One of the sixteen predefined color strings may be used: 
@@ -111,7 +111,7 @@ case class Th(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def bgcolor: scala.Option[String] = attributes.get("bgcolor").asInstanceOf[scala.Option[String]]
-  def bgcolor(value: String): Th = copy(attributes = attributes + ("bgcolor" -> value.toString)).asInstanceOf[Th]
+  def bgcolor(value: String): Th = copy(attributes = attributes + ("bgcolor" -> value)).asInstanceOf[Th]
   /**
    * This attribute is used to set the character to align the cells in a column on. Typical values for this include a period (.) when attempting to align numbers or monetary values. If 
 <code><a href="/en-US/docs/Web/HTML/Element/th#attr-align">align</a></code> is not set to 
@@ -125,7 +125,7 @@ case class Th(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def char: scala.Option[String] = attributes.get("char").asInstanceOf[scala.Option[String]]
-  def char(value: String): Th = copy(attributes = attributes + ("char" -> value.toString)).asInstanceOf[Th]
+  def char(value: String): Th = copy(attributes = attributes + ("char" -> value)).asInstanceOf[Th]
   /**
    * This attribute is used to indicate the number of characters to offset the column data from the alignment characters specified by the 
 <strong>char</strong> attribute. 
@@ -134,7 +134,7 @@ case class Th(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def charoff: scala.Option[String] = attributes.get("charoff").asInstanceOf[scala.Option[String]]
-  def charoff(value: String): Th = copy(attributes = attributes + ("charoff" -> value.toString)).asInstanceOf[Th]
+  def charoff(value: String): Th = copy(attributes = attributes + ("charoff" -> value)).asInstanceOf[Th]
   /**
    * This attribute contains a non-negative integer value that indicates on how many columns does the cell extend. Its default value is 
 <code>1</code>; if its value is set to 
@@ -142,14 +142,14 @@ case class Th(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 <a href="/en-US/docs/Web/HTML/Element/colgroup" title="The&nbsp;HTML Table Column Group Element&nbsp;(<colgroup>) defines a group of columns within a table."><code>&lt;colgroup&gt;</code></a>, eventually implicitly defined, the cell belongs to. Values higher than 1000 are clipped down to 1000.
    */
   def colspan: scala.Option[String] = attributes.get("colspan").asInstanceOf[scala.Option[String]]
-  def colspan(value: String): Th = copy(attributes = attributes + ("colspan" -> value.toString)).asInstanceOf[Th]
+  def colspan(value: String): Th = copy(attributes = attributes + ("colspan" -> value)).asInstanceOf[Th]
   /**
    * This attributes a list of space-separated strings, each corresponding to the 
 <strong>id</strong> attribute of the 
 <a href="/en-US/docs/Web/HTML/Element/th" title="Editorial review completed."><code>&lt;th&gt;</code></a> elements that applies to this element.
    */
   def headers: scala.Option[String] = attributes.get("headers").asInstanceOf[scala.Option[String]]
-  def headers(value: String): Th = copy(attributes = attributes + ("headers" -> value.toString)).asInstanceOf[Th]
+  def headers(value: String): Th = copy(attributes = attributes + ("headers" -> value)).asInstanceOf[Th]
   /**
    * This attribute contains a non-negative integer value that indicates on how many rows does the cell extend. Its default value is 
 <code>1</code>; if its value is set to 
@@ -159,7 +159,7 @@ case class Th(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 <a href="/en-US/docs/Web/HTML/Element/tfoot" title="The HTML Table Foot Element (<tfoot>) defines a set of rows summarizing the columns of the table."><code>&lt;tfoot&gt;</code></a>, eventually implicitly defined) the cell belongs to. Values higher than 65534 are clipped down to 65534.
    */
   def rowspan: scala.Option[String] = attributes.get("rowspan").asInstanceOf[scala.Option[String]]
-  def rowspan(value: String): Th = copy(attributes = attributes + ("rowspan" -> value.toString)).asInstanceOf[Th]
+  def rowspan(value: String): Th = copy(attributes = attributes + ("rowspan" -> value)).asInstanceOf[Th]
   /**
    * This enumerated attribute defines the cells that the header defined in this 
 <a href="/en-US/docs/Web/HTML/Element/th" title="Editorial review completed."><code>&lt;th&gt;</code></a> element relates to. It may have the following values: 
@@ -172,7 +172,7 @@ case class Th(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </ul>
    */
   def scope: scala.Option[String] = attributes.get("scope").asInstanceOf[scala.Option[String]]
-  def scope(value: String): Th = copy(attributes = attributes + ("scope" -> value.toString)).asInstanceOf[Th]
+  def scope(value: String): Th = copy(attributes = attributes + ("scope" -> value)).asInstanceOf[Th]
   /**
    * This attribute specifies the vertical alignment of the text within each row of cells of the table header. Possible values for this attribute are: 
 <ul> 
@@ -187,7 +187,7 @@ case class Th(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def valign: scala.Option[String] = attributes.get("valign").asInstanceOf[scala.Option[String]]
-  def valign(value: String): Th = copy(attributes = attributes + ("valign" -> value.toString)).asInstanceOf[Th]
+  def valign(value: String): Th = copy(attributes = attributes + ("valign" -> value)).asInstanceOf[Th]
   /**
    * This attribute is used to define a recommended cell width. &nbsp;Properties&nbsp;
 <a href="/en-US/docs/Web/API/HTMLTableElement/cellSpacing">cellspacing</a> and 
@@ -199,5 +199,5 @@ case class Th(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
-  def width(value: String): Th = copy(attributes = attributes + ("width" -> value.toString)).asInstanceOf[Th]
+  def width(value: String): Th = copy(attributes = attributes + ("width" -> value)).asInstanceOf[Th]
 }

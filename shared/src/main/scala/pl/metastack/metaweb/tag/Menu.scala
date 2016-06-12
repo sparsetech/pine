@@ -32,7 +32,7 @@ case class Menu(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <em>context menu</em> state.
    */
   def label: scala.Option[String] = attributes.get("label").asInstanceOf[scala.Option[String]]
-  def label(value: String): Menu = copy(attributes = attributes + ("label" -> value.toString)).asInstanceOf[Menu]
+  def label(value: String): Menu = copy(attributes = attributes + ("label" -> value)).asInstanceOf[Menu]
   /**
    * This attribute indicates the kind of menu being declared, and can be one of two values. 
 <ul> 
@@ -41,5 +41,5 @@ case class Menu(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </ul>
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
-  def `type`(value: String): Menu = copy(attributes = attributes + ("type" -> value.toString)).asInstanceOf[Menu]
+  def `type`(value: String): Menu = copy(attributes = attributes + ("type" -> value)).asInstanceOf[Menu]
 }

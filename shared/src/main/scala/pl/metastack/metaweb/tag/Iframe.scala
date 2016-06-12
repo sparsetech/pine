@@ -12,41 +12,41 @@ case class Iframe(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
    * The alignment of this element with respect to the surrounding context.
    */
   def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
-  def align(value: String): Iframe = copy(attributes = attributes + ("align" -> value.toString)).asInstanceOf[Iframe]
+  def align(value: String): Iframe = copy(attributes = attributes + ("align" -> value)).asInstanceOf[Iframe]
   /**
    * This attribute can be set to 
 <code>true</code> if the frame is allowed to be placed into full screen mode by calling its 
 <a href="/en-US/docs/Web/API/Element/mozRequestFullScreen" title="{{ APIRef }}"><code>element.mozRequestFullScreen()</code></a> method. If this isn't set, the element can't be placed into full screen mode.
    */
   def allowfullscreen: scala.Option[String] = attributes.get("allowfullscreen").asInstanceOf[scala.Option[String]]
-  def allowfullscreen(value: String): Iframe = copy(attributes = attributes + ("allowfullscreen" -> value.toString)).asInstanceOf[Iframe]
+  def allowfullscreen(value: String): Iframe = copy(attributes = attributes + ("allowfullscreen" -> value)).asInstanceOf[Iframe]
   /**
    * The value 1 (the default) tells the browser to draw a border between this frame and every other frame. The value 0 tells the browser not to draw a border between this frame and other frames.
    */
   def frameborder: scala.Option[String] = attributes.get("frameborder").asInstanceOf[scala.Option[String]]
-  def frameborder(value: String): Iframe = copy(attributes = attributes + ("frameborder" -> value.toString)).asInstanceOf[Iframe]
+  def frameborder(value: String): Iframe = copy(attributes = attributes + ("frameborder" -> value)).asInstanceOf[Iframe]
   /**
    * Indicates the height of the frame 
 <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML/HTML5">HTML5</a></span> in CSS pixels, or 
 <span class="inlineIndicator htmlVer htmlVerInline">HTML 4.01</span> in pixels or as a percentage.
    */
   def height: scala.Option[String] = attributes.get("height").asInstanceOf[scala.Option[String]]
-  def height(value: String): Iframe = copy(attributes = attributes + ("height" -> value.toString)).asInstanceOf[Iframe]
+  def height(value: String): Iframe = copy(attributes = attributes + ("height" -> value)).asInstanceOf[Iframe]
   /**
    * A URI of a long description of the frame. Due to widespread misuse, this is not helpful for non-visual browsers.
    */
   def longdesc: scala.Option[String] = attributes.get("longdesc").asInstanceOf[scala.Option[String]]
-  def longdesc(value: String): Iframe = copy(attributes = attributes + ("longdesc" -> value.toString)).asInstanceOf[Iframe]
+  def longdesc(value: String): Iframe = copy(attributes = attributes + ("longdesc" -> value)).asInstanceOf[Iframe]
   /**
    * The amount of space in pixels between the frame's content and its top and bottom margins.
    */
   def marginheight: scala.Option[String] = attributes.get("marginheight").asInstanceOf[scala.Option[String]]
-  def marginheight(value: String): Iframe = copy(attributes = attributes + ("marginheight" -> value.toString)).asInstanceOf[Iframe]
+  def marginheight(value: String): Iframe = copy(attributes = attributes + ("marginheight" -> value)).asInstanceOf[Iframe]
   /**
    * The amount of space in pixels between the frame's content and its left and right margins.
    */
   def marginwidth: scala.Option[String] = attributes.get("marginwidth").asInstanceOf[scala.Option[String]]
-  def marginwidth(value: String): Iframe = copy(attributes = attributes + ("marginwidth" -> value.toString)).asInstanceOf[Iframe]
+  def marginwidth(value: String): Iframe = copy(attributes = attributes + ("marginwidth" -> value)).asInstanceOf[Iframe]
   /**
    * Use 
 <code><strong>allowfullscreen</strong></code> instead. In Gecko 9.0 or later, this attribute can be set to 
@@ -54,7 +54,7 @@ case class Iframe(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <a href="/en-US/docs/Web/API/Element/mozRequestFullScreen" title="{{ APIRef }}"><code>element.mozRequestFullScreen()</code></a> method. If this isn't set, the element can't be placed into full screen mode.
    */
   def mozallowfullscreen: scala.Option[String] = attributes.get("mozallowfullscreen").asInstanceOf[scala.Option[String]]
-  def mozallowfullscreen(value: String): Iframe = copy(attributes = attributes + ("mozallowfullscreen" -> value.toString)).asInstanceOf[Iframe]
+  def mozallowfullscreen(value: String): Iframe = copy(attributes = attributes + ("mozallowfullscreen" -> value)).asInstanceOf[Iframe]
   /**
    * Use 
 <code><strong>allowfullscreen</strong></code> instead. In Chrome 17 or later (and maybe earlier), this attribute can be set to 
@@ -62,7 +62,7 @@ case class Iframe(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <a href="/en-US/docs/Web/API/Element/webkitRequestFullScreen" class="new" title="The documentation about this has not yet been written; please consider contributing!"><code>element.webkitRequestFullScreen()</code></a> method. If this isn't set, the element can't be placed into full screen mode.
    */
   def webkitallowfullscreen: scala.Option[String] = attributes.get("webkitallowfullscreen").asInstanceOf[scala.Option[String]]
-  def webkitallowfullscreen(value: String): Iframe = copy(attributes = attributes + ("webkitallowfullscreen" -> value.toString)).asInstanceOf[Iframe]
+  def webkitallowfullscreen(value: String): Iframe = copy(attributes = attributes + ("webkitallowfullscreen" -> value)).asInstanceOf[Iframe]
   /**
    * For frames hosting an 
 <a href="/en-US/docs/Apps" title="OpenWebApps">open web app</a>, this specifies the URL of the 
@@ -70,7 +70,7 @@ case class Iframe(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <a href="/en-US/docs/DOM/Using_the_Browser_API" title="DOM/Using_the_Browser_API">Using the Browser API</a> for details. Available in Gecko 13.0 and later.
    */
   def mozapp: scala.Option[String] = attributes.get("mozapp").asInstanceOf[scala.Option[String]]
-  def mozapp(value: String): Iframe = copy(attributes = attributes + ("mozapp" -> value.toString)).asInstanceOf[Iframe]
+  def mozapp(value: String): Iframe = copy(attributes = attributes + ("mozapp" -> value)).asInstanceOf[Iframe]
   /**
    * Indicates that the frame is to appear like a top-level browser window to the embedded content. This means that 
 <a href="/en-US/docs/Web/API/Window/top" title="Returns a reference to the topmost window in the window hierarchy."><code>window.top</code></a>
@@ -82,7 +82,7 @@ case class Iframe(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <a href="/en-US/docs/DOM/Using_the_Browser_API" title="DOM/Using_the_Browser_API">Using the Browser API</a> for details. Available in Gecko 13.0 and later.
    */
   def mozbrowser: scala.Option[String] = attributes.get("mozbrowser").asInstanceOf[scala.Option[String]]
-  def mozbrowser(value: String): Iframe = copy(attributes = attributes + ("mozbrowser" -> value.toString)).asInstanceOf[Iframe]
+  def mozbrowser(value: String): Iframe = copy(attributes = attributes + ("mozbrowser" -> value)).asInstanceOf[Iframe]
   /**
    * A name for the embedded browsing context (or frame). This can be used as the value of the 
 <code><strong>target</strong></code> attribute of an 
@@ -92,12 +92,12 @@ case class Iframe(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <a href="/en-US/docs/Web/HTML/Element/button" title="The HTML <button> Element represents a clickable button."><code>&lt;button&gt;</code></a> element.
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
-  def name(value: String): Iframe = copy(attributes = attributes + ("name" -> value.toString)).asInstanceOf[Iframe]
+  def name(value: String): Iframe = copy(attributes = attributes + ("name" -> value)).asInstanceOf[Iframe]
   /**
    * Load the frame's page in a separate content process.
    */
   def remote: scala.Option[String] = attributes.get("remote").asInstanceOf[scala.Option[String]]
-  def remote(value: String): Iframe = copy(attributes = attributes + ("remote" -> value.toString)).asInstanceOf[Iframe]
+  def remote(value: String): Iframe = copy(attributes = attributes + ("remote" -> value)).asInstanceOf[Iframe]
   /**
    * Enumerated attribute indicating when the browser should provide a scroll bar (or other scrolling device) for the frame: 
 <ul> 
@@ -107,7 +107,7 @@ case class Iframe(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 </ul>
    */
   def scrolling: scala.Option[String] = attributes.get("scrolling").asInstanceOf[scala.Option[String]]
-  def scrolling(value: String): Iframe = copy(attributes = attributes + ("scrolling" -> value.toString)).asInstanceOf[Iframe]
+  def scrolling(value: String): Iframe = copy(attributes = attributes + ("scrolling" -> value)).asInstanceOf[Iframe]
   /**
    * If specified as an empty string, this attribute enables extra restrictions on the content that can appear in the inline frame. The value of the attribute can either be an empty string (all the restrictions are applied), or a space-separated list of tokens that lift particular restrictions. Valid tokens are: 
 <ul> 
@@ -129,7 +129,7 @@ case class Iframe(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 </div>
    */
   def sandbox: scala.Option[String] = attributes.get("sandbox").asInstanceOf[scala.Option[String]]
-  def sandbox(value: String): Iframe = copy(attributes = attributes + ("sandbox" -> value.toString)).asInstanceOf[Iframe]
+  def sandbox(value: String): Iframe = copy(attributes = attributes + ("sandbox" -> value)).asInstanceOf[Iframe]
   /**
    * This 
 <strong>Boolean attribute</strong> indicates that the browser should render the inline frame in a way that makes it appear to be part of the containing document, for example by applying CSS styles that apply to the 
@@ -137,12 +137,12 @@ case class Iframe(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <code>&lt;iframe seamless="seamless"&gt;</code>.
    */
   def seamless: scala.Option[String] = attributes.get("seamless").asInstanceOf[scala.Option[String]]
-  def seamless(value: String): Iframe = copy(attributes = attributes + ("seamless" -> value.toString)).asInstanceOf[Iframe]
+  def seamless(value: String): Iframe = copy(attributes = attributes + ("seamless" -> value)).asInstanceOf[Iframe]
   /**
    * The URL of the page to embed.
    */
   def src: scala.Option[String] = attributes.get("src").asInstanceOf[scala.Option[String]]
-  def src(value: String): Iframe = copy(attributes = attributes + ("src" -> value.toString)).asInstanceOf[Iframe]
+  def src(value: String): Iframe = copy(attributes = attributes + ("src" -> value)).asInstanceOf[Iframe]
   /**
    * The content of the page that the embedded context is to contain. This attribute is expected to be used together with the sandbox and seamless attributes. If a browser supports the 
 <code>srcdoc</code> attribute, it will override the content specified in the 
@@ -151,12 +151,12 @@ case class Iframe(attributes: Predef.Map[String, Any] = Predef.Map.empty, childr
 <code>src</code> attribute instead (if present).
    */
   def srcdoc: scala.Option[String] = attributes.get("srcdoc").asInstanceOf[scala.Option[String]]
-  def srcdoc(value: String): Iframe = copy(attributes = attributes + ("srcdoc" -> value.toString)).asInstanceOf[Iframe]
+  def srcdoc(value: String): Iframe = copy(attributes = attributes + ("srcdoc" -> value)).asInstanceOf[Iframe]
   /**
    * Indicates the width of the frame 
 <span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML/HTML5">HTML5</a></span> in CSS pixels, or 
 <span class="inlineIndicator htmlVer htmlVerInline">HTML 4.01</span> in pixels or as a percentage.
    */
   def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
-  def width(value: String): Iframe = copy(attributes = attributes + ("width" -> value.toString)).asInstanceOf[Iframe]
+  def width(value: String): Iframe = copy(attributes = attributes + ("width" -> value)).asInstanceOf[Iframe]
 }

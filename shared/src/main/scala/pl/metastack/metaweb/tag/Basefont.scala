@@ -16,15 +16,15 @@ case class Basefont(attributes: Predef.Map[String, Any] = Predef.Map.empty, chil
    * This attribute sets the text color using either a named color or a color specified in the hexadecimal #RRGGBB format.
    */
   def color: scala.Option[String] = attributes.get("color").asInstanceOf[scala.Option[String]]
-  def color(value: String): Basefont = copy(attributes = attributes + ("color" -> value.toString)).asInstanceOf[Basefont]
+  def color(value: String): Basefont = copy(attributes = attributes + ("color" -> value)).asInstanceOf[Basefont]
   /**
    * This attribute contains a list of one or more font names. The document text in the default style is rendered in the first font face that the client's browser supports. If no font listed is installed on the local system, the browser typically defaults to the proportional or fixed-width font for that system.
    */
   def face: scala.Option[String] = attributes.get("face").asInstanceOf[scala.Option[String]]
-  def face(value: String): Basefont = copy(attributes = attributes + ("face" -> value.toString)).asInstanceOf[Basefont]
+  def face(value: String): Basefont = copy(attributes = attributes + ("face" -> value)).asInstanceOf[Basefont]
   /**
    * This attribute specifies the font size as either a numeric or relative value. Numeric values range from 1 to 7 with 1 being the smallest and 3 the default.
    */
   def size: scala.Option[String] = attributes.get("size").asInstanceOf[scala.Option[String]]
-  def size(value: String): Basefont = copy(attributes = attributes + ("size" -> value.toString)).asInstanceOf[Basefont]
+  def size(value: String): Basefont = copy(attributes = attributes + ("size" -> value)).asInstanceOf[Basefont]
 }

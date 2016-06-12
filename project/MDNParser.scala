@@ -199,7 +199,7 @@ object MDNParser {
       if (attrType == "Boolean")
         p.println( s"""  def $attrName(value: $attrType): $className = (if (value) copy(attributes = attributes + ("${attribute.name}" -> "")) else copy(attributes = attributes - "${attribute.name}")).asInstanceOf[$className]""")
       else
-        p.println( s"""  def $attrName(value: $attrType): $className = copy(attributes = attributes + ("${attribute.name}" -> value.toString)).asInstanceOf[$className]""")
+        p.println( s"""  def $attrName(value: $attrType): $className = copy(attributes = attributes + ("${attribute.name}" -> value)).asInstanceOf[$className]""")
     }
 
   def globalAttributes(): Seq[Attribute] = {

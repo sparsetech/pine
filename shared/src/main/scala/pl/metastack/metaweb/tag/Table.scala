@@ -30,7 +30,7 @@ case class Table(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
-  def align(value: String): Table = copy(attributes = attributes + ("align" -> value.toString)).asInstanceOf[Table]
+  def align(value: String): Table = copy(attributes = attributes + ("align" -> value)).asInstanceOf[Table]
   /**
    * This attribute defines the background color of the table and its content. It is one of the 6-digit hexadecimal code as defined in 
 <a href="http://www.w3.org/Graphics/Color/sRGB" class="external" title="http://www.w3.org/Graphics/Color/sRGB">sRGB</a>, prefixed by a '#'. One of the sixteen predefined color strings may be used: 
@@ -96,7 +96,7 @@ case class Table(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def bgcolor: scala.Option[String] = attributes.get("bgcolor").asInstanceOf[scala.Option[String]]
-  def bgcolor(value: String): Table = copy(attributes = attributes + ("bgcolor" -> value.toString)).asInstanceOf[Table]
+  def bgcolor(value: String): Table = copy(attributes = attributes + ("bgcolor" -> value)).asInstanceOf[Table]
   /**
    * This integer attribute defines, in pixels, the size of the frame surrounding the table. If set to 
 <span>0</span>, it implies that the 
@@ -115,7 +115,7 @@ case class Table(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def border: scala.Option[String] = attributes.get("border").asInstanceOf[scala.Option[String]]
-  def border(value: String): Table = copy(attributes = attributes + ("border" -> value.toString)).asInstanceOf[Table]
+  def border(value: String): Table = copy(attributes = attributes + ("border" -> value)).asInstanceOf[Table]
   /**
    * This attribute defines the space between the content of a cell and the border, displayed or not, of it. If it is a pixel length, this pixel-sized space will be applied on all four sides; if it is a percentage length, the content will be centered and the total vertical space (top and bottom) will represent this percentage. The same is true for the total horizontal space (left and right). 
 <div class="note">
@@ -131,7 +131,7 @@ case class Table(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def cellpadding: scala.Option[String] = attributes.get("cellpadding").asInstanceOf[scala.Option[String]]
-  def cellpadding(value: String): Table = copy(attributes = attributes + ("cellpadding" -> value.toString)).asInstanceOf[Table]
+  def cellpadding(value: String): Table = copy(attributes = attributes + ("cellpadding" -> value)).asInstanceOf[Table]
   /**
    * This attribute defines the size, in percentage or in pixels, of the space between two cells (both horizontally and vertically), between the top of the table and the cells of the first row, the left of the table and the first column, the right of the table and the last column and the bottom of the table and the last row. 
 <div class="note">
@@ -144,7 +144,7 @@ case class Table(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def cellspacing: scala.Option[String] = attributes.get("cellspacing").asInstanceOf[scala.Option[String]]
-  def cellspacing(value: String): Table = copy(attributes = attributes + ("cellspacing" -> value.toString)).asInstanceOf[Table]
+  def cellspacing(value: String): Table = copy(attributes = attributes + ("cellspacing" -> value)).asInstanceOf[Table]
   /**
    * This enumerated attribute defines which side of the frame surrounding the table must be displayed. It may have the following values: 
 <table style="width: 668px;"> 
@@ -190,7 +190,7 @@ case class Table(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def frame: scala.Option[String] = attributes.get("frame").asInstanceOf[scala.Option[String]]
-  def frame(value: String): Table = copy(attributes = attributes + ("frame" -> value.toString)).asInstanceOf[Table]
+  def frame(value: String): Table = copy(attributes = attributes + ("frame" -> value)).asInstanceOf[Table]
   /**
    * This enumerated attribute defines where rules, i.e. lines, should appear in a table. It can have the following values: 
 <ul> 
@@ -209,7 +209,7 @@ case class Table(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def rules: scala.Option[String] = attributes.get("rules").asInstanceOf[scala.Option[String]]
-  def rules(value: String): Table = copy(attributes = attributes + ("rules" -> value.toString)).asInstanceOf[Table]
+  def rules(value: String): Table = copy(attributes = attributes + ("rules" -> value)).asInstanceOf[Table]
   /**
    * This attribute defines an alternative text use to describe the table in user-agent unable to display it. Typically, it contents a description of it to allow visually impaired people, like blind people browsing the web using Braille screen, to get the information in it. If the information added in this attribute may also be useful for non-visually impaired people, consider using the 
 <a href="/en-US/docs/Web/HTML/Element/caption" title="The HTML <caption> Element (or HTML Table Caption Element) represents the title of a table. Though it is always the first descendant of a <table>, its styling, using CSS, may place it elsewhere, relative to the table."><code>&lt;caption&gt;</code></a> instead. The summary attribute is not mandatory and may be omitted when a 
@@ -227,7 +227,7 @@ case class Table(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def summary: scala.Option[String] = attributes.get("summary").asInstanceOf[scala.Option[String]]
-  def summary(value: String): Table = copy(attributes = attributes + ("summary" -> value.toString)).asInstanceOf[Table]
+  def summary(value: String): Table = copy(attributes = attributes + ("summary" -> value)).asInstanceOf[Table]
   /**
    * This attribute defines the width of the table. It may either be a pixel length or a percentage value, representing the percentage of the width of its container that the table should use. 
 <div class="note">
@@ -238,5 +238,5 @@ case class Table(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
-  def width(value: String): Table = copy(attributes = attributes + ("width" -> value.toString)).asInstanceOf[Table]
+  def width(value: String): Table = copy(attributes = attributes + ("width" -> value)).asInstanceOf[Table]
 }

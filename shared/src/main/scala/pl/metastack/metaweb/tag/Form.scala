@@ -18,13 +18,13 @@ case class Form(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </div>
    */
   def accept: scala.Option[String] = attributes.get("accept").asInstanceOf[scala.Option[String]]
-  def accept(value: String): Form = copy(attributes = attributes + ("accept" -> value.toString)).asInstanceOf[Form]
+  def accept(value: String): Form = copy(attributes = attributes + ("accept" -> value)).asInstanceOf[Form]
   /**
    * A space- or comma-delimited list of character encodings that the server accepts. The browser uses them in the order in which they are listed. The default value, the reserved string "UNKNOWN", indicates the same encoding as that of the document containing the form element.
 <br> In previous versions of HTML, the different character encodings could be delimited by spaces or commas. In HTML5, only spaces are allowed as delimiters.
    */
   def `accept-charset`: scala.Option[String] = attributes.get("accept-charset").asInstanceOf[scala.Option[String]]
-  def `accept-charset`(value: String): Form = copy(attributes = attributes + ("accept-charset" -> value.toString)).asInstanceOf[Form]
+  def `accept-charset`(value: String): Form = copy(attributes = attributes + ("accept-charset" -> value)).asInstanceOf[Form]
   /**
    * The URI of a program that processes the form information. This value can be overridden by a 
 <code><a href="/en-US/docs/Web/HTML/Element/button#attr-formaction">formaction</a></code> attribute on a 
@@ -32,7 +32,7 @@ case class Form(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <a href="/en-US/docs/Web/HTML/Element/input" title="The HTML <input> element is used to create interactive controls for web-based forms in order to accept data from the user. The semantics of an <input> varies considerably depending on the value of its type attribute."><code>&lt;input&gt;</code></a> element.
    */
   def action: scala.Option[String] = attributes.get("action").asInstanceOf[scala.Option[String]]
-  def action(value: String): Form = copy(attributes = attributes + ("action" -> value.toString)).asInstanceOf[Form]
+  def action(value: String): Form = copy(attributes = attributes + ("action" -> value)).asInstanceOf[Form]
   /**
    * This is a nonstandard attribute used by iOS Safari Mobile which controls whether and how the text value for textual form control descendants should be automatically capitalized as it is entered/edited by the user. If the 
 <code>autocapitalize</code> attribute is specified on an individual form control descendant, it trumps the form-wide 
@@ -48,7 +48,7 @@ case class Form(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </ul>
    */
   def autocapitalize: scala.Option[String] = attributes.get("autocapitalize").asInstanceOf[scala.Option[String]]
-  def autocapitalize(value: String): Form = copy(attributes = attributes + ("autocapitalize" -> value.toString)).asInstanceOf[Form]
+  def autocapitalize(value: String): Form = copy(attributes = attributes + ("autocapitalize" -> value)).asInstanceOf[Form]
   /**
    * Indicates whether input elements can by default have their values automatically completed by the browser. This setting can be overridden by an 
 <code>autocomplete</code> attribute on an element belonging to the form. Possible values are: 
@@ -59,7 +59,7 @@ case class Form(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <a href="/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion#The_autocomplete_attribute_and_login_fields">The autocomplete attribute and login fields</a>.
    */
   def autocomplete: scala.Option[String] = attributes.get("autocomplete").asInstanceOf[scala.Option[String]]
-  def autocomplete(value: String): Form = copy(attributes = attributes + ("autocomplete" -> value.toString)).asInstanceOf[Form]
+  def autocomplete(value: String): Form = copy(attributes = attributes + ("autocomplete" -> value)).asInstanceOf[Form]
   /**
    * When the value of the 
 <code>method</code> attribute is 
@@ -73,7 +73,7 @@ case class Form(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <p>This value can be overridden by a <code><a href="/en-US/docs/Web/HTML/Element/button#attr-formenctype">formenctype</a></code> attribute on a <a href="/en-US/docs/Web/HTML/Element/button" title="The HTML <button> Element represents a clickable button."><code>&lt;button&gt;</code></a> or <a href="/en-US/docs/Web/HTML/Element/input" title="The HTML <input> element is used to create interactive controls for web-based forms in order to accept data from the user. The semantics of an <input> varies considerably depending on the value of its type attribute."><code>&lt;input&gt;</code></a> element.</p>
    */
   def enctype: scala.Option[String] = attributes.get("enctype").asInstanceOf[scala.Option[String]]
-  def enctype(value: String): Form = copy(attributes = attributes + ("enctype" -> value.toString)).asInstanceOf[Form]
+  def enctype(value: String): Form = copy(attributes = attributes + ("enctype" -> value)).asInstanceOf[Form]
   /**
    * The 
 <a href="/en-US/docs/HTTP" title="http://www.w3.org/Protocols/rfc2616/rfc2616.html">HTTP</a> method that the browser uses to submit the form. Possible values are: 
@@ -84,13 +84,13 @@ case class Form(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <p>This value can be overridden by a <code><a href="/en-US/docs/Web/HTML/Element/button#attr-formmethod">formmethod</a></code> attribute on a <a href="/en-US/docs/Web/HTML/Element/button" title="The HTML <button> Element represents a clickable button."><code>&lt;button&gt;</code></a> or <a href="/en-US/docs/Web/HTML/Element/input" title="The HTML <input> element is used to create interactive controls for web-based forms in order to accept data from the user. The semantics of an <input> varies considerably depending on the value of its type attribute."><code>&lt;input&gt;</code></a> element.</p>
    */
   def method: scala.Option[String] = attributes.get("method").asInstanceOf[scala.Option[String]]
-  def method(value: String): Form = copy(attributes = attributes + ("method" -> value.toString)).asInstanceOf[Form]
+  def method(value: String): Form = copy(attributes = attributes + ("method" -> value)).asInstanceOf[Form]
   /**
    * The name of the form. In HTML 4,its use is deprecated (
 <code>id</code> should be used instead). It must be unique among the forms in a document and not just an empty string in HTML 5.
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
-  def name(value: String): Form = copy(attributes = attributes + ("name" -> value.toString)).asInstanceOf[Form]
+  def name(value: String): Form = copy(attributes = attributes + ("name" -> value)).asInstanceOf[Form]
   /**
    * This Boolean attribute indicates that the form is not to be validated when submitted. If this attribute is not specified (and therefore the form is validated), this default setting can be overridden by a 
 <code><a href="/en-US/docs/Web/HTML/Element/button#attr-formnovalidate">formnovalidate</a></code> attribute on a 
@@ -98,7 +98,7 @@ case class Form(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <a href="/en-US/docs/Web/HTML/Element/input" title="The HTML <input> element is used to create interactive controls for web-based forms in order to accept data from the user. The semantics of an <input> varies considerably depending on the value of its type attribute."><code>&lt;input&gt;</code></a> element belonging to the form.
    */
   def novalidate: scala.Option[String] = attributes.get("novalidate").asInstanceOf[scala.Option[String]]
-  def novalidate(value: String): Form = copy(attributes = attributes + ("novalidate" -> value.toString)).asInstanceOf[Form]
+  def novalidate(value: String): Form = copy(attributes = attributes + ("novalidate" -> value)).asInstanceOf[Form]
   /**
    * A name or keyword indicating where to display the response that is received after submitting the form. In HTML 4, this is the name/keyword for a frame. In HTML5, it is a name/keyword for a 
 <em>browsing context</em> (for example, tab, window, or inline frame). The following keywords have special meanings: 
@@ -112,5 +112,5 @@ case class Form(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <p>HTML5: This value can be overridden by a <code><a href="/en-US/docs/Web/HTML/Element/button#attr-formtarget">formtarget</a></code> attribute on a <a href="/en-US/docs/Web/HTML/Element/button" title="The HTML <button> Element represents a clickable button."><code>&lt;button&gt;</code></a> or <a href="/en-US/docs/Web/HTML/Element/input" title="The HTML <input> element is used to create interactive controls for web-based forms in order to accept data from the user. The semantics of an <input> varies considerably depending on the value of its type attribute."><code>&lt;input&gt;</code></a> element.</p>
    */
   def target: scala.Option[String] = attributes.get("target").asInstanceOf[scala.Option[String]]
-  def target(value: String): Form = copy(attributes = attributes + ("target" -> value.toString)).asInstanceOf[Form]
+  def target(value: String): Form = copy(attributes = attributes + ("target" -> value)).asInstanceOf[Form]
 }

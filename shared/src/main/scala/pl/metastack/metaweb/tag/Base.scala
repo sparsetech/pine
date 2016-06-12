@@ -18,7 +18,7 @@ case class Base(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <br> Absolute and relative URIs are allowed (but see note section below).
    */
   def href: scala.Option[String] = attributes.get("href").asInstanceOf[scala.Option[String]]
-  def href(value: String): Base = copy(attributes = attributes + ("href" -> value.toString)).asInstanceOf[Base]
+  def href(value: String): Base = copy(attributes = attributes + ("href" -> value)).asInstanceOf[Base]
   /**
    * A name or keyword indicating the default location to display the result when hyperlinks or forms cause navigation, for elements that do not have an explicit target reference. In HTML4, this is the name of, or a keyword for, a frame. In HTML5, it is a name of, or keyword for, a 
 <em>browsing context</em> (for example, tab, window, or inline frame). The following keywords have special meanings: 
@@ -30,5 +30,5 @@ case class Base(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </ul>
    */
   def target: scala.Option[String] = attributes.get("target").asInstanceOf[scala.Option[String]]
-  def target(value: String): Base = copy(attributes = attributes + ("target" -> value.toString)).asInstanceOf[Base]
+  def target(value: String): Base = copy(attributes = attributes + ("target" -> value)).asInstanceOf[Base]
 }

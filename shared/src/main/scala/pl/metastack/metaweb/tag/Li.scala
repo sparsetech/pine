@@ -22,7 +22,7 @@ case class Li(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def value: scala.Option[Long] = attributes.get("value").asInstanceOf[scala.Option[Long]]
-  def value(value: Long): Li = copy(attributes = attributes + ("value" -> value.toString)).asInstanceOf[Li]
+  def value(value: Long): Li = copy(attributes = attributes + ("value" -> value)).asInstanceOf[Li]
   /**
    * This character attribute indicates the numbering type: 
 <ul> 
@@ -39,5 +39,5 @@ case class Li(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
-  def `type`(value: String): Li = copy(attributes = attributes + ("type" -> value.toString)).asInstanceOf[Li]
+  def `type`(value: String): Li = copy(attributes = attributes + ("type" -> value)).asInstanceOf[Li]
 }

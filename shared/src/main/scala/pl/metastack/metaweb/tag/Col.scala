@@ -32,7 +32,7 @@ case class Col(attributes: Predef.Map[String, Any] = Predef.Map.empty, children:
 </div>
    */
   def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
-  def align(value: String): Col = copy(attributes = attributes + ("align" -> value.toString)).asInstanceOf[Col]
+  def align(value: String): Col = copy(attributes = attributes + ("align" -> value)).asInstanceOf[Col]
   /**
    * This attribute defines the background color of each cell of the column. It is one of the 6-digit hexadecimal code as defined in 
 <a href="http://www.w3.org/Graphics/Color/sRGB" class="external" title="http://www.w3.org/Graphics/Color/sRGB">sRGB</a>, prefixed by a '#'. One of the sixteen predefined color strings may be used: 
@@ -99,7 +99,7 @@ case class Col(attributes: Predef.Map[String, Any] = Predef.Map.empty, children:
 </div>
    */
   def bgcolor: scala.Option[String] = attributes.get("bgcolor").asInstanceOf[scala.Option[String]]
-  def bgcolor(value: String): Col = copy(attributes = attributes + ("bgcolor" -> value.toString)).asInstanceOf[Col]
+  def bgcolor(value: String): Col = copy(attributes = attributes + ("bgcolor" -> value)).asInstanceOf[Col]
   /**
    * This attribute is used to set the character to align the cells in a column on. Typical values for this include a period (.) when attempting to align numbers or monetary values. If 
 <code><a href="/en-US/docs/Web/HTML/Element/col#attr-align">align</a></code> is not set to 
@@ -113,7 +113,7 @@ case class Col(attributes: Predef.Map[String, Any] = Predef.Map.empty, children:
 </div>
    */
   def char: scala.Option[String] = attributes.get("char").asInstanceOf[scala.Option[String]]
-  def char(value: String): Col = copy(attributes = attributes + ("char" -> value.toString)).asInstanceOf[Col]
+  def char(value: String): Col = copy(attributes = attributes + ("char" -> value)).asInstanceOf[Col]
   /**
    * This attribute is used to indicate the number of characters to offset the column data from the alignment characters specified by the 
 <strong>char</strong> attribute. 
@@ -122,14 +122,14 @@ case class Col(attributes: Predef.Map[String, Any] = Predef.Map.empty, children:
 </div>
    */
   def charoff: scala.Option[String] = attributes.get("charoff").asInstanceOf[scala.Option[String]]
-  def charoff(value: String): Col = copy(attributes = attributes + ("charoff" -> value.toString)).asInstanceOf[Col]
+  def charoff(value: String): Col = copy(attributes = attributes + ("charoff" -> value)).asInstanceOf[Col]
   /**
    * This attribute contains a positive integer indicating the number of consecutive columns the 
 <code>&lt;col&gt;</code> element spans. If not present, its default value is 
 <code>1</code>.
    */
   def span: scala.Option[Long] = attributes.get("span").asInstanceOf[scala.Option[Long]]
-  def span(value: Long): Col = copy(attributes = attributes + ("span" -> value.toString)).asInstanceOf[Col]
+  def span(value: Long): Col = copy(attributes = attributes + ("span" -> value)).asInstanceOf[Col]
   /**
    * This attribute specifies the vertical alignment of the text within each cell of the column. Possible values for this attribute are: 
 <ul> 
@@ -148,12 +148,12 @@ case class Col(attributes: Predef.Map[String, Any] = Predef.Map.empty, children:
 </div>
    */
   def valign: scala.Option[String] = attributes.get("valign").asInstanceOf[scala.Option[String]]
-  def valign(value: String): Col = copy(attributes = attributes + ("valign" -> value.toString)).asInstanceOf[Col]
+  def valign(value: String): Col = copy(attributes = attributes + ("valign" -> value)).asInstanceOf[Col]
   /**
    * This attribute specifies a default width for each column in the current column group. In addition to the standard pixel and percentage values, this attribute might take the special form 
 <code>0*</code>, which means that the width of each column in the group should be the minimum width necessary to hold the column's contents. Relative widths such as 
 <code>0.5*</code> also can be used.
    */
   def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
-  def width(value: String): Col = copy(attributes = attributes + ("width" -> value.toString)).asInstanceOf[Col]
+  def width(value: String): Col = copy(attributes = attributes + ("width" -> value)).asInstanceOf[Col]
 }

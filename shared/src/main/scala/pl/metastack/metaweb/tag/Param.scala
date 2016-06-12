@@ -12,18 +12,18 @@ case class Param(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
    * Name of the parameter.
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
-  def name(value: String): Param = copy(attributes = attributes + ("name" -> value.toString)).asInstanceOf[Param]
+  def name(value: String): Param = copy(attributes = attributes + ("name" -> value)).asInstanceOf[Param]
   /**
    * Only used if the 
 <code>valuetype</code> is set to "ref". Specifies the MIME type of values found at the URI specified by value.
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
-  def `type`(value: String): Param = copy(attributes = attributes + ("type" -> value.toString)).asInstanceOf[Param]
+  def `type`(value: String): Param = copy(attributes = attributes + ("type" -> value)).asInstanceOf[Param]
   /**
    * Specifies the value of the parameter.
    */
   def value: scala.Option[String] = attributes.get("value").asInstanceOf[scala.Option[String]]
-  def value(value: String): Param = copy(attributes = attributes + ("value" -> value.toString)).asInstanceOf[Param]
+  def value(value: String): Param = copy(attributes = attributes + ("value" -> value)).asInstanceOf[Param]
   /**
    * Specifies the type of the 
 <code>value</code> attribute. Possible values are: 
@@ -34,5 +34,5 @@ case class Param(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </ul>
    */
   def valuetype: scala.Option[String] = attributes.get("valuetype").asInstanceOf[scala.Option[String]]
-  def valuetype(value: String): Param = copy(attributes = attributes + ("valuetype" -> value.toString)).asInstanceOf[Param]
+  def valuetype(value: String): Param = copy(attributes = attributes + ("valuetype" -> value)).asInstanceOf[Param]
 }

@@ -14,5 +14,5 @@ case class Dd(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 <code>no</code>.
    */
   def nowrap: scala.Option[String] = attributes.get("nowrap").asInstanceOf[scala.Option[String]]
-  def nowrap(value: String): Dd = copy(attributes = attributes + ("nowrap" -> value.toString)).asInstanceOf[Dd]
+  def nowrap(value: String): Dd = copy(attributes = attributes + ("nowrap" -> value)).asInstanceOf[Dd]
 }
