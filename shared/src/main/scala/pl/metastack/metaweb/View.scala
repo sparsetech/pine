@@ -20,22 +20,23 @@ class IdMap {
   * 4. destroy()
   */
 trait View {
-  /** There can be several instances of this view. As elements have a global ID
-    * in the DOM, we need to give each view a unique name.
+  /** `idMap` contains a function that allows us to resolve NodeRefs used in
+    * this view.
     */
-  implicit def id: ViewId
-
   implicit val idMap = new IdMap
 
   /** Every view must be identifiable with an ID, otherwise we cannot remove it */
   val root: NodeRef[tree.Tag]
 
+  /** Must be overridden when there are multiple instances of this view. Used to
+    * give this view's ID a unique suffix. Needed to identify elements on the
+    * client after pre-population.
+    */
+  implicit def id: ViewId
+
   /** Creates immutable tree node */
   def node(): Future[tree.Node]
 
-  /** Must be overridden when there are multiple instances of this view. Used to
-    * identify elements on the client after pre-population.
-    */
   def populate(): Diff = Diff.Noop()
 
   /** Registers event handlers. Only called in JavaScript. The overridden
