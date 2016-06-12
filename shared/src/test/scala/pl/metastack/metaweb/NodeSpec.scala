@@ -3,6 +3,14 @@ package pl.metastack.metaweb
 import org.scalatest.FunSuite
 
 class NodeSpec extends FunSuite {
+  test("Instantiate") {
+    val a = tag.A()
+      .href("http://github.com/")
+      .set(tree.Text("GitHub"))
+    assert(a == html"""<a href="http://github.com/">GitHub</a>""")
+    assert(a.toHtml == """<a href="http://github.com/">GitHub</a>""")
+  }
+
   test("byClass") {
     val span = html"""<div class="test"><span class="test2">42</span></div>"""
 
