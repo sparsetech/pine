@@ -15,7 +15,9 @@ trait Tag extends Node {
   def children: Seq[Node]
   def attributes: Map[String, Any]
   def copy(attributes: Map[String, Any] = attributes, children: Seq[Node] = children): Tag
+
   def id: Option[String]
+  def id(value: String): Tag
 
   // TODO Rewrite in a more functional style
   def find(f: Node => Boolean): Option[Node] = {
@@ -143,4 +145,5 @@ case class CustomTag(tagName: String,
 
   override def id: Option[String] = attributes.get("id")
     .asInstanceOf[Option[String]]
+  override def id(value: String): Tag = setAttr("id", value)
 }
