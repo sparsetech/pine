@@ -1,5 +1,7 @@
 package pl.metastack.metaweb.tree
 
+import pl.metastack.metaweb.tag.HTMLTag
+
 sealed trait Node {
   def map(f: Node => Node): Node
 }
@@ -123,12 +125,10 @@ trait Tag extends Node {
     byTagOpt(tagName).getOrElse(
       throw new IllegalArgumentException(s"Invalid tag name '$tagName'"))
 
-  def byClassOpt[T <: Tag](`class`: String): Option[T] =
+  def byClassOpt[T <: HTMLTag[_]](`class`: String): Option[T] =
     find {
-      case t: Tag =>
-        val cls = t.attributes.get("class")
-        cls.exists(_.asInstanceOf[String].split(' ').toSet.contains(`class`))
-      case _ => false
+      case t: HTMLTag[_] => t.`class`.exists(_.split(' ').toSet.contains(`class`))
+      case _             => false
     }.map(_.asInstanceOf[T])
 
   def byClass[T <: Tag](`class`: String): T = byClassOpt(`class`).get
