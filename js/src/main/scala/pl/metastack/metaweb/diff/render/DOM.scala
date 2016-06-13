@@ -1,7 +1,6 @@
 package pl.metastack.metaweb.diff.render
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import org.scalajs.dom
 import pl.metastack.metaweb.{HtmlHelpers, PlatformSupport, View, tree}
@@ -10,17 +9,17 @@ import pl.metastack.metaweb.diff._
 object DOM {
   trait Implicit {
     implicit class ViewToDom(view: View) {
-      def toDom: Future[dom.Node] = renderView(view)
+      def toDom(implicit ec: ExecutionContext): Future[dom.Node] = renderView(view)
     }
   }
 
-  def logFailingFuture[T](future: Future[T]): Future[T] = {
+  def logFailingFuture[T](future: Future[T])(implicit ec: ExecutionContext): Future[T] = {
     future.onFailure { case t => t.printStackTrace() }
     future
   }
 
   implicit object RenderDom extends Render[dom.Node, Unit] with PlatformSupport {
-    def render(node: dom.Node, diff: Diff): Future[Unit] =
+    def render(node: dom.Node, diff: Diff)(implicit ec: ExecutionContext): Future[Unit] =
       diff match {
         case Diff.Sequence(left, right @ _*) =>
           right.foldLeft(render(node, left)) { case (acc, cur) =>
@@ -92,7 +91,7 @@ object DOM {
       case _ => Map.empty
     }
 
-  def renderView(view: View): Future[dom.Node] = {
+  def renderView(view: View)(implicit ec: ExecutionContext): Future[dom.Node] = {
     import Render._
     for {
       n <- view.node().map(suffixIds(_, view.id.value))

@@ -1,7 +1,10 @@
 package pl.metastack.metaweb
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 import org.scalajs.dom
 import org.scalatest.FunSuite
+
 import pl.metastack.metaweb.diff.NodeRef
 
 class NodeRefSpec extends FunSuite with DiffSupport {

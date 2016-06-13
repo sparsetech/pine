@@ -1,7 +1,6 @@
 package pl.metastack.metaweb.diff.render
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
 import pl.metastack.metaweb._
 import pl.metastack.metaweb.diff._
@@ -9,13 +8,13 @@ import pl.metastack.metaweb.diff._
 object Tree {
   trait Implicit {
     implicit class ViewToTree(view: View) {
-      def toTree: Future[tree.Node] = renderView(view)
-      def toHtml: Future[String] = renderView(view).map(_.toHtml)
+      def toTree(implicit ec: ExecutionContext): Future[tree.Node] = renderView(view)
+      def toHtml(implicit ec: ExecutionContext): Future[String] = renderView(view).map(_.toHtml)
     }
   }
 
   implicit object RenderNode extends Render[tree.Node, tree.Node] {
-    def render(node: tree.Node, diff: Diff): Future[tree.Node] =
+    def render(node: tree.Node, diff: Diff)(implicit ec: ExecutionContext): Future[tree.Node] =
       diff match {
         case Diff.Sequence(left, right @ _*) =>
           right.foldLeft(render(node, left)) { case (acc, cur) =>
@@ -68,7 +67,7 @@ object Tree {
       }
   }
 
-  def renderView(view: View): Future[tree.Node] = {
+  def renderView(view: View)(implicit ec: ExecutionContext): Future[tree.Node] = {
     import Render._
     for {
       n <- view.node().map(suffixIds(_, view.id.value))
