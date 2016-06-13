@@ -1,12 +1,12 @@
 val Scala    = "2.11.8"
 val Circe    = "0.4.1"
 val Finch    = "0.10.0"
-val MetaWeb  = "0.2.0-SNAPSHOT"
+val MetaWeb  = "0.2.0"
 val Paradise = "2.1.0"
 
 val SharedSettings = Seq(
   name         := "example",
-  version      := "0.1.0-SNAPSHOT",
+  version      := MetaWeb,
   scalaVersion := Scala,
   addCompilerPlugin(
     "org.scalamacros" % "paradise" % Paradise cross CrossVersion.full

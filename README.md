@@ -11,8 +11,8 @@ Please refer to the [example application](https://github.com/MetaStack-pl/MetaWe
 
 ## sbt
 ```scala
-libraryDependencies += "pl.metastack" %%  "metaweb" % "0.2.0-SNAPSHOT"  // Scala
-libraryDependencies += "pl.metastack" %%% "metaweb" % "0.2.0-SNAPSHOT"  // Scala.js
+libraryDependencies += "pl.metastack" %%  "metaweb" % "0.2.0"  // Scala
+libraryDependencies += "pl.metastack" %%% "metaweb" % "0.2.0"  // Scala.js
 ```
 
 ## Example
