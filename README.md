@@ -231,6 +231,9 @@ A view defines the following rendering methods:
 - `toHtml: Future[String]` Same as `toTree`, but returns snapshot as HTML
 - `toDom: Future[dom.Node]` Only available in Scala.js; populates the view and registers event handlers, returns a node that can be inserted into the body of the DOM
 
+## Links
+* [ScalaDoc](https://www.javadoc.io/doc/pl.metastack/metaweb_2.11/)
+
 ## License
 MetaWeb is licensed under the terms of the Apache v2.0 license.
 
