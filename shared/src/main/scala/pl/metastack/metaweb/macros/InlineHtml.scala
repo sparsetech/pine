@@ -23,6 +23,14 @@ object InlineHtml {
                        root: Boolean): Seq[c.Expr[Seq[tree.Node]]] = {
     import c.universe._
 
+    val stringType = definitions.StringClass.toType
+    val optionStringType =
+      appliedType(definitions.OptionClass, List(stringType))
+    val nodeType = c.mirror.staticClass("pl.metastack.metaweb.tree.Node")
+       .toType
+    val seqType = c.mirror.staticClass("scala.collection.Seq")
+    val seqNodeType = appliedType(seqType, List(nodeType))
+
     (node.label, Option(node.prefix)) match {
       case ("#PCDATA", _) =>
         // TODO Find a better solution
@@ -35,25 +43,11 @@ object InlineHtml {
             val index = v.drop(2).init.toInt
 
             args(index) match {
-              // TODO Do proper type checking
-              case n: c.Expr[tree.Node]
-                if n.tree.tpe.toString == "pl.metastack.metaweb.tree.Node" =>
-                c.Expr(q"Seq($n)")
-              case n: c.Expr[tree.Tag]
-                if n.tree.tpe.toString == "pl.metastack.metaweb.tree.Tag" =>
-                c.Expr(q"Seq($n)")
-
-              case n: c.Expr[Seq[tree.Node]]
-                if n.tree.tpe.toString == "Seq[pl.metastack.metaweb.tree.Node]" =>
-                n
-              case n: c.Expr[Seq[tree.Tag]]
-                if n.tree.tpe.toString == "Seq[pl.metastack.metaweb.tree.Tag]" =>
-                n
-
-              case n: c.Expr[String]
-                if n.tree.tpe.toString == "String" =>
-                  c.Expr(q"Seq(pl.metastack.metaweb.tree.Text($n))")
-
+              case n if n.tree.tpe <:< nodeType => c.Expr(q"Seq($n)")
+              case n if n.tree.tpe <:< seqNodeType =>
+                n.asInstanceOf[c.Expr[Seq[tree.Node]]]
+              case n if n.tree.tpe =:= stringType =>
+                c.Expr(q"Seq(pl.metastack.metaweb.tree.Text($n))")
               case n =>
                 c.error(c.enclosingPosition, s"Type ${n.tree.tpe} (${n.tree.symbol}) not supported")
                 null
@@ -85,18 +79,12 @@ object InlineHtml {
                 tagEvents += c.Expr(q"${k.drop(2)} -> ((_: Any) => { ${args(index)}; () })")
             } else {
               args(index) match {
-                case a: c.Expr[String]
-                  if a.tree.tpe.toString == "String" =>
+                case a if a.tree.tpe =:= stringType =>
                   tagAttrs += c.Expr(q"Some($k -> $a)")
-
-                case a: c.Expr[Option[String]]
-                  if a.tree.tpe.toString == "Option[String]" ||
-                     a.tree.tpe.toString == "Some[String]" ||
-                     a.tree.tpe.toString == "None.type" =>
-                  tagAttrs += c.Expr(q"$a.map(v => $k -> v)")
-
+                case a if a.tree.tpe <:< optionStringType =>
+                  tagAttrs += c.Expr(q"$a.map($k -> _)")
                 case a =>
-                  c.error(c.enclosingPosition, s"Type of $a not supported")
+                  c.error(c.enclosingPosition, s"Type ${a.tree.tpe} (${a.tree.symbol}) not supported")
                   null
               }
             }

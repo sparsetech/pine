@@ -33,6 +33,13 @@ class InlineHtmlSpec extends FunSuite {
     assert(div.toHtml == """<div id="test"></div>""")
   }
 
+  test("String (type alias) attribute placeholder") {
+    type Str = String
+    val id: Str = "test"
+    val div = html"<div id=$id></div>"
+    assert(div.toHtml == """<div id="test"></div>""")
+  }
+
   test("Option[String] attribute placeholder") {
     val id = Some("test")
     val div = html"<div id=$id></div>"
@@ -45,10 +52,25 @@ class InlineHtmlSpec extends FunSuite {
     val id3 = Option.empty[String]
     val div3 = html"<div id=$id3></div>"
     assert(div3.toHtml == """<div></div>""")
+
+    assertDoesNotCompile {
+      """
+      val id4 = Option.empty[Int]
+      val div4 = html"<div id=$id4></div>"
+      """
+    }
   }
+
 
   test("String placeholder") {
     val text = "Hello world"
+    val div = html"<div>$text</div>"
+    assert(div.toHtml == "<div>Hello world</div>")
+  }
+
+  test("String (type alias) placeholder") {
+    type Str = String
+    val text: Str = "Hello world"
     val div = html"<div>$text</div>"
     assert(div.toHtml == "<div>Hello world</div>")
   }
