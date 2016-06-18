@@ -63,30 +63,21 @@ object InlineHtml {
 
         val tagType = TypeName(tag.capitalize)
         val tagAttrs = mutable.ArrayBuffer.empty[c.Expr[Option[(String, Any)]]]
-        val tagEvents = mutable.ArrayBuffer.empty[c.Expr[(String, Seq[Any] => Unit)]]
 
         (node.attributes.asAttrMap ++ rootAttributes).foreach { case (k, v) =>
-          if (!v.startsWith("${") || !v.endsWith("}")) {
-            if (k.startsWith("on")) tagEvents += c.Expr(q"${k.drop(2)} -> ((_: Any) => { $v; () })")
-            else tagAttrs += c.Expr(q"Some($k -> $v)")
-          } else {
+          if (!v.startsWith("${") || !v.endsWith("}"))
+            tagAttrs += c.Expr(q"Some($k -> $v)")
+          else {
             val index = v.drop(2).init.toInt
 
-            if (k.startsWith("on")) {
-              if (args(index).actualType.toString == "Any => Unit")  // TODO Don't rely on string comparison
-                tagEvents += c.Expr(q"${k.drop(2)} -> ${args(index)}")
-              else  // Enforce lazy evaluation
-                tagEvents += c.Expr(q"${k.drop(2)} -> ((_: Any) => { ${args(index)}; () })")
-            } else {
-              args(index) match {
-                case a if a.tree.tpe =:= stringType =>
-                  tagAttrs += c.Expr(q"Some($k -> $a)")
-                case a if a.tree.tpe <:< optionStringType =>
-                  tagAttrs += c.Expr(q"$a.map($k -> _)")
-                case a =>
-                  c.error(c.enclosingPosition, s"Type ${a.tree.tpe} (${a.tree.symbol}) not supported")
-                  null
-              }
+            args(index) match {
+              case a if a.tree.tpe =:= stringType =>
+                tagAttrs += c.Expr(q"Some($k -> $a)")
+              case a if a.tree.tpe <:< optionStringType =>
+                tagAttrs += c.Expr(q"$a.map($k -> _)")
+              case a =>
+                c.error(c.enclosingPosition, s"Type ${a.tree.tpe} (${a.tree.symbol}) not supported")
+                null
             }
           }
         }
