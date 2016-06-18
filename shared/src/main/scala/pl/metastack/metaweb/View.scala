@@ -49,15 +49,31 @@ trait View {
 
 object View {
   trait Implicits {
-    implicit def NumericToView[T](value: T)(implicit num: Numeric[T]): View =
-      View(value.toString)
-    implicit def BooleanToView(value: Boolean): View = View(value.toString)
-    implicit def StringToView(value: String): View = View(value)
+    implicit def NumericToTree[T](value: T)
+                                 (implicit num: Numeric[T]): tree.Node =
+      tree.Text(value.toString)
+    implicit def BooleanToTree(value: Boolean): tree.Node =
+      tree.Text(value.toString)
+    implicit def StringToTree(value: String): tree.Node = tree.Text(value)
+
+    implicit def TreeToView(value: tree.Node): View = View(value)
+
+    // Scala cannot resolve these implicits automatically
+    implicit def NumericToView[T](value: T)
+                                 (implicit num: Numeric[T]): View =
+      TreeToView(NumericToTree(value))
+    implicit def BooleanToView(value: Boolean): View =
+      TreeToView(BooleanToTree(value))
+    implicit def StringToView(value: String): View =
+      TreeToView(StringToTree(value))
   }
 
-  def apply(text: String): View = new View {
-    override val root: NodeRef[tree.Tag] = null  // TODO Text nodes cannot be removed
+  /** @note The DOM node of resulting view cannot be accessed. The view cannot
+    *       be manually removed from the DOM either.
+    */
+  def apply(value: tree.Node): View = new View {
+    override val root: NodeRef[tree.Tag] = null
     override implicit def id: ViewId = ViewId("")
-    override def node(): Future[tree.Node] = Future.successful(tree.Text(text))
+    override def node(): Future[tree.Node] = Future.successful(value)
   }
 }
