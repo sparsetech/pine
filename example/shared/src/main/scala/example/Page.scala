@@ -1,5 +1,6 @@
-package pl.metastack.metaweb
+package example
 
+import pl.metastack.metaweb._
 import pl.metastack.metaweb.diff.{Diff, NodeRef}
 
 import scala.concurrent.ExecutionContext.Implicits.global

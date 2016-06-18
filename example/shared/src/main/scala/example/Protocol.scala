@@ -1,4 +1,4 @@
-package pl.metastack.metaweb
+package example
 
 import cats.data.Xor
 import io.circe._, io.circe.generic.auto._, io.circe.parser._, io.circe.syntax._

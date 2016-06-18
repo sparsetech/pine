@@ -1,13 +1,16 @@
-package pl.metastack.metaweb
+package example
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.scalajs.js
+import scala.scalajs.js.JSON
 import scala.scalajs.js.annotation.JSExport
-import scala.concurrent.ExecutionContext.Implicits.global
+
 import org.scalajs.dom
+
+import pl.metastack.metaweb._
 import pl.metastack.metaweb.diff.Diff
 import pl.metastack.metaweb.macros.Js
-
-import scala.scalajs.js.JSON
 
 @Js object Router extends js.JSApp {
   def pageNode(): dom.Element = dom.document.getElementById(Templates.PageId)

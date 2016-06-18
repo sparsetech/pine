@@ -1,4 +1,4 @@
-package pl.metastack.metaweb
+package example
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

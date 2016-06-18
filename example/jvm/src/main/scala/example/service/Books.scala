@@ -1,12 +1,11 @@
-package pl.metastack.metaweb.service
+package example.service
 
 import scala.concurrent.Future
 
 import cats.data.Xor
 
-import pl.metastack.metaweb
-import pl.metastack.metaweb.Books._
-import pl.metastack.metaweb.{BookDetails, BookListItem, Service}
+import example.Books._
+import example.{BookDetails, BookListItem, Service}
 
 object Books {
   case class Book(id: Int, author: String, title: String, price: Double)
@@ -19,10 +18,10 @@ object Books {
     Book(id = 5, author = "Dean Wampler", title = "Programming Scala", price = 9.0))
 }
 
-class Books extends Service[metaweb.Request, metaweb.Response] {
+class Books extends Service[example.Request, example.Response] {
   import Books._
 
-  override val process: PartialFunction[metaweb.Request, Future[metaweb.Response]] = {
+  override val process: PartialFunction[example.Request, Future[example.Response]] = {
     case Request.List()      => Future.successful(list())
     case Request.Details(id) => Future.successful(details(id))
   }

@@ -1,10 +1,12 @@
-package pl.metastack.metaweb.page
+package example.page
 
 import scala.concurrent.Future
 
 import pl.metastack.metaweb._
 import pl.metastack.metaweb.diff._
 import pl.metastack.metaweb.macros.Js
+
+import example._
 
 class Index extends Page with Routing {
   val btnGuess = NodeRef[tag.Button]("guess")

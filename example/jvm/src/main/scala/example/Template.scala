@@ -1,9 +1,11 @@
-package pl.metastack.metaweb
+package example
 
 import java.io.File
 
 import scala.io.Source
 import scala.concurrent.Future
+
+import pl.metastack.metaweb._
 
 object Template {
   def fetch(template: String): Future[tree.Tag] = {

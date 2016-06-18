@@ -1,20 +1,25 @@
-package pl.metastack.metaweb
+package example
 
 import java.io.File
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 import cats.data.Xor
+
 import com.twitter.finagle
 import com.twitter.finagle.{Http, http}
 import com.twitter.io.{Buf, Reader}
 import com.twitter.util.{Await, Future}
+
 import io.circe._
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
 import io.finch._
-import pl.metastack.metaweb.TwitterUtils._
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import pl.metastack.metaweb._
+
+import example.TwitterUtils._
 
 object Server extends App {
   def fileEndpoint(uri: String, path: String, contentType: String): Endpoint[Buf] =

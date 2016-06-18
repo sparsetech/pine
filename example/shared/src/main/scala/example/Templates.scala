@@ -1,8 +1,10 @@
-package pl.metastack.metaweb
+package example
 
 import scala.collection.mutable
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+
+import pl.metastack.metaweb._
 
 object Templates {
   val cache = mutable.HashMap.empty[String, tree.Tag]

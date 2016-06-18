@@ -1,4 +1,4 @@
-package pl.metastack.metaweb
+package example
 
 import com.twitter.util.{Return, Throw, Future => TFuture, Promise => TPromise}
 

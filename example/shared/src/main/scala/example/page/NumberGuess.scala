@@ -1,11 +1,13 @@
-package pl.metastack.metaweb.page
-
-import pl.metastack.metaweb.diff.{Diff, NodeRef}
-import pl.metastack.metaweb.{NumberGuess => NG, _}
-import pl.metastack.metaweb.macros.Js
+package example.page
 
 import scala.concurrent.Future
 import scala.util.Try
+
+import pl.metastack.metaweb._
+import pl.metastack.metaweb.diff.{Diff, NodeRef}
+import pl.metastack.metaweb.macros.Js
+
+import example.{NumberGuess => NG, _}
 
 class NumberGuess extends Page with Routing {
   val input   = NodeRef[tag.Input]("input")

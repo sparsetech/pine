@@ -1,4 +1,8 @@
-package pl.metastack.metaweb.page
+package example.page
+
+import scala.collection.mutable.ListBuffer
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import cats.data.Xor
 import io.circe.generic.auto._
@@ -9,11 +13,9 @@ import pl.metastack.metaweb._
 import pl.metastack.metaweb.dsl._
 import pl.metastack.metaweb.diff._
 import pl.metastack.metaweb.macros.Js
-import pl.metastack.metaweb.{Books => BK}
 
-import scala.collection.mutable.ListBuffer
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import example._
+import example.{Books => BK}
 
 class Books extends Page with Routing {
   val books = ListBuffer.empty[BookListItem]
