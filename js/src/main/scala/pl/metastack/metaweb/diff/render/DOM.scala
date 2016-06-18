@@ -52,14 +52,16 @@ object DOM {
 
         case Diff.Noop() => Future.successful(())
 
-        case e: DiffDom.SubscribeEvent[js.Any] =>
-          e.set { event: js.Any =>
-            logFailingFuture(render(node, e.f(event)))
+        case e: DiffDom.SubscribeEvent[_] =>
+          val cast = e.asInstanceOf[DiffDom.SubscribeEvent[dom.Event]]
+          cast.set { event: dom.Event =>
+            logFailingFuture(render(node, cast.f(event)))
           }
           Future.successful(())
 
-        case e: DiffDom.UnsubscribeEvent[js.Any] =>
-          Future.successful(e.set(null))
+        case e: DiffDom.UnsubscribeEvent[_] =>
+          val cast = e.asInstanceOf[DiffDom.SubscribeEvent[dom.Event]]
+          Future.successful(cast.set(null))
 
         case Diff.PrependChild(ref, child) =>
           renderView(child).map(ref.dom.prependChild)
