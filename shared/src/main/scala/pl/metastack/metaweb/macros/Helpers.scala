@@ -16,7 +16,7 @@ object Helpers {
   def literalValueTree[T](c: Context)(tree: c.Tree): T = {
     import c.universe._
     tree match {
-      case Literal(Constant(value: T)) => value
+      case Literal(Constant(value)) => value.asInstanceOf[T]
       case _ =>
         c.error(c.enclosingPosition, "Literal expected")
         throw new RuntimeException()
