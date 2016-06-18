@@ -57,6 +57,8 @@ object View {
     implicit def StringToTree(value: String): tree.Node = tree.Text(value)
 
     implicit def TreeToView(value: tree.Node): View = View(value)
+    implicit def SeqTreeToSeqView(value: Seq[tree.Node]): Seq[View] =
+      value.map(TreeToView)
 
     // Scala cannot resolve these implicits automatically
     implicit def NumericToView[T](value: T)
