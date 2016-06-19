@@ -71,9 +71,9 @@ trait Tag extends Node {
     copy(attributes = attributes - attribute)
   def clearAttr: T = copy(attributes = Map.empty)
 
-  def map(f: Node => Node): Node = f(copy(children = children.map(f)))
+  def map(f: Node => Node): T = copy(children = children.map(f(_).map(f)))
 
-  def partialMap(f: PartialFunction[Node, Node]): Node =
+  def partialMap(f: PartialFunction[Node, Node]): T =
     map(node => f.lift(node).getOrElse(node))
 
   def withoutId: T = copy(attributes = attributes - "id")
