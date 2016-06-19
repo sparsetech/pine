@@ -97,7 +97,7 @@ object DOM {
     import Render._
     for {
       n <- view.node().map(suffixIds(_, view.id.value))
-      d = tree.render.DOM.render(n).asInstanceOf[dom.Node] // TODO Why is cast needed?
+      d = tree.render.DOM.render(n): dom.Node // TODO Why is downcast needed?
       _ = view.idMap.f = collectNodes(d).get(_)
       p <- render(d, view.populate())
       r <- render(d, view.register())
