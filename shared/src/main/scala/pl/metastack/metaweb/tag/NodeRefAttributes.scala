@@ -3,27 +3,27 @@ package pl.metastack.metaweb.tag
 import pl.metastack.metaweb.diff.{Attribute, NodeRef}
 
 trait NodeRefAttributes {
-  implicit class NodeRefAttributesHTMLTag[_](nodeRef: NodeRef[HTMLTag[_]]) {
-    val accesskey = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "accesskey")
-    val `class` = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "class")
-    val contenteditable = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "contenteditable")
-    val contextmenu = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "contextmenu")
-    val dir = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "dir")
-    val draggable = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "draggable")
-    val dropzone = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "dropzone")
-    val hidden = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "hidden")
-    val id = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "id")
-    val itemid = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "itemid")
-    val itemprop = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "itemprop")
-    val itemref = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "itemref")
-    val itemscope = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "itemscope")
-    val itemtype = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "itemtype")
-    val lang = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "lang")
-    val spellcheck = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "spellcheck")
-    val style = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "style")
-    val tabindex = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "tabindex")
-    val title = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "title")
-    val translate = new Attribute[HTMLTag[_], scala.Option[String], String](nodeRef, "translate")
+  implicit class NodeRefAttributesHTMLTag(nodeRef: NodeRef[HTMLTag]) {
+    val accesskey = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "accesskey")
+    val `class` = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "class")
+    val contenteditable = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "contenteditable")
+    val contextmenu = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "contextmenu")
+    val dir = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "dir")
+    val draggable = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "draggable")
+    val dropzone = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "dropzone")
+    val hidden = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "hidden")
+    val id = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "id")
+    val itemid = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "itemid")
+    val itemprop = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "itemprop")
+    val itemref = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "itemref")
+    val itemscope = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "itemscope")
+    val itemtype = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "itemtype")
+    val lang = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "lang")
+    val spellcheck = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "spellcheck")
+    val style = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "style")
+    val tabindex = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "tabindex")
+    val title = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "title")
+    val translate = new Attribute[HTMLTag, scala.Option[String], String](nodeRef, "translate")
   }
 
   implicit class NodeRefAttributesA(nodeRef: NodeRef[A]) {

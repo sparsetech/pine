@@ -12,7 +12,8 @@ There is no limitation to the depth and overlap of lists defined with the <a hre
 <a href="/en-US/docs/Web/HTML/Element/ol" title="The HTML <ol> Element (or HTML Ordered List Element) represents an ordered list of items. Typically, ordered-list items are displayed with a preceding numbering, which can be of any form, like numerals, letters or Romans numerals or even simple bullets. This numbered style is not defined in the HTML description of the page, but in its associated CSS, using the list-style-type property."><code>&lt;ol&gt;</code></a> element should be used, else the 
 <a href="/en-US/docs/Web/HTML/Element/ul" title="The HTML unordered list element (<ul>) represents an unordered list of items, namely a collection of items that do not have a numerical ordering, and their order in the list is meaningless. Typically, unordered-list items are displayed with a bullet, which can be of several forms, like a dot, a circle or a squared. The bullet style is not defined in the HTML description of the page, but in its associated CSS, using the list-style-type property."><code>&lt;ul&gt;</code></a> is adequate.
  */
-case class Ol(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Ol] {
+case class Ol(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Ol
   override def tagName = "ol"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Ol = Ol(attributes, children)
   /**
@@ -28,12 +29,12 @@ case class Ol(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def compact: scala.Option[String] = attributes.get("compact").asInstanceOf[scala.Option[String]]
-  def compact(value: String): Ol = copy(attributes = attributes + ("compact" -> value)).asInstanceOf[Ol]
+  def compact(value: String): Ol = copy(attributes = attributes + ("compact" -> value))
   /**
    * This Boolean attribute specifies that the items of the item are specified in the reverse order, i.e. that the least important one is listed first.
    */
   def reversed: scala.Option[String] = attributes.get("reversed").asInstanceOf[scala.Option[String]]
-  def reversed(value: String): Ol = copy(attributes = attributes + ("reversed" -> value)).asInstanceOf[Ol]
+  def reversed(value: String): Ol = copy(attributes = attributes + ("reversed" -> value))
   /**
    * This integer attribute specifies the start value for numbering the individual list items. Although the ordering type of list elements might be Roman numerals, such as XXXI, or letters, the value of start is always represented as a number. To start numbering elements from the letter "C", use 
 <code>&lt;ol start="3"&gt;</code>. 
@@ -42,7 +43,7 @@ case class Ol(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def start: scala.Option[String] = attributes.get("start").asInstanceOf[scala.Option[String]]
-  def start(value: String): Ol = copy(attributes = attributes + ("start" -> value)).asInstanceOf[Ol]
+  def start(value: String): Ol = copy(attributes = attributes + ("start" -> value))
   /**
    * Indicates the numbering type: 
 <ul> 
@@ -59,5 +60,5 @@ case class Ol(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
-  def `type`(value: String): Ol = copy(attributes = attributes + ("type" -> value)).asInstanceOf[Ol]
+  def `type`(value: String): Ol = copy(attributes = attributes + ("type" -> value))
 }

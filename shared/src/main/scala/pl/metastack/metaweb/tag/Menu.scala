@@ -23,7 +23,8 @@ import pl.metastack.metaweb.tree
  </ul> 
 </dd>
  */
-case class Menu(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Menu] {
+case class Menu(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Menu
   override def tagName = "menu"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Menu = Menu(attributes, children)
   /**
@@ -32,7 +33,7 @@ case class Menu(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <em>context menu</em> state.
    */
   def label: scala.Option[String] = attributes.get("label").asInstanceOf[scala.Option[String]]
-  def label(value: String): Menu = copy(attributes = attributes + ("label" -> value)).asInstanceOf[Menu]
+  def label(value: String): Menu = copy(attributes = attributes + ("label" -> value))
   /**
    * This attribute indicates the kind of menu being declared, and can be one of two values. 
 <ul> 
@@ -41,5 +42,5 @@ case class Menu(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </ul>
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
-  def `type`(value: String): Menu = copy(attributes = attributes + ("type" -> value)).asInstanceOf[Menu]
+  def `type`(value: String): Menu = copy(attributes = attributes + ("type" -> value))
 }

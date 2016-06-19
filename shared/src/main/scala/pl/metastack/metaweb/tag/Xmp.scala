@@ -11,7 +11,8 @@ import pl.metastack.metaweb.tree
  <li>A monospaced font can also be obtained on any element, by applying an adequate <a href="/en-US/docs/CSS" title="CSS">CSS</a> style using <code>monospace</code> as the generic-font value for the <a href="/en-US/docs/Web/CSS/font-family" title=""><code>font-family</code></a> property.</li> 
 </ul>
  */
-case class Xmp(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Xmp] {
+case class Xmp(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Xmp
   override def tagName = "xmp"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Xmp = Xmp(attributes, children)
 }

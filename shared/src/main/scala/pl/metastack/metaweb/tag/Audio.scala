@@ -7,52 +7,53 @@ import pl.metastack.metaweb.tree
 Fallback content for browser not supporting the <code>&lt;audio&gt;</code> element can be added too.
 You can use the Web Audio API to directly generate and manipulate audio streams from JavaScript code. See <a href="/en-US/docs/Web/API/Web_Audio_API">Web Audio API</a> for details.
  */
-case class Audio(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Audio] {
+case class Audio(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Audio
   override def tagName = "audio"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Audio = Audio(attributes, children)
   /**
    * A Boolean attribute; if specified (even if the value is "false"!), the audio will automatically begin to play back as soon as it can do so without stopping to finish loading the data.
    */
   def autoplay: scala.Option[String] = attributes.get("autoplay").asInstanceOf[scala.Option[String]]
-  def autoplay(value: String): Audio = copy(attributes = attributes + ("autoplay" -> value)).asInstanceOf[Audio]
+  def autoplay(value: String): Audio = copy(attributes = attributes + ("autoplay" -> value))
   /**
    * A Boolean attribute; if specified, the audio will automatically begin being downloaded, even if not set to automatically play. This continues until the media cache is full, or the entire audio file has been downloaded, whichever comes first. This should only be used when it is expected that the user will choose to play the audio; for example, if the user has navigated to a page using a "Play this audio" link. This attribute was removed in Gecko 2.0 (Firefox 4 / Thunderbird 3.3 / SeaMonkey 2.1) in favor of the 
 <code>preload</code> attribute.
    */
   def autobuffer: scala.Option[String] = attributes.get("autobuffer").asInstanceOf[scala.Option[String]]
-  def autobuffer(value: String): Audio = copy(attributes = attributes + ("autobuffer" -> value)).asInstanceOf[Audio]
+  def autobuffer(value: String): Audio = copy(attributes = attributes + ("autobuffer" -> value))
   /**
    * An attribute you can read to determine which time ranges of the media have been buffered. This attribute contains a 
 <a href="/en-US/docs/Web/API/TimeRanges" title="The TimeRanges interface is used to represent a set of time ranges, primarily for the purpose of tracking which portions of media have been buffered when loading it for use by the <audio> and <video>&nbsp;elements."><code>TimeRanges</code></a> object.
    */
   def buffered: scala.Option[String] = attributes.get("buffered").asInstanceOf[scala.Option[String]]
-  def buffered(value: String): Audio = copy(attributes = attributes + ("buffered" -> value)).asInstanceOf[Audio]
+  def buffered(value: String): Audio = copy(attributes = attributes + ("buffered" -> value))
   /**
    * If this attribute is present, the browser will offer controls to allow the user to control audio playback, including volume, seeking, and pause/resume playback.
    */
   def controls: scala.Option[String] = attributes.get("controls").asInstanceOf[scala.Option[String]]
-  def controls(value: String): Audio = copy(attributes = attributes + ("controls" -> value)).asInstanceOf[Audio]
+  def controls(value: String): Audio = copy(attributes = attributes + ("controls" -> value))
   /**
    * A Boolean attribute,&nbsp;when&nbsp;specified, will&nbsp;automatically seek back to the start&nbsp;upon reaching the end of the audio.
    */
   def loop: scala.Option[String] = attributes.get("loop").asInstanceOf[scala.Option[String]]
-  def loop(value: String): Audio = copy(attributes = attributes + ("loop" -> value)).asInstanceOf[Audio]
+  def loop(value: String): Audio = copy(attributes = attributes + ("loop" -> value))
   /**
    * The offset, specified as the number of samples since the beginning of the audio stream, at which the audio is currently playing.
    */
   def mozCurrentSampleOffset: scala.Option[String] = attributes.get("mozCurrentSampleOffset").asInstanceOf[scala.Option[String]]
-  def mozCurrentSampleOffset(value: String): Audio = copy(attributes = attributes + ("mozCurrentSampleOffset" -> value)).asInstanceOf[Audio]
+  def mozCurrentSampleOffset(value: String): Audio = copy(attributes = attributes + ("mozCurrentSampleOffset" -> value))
   /**
    * A Boolean attribute which indicates whether the audio will be initially silenced. Its default value is false, meaning that the audio will be played.
    */
   def muted: scala.Option[String] = attributes.get("muted").asInstanceOf[scala.Option[String]]
-  def muted(value: String): Audio = copy(attributes = attributes + ("muted" -> value)).asInstanceOf[Audio]
+  def muted(value: String): Audio = copy(attributes = attributes + ("muted" -> value))
   /**
    * A 
 <a href="/en-US/docs/Web/API/TimeRanges" title="The TimeRanges interface is used to represent a set of time ranges, primarily for the purpose of tracking which portions of media have been buffered when loading it for use by the <audio> and <video>&nbsp;elements."><code>TimeRanges</code></a> object indicating all the ranges of the audio that have been played.
    */
   def played: scala.Option[String] = attributes.get("played").asInstanceOf[scala.Option[String]]
-  def played(value: String): Audio = copy(attributes = attributes + ("played" -> value)).asInstanceOf[Audio]
+  def played(value: String): Audio = copy(attributes = attributes + ("played" -> value))
   /**
    * This enumerated attribute is intended to provide a hint to the browser about what the author thinks will lead to the best user experience. It may have one of the following values: 
 <ul> 
@@ -71,17 +72,17 @@ case class Audio(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 </div>
    */
   def preload: scala.Option[String] = attributes.get("preload").asInstanceOf[scala.Option[String]]
-  def preload(value: String): Audio = copy(attributes = attributes + ("preload" -> value)).asInstanceOf[Audio]
+  def preload(value: String): Audio = copy(attributes = attributes + ("preload" -> value))
   /**
    * The URL of the audio to embed. This is subject to 
 <a href="/en-US/docs/HTTP_access_control">HTTP access controls</a>. This is optional; you may instead use the 
 <a href="/en-US/docs/Web/HTML/Element/source" title="The HTML <source> element is used to specify multiple media resources for <picture>, <audio> and <video> elements. It is an empty element. It is commonly used to serve the same media in multiple formats supported by different browsers."><code>&lt;source&gt;</code></a> element within the audio block to specify the audio to embed.
    */
   def src: scala.Option[String] = attributes.get("src").asInstanceOf[scala.Option[String]]
-  def src(value: String): Audio = copy(attributes = attributes + ("src" -> value)).asInstanceOf[Audio]
+  def src(value: String): Audio = copy(attributes = attributes + ("src" -> value))
   /**
    * The playback volume of any audio portions, in the range 0.0 (silent) to 1.0 (loudest).
    */
   def volume: scala.Option[String] = attributes.get("volume").asInstanceOf[scala.Option[String]]
-  def volume(value: String): Audio = copy(attributes = attributes + ("volume" -> value)).asInstanceOf[Audio]
+  def volume(value: String): Audio = copy(attributes = attributes + ("volume" -> value))
 }

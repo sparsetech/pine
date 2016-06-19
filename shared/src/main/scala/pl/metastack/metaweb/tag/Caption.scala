@@ -10,7 +10,8 @@ import pl.metastack.metaweb.tree
 <a href="/en-US/docs/Web/HTML/Element/figure" title="The HTML <figure> Element represents self-contained content, frequently with a caption&nbsp;(<figcaption>), and is&nbsp;typically referenced as a single unit. While it is related to the main flow, its position is independent of the main flow. Usually this is an image, an illustration, a diagram, a code snippet, or a schema that is referenced in the main text, but that can be moved to another page or to an appendix without affecting the main flow."><code>&lt;figure&gt;</code></a> element, use the 
 <a href="/en-US/docs/Web/HTML/Element/figcaption" title="The HTML <figcaption> Element represents a caption or a legend associated with a figure or an illustration described by the rest of the data of the <figure> element which is its immediate ancestor which means <figcaption> can be the first or last element inside a <figure> block.&nbsp;Also, the HTML Figcaption Element&nbsp;is optional; if not provided, then the parent figure element will have no caption."><code>&lt;figcaption&gt;</code></a> element instead.
  */
-case class Caption(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Caption] {
+case class Caption(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Caption
   override def tagName = "caption"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Caption = Caption(attributes, children)
   /**
@@ -32,5 +33,5 @@ case class Caption(attributes: Predef.Map[String, Any] = Predef.Map.empty, child
 </div>
    */
   def align: scala.Option[String] = attributes.get("align").asInstanceOf[scala.Option[String]]
-  def align(value: String): Caption = copy(attributes = attributes + ("align" -> value)).asInstanceOf[Caption]
+  def align(value: String): Caption = copy(attributes = attributes + ("align" -> value))
 }

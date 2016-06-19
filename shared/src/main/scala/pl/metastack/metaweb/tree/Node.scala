@@ -11,13 +11,16 @@ case class Text(text: String) extends Node {
 }
 
 trait Tag extends Node {
+  type T <: Tag
+
   def tagName: String
   def children: Seq[Node]
   def attributes: Map[String, Any]
-  def copy(attributes: Map[String, Any] = attributes, children: Seq[Node] = children): Tag
+  def copy(attributes: Map[String, Any] = attributes,
+           children: Seq[Node] = children): T
 
   def id: Option[String]
-  def id(value: String): Tag
+  def id(value: String): T
 
   // TODO Rewrite in a more functional style
   def find(f: Node => Boolean): Option[Node] = {
@@ -38,44 +41,44 @@ trait Tag extends Node {
     }
   }
 
-  def prepend(node: Node): Tag = copy(children = node +: children)
-  def +:(node: Node): Tag = prepend(node)
+  def prepend(node: Node): T = copy(children = node +: children)
+  def +:(node: Node): T = prepend(node)
 
-  def append(node: Node): Tag = copy(children = children :+ node)
-  def :+(node: Node): Tag = append(node)
+  def append(node: Node): T = copy(children = children :+ node)
+  def :+(node: Node): T = append(node)
 
-  def appendAll(nodes: Seq[Node]): Tag = copy(children = children ++ nodes)
-  def ++(nodes: Seq[Node]): Tag = appendAll(nodes)
+  def appendAll(nodes: Seq[Node]): T = copy(children = children ++ nodes)
+  def ++(nodes: Seq[Node]): T = appendAll(nodes)
 
-  def set(node: Node): Tag = copy(children = Seq(node))
-  def set(nodes: Seq[Node]): Tag = copy(children = nodes)
+  def set(node: Node): T = copy(children = Seq(node))
+  def set(nodes: Seq[Node]): T = copy(children = nodes)
 
-  def clearAll: Tag = copy(children = Seq.empty)
+  def clearAll: T = copy(children = Seq.empty)
 
-  def remove(node: Node): Tag = copy(children = children.diff(Seq(node)))
-  def -(node: Node): Tag = remove(node)
+  def remove(node: Node): T = copy(children = children.diff(Seq(node)))
+  def -(node: Node): T = remove(node)
 
-  def removeAll(node: Seq[Node]): Tag = copy(children = children.diff(Seq(node)))
-  def --(node: Seq[Node]): Tag = removeAll(node)
+  def removeAll(node: Seq[Node]): T = copy(children = children.diff(Seq(node)))
+  def --(node: Seq[Node]): T = removeAll(node)
 
-  def replace(reference: Node, node: Node): Tag =
+  def replace(reference: Node, node: Node): T =
     copy(children = children.map(n => if (n == reference) node else n))
 
   def attr(attribute: String): Option[Any] = attributes.get(attribute)
-  def setAttr(attribute: String, value: Any): Tag =
+  def setAttr(attribute: String, value: Any): T =
     copy(attributes = attributes + (attribute -> value))
-  def remAttr(attribute: String): Tag =
+  def remAttr(attribute: String): T =
     copy(attributes = attributes - attribute)
-  def clearAttr: Tag = copy(attributes = Map.empty)
+  def clearAttr: T = copy(attributes = Map.empty)
 
   def map(f: Node => Node): Node = f(copy(children = children.map(f)))
 
   def partialMap(f: PartialFunction[Node, Node]): Node =
     map(node => f.lift(node).getOrElse(node))
 
-  def withoutId: Tag = copy(attributes = attributes - "id")
+  def withoutId: T = copy(attributes = attributes - "id")
 
-  def instantiateMap(nodes: Map[String, Node]): Tag = {
+  def instantiateMap(nodes: Map[String, Node]): T = {
     val attrId = attributes.get("id")
 
     if (nodes.exists { case (id, _) => attrId.contains(id) }) {
@@ -92,13 +95,13 @@ trait Tag extends Node {
       )
   }
 
-  def instantiate(nodes: (String, Node)*): Tag =
+  def instantiate(nodes: (String, Node)*): T =
     instantiateMap(nodes.toMap)
 
-  def updateChild[T <: Tag](id: String, f: T => Node): Node = {
+  def updateChild[U <: Tag](id: String, f: U => Node): Node = {
     val attrId = attributes.get("id")
 
-    if (attrId.contains(id)) f(this.asInstanceOf[T])
+    if (attrId.contains(id)) f(this.asInstanceOf[U])
     else
       copy(
         children = children.map {
@@ -108,42 +111,44 @@ trait Tag extends Node {
       )
   }
 
-  def byIdOpt[T <: Tag](id: String): Option[T] =
+  def byIdOpt[U <: Tag](id: String): Option[U] =
     find {
       case t: Tag => t.id.contains(id)
       case _      => false
-    }.map(_.asInstanceOf[T])
+    }.map(_.asInstanceOf[U])
 
-  def byId[T <: Tag](id: String): T = byIdOpt(id)
+  def byId[U <: Tag](id: String): U = byIdOpt(id)
     .getOrElse(throw new IllegalArgumentException(s"Invalid node ID '$id'"))
 
-  def byTagOpt[T <: Tag](tag: String): Option[T] =
+  def byTagOpt[U <: Tag](tag: String): Option[U] =
     find {
       case t: Tag => t.tagName == tag
       case _      => false
-    }.map(_.asInstanceOf[T])
+    }.map(_.asInstanceOf[U])
 
-  def byTag[T <: Tag](tagName: String): T =
+  def byTag[U <: Tag](tagName: String): U =
     byTagOpt(tagName).getOrElse(
       throw new IllegalArgumentException(s"Invalid tag name '$tagName'"))
 
-  def byClassOpt[T <: HTMLTag[_]](`class`: String): Option[T] =
+  def byClassOpt[U <: HTMLTag](`class`: String): Option[U] =
     find {
-      case t: HTMLTag[_] => t.`class`.exists(_.split(' ').toSet.contains(`class`))
-      case _             => false
-    }.map(_.asInstanceOf[T])
+      case t: HTMLTag => t.`class`.exists(_.split(' ').toSet.contains(`class`))
+      case _          => false
+    }.map(_.asInstanceOf[U])
 
-  def byClass[T <: Tag](`class`: String): T = byClassOpt(`class`).get
+  def byClass[U <: Tag](`class`: String): U = byClassOpt(`class`).get
 }
 
 case class CustomTag(tagName: String,
                      attributes: Map[String, Any] = Map.empty,
                      children: Seq[Node] = Seq.empty) extends Tag {
+  override type T = CustomTag
+
   override def copy(attributes: Map[String, Any] = attributes,
                     children: Seq[Node] = children): CustomTag =
     CustomTag(tagName, attributes, children)
 
   override def id: Option[String] = attributes.get("id")
     .asInstanceOf[Option[String]]
-  override def id(value: String): Tag = setAttr("id", value)
+  override def id(value: String): CustomTag = setAttr("id", value)
 }

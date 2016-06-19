@@ -10,7 +10,8 @@ Depending on the attributes set, the kind of metadata can be one of the followin
 <li>If <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-charset">charset</a></code> is set, it is a&nbsp;<em>charset declaration</em>, i.e. the charset used for the serialized form of the webpage.&nbsp;<span class="inlineIndicator htmlVer htmlVerInline"><a href="/en-US/docs/HTML/HTML5">HTML5</a></span></li> 
 <li>If <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-itemprop">itemprop</a></code> is set, it is <em>user-defined metadata</em>, transparent for the user-agent as the semantics of the metadata is user-specific. <span class="spec-Living">Living Standard</span> <span class="inlineIndicator unimplemented unimplementedInline">Unimplemented</span></li>
  */
-case class Meta(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Meta] {
+case class Meta(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Meta
   override def tagName = "meta"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Meta = Meta(attributes, children)
   /**
@@ -36,14 +37,14 @@ case class Meta(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </div>
    */
   def charset: scala.Option[String] = attributes.get("charset").asInstanceOf[scala.Option[String]]
-  def charset(value: String): Meta = copy(attributes = attributes + ("charset" -> value)).asInstanceOf[Meta]
+  def charset(value: String): Meta = copy(attributes = attributes + ("charset" -> value))
   /**
    * This attribute gives the value associated with the 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-http-equiv">http-equiv</a></code> or 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-name">name</a></code> attribute, depending of the context.
    */
   def content: scala.Option[String] = attributes.get("content").asInstanceOf[scala.Option[String]]
-  def content(value: String): Meta = copy(attributes = attributes + ("content" -> value)).asInstanceOf[Meta]
+  def content(value: String): Meta = copy(attributes = attributes + ("content" -> value))
   /**
    * This enumerated attribute defines the pragma that can alter servers and user-agents behavior. The value of the pragma is defined using the 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-content">content</a></code> and can be one of the following: 
@@ -128,7 +129,7 @@ case class Meta(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </dl>
    */
   def `http-equiv`: scala.Option[String] = attributes.get("http-equiv").asInstanceOf[scala.Option[String]]
-  def `http-equiv`(value: String): Meta = copy(attributes = attributes + ("http-equiv" -> value)).asInstanceOf[Meta]
+  def `http-equiv`(value: String): Meta = copy(attributes = attributes + ("http-equiv" -> value))
   /**
    * This attribute defines the name of document-level metadata. It should not be set if one of the attributes 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-itemprop">itemprop</a></code>, 
@@ -348,7 +349,7 @@ case class Meta(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </ul>
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
-  def name(value: String): Meta = copy(attributes = attributes + ("name" -> value)).asInstanceOf[Meta]
+  def name(value: String): Meta = copy(attributes = attributes + ("name" -> value))
   /**
    * This attribute defines the scheme in which the metadata is described. A scheme is a context leading to the correct interpretations of the 
 <code><a href="/en-US/docs/Web/HTML/Element/meta#attr-content">content</a></code> value, like a format. 
@@ -357,5 +358,5 @@ case class Meta(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </div>
    */
   def scheme: scala.Option[String] = attributes.get("scheme").asInstanceOf[scala.Option[String]]
-  def scheme(value: String): Meta = copy(attributes = attributes + ("scheme" -> value)).asInstanceOf[Meta]
+  def scheme(value: String): Meta = copy(attributes = attributes + ("scheme" -> value))
 }

@@ -10,7 +10,8 @@ import pl.metastack.metaweb.tree
  <li>The <code>&lt;footer&gt;</code> element is not sectioning content and therefore doesn't introduce a new section in the <a href="/en-US/docs/Sections_and_Outlines_of_an_HTML5_document" title="Sections and Outlines of an HTML5 document">outline</a>.</li> 
 </ul>
  */
-case class Footer(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Footer] {
+case class Footer(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Footer
   override def tagName = "footer"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Footer = Footer(attributes, children)
 }

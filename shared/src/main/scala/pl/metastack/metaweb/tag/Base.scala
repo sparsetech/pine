@@ -10,7 +10,8 @@ The base URL of a document can be queried from a script using <a class="new" hre
 <strong>href</strong> and first 
 <strong>target</strong> value are used; all others are ignored.
  */
-case class Base(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Base] {
+case class Base(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Base
   override def tagName = "base"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Base = Base(attributes, children)
   /**
@@ -18,7 +19,7 @@ case class Base(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <br> Absolute and relative URIs are allowed (but see note section below).
    */
   def href: scala.Option[String] = attributes.get("href").asInstanceOf[scala.Option[String]]
-  def href(value: String): Base = copy(attributes = attributes + ("href" -> value)).asInstanceOf[Base]
+  def href(value: String): Base = copy(attributes = attributes + ("href" -> value))
   /**
    * A name or keyword indicating the default location to display the result when hyperlinks or forms cause navigation, for elements that do not have an explicit target reference. In HTML4, this is the name of, or a keyword for, a frame. In HTML5, it is a name of, or keyword for, a 
 <em>browsing context</em> (for example, tab, window, or inline frame). The following keywords have special meanings: 
@@ -30,5 +31,5 @@ case class Base(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </ul>
    */
   def target: scala.Option[String] = attributes.get("target").asInstanceOf[scala.Option[String]]
-  def target(value: String): Base = copy(attributes = attributes + ("target" -> value)).asInstanceOf[Base]
+  def target(value: String): Base = copy(attributes = attributes + ("target" -> value))
 }

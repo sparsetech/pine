@@ -9,7 +9,8 @@ This element is obsolete. Use a more appropriate element, such as
 <a href="/en-US/docs/Web/HTML/Element/span" title="The HTML <span> element is a generic inline container for phrasing content, which does not inherently represent anything. It can be used to group elements for styling purposes (using the class or id attributes), or because they share attribute values, such as lang. It should be used only when no other semantic element is appropriate. <span> is very much like a <div> element, but <div> is a block-level element whereas a <span> is an inline element."><code>&lt;span&gt;</code></a> with 
 <a href="/fr/docs/CSS" title="/fr/docs/CSS">CSS</a>, instead.
  */
-case class Tt(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Tt] {
+case class Tt(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Tt
   override def tagName = "tt"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Tt = Tt(attributes, children)
 }

@@ -10,7 +10,8 @@ import pl.metastack.metaweb.tree
  <li>A caption can be associated with the <code>&lt;figure&gt;</code> element by inserting a <a href="/en-US/docs/Web/HTML/Element/figcaption" title="The HTML <figcaption> Element represents a caption or a legend associated with a figure or an illustration described by the rest of the data of the <figure> element which is its immediate ancestor which means <figcaption> can be the first or last element inside a <figure> block.&nbsp;Also, the HTML Figcaption Element&nbsp;is optional; if not provided, then the parent figure element will have no caption."><code>&lt;figcaption&gt;</code></a> inside it (as the first or the last child).</li> 
 </ul>
  */
-case class Figure(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Figure] {
+case class Figure(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Figure
   override def tagName = "figure"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Figure = Figure(attributes, children)
 }

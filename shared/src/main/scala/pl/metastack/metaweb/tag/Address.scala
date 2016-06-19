@@ -11,7 +11,8 @@ import pl.metastack.metaweb.tree
  <li>Typically an <span style="font-family: Courier New;">&lt;address&gt;</span> element can be placed inside the <a href="/en-US/docs/Web/HTML/Element/footer" title="The HTML Footer Element (<footer>) represents a footer for its nearest sectioning content or sectioning root element. A footer typically contains information about the author of the section, copyright data or links to related documents."><code>&lt;footer&gt;</code></a> element of the current section, if any.</li> 
 </ul>
  */
-case class Address(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Address] {
+case class Address(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Address
   override def tagName = "address"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Address = Address(attributes, children)
 }

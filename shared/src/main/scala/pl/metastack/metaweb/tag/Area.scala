@@ -5,7 +5,8 @@ import pl.metastack.metaweb.tree
 /**
  * The <em>HTML <code>&lt;area&gt;</code> element</em> defines a hot-spot region on an image, and optionally associates it with a <a class="glossaryLink" href="/en-US/docs/Glossary/Hyperlink" title="hypertext link: Hyperlinks connect web pages, or data items, to one another. In HTML, anchor elements define the hyperlinks from a part of a Web page, such as a text string or image, to another site, page or even a particular point within a page.">hypertext link</a>. This element is used only within a <a href="/en-US/docs/Web/HTML/Element/map" title="The HTML <map> element is used with <area> elements to define an image map (a clickable link area)."><code>&lt;map&gt;</code></a> element.
  */
-case class Area(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Area] {
+case class Area(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Area
   override def tagName = "area"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Area = Area(attributes, children)
   /**
@@ -13,7 +14,7 @@ case class Area(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <strong>href</strong> attribute is used.
    */
   def alt: scala.Option[String] = attributes.get("alt").asInstanceOf[scala.Option[String]]
-  def alt(value: String): Area = copy(attributes = attributes + ("alt" -> value)).asInstanceOf[Area]
+  def alt(value: String): Area = copy(attributes = attributes + ("alt" -> value))
   /**
    * A set of values specifying the coordinates of the hot-spot region. The number and meaning of the values depend upon the value specified for the 
 <strong>shape</strong> attribute. For a 
@@ -27,32 +28,32 @@ case class Area(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <code>x1,y1,x2,y2,x3,y3,</code> and so on. In HTML4, the values are numbers of pixels or percentages, if a percent sign (%) is appended; in HTML5, the values are numbers of CSS&nbsp;pixels.
    */
   def coords: scala.Option[String] = attributes.get("coords").asInstanceOf[scala.Option[String]]
-  def coords(value: String): Area = copy(attributes = attributes + ("coords" -> value)).asInstanceOf[Area]
+  def coords(value: String): Area = copy(attributes = attributes + ("coords" -> value))
   /**
    * This attribute, if present, indicates that the author intends the hyperlink to be used for downloading a resource. See 
 <a href="/en-US/docs/Web/HTML/Element/a" title="The HTML <a> Element (or the HTML Anchor Element) defines a hyperlink, the named target destination for a hyperlink, or both."><code>&lt;a&gt;</code></a> for a full description of the 
 <code><a href="/en-US/docs/Web/HTML/Element/a#attr-download">download</a></code> attribute.
    */
   def download: scala.Option[String] = attributes.get("download").asInstanceOf[scala.Option[String]]
-  def download(value: String): Area = copy(attributes = attributes + ("download" -> value)).asInstanceOf[Area]
+  def download(value: String): Area = copy(attributes = attributes + ("download" -> value))
   /**
    * The hyperlink target for the area. Its value is a valid URL. In HTML4, either this attribute or the 
 <strong>nohref</strong> attribute must be present in the element. In HTML5, this attribute may be omitted; if so, the area element does not represent a hyperlink.
    */
   def href: scala.Option[String] = attributes.get("href").asInstanceOf[scala.Option[String]]
-  def href(value: String): Area = copy(attributes = attributes + ("href" -> value)).asInstanceOf[Area]
+  def href(value: String): Area = copy(attributes = attributes + ("href" -> value))
   /**
    * Indicates the language of the linked resource. Allowed values are determined by 
 <a class="external" href="http://www.ietf.org/rfc/bcp/bcp47.txt" title="http://www.ietf.org/rfc/bcp/bcp47.txt">BCP47</a>. Use this attribute only if the 
 <strong>href</strong> attribute is present.
    */
   def hreflang: scala.Option[String] = attributes.get("hreflang").asInstanceOf[scala.Option[String]]
-  def hreflang(value: String): Area = copy(attributes = attributes + ("hreflang" -> value)).asInstanceOf[Area]
+  def hreflang(value: String): Area = copy(attributes = attributes + ("hreflang" -> value))
   /**
    * Define a names for the clickable area so that it can be scripted by older browsers.
    */
   def name: scala.Option[String] = attributes.get("name").asInstanceOf[scala.Option[String]]
-  def name(value: String): Area = copy(attributes = attributes + ("name" -> value)).asInstanceOf[Area]
+  def name(value: String): Area = copy(attributes = attributes + ("name" -> value))
   /**
    * A hint of the media for which the linked resource was designed, for example 
 <code>print and screen</code>. If omitted, it defaults to 
@@ -60,7 +61,7 @@ case class Area(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <strong>href</strong> attribute is present.
    */
   def media: scala.Option[String] = attributes.get("media").asInstanceOf[scala.Option[String]]
-  def media(value: String): Area = copy(attributes = attributes + ("media" -> value)).asInstanceOf[Area]
+  def media(value: String): Area = copy(attributes = attributes + ("media" -> value))
   /**
    * Indicates that no hyperlink exists for the associated area. Either this attribute or the 
 <strong>href</strong> attribute must be present in the element. 
@@ -69,7 +70,7 @@ case class Area(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 </div>
    */
   def nohref: scala.Option[String] = attributes.get("nohref").asInstanceOf[scala.Option[String]]
-  def nohref(value: String): Area = copy(attributes = attributes + ("nohref" -> value)).asInstanceOf[Area]
+  def nohref(value: String): Area = copy(attributes = attributes + ("nohref" -> value))
   /**
    * For anchors containing the 
 <strong>href</strong> attribute, this attribute specifies the relationship of the target object to the link object. The value is a comma-separated list of 
@@ -77,7 +78,7 @@ case class Area(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <strong>href</strong> attribute is present.
    */
   def rel: scala.Option[String] = attributes.get("rel").asInstanceOf[scala.Option[String]]
-  def rel(value: String): Area = copy(attributes = attributes + ("rel" -> value)).asInstanceOf[Area]
+  def rel(value: String): Area = copy(attributes = attributes + ("rel" -> value))
   /**
    * The shape of the associated hot spot. The specifications for HTML 5 and HTML 4 define the values 
 <code>rect</code>, which defines a rectangular region; 
@@ -91,7 +92,7 @@ case class Area(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <span title="This API has not been standardized."><i class="icon-warning-sign"> </i></span>.
    */
   def shape: scala.Option[String] = attributes.get("shape").asInstanceOf[scala.Option[String]]
-  def shape(value: String): Area = copy(attributes = attributes + ("shape" -> value)).asInstanceOf[Area]
+  def shape(value: String): Area = copy(attributes = attributes + ("shape" -> value))
   /**
    * This attribute specifies where to display the linked resource. In HTML4, this is the name of, or a keyword for, a frame. In HTML5, it is a name of, or keyword for, a 
 <em>browsing context</em> (for example, tab, window, or inline frame). The following keywords have special meanings: 
@@ -104,12 +105,12 @@ case class Area(attributes: Predef.Map[String, Any] = Predef.Map.empty, children
 <strong>href</strong> attribute is present.
    */
   def target: scala.Option[String] = attributes.get("target").asInstanceOf[scala.Option[String]]
-  def target(value: String): Area = copy(attributes = attributes + ("target" -> value)).asInstanceOf[Area]
+  def target(value: String): Area = copy(attributes = attributes + ("target" -> value))
   /**
    * This attribute specifies the media type in the form of a MIME type for the link target. Generally, this is provided strictly as advisory information; however, in the future a browser might add a small icon for multimedia types. For example, a browser might add a small speaker icon when type is set to audio/wav. For a complete list of recognized MIME types, see 
 <a class="external linkification-ext" href="http://www.w3.org/TR/html4/references.html#ref-MIMETYPES" title="Linkification: http://www.w3.org/TR/html4/references.html#ref-MIMETYPES">http://www.w3.org/TR/html4/references.html#ref-MIMETYPES</a>. Use this attribute only if the 
 <strong>href</strong> attribute is present.
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
-  def `type`(value: String): Area = copy(attributes = attributes + ("type" -> value)).asInstanceOf[Area]
+  def `type`(value: String): Area = copy(attributes = attributes + ("type" -> value))
 }

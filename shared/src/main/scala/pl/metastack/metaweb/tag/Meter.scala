@@ -10,7 +10,8 @@ import pl.metastack.metaweb.tree
 <strong>max</strong> attribute should define the range so that the 
 <strong>value</strong> attribute's value is within it.
  */
-case class Meter(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Meter] {
+case class Meter(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Meter
   override def tagName = "meter"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Meter = Meter(attributes, children)
   /**
@@ -21,19 +22,19 @@ case class Meter(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <strong>max</strong> attribute, the value is equal to the nearest end of the range.
    */
   def value: scala.Option[String] = attributes.get("value").asInstanceOf[scala.Option[String]]
-  def value(value: String): Meter = copy(attributes = attributes + ("value" -> value)).asInstanceOf[Meter]
+  def value(value: String): Meter = copy(attributes = attributes + ("value" -> value))
   /**
    * The lower numeric bound of the measured range. This must be less than the maximum value (
 <strong>max</strong> attribute), if specified. If unspecified, the minimum value is 0.
    */
   def min: scala.Option[Double] = attributes.get("min").asInstanceOf[scala.Option[Double]]
-  def min(value: Double): Meter = copy(attributes = attributes + ("min" -> value)).asInstanceOf[Meter]
+  def min(value: Double): Meter = copy(attributes = attributes + ("min" -> value))
   /**
    * The upper numeric bound of the measured range. This must be greater than the minimum value (
 <strong>min</strong> attribute), if specified. If unspecified, the maximum value is 1.
    */
   def max: scala.Option[Double] = attributes.get("max").asInstanceOf[scala.Option[Double]]
-  def max(value: Double): Meter = copy(attributes = attributes + ("max" -> value)).asInstanceOf[Meter]
+  def max(value: Double): Meter = copy(attributes = attributes + ("max" -> value))
   /**
    * The upper numeric bound of the low end of the measured range. This must be greater than the minimum value (
 <strong>min</strong> attribute), and it also must be less than the high value and maximum value (
@@ -42,7 +43,7 @@ case class Meter(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <strong>low</strong> value is equal to the minimum value.
    */
   def low: scala.Option[Double] = attributes.get("low").asInstanceOf[scala.Option[Double]]
-  def low(value: Double): Meter = copy(attributes = attributes + ("low" -> value)).asInstanceOf[Meter]
+  def low(value: Double): Meter = copy(attributes = attributes + ("low" -> value))
   /**
    * The lower numeric bound of the high end of the measured range. This must be less than the maximum value (
 <strong>max</strong> attribute), and it also must be greater than the low value and minimum value (
@@ -51,7 +52,7 @@ case class Meter(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <strong>high</strong> value is equal to the maximum value.
    */
   def high: scala.Option[Double] = attributes.get("high").asInstanceOf[scala.Option[Double]]
-  def high(value: Double): Meter = copy(attributes = attributes + ("high" -> value)).asInstanceOf[Meter]
+  def high(value: Double): Meter = copy(attributes = attributes + ("high" -> value))
   /**
    * This attribute indicates the optimal numeric value. It must be within the range (as defined by the 
 <strong>min</strong> attribute and 
@@ -62,7 +63,7 @@ case class Meter(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <strong>low</strong> attribute, then the lower range is considered preferred.
    */
   def optimum: scala.Option[Double] = attributes.get("optimum").asInstanceOf[scala.Option[Double]]
-  def optimum(value: Double): Meter = copy(attributes = attributes + ("optimum" -> value)).asInstanceOf[Meter]
+  def optimum(value: Double): Meter = copy(attributes = attributes + ("optimum" -> value))
   /**
    * This attribute associates the element with a 
 <code>form</code> element that has ownership of the 
@@ -75,5 +76,5 @@ case class Meter(attributes: Predef.Map[String, Any] = Predef.Map.empty, childre
 <code>form</code> element.
    */
   def form: scala.Option[String] = attributes.get("form").asInstanceOf[scala.Option[String]]
-  def form(value: String): Meter = copy(attributes = attributes + ("form" -> value)).asInstanceOf[Meter]
+  def form(value: String): Meter = copy(attributes = attributes + ("form" -> value))
 }

@@ -24,22 +24,23 @@ import pl.metastack.metaweb.tree
  The width of the coordinate space in CSS pixels. Defaults to 300.
 </dd>
  */
-case class Canvas(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Canvas] {
+case class Canvas(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Canvas
   override def tagName = "canvas"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Canvas = Canvas(attributes, children)
   /**
    * The height of the coordinate space in CSS pixels. Defaults to 150.
    */
   def height: scala.Option[String] = attributes.get("height").asInstanceOf[scala.Option[String]]
-  def height(value: String): Canvas = copy(attributes = attributes + ("height" -> value)).asInstanceOf[Canvas]
+  def height(value: String): Canvas = copy(attributes = attributes + ("height" -> value))
   /**
    * Lets the canvas know whether or not translucency will be a factor. If the canvas knows there's no translucency, painting performance can be optimized.
    */
   def `moz-opaque`: scala.Option[String] = attributes.get("moz-opaque").asInstanceOf[scala.Option[String]]
-  def `moz-opaque`(value: String): Canvas = copy(attributes = attributes + ("moz-opaque" -> value)).asInstanceOf[Canvas]
+  def `moz-opaque`(value: String): Canvas = copy(attributes = attributes + ("moz-opaque" -> value))
   /**
    * The width of the coordinate space in CSS pixels. Defaults to 300.
    */
   def width: scala.Option[String] = attributes.get("width").asInstanceOf[scala.Option[String]]
-  def width(value: String): Canvas = copy(attributes = attributes + ("width" -> value)).asInstanceOf[Canvas]
+  def width(value: String): Canvas = copy(attributes = attributes + ("width" -> value))
 }

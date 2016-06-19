@@ -12,7 +12,8 @@ There is no limitation to the depth and imbrication of lists defined with the <a
 <a href="/en-US/docs/Web/HTML/Element/ol" title="The HTML <ol> Element (or HTML Ordered List Element) represents an ordered list of items. Typically, ordered-list items are displayed with a preceding numbering, which can be of any form, like numerals, letters or Romans numerals or even simple bullets. This numbered style is not defined in the HTML description of the page, but in its associated CSS, using the list-style-type property."><code>&lt;ol&gt;</code></a> element should be used, otherwise you can use 
 <a href="/en-US/docs/Web/HTML/Element/ul" title="The HTML unordered list element (<ul>) represents an unordered list of items, namely a collection of items that do not have a numerical ordering, and their order in the list is meaningless. Typically, unordered-list items are displayed with a bullet, which can be of several forms, like a dot, a circle or a squared. The bullet style is not defined in the HTML description of the page, but in its associated CSS, using the list-style-type property."><code>&lt;ul&gt;</code></a>.
  */
-case class Ul(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Ul] {
+case class Ul(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Ul
   override def tagName = "ul"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Ul = Ul(attributes, children)
   /**
@@ -28,7 +29,7 @@ case class Ul(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def compact: scala.Option[String] = attributes.get("compact").asInstanceOf[scala.Option[String]]
-  def compact(value: String): Ul = copy(attributes = attributes + ("compact" -> value)).asInstanceOf[Ul]
+  def compact(value: String): Ul = copy(attributes = attributes + ("compact" -> value))
   /**
    * Used to set the bullet style for the list. The values defined under 
 <a href="/en/HTML3.2" title="en/HTML3.2">HTML3.2</a> and the transitional version of 
@@ -48,5 +49,5 @@ case class Ul(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: 
 </div>
    */
   def `type`: scala.Option[String] = attributes.get("type").asInstanceOf[scala.Option[String]]
-  def `type`(value: String): Ul = copy(attributes = attributes + ("type" -> value)).asInstanceOf[Ul]
+  def `type`(value: String): Ul = copy(attributes = attributes + ("type" -> value))
 }

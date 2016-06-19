@@ -11,7 +11,8 @@ import pl.metastack.metaweb.tree
  <li>User agents, such as screen readers targeting disabled users, can use this element to determine whether to omit the initial rendering of this content.</li> 
 </ul>
  */
-case class Nav(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[Nav] {
+case class Nav(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+  override type T = Nav
   override def tagName = "nav"
   override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Nav = Nav(attributes, children)
 }

@@ -62,7 +62,7 @@ object MDNParser {
     val file = new File(path, "HTMLTag.scala")
     printToFile(file) { p =>
       writeHeader(p)
-      p.println(s"""trait HTMLTag[T <: tree.Tag] extends tree.Tag { self: T =>""")
+      p.println(s"""trait HTMLTag extends tree.Tag {""")
       writeAttributes(p, "T", attributes)
       p.println("}")
       p.println("""object HTMLTag {""")
@@ -101,7 +101,8 @@ object MDNParser {
       p.println( s"""/**""")
       p.println( s""" * $description""")
       p.println( s""" */""")
-      p.println(s"""case class $className(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag[$className] {""")
+      p.println(s"""case class $className(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {""")
+      p.println(s"  override type T = $className")
       p.println(s"""  override def tagName = "${element.tag}"""")
       p.println(s"""  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): $className = $className(attributes, children)""")
 
@@ -166,7 +167,7 @@ object MDNParser {
       p.println("import pl.metastack.metaweb.diff.{Attribute, NodeRef}")
       p.println()
       p.println("trait NodeRefAttributes {")
-      writeNodeRefAttributesClass(p, "HTMLTag[_]", globalAttributes)
+      writeNodeRefAttributesClass(p, "HTMLTag", globalAttributes)
 
       elements.toList.sortBy(_.tag).foreach { element =>
         if (element.attributes.nonEmpty) {
@@ -197,9 +198,9 @@ object MDNParser {
         p.println( s"""  def $attrName: scala.Option[$attrType] = attributes.get("${attribute.name}").asInstanceOf[scala.Option[$attrType]]""")
 
       if (attrType == "Boolean")
-        p.println( s"""  def $attrName(value: $attrType): $className = (if (value) copy(attributes = attributes + ("${attribute.name}" -> "")) else copy(attributes = attributes - "${attribute.name}")).asInstanceOf[$className]""")
+        p.println( s"""  def $attrName(value: $attrType): $className = (if (value) copy(attributes = attributes + ("${attribute.name}" -> "")) else copy(attributes = attributes - "${attribute.name}"))""")
       else
-        p.println( s"""  def $attrName(value: $attrType): $className = copy(attributes = attributes + ("${attribute.name}" -> value)).asInstanceOf[$className]""")
+        p.println( s"""  def $attrName(value: $attrType): $className = copy(attributes = attributes + ("${attribute.name}" -> value))""")
     }
 
   def globalAttributes(): Seq[Attribute] = {

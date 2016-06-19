@@ -7,6 +7,7 @@ class NodeSpec extends FunSuite {
     val a = tag.A()
       .href("http://github.com/")
       .set(tree.Text("GitHub"))
+    assert((a: tag.A) == a)
     assert(a == html"""<a href="http://github.com/">GitHub</a>""")
     assert(a.toHtml == """<a href="http://github.com/">GitHub</a>""")
   }
