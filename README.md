@@ -177,7 +177,7 @@ Diff(
 - *Combining diffs:* The `:+` operator may be more convenient than `Diff()` in some cases.
 ```scala
 btnRemove.click.subscribe(_ => destroy()) :+
-btnRenameToggle.click.subscribe { _ =>
+btnRenameToggle.click.subscribe(_ => rename())
 ```
 
 ## Views
