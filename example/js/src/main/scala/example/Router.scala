@@ -1,13 +1,11 @@
 package example
 
 import scala.concurrent.ExecutionContext.Implicits.global
-
 import scala.scalajs.js
 import scala.scalajs.js.JSON
 import scala.scalajs.js.annotation.JSExport
-
 import org.scalajs.dom
-
+import pl.metastack.metarouter.PathParser
 import pl.metastack.metaweb._
 import pl.metastack.metaweb.diff.Diff
 import pl.metastack.metaweb.macros.Js
@@ -35,15 +33,8 @@ object Router extends js.JSApp {
     }
 
   def resolvePage(): Page = {
-    val href = dom.window.location.href
-    val uri = href.split('/').drop(3).toSeq.mkString("/").split('?')
-    val path = uri.head
-    path match {
-      case "numberguess" => new page.NumberGuess
-      case "books" => new page.Books
-      // case "books/details" => new page.BooksDetails
-      case _ => new page.Index
-    }
+    val parsed = PathParser.parse(dom.window.location.href)
+    Routes.instantiate(parsed.path).getOrElse(new page.Index)
   }
 
   @JSExport

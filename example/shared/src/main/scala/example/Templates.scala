@@ -11,10 +11,11 @@ object Templates {
 
   val PageId = "page"
 
-  def Books = page("Books")
-  def Index = page("Index")
+  def Index       = page("Index")
+  def Books       = page("Books")
+  def BookDetails = page("BookDetails")
   def NumberGuess = page("NumberGuess")
-  def Layout = get("Layout")
+  def Layout      = get("Layout")
 
   def get(template: String): Future[tree.Tag] =
     cache.get(template) match {

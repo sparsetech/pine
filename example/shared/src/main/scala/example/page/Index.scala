@@ -18,8 +18,9 @@ class Index extends Page with Routing {
 
   @Js override def register(): Diff =
     super.register() :+
-    btnGuess.click.subscribe(_ => redirect(new page.NumberGuess, "/numberguess")) :+
-    btnBooks.click.subscribe(_ => redirect(new page.Books, "/books"))
+    btnGuess.click.subscribe(_ =>
+      redirect(Routes.numberGuess(Routes.NumberGuess()))) :+
+    btnBooks.click.subscribe(_ => redirect(Routes.books(Routes.Books())))
 
   override def destroy(): Diff = {
     println("On redirect")

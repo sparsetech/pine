@@ -103,7 +103,7 @@ class ItemView(book: BookListItem) extends View {
   override def populate(): Diff =
     Diff(
       title := book.title,
-      title.href := s"/book/${book.id}",
+      title.href := Routes.bookDetails(Routes.BookDetails(book.id)).url(),
       txtRename.value := book.title,
       divRenameBox.hide(hidden)
     )

@@ -4,6 +4,7 @@ import java.io.File
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
+import cats.Eval
 import cats.data.Xor
 
 import com.twitter.finagle
@@ -15,6 +16,7 @@ import io.circe._
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
+
 import io.finch._
 
 import pl.metastack.metaweb._
@@ -62,16 +64,14 @@ object Server extends App {
       case n => n
     }.toHtml
 
-  val index: Endpoint[String] = / {
-    renderView(new page.Index).asTwitter.map(Ok(_).withContentType(Some("text/html")))
-  }
-
-  val numberGuess: Endpoint[String] = get("numberguess") {
-    renderView(new page.NumberGuess).asTwitter.map(Ok(_).withContentType(Some("text/html")))
-  }
-
-  val books: Endpoint[String] = get("books") {
-    renderView(new page.Books).asTwitter.map(Ok(_).withContentType(Some("text/html")))
+  val pagesEndpoint = new Endpoint[String] {
+    def apply(input: Input): Endpoint.Result[String] =
+      Routes.instantiate(input.request.uri).map { page =>
+        (input.copy(path = Seq.empty), Eval.now(
+          renderView(page)
+            .asTwitter
+            .map(Ok(_).withContentType(Some("text/html")))))
+      }
   }
 
   val sjsFile = fileEndpoint("sjs", "js/target/scala-2.11", "text/javascript")
@@ -79,7 +79,7 @@ object Server extends App {
   val api     = serviceEndpoint(MyService, "api")
 
   val server: finagle.Service[http.Request, http.Response] = (
-    index :+: numberGuess :+: books :+: sjsFile :+: tplFile :+: api
+    pagesEndpoint :+: sjsFile :+: tplFile :+: api
   ).toService
 
   Await.ready(Http.server.serve(":8080", server))

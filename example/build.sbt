@@ -1,8 +1,9 @@
-val Scala    = "2.11.8"
-val Circe    = "0.4.1"
-val Finch    = "0.10.0"
-val MetaWeb  = "0.2.0"
-val Paradise = "2.1.0"
+val Scala      = "2.11.8"
+val Circe      = "0.4.1"
+val Finch      = "0.10.0"
+val MetaWeb    = "0.2.0"
+val Paradise   = "2.1.0"
+val MetaRouter = "0.1.1"
 
 val SharedSettings = Seq(
   name         := "example",
@@ -24,6 +25,7 @@ lazy val example = crossProject.in(file("."))
   .jvmSettings(
     libraryDependencies ++= Seq(
       "pl.metastack" %% "metaweb" % MetaWeb,
+      "pl.metastack" %% "metarouter" % MetaRouter,
       "com.github.finagle" %% "finch-core" % Finch,
       "io.circe" %% "circe-core" % Circe,
       "io.circe" %% "circe-generic" % Circe,
@@ -33,6 +35,7 @@ lazy val example = crossProject.in(file("."))
   .jsSettings(
     libraryDependencies ++= Seq(
       "pl.metastack" %%% "metaweb" % MetaWeb,
+      "pl.metastack" %%% "metarouter" % MetaRouter,
       "io.circe" %%% "circe-core" % Circe,
       "io.circe" %%% "circe-generic" % Circe,
       "io.circe" %%% "circe-parser" % Circe
