@@ -135,7 +135,7 @@ node.toHtml == html  // true
 HTML code is parsed during compile-time and then translated to an immutable or stateful tree. This reduces any runtime overhead. HTML can be specified inline or loaded from external files.
 
 ## Diffs
-Diffs encapsulate changes and need to be returned from most `View` functions like `populate()` or `register()`. Diffs are rendered by an external processing unit.
+Diffs encapsulate changes and need to be returned from most `View` functions like `populate()` or `register()`. Diffs are rendered by an external processing unit. As diffs denote precise changes in the page tree, a virtual DOM is not required.
 
 We define two types of diffs.
 
@@ -199,6 +199,15 @@ Every view must must be identifiable such that we can remove it in `destroy()`. 
 
 Furthermore, there may be several instances of a view. As elements have a global ID in the DOM, we need to give each view a unique name. This is done by overriding `id`, which will be used as the suffix for all ID attributes in the tree. The ID will also be used to re-identify elements on the client that have been rendered on the server.
 
+### NodeRef
+To access and modify a node, the `id` attribute must be set. Afterwards, it can be accessed in the view by defining a `NodeRef` instance:
+
+```scala
+val root = NodeRef[tag.Li]("book")
+```
+
+Each `NodeRef` instance provides a `dom` method that allows to access the underlying DOM node.
+
 ### Life cycle
 A view has the following life cycle:
 
@@ -230,6 +239,11 @@ A view defines the following rendering methods:
 - `toTree: Future[tree.Node]` Populates the view and returns its tree as a snapshot
 - `toHtml: Future[String]` Same as `toTree`, but returns snapshot as HTML
 - `toDom: Future[dom.Node]` Only available in Scala.js; populates the view and registers event handlers, returns a node that can be inserted into the body of the DOM
+
+## IntelliJ support
+When loading the example project in IntelliJ, some references in the `shared` module may not be resolved properly. This happens because IntelliJ doesn't add a dependency from platform-specific modules (i.e. `jvm` and `js`) to the `shared` module.
+
+To fix this, please go to `File -> Project Structure... -> Modules -> example-Sources -> Dependencies`. Then, add a module dependency to `exampleJVM` and `exampleJS`.
 
 ## Links
 * [ScalaDoc](https://www.javadoc.io/doc/pl.metastack/metaweb_2.11/)
