@@ -61,7 +61,6 @@ class InlineHtmlSpec extends FunSuite {
     }
   }
 
-
   test("String placeholder") {
     val text = "Hello world"
     val div = html"<div>$text</div>"
@@ -73,6 +72,30 @@ class InlineHtmlSpec extends FunSuite {
     val text: Str = "Hello world"
     val div = html"<div>$text</div>"
     assert(div.toHtml == "<div>Hello world</div>")
+  }
+
+  test("Integer placeholder") {
+    val text = 42
+    val div = html"<div>$text</div>"
+    assert(div.toHtml == "<div>42</div>")
+  }
+
+  test("Double placeholder") {
+    val text = 42.0
+    val div = html"<div>$text</div>"
+    assert(div.toHtml == "<div>42.0</div>")
+  }
+
+  test("Boolean placeholder") {
+    val text = true
+    val div = html"<div>$text</div>"
+    assert(div.toHtml == "<div>true</div>")
+  }
+
+  test("Float placeholder") {
+    val text = 1.0f
+    val div = html"<div>$text</div>"
+    assert(div.toHtml == "<div>1.0</div>")
   }
 
   test("Node placeholder") {
