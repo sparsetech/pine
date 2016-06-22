@@ -167,7 +167,7 @@ title.href := s"/book/${book.id}"
 
 - *Combining diffs:* There are two ways of creating a sequence of diffs. `Diff()` can take one or more diffs.
 
-```
+```scala
 Diff(
   title := book.title,
   title.href := s"/book/${book.id}"
