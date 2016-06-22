@@ -24,8 +24,6 @@ object InlineHtml {
     import c.universe._
 
     val integerType = definitions.IntTpe
-    val doubleType = definitions.DoubleTpe
-    val floatType = definitions.FloatTpe
     val booleanType = definitions.BooleanTpe
     val stringType = definitions.StringClass.toType
     val optionStringType =
@@ -51,8 +49,6 @@ object InlineHtml {
               case n if n.tree.tpe <:< seqNodeType =>
                 n.asInstanceOf[c.Expr[Seq[tree.Node]]]
               case n if n.tree.tpe =:= integerType ||
-                        n.tree.tpe =:= doubleType  ||
-                        n.tree.tpe =:= floatType   ||
                         n.tree.tpe =:= booleanType =>
                 c.Expr(q"Seq(pl.metastack.metaweb.tree.Text($n.toString))")
               case n if n.tree.tpe =:= stringType =>
