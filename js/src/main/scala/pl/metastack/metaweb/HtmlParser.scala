@@ -3,7 +3,7 @@ package pl.metastack.metaweb
 import org.scalajs.dom
 
 object HtmlParser {
-  def fromString(html: String): tree.Tag = {
+  def fromString(html: String): tree.Node = {
     val node = if (html.startsWith("<!DOCTYPE")) {
       val document = dom.document.implementation.createHTMLDocument("")
       document.documentElement.innerHTML = html
@@ -18,6 +18,8 @@ object HtmlParser {
       node.firstChild
     }
 
-    DOM.toTree[tree.Tag](node)
+    Option(node)
+      .map(DOM.toTree[tree.Node])
+      .getOrElse(tree.Text(""))
   }
 }

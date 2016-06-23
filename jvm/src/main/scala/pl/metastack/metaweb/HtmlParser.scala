@@ -20,13 +20,15 @@ object HtmlParser {
         HTMLTag.fromTag(tagName, tagAttrs, tagChildren)
     }
 
-  def fromString(html: String): tree.Tag = {
-    val xml = XML.loadString(html)
-    convert(xml, root = true).asInstanceOf[tree.Tag]
-  }
-
-  def fromFile(fileName: String): tree.Tag = {
-    val xml = XML.loadFile(fileName)
-    convert(xml, root = true).asInstanceOf[tree.Tag]
-  }
+  def fromString(html: String): tree.Node =
+    if (html.trim.startsWith("<")) {
+      val xml = XML.loadString(html)
+      convert(xml, root = true)
+    } else {
+      val xml = XML.loadString(s"<div>$html</div>")
+      convert(xml, root = true).asInstanceOf[tree.Tag]
+        .children
+        .headOption
+        .getOrElse(tree.Text(""))
+    }
 }

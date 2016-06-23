@@ -17,13 +17,15 @@ object HtmlHelpers {
     "required", "reversed", "scoped", "seamless", "selected", "sortable",
     "spellcheck", "translate", "truespeed", "typemustmatch", "visible")
 
-  def escapeAttribute(value: String): String = value.replaceAll("\"", "&quot;")
-  def quoteAttribute(value: Any): String =
-    if (value == null) "\"\""
-    else "\"" + escapeAttribute(value.toString) + "\""
+  def encodeAttributeValue(value: Any): String =
+    "\"" +
+      value.toString
+        .replaceAll("&", "&amp;")
+        .replaceAll("\"", "&quot;") +
+      "\""
 
   /** See also scala.xml.Utility.escape() */
-  def escape(text: String): String =
+  def encodeText(text: String): String =
     text.flatMap {
       case '<' => "&lt;"
       case '>' => "&gt;"
@@ -36,9 +38,9 @@ object HtmlHelpers {
       case c => ""
     }
 
-  def encodedAttributes(attributes: Map[String, Any]): String =
+  def encodeAttributes(attributes: Map[String, Any]): String =
     attributes.map { case (key, value) =>
-      s"$key=" + HtmlHelpers.quoteAttribute(value)
+      s"$key=" + encodeAttributeValue(value)
     }.mkString(" ")
 
   def node(tagName: String,
@@ -46,7 +48,7 @@ object HtmlHelpers {
            contents: Seq[String]): String = {
     val attrs =
       if (attributes.isEmpty) ""
-      else s" ${encodedAttributes(attributes)}"
+      else s" ${encodeAttributes(attributes)}"
 
     if (HtmlHelpers.VoidElements.contains(tagName) && contents.isEmpty)
       s"<$tagName$attrs/>"

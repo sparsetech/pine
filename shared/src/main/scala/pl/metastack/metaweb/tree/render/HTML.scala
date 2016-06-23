@@ -30,6 +30,6 @@ object HTML extends HTML[Node] {
   }
 
   implicit case object RenderText extends HTML[Text] {
-    def render(node: Text): String = HtmlHelpers.escape(node.text)
+    def render(node: Text): String = HtmlHelpers.encodeText(node.text)
   }
 }

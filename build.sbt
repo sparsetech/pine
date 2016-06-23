@@ -3,6 +3,7 @@ val ScalaXml   = "1.0.5"
 val Scala2_11  = "2.11.8"
 val Scala2_12  = "2.12.0-M4"
 val ScalaTest  = "3.0.0-RC2"
+val ScalaCheck = "1.13.1"
 val ScalaJsDom = "0.9.1"
 
 val SharedSettings = Seq(
@@ -49,13 +50,15 @@ lazy val metaWeb = crossProject.in(file("."))
   )
   .jvmSettings(
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % ScalaTest % "test"
+      "org.scalatest" %% "scalatest" % ScalaTest % "test",
+      "org.scalacheck" %% "scalacheck" % ScalaCheck % "test"
     )
   )
   .jsSettings(
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % ScalaJsDom,
-      "org.scalatest" %%% "scalatest" % ScalaTest % "test"
+      "org.scalatest" %%% "scalatest" % ScalaTest % "test",
+      "org.scalacheck" %%% "scalacheck" % ScalaCheck % "test"
     ),
 
     requiresDOM := true,  // For test cases

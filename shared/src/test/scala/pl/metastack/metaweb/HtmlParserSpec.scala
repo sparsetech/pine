@@ -11,8 +11,8 @@ class HtmlParserSpec extends FunSuite {
 
   test("Resolve node") {
     val html = """<div id="a"><b>test</b><span id="b"></span></div>"""
-    val div = HtmlParser.fromString(html)
-    assert(div.byId[tree.Tag]("b") == html"""<span id="b"></span>""")
+    val div = HtmlParser.fromString(html).asInstanceOf[tag.Div]
+    assert(div.byId[tag.Span]("b") == html"""<span id="b"></span>""")
   }
 
   test("Don't ignore DOCTYPE") {
