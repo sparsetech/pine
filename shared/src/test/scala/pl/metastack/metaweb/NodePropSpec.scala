@@ -2,6 +2,8 @@ package pl.metastack.metaweb
 
 import org.scalacheck.{Gen, Properties}
 import org.scalacheck.Prop.forAll
+import pl.metastack.metaweb.macros.Js
+import pl.metastack.metaweb.tag.HTMLTag
 
 import scala.collection.mutable.ListBuffer
 
@@ -10,7 +12,7 @@ class NodePropSpec extends Properties("Node") {
   val attributeKeyGen  = Gen.listOf(attributeKeyChar).map(_.mkString)
     .filter(_.nonEmpty)
     .filter(x => x.head.isLetter || x.head == '_')
-  val attributeValueChar = Gen.oneOf('a', '1', 'ö', '&', ';', '\'', '"', '-')
+  val attributeValueChar = Gen.oneOf('a', '1', 'ö', '&', ';', '\'', '"', '-', ' ')
   val attributeValueGen  = Gen.listOf(attributeValueChar).map(_.mkString)
 
   val attribute = for {
@@ -22,14 +24,19 @@ class NodePropSpec extends Properties("Node") {
     s <- attributeValueGen
   } yield tree.Text(s)
 
-  def tagGen(sz: Int) =
+  def tagGen(sz: Int): Gen[tree.Tag] = tagGen(sz, Seq.empty)
+
+  def tagGen(sz: Int, parentTags: Seq[String]): Gen[tree.Tag] =
     for {
       // TODO Consider nesting rules (tag.Input cannot have children)
-      tag <- Gen.oneOf(tag.A, tag.B, tag.Div, tag.Span)
+      tag <- Gen.oneOf("a", "b", "div", "span").filter { t =>
+        if (Set("a", "b").contains(t)) !parentTags.contains(t)
+        else true
+      }
       attributes <- Gen.mapOfN(sz / 3, attribute)
 
       n <- Gen.choose(sz / 5, sz / 2)
-      children <- Gen.listOfN(n, sizedTree(sz / 2)).filter { l =>
+      children <- Gen.listOfN(n, sizedTree(sz / 2, parentTags ++ Seq(tag))).filter { l =>
         l.length <= 1 || !l.zip(l.tail).exists {
           // Two adjacent nodes cannot be text nodes
           case (left, right) =>
@@ -43,11 +50,13 @@ class NodePropSpec extends Properties("Node") {
           case _ => false
         }
       }
-    } yield tag(attributes, children)
+    } yield HTMLTag.fromTag(tag, attributes, children)
 
-  def sizedTree(sz: Int): Gen[tree.Node] =
+  def sizedTree(sz: Int): Gen[tree.Node] = sizedTree(sz, Seq.empty)
+
+  def sizedTree(sz: Int, parentTags: Seq[String]): Gen[tree.Node] =
     if (sz <= 0) textGen
-    else Gen.frequency((1, textGen), (3, tagGen(sz)))
+    else Gen.frequency((1, textGen), (3, tagGen(sz, parentTags)))
 
   val sized = Gen.choose(0, 20)
 
@@ -88,5 +97,18 @@ class NodePropSpec extends Properties("Node") {
 
   property("filter (reference implementation)") = forAll(sized.flatMap(tagGen), filterFunGen) { (tag, f) =>
     tag.filter(f) == myFilter(tag, f)
+  }
+
+  property("toText") = forAll(sized.flatMap(tagGen)) { tag: tree.Tag =>
+    val text = tag.toText
+    tag
+      .filter(_.isInstanceOf[tree.Text])
+      .forall(x => text.contains(x.asInstanceOf[tree.Text].text))
+  }
+
+  @Js val js = {
+    property("toText (DOM)") = forAll(nodeGen) { node: tree.Node =>
+      node.toText == node.toDom.textContent
+    }
   }
 }
