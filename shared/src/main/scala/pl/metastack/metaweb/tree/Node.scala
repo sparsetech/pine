@@ -71,6 +71,20 @@ trait Tag extends Node {
     copy(attributes = attributes - attribute)
   def clearAttr: T = copy(attributes = Map.empty)
 
+  private def filterChildren(f: Node => Boolean): Seq[Node] = {
+    val seq = if (f(this)) Seq(this) else Seq.empty
+    seq ++ children.flatMap {
+      case t: Tag => t.filterChildren(f)
+      case n => if (f(n)) Seq(n) else Seq.empty
+    }
+  }
+
+  def filter(f: Node => Boolean): Seq[Node] =
+    children.flatMap {
+      case tag: Tag => tag.filterChildren(f)
+      case node => if (f(node)) Seq(node) else Seq.empty
+    }
+
   def map(f: Node => Node): T = copy(children = children.map(f(_).map(f)))
 
   def partialMap(f: PartialFunction[Node, Node]): T =
