@@ -195,14 +195,18 @@ object MetaWeb extends AutoPlugin {
       if (!file.exists()) Seq.empty
       else {
         val files = file.listFiles().toSeq
-        files.filter(_.getPath.endsWith(".html")).map { file =>
+        files.filter(file =>
+          file.getPath.endsWith(".html") &&
+          !file.toPath.getFileName.toString.startsWith("_")
+        ).map { file =>
           val targetPath = this.targetPath(file.getPath, packageName)
           val targetFile = new File(targetPath)
+
+          log.info(s"Processing $targetPath...")
 
           val code = htmlToScala(file.getPath, packageName)
           IO.write(targetFile, code)
 
-          log.info(s"Written $targetPath")
           targetFile
         }
       }
