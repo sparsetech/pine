@@ -96,7 +96,8 @@ object DOM {
   def renderView(view: View)(implicit ec: ExecutionContext): Future[dom.Node] = {
     import Render._
     for {
-      n <- view.node().map(suffixIds(_, view.id.value))
+      n <- if (view.id.value.isEmpty) view.node()
+           else view.node().map(suffixIds(_, view.id.value))
       d = tree.render.DOM.render(n): dom.Node // TODO Why is downcast needed?
       _ = view.idMap.f = collectNodes(d).get(_)
       p <- render(d, view.populate())

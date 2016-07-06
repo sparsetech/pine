@@ -42,12 +42,12 @@ object Tree {
 
                 case Diff.PrependChild(ref, child) if ref.matches(tag) =>
                   renderView(child).map { c =>
-                    tag.copy(children = Seq(c) ++ tag.children)
+                    tag.copy(children = c +: tag.children)
                   }
 
                 case Diff.AppendChild(ref, child) if ref.matches(tag) =>
                   renderView(child).map { c =>
-                    tag.copy(children = tag.children ++ Seq(c))
+                    tag.copy(children = tag.children :+ c)
                   }
 
                 case Diff.ReplaceChildren(ref, children) if ref.matches(tag) =>
@@ -70,7 +70,8 @@ object Tree {
   def renderView(view: View)(implicit ec: ExecutionContext): Future[tree.Node] = {
     import Render._
     for {
-      n <- view.node().map(suffixIds(_, view.id.value))
+      n <- if (view.id.value.isEmpty) view.node()
+           else view.node().map(suffixIds(_, view.id.value))
       p <- render(n, view.populate())
     } yield p
   }
