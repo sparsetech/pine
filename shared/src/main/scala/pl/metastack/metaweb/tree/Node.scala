@@ -114,10 +114,10 @@ trait Tag extends Node {
   def instantiate(nodes: (String, Node)*): T =
     instantiateMap(nodes.toMap)
 
-  def update[U <: Tag](f: U => Tag)(implicit ct: ClassTag[U]): Node =
+  def updateByTag[U <: Tag](f: U => Tag)(implicit ct: ClassTag[U]): Node =
     if (getClass == ct.runtimeClass) f(this.asInstanceOf[U])
     else map {
-      case t: Tag => t.update[U](f)
+      case t: Tag => t.updateByTag[U](f)
       case n      => n
     }
 

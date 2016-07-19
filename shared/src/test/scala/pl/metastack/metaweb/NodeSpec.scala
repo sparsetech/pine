@@ -83,13 +83,13 @@ class NodeSpec extends FunSuite {
 
   test("Update") {
     val div = html"""<div><span></span></div>"""
-    val html = div.update[tag.Span](_ +: html"<b>Hello</b>").toHtml
+    val html = div.updateByTag[tag.Span](_ +: html"<b>Hello</b>").toHtml
     assert(html == "<div><span><b>Hello</b></span></div>")
   }
 
   test("Update with multiple matches") {
     val div = html"""<div><span></span><span></span></div>"""
-    val html = div.update[tag.Span](_ +: html"<b>Hello</b>").toHtml
+    val html = div.updateByTag[tag.Span](_ +: html"<b>Hello</b>").toHtml
     assert(html == "<div><span><b>Hello</b></span><span><b>Hello</b></span></div>")
   }
 }
