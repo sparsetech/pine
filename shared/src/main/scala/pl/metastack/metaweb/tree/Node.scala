@@ -2,6 +2,8 @@ package pl.metastack.metaweb.tree
 
 import pl.metastack.metaweb.tag.HTMLTag
 
+import scala.reflect.ClassTag
+
 sealed trait Node {
   def +:[T <: Tag](node: T): node.T = node.prepend(this)
   def map(f: Node => Node): Node
@@ -111,6 +113,13 @@ trait Tag extends Node {
 
   def instantiate(nodes: (String, Node)*): T =
     instantiateMap(nodes.toMap)
+
+  def update[U <: Tag](f: U => Tag)(implicit ct: ClassTag[U]): Node =
+    if (ct.runtimeClass == getClass) f(this.asInstanceOf[U])
+    else map {
+      case t: Tag => t.update[U](f)
+      case n      => n
+    }
 
   def updateChild[U <: Tag](id: String, f: U => Node): Node = {
     val attrId = attributes.get("id")
