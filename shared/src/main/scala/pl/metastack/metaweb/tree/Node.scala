@@ -3,6 +3,7 @@ package pl.metastack.metaweb.tree
 import pl.metastack.metaweb.tag.HTMLTag
 
 sealed trait Node {
+  def +:[T <: Tag](node: T): node.T = node.prepend(this)
   def map(f: Node => Node): Node
 }
 
@@ -42,7 +43,6 @@ trait Tag extends Node {
   }
 
   def prepend(node: Node): T = copy(children = node +: children)
-  def +:(node: Node): T = prepend(node)
 
   def append(node: Node): T = copy(children = children :+ node)
   def :+(node: Node): T = append(node)

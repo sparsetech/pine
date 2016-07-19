@@ -68,4 +68,16 @@ class NodeSpec extends FunSuite {
 
     assert(modified == div2)
   }
+
+  test("Prepend") {
+    val div = html"""<div><br/></div>"""
+    val str = (div +: html"""<span></span>""").toHtml
+    assert(str == "<div><span></span><br/></div>")
+  }
+
+  test("Append") {
+    val div = html"""<div><br/></div>"""
+    val str = (div :+ html"""<span></span>""").toHtml
+    assert(str == "<div><br/><span></span></div>")
+  }
 }
