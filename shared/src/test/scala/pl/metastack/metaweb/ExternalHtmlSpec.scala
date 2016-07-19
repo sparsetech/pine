@@ -66,7 +66,7 @@ class ExternalHtmlSpec extends FunSuite {
     }
 
     // Instantiate template and replace list
-    val replaced = tpl.updateChild[tree.Tag]("list", _.set(items))
+    val replaced = tpl.updateById[tree.Tag]("list", _.set(items))
       .asInstanceOf[tree.Tag]
 
     val list = replaced.byId[tree.Tag]("list")

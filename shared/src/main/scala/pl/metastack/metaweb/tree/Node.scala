@@ -121,14 +121,14 @@ trait Tag extends Node {
       case n      => n
     }
 
-  def updateChild[U <: Tag](id: String, f: U => Node): Node = {
+  def updateById[U <: Tag](id: String, f: U => Node): Node = {
     val attrId = attributes.get("id")
 
     if (attrId.contains(id)) f(this.asInstanceOf[U])
     else
       copy(
         children = children.map {
-          case tag: Tag => tag.updateChild(id, f)
+          case tag: Tag => tag.updateById(id, f)
           case n => n
         }
       )
