@@ -115,7 +115,7 @@ trait Tag extends Node {
     instantiateMap(nodes.toMap)
 
   def update[U <: Tag](f: U => Tag)(implicit ct: ClassTag[U]): Node =
-    if (ct.runtimeClass == getClass) f(this.asInstanceOf[U])
+    if (getClass == ct.runtimeClass) f(this.asInstanceOf[U])
     else map {
       case t: Tag => t.update[U](f)
       case n      => n
@@ -143,14 +143,14 @@ trait Tag extends Node {
   def byId[U <: Tag](id: String): U = byIdOpt(id)
     .getOrElse(throw new IllegalArgumentException(s"Invalid node ID '$id'"))
 
-  def byTagOpt[U <: Tag](tag: String): Option[U] =
+  def byTagOpt[U <: Tag](implicit ct: ClassTag[U]): Option[U] =
     find {
-      case t: Tag => t.tagName == tag
+      case t: Tag => t.getClass == ct.runtimeClass
       case _      => false
     }.map(_.asInstanceOf[U])
 
-  def byTag[U <: Tag](tagName: String): U =
-    byTagOpt(tagName).getOrElse(
+  def byTag[U <: Tag](implicit ct: ClassTag[U]): U =
+    byTagOpt[U].getOrElse(
       throw new IllegalArgumentException(s"Invalid tag name '$tagName'"))
 
   def byClassOpt[U <: HTMLTag](`class`: String): Option[U] =

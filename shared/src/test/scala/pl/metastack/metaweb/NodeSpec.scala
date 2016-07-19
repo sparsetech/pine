@@ -37,7 +37,7 @@ class NodeSpec extends FunSuite {
     }
 
     assert((modified: tag.Html) == modified)
-    assert(modified.byTag[tag.Title]("title") == html"<title>Changed</title>")
+    assert(modified.byTag[tag.Title] == html"<title>Changed</title>")
   }
 
   test("map with multiple occurrences") {
