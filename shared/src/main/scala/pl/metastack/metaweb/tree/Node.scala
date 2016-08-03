@@ -5,12 +5,18 @@ import pl.metastack.metaweb.tag.HTMLTag
 import scala.reflect.ClassTag
 
 sealed trait Node {
+  type T <: Node
+
   def +:[T <: Tag](node: T): node.T = node.prepend(this)
-  def map(f: Node => Node): Node
+  def map(f: Node => Node): T
+  def mapFirst(f: PartialFunction[Node, Node]): T
 }
 
 case class Text(text: String) extends Node {
-  def map(f: Node => Node): Node = f(this)
+  override type T = Text
+
+  def map(f: Node => Node): T = this
+  def mapFirst(f: PartialFunction[Node, Node]): T = this
 }
 
 trait Tag extends Node {
