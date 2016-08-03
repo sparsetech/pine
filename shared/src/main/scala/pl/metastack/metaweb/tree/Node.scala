@@ -115,7 +115,7 @@ trait Tag extends Node {
     instantiateMap(nodes.toMap)
 
   def updateByTag[U <: Tag](f: U => Tag)(implicit ct: ClassTag[U]): Node =
-    if (getClass == ct.runtimeClass) f(this.asInstanceOf[U])
+    if (getClass == ct.runtimeClass) f(asInstanceOf[U])
     else map {
       case t: Tag => t.updateByTag[U](f)
       case n      => n
@@ -124,7 +124,7 @@ trait Tag extends Node {
   def updateById[U <: Tag](id: String, f: U => Node): Node = {
     val attrId = attributes.get("id")
 
-    if (attrId.contains(id)) f(this.asInstanceOf[U])
+    if (attrId.contains(id)) f(asInstanceOf[U])
     else
       copy(
         children = children.map {
