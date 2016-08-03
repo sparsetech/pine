@@ -139,6 +139,11 @@ trait Tag extends Node {
       case n if n.getClass == ct.runtimeClass => f(n.asInstanceOf[U])
     }
 
+  def updateFirstByTag[U <: Tag](f: U => Tag)(implicit ct: ClassTag[U]): Node =
+    mapFirst {
+      case n if n.getClass == ct.runtimeClass => f(n.asInstanceOf[U])
+    }
+
   def updateById[U <: Tag](id: String, f: U => Node): Node = {
     val attrId = attributes.get("id")
 
