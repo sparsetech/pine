@@ -144,18 +144,11 @@ trait Tag extends Node {
       case n if n.getClass == ct.runtimeClass => f(n.asInstanceOf[U])
     }
 
-  def updateById[U <: Tag](id: String, f: U => Node): Node = {
-    val attrId = attributes.get("id")
-
-    if (attrId.contains(id)) f(asInstanceOf[U])
-    else
-      copy(
-        children = children.map {
-          case tag: Tag => tag.updateById(id, f)
-          case n => n
-        }
-      )
-  }
+  def updateById[U <: Tag](id: String, f: U => Node): Node =
+    mapFirst {
+      case tag: Tag if tag.attributes.get("id").contains(id) =>
+        f(tag.asInstanceOf[U])
+    }
 
   def byIdOpt[U <: Tag](id: String): Option[U] =
     find {
