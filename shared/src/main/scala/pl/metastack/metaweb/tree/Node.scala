@@ -135,10 +135,8 @@ trait Tag extends Node {
     instantiateMap(nodes.toMap)
 
   def updateByTag[U <: Tag](f: U => Tag)(implicit ct: ClassTag[U]): Node =
-    if (getClass == ct.runtimeClass) f(asInstanceOf[U])
-    else map {
-      case t: Tag => t.updateByTag[U](f)
-      case n      => n
+    partialMap {
+      case n if n.getClass == ct.runtimeClass => f(n.asInstanceOf[U])
     }
 
   def updateById[U <: Tag](id: String, f: U => Node): Node = {
