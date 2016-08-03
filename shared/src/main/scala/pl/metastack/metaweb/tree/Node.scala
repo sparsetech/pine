@@ -89,6 +89,26 @@ trait Tag extends Node {
 
   def map(f: Node => Node): T = copy(children = children.map(f(_).map(f)))
 
+  def mapFirst(f: PartialFunction[Node, Node]): T = {
+    var done = false
+
+    def m(n: Node): Node =
+      if (done) n
+      else f.lift(n) match {
+        case Some(mapped) =>
+          done = true
+          mapped
+
+        case None =>
+          n match {
+            case t: Tag => t.copy(children = t.children.map(child => m(child)))
+            case _      => n
+          }
+      }
+
+    copy(children = children.map(m))
+  }
+
   def partialMap(f: PartialFunction[Node, Node]): T =
     map(node => f.lift(node).getOrElse(node))
 

@@ -69,6 +69,34 @@ class NodeSpec extends FunSuite {
     assert(modified == div2)
   }
 
+  test("Map first") {
+    val div = html"""
+      <div>
+        <span>
+          <b>Hello</b>
+          <i>World</i>
+          <b>!</b>
+        </span>
+      </div>
+    """
+
+    val modified = div.mapFirst {
+      case t: tag.B => tag.I(t.attributes, t.children)
+    }
+
+    val div2 = html"""
+      <div>
+        <span>
+          <i>Hello</i>
+          <i>World</i>
+          <b>!</b>
+        </span>
+      </div>
+    """
+
+    assert(modified == div2)
+  }
+
   test("Prepend") {
     val div = html"""<div><br/></div>"""
     val str = (div +: html"""<span></span>""").toHtml
