@@ -124,7 +124,7 @@ tpl.toHtml  // <html>...</html>
 ```
 
 ## Runtime HTML parser
-MetaWeb provides an HTML parser backed by the DOM in Scala.js, but uses [scala-xml](https://github.com/scala/scala-xml) for the JVM.
+MetaWeb provides an HTML parser backed by the DOM in Scala.js, but uses its own parser for the JVM.
 
 ```scala
 val html = """<div id="a"><span>42</span></div>"""
