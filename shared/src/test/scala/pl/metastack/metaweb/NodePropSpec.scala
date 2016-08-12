@@ -62,6 +62,12 @@ class NodePropSpec extends Properties("Node") {
 
   def nodeGen: Gen[tree.Node] = sized.flatMap(sizedTree)
 
+  // Ignore text nodes that start with whitespaces on root level
+  def rootNodeGen: Gen[tree.Node] = nodeGen.filter {
+    case tree.Text(t) => !t.startsWith(" ")
+    case _ => true
+  }
+
   def fun1: tree.Node => Boolean = {
     case n: tree.Tag => true
     case _ => false
@@ -74,7 +80,7 @@ class NodePropSpec extends Properties("Node") {
 
   def filterFunGen: Gen[tree.Node => Boolean] = Gen.oneOf(fun1, fun2)
 
-  property("toHtml") = forAll(nodeGen) { node: tree.Node =>
+  property("toHtml") = forAll(rootNodeGen) { node: tree.Node =>
     HtmlParser.fromString(node.toHtml) == node
   }
 

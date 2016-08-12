@@ -7,9 +7,8 @@ import scala.collection.mutable
 
 import scala.reflect.macros.blackbox.Context
 
-import scala.xml.XML
-
 import pl.metastack.metaweb.tree
+import pl.metastack.metaweb.internal.HtmlParser
 
 object InlineHtml {
   trait Implicit {
@@ -18,7 +17,7 @@ object InlineHtml {
     }
   }
 
-  def iter(c: Context)(node: scala.xml.Node,
+  def iter(c: Context)(node: tree.Node,
                        args: Seq[c.Expr[Any]],
                        root: Boolean): Seq[c.Expr[Seq[tree.Node]]] = {
     import c.universe._
@@ -33,10 +32,10 @@ object InlineHtml {
     val seqType = c.mirror.staticClass("scala.collection.Seq")
     val seqNodeType = appliedType(seqType, List(nodeType))
 
-    (node.label, Option(node.prefix)) match {
-      case ("#PCDATA", _) =>
+    node match {
+      case tree.Text(text) =>
         // TODO Find a better solution
-        val parts = node.text.replaceAll("""\$\{\d+\}""", "_$0_").split("_").toSeq
+        val parts = text.replaceAll("""\$\{\d+\}""", "_$0_").split("_").toSeq
 
         parts.map { v =>
           if (!v.startsWith("${") || !v.endsWith("}"))
@@ -60,16 +59,11 @@ object InlineHtml {
           }
         }
 
-      case (tag, prefix) =>
-        val tagName = prefix.map(pfx => s"$pfx:$tag").getOrElse(tag)
-        val rootAttributes: Map[String, String] =
-          if (root) Helpers.namespaceBinding(node.scope)
-          else Map.empty
-
-        val tagType = TypeName(tag.capitalize)
+      case tag: tree.Tag =>
+        val tagType  = TypeName(tag.tagName.capitalize)
         val tagAttrs = mutable.ArrayBuffer.empty[c.Expr[Option[(String, Any)]]]
 
-        (node.attributes.asAttrMap ++ rootAttributes).foreach { case (k, v) =>
+        tag.attributes.mapValues(_.toString).foreach { case (k, v) =>
           if (!v.startsWith("${") || !v.endsWith("}"))
             tagAttrs += c.Expr(q"Some($k -> $v)")
           else {
@@ -87,19 +81,19 @@ object InlineHtml {
           }
         }
 
-        val tagChildren = node.child.flatMap(n => iter(c)(n, args, root = false))
+        val tagChildren = tag.children.flatMap(n => iter(c)(n, args, root = false))
         val qAttrs = q"Seq[Option[(String, String)]](..$tagAttrs).collect { case Some(x) => x }.toMap"
 
         try {
           c.typecheck(q"val x: pl.metastack.metaweb.tag.$tagType")
           Seq(c.Expr(q"Seq(new pl.metastack.metaweb.tag.$tagType($qAttrs, Seq(..$tagChildren).flatten))"))
         } catch { case t: Throwable =>
-          Seq(c.Expr(q"Seq(pl.metastack.metaweb.tag.HTMLTag.fromTag($tagName, $qAttrs, Seq(..$tagChildren).flatten))"))
+          Seq(c.Expr(q"Seq(pl.metastack.metaweb.tag.HTMLTag.fromTag(${tag.tagName}, $qAttrs, Seq(..$tagChildren).flatten))"))
         }
     }
   }
 
-  def insertPlaceholders(c: Context)(parts: Seq[c.universe.Tree]): String = {
+  def insertPlaceholders(c: Context)(parts: Seq[c.universe.Tree]): String =
     parts.zipWithIndex.map { case (tree, i) =>
       val p = Helpers.literalValueTree[String](c)(tree)
 
@@ -107,14 +101,13 @@ object InlineHtml {
       else if (p.lastOption.contains('=')) p + "\"${" + i + "}\""
       else p + "${" + i + "}"
     }.mkString
-  }
 
   def convert(c: Context)(parts: Seq[c.universe.Tree],
                           args: Seq[c.Expr[Any]]): c.Expr[tree.Tag] = {
     import c.universe._
     val html = insertPlaceholders(c)(parts)
-    val xml = XML.loadString(html)
-    val nodes = iter(c)(xml, args, root = true).head
+    val node = HtmlParser.fromString(html)
+    val nodes = iter(c)(node, args, root = true).head
     c.Expr(q"$nodes.head").asInstanceOf[c.Expr[tree.Tag]]
   }
 

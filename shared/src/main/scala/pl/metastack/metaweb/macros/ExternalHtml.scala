@@ -1,13 +1,13 @@
 package pl.metastack.metaweb.macros
 
+import java.io.File
+
 import scala.language.reflectiveCalls
 import scala.language.experimental.macros
-
 import scala.reflect.macros.blackbox.Context
 
-import scala.xml.XML
-
 import pl.metastack.metaweb.tree
+import pl.metastack.metaweb.internal.HtmlParser
 
 object ExternalHtml {
   trait Method {
@@ -15,35 +15,31 @@ object ExternalHtml {
     def html(fileName: String): tree.Tag = macro HtmlImpl
   }
 
-  def convert(c: Context)(node: scala.xml.Node,
+  def convert(c: Context)(node: tree.Node,
                           root: Boolean): c.Expr[tree.Node] = {
     import c.universe._
 
-    (node.label, Option(node.prefix)) match {
-      case ("#PCDATA", _) => c.Expr(q"pl.metastack.metaweb.tree.Text(${node.text})")
-      case (tag, prefix) =>
-        val tagName = prefix.map(pfx => s"$pfx:$tag").getOrElse(tag)
-        val rootAttributes: Map[String, String] =
-          if (root) Helpers.namespaceBinding(node.scope)
-          else Map.empty
-
-        val tagType = TypeName(tag.capitalize)
-        val tagAttrs = node.attributes.asAttrMap ++ rootAttributes
-        val tagChildren = node.child.map(convert(c)(_, root = false))
+    node match {
+      case tree.Text(text) => c.Expr(q"pl.metastack.metaweb.tree.Text($text)")
+      case tag: tree.Tag =>
+        val tagType = TypeName(tag.tagName.capitalize)
+        val tagAttrs = tag.attributes.mapValues(_.toString)
+        val tagChildren = tag.children.map(convert(c)(_, root = false))
 
         try {
           c.typecheck(q"val x: pl.metastack.metaweb.tag.$tagType")
           c.Expr(q"new pl.metastack.metaweb.tag.$tagType($tagAttrs, Seq(..$tagChildren))")
         } catch { case t: Throwable =>
-          c.Expr(q"pl.metastack.metaweb.tag.HTMLTag.fromTag($tagName, $tagAttrs, Seq(..$tagChildren))")
+          c.Expr(q"pl.metastack.metaweb.tag.HTMLTag.fromTag(${tag.tagName}, $tagAttrs, Seq(..$tagChildren))")
         }
     }
   }
 
   def HtmlImpl(c: Context)(fileName: c.Expr[String]): c.Expr[tree.Tag] = {
     val fileNameValue = Helpers.literalValueExpr(c)(fileName)
-    val xml = XML.loadFile(fileNameValue)
-    convert(c)(xml, root = true)
+    val html = io.Source.fromFile(new File(fileNameValue)).mkString
+    val node = HtmlParser.fromString(html)
+    convert(c)(node, root = true)
       .asInstanceOf[c.Expr[tree.Tag]]
   }
 }

@@ -1,5 +1,4 @@
 val Paradise   = "2.1.0"
-val ScalaXml   = "1.0.5"
 val Scala2_11  = "2.11.8"
 val Scala2_12  = "2.12.0-M4"
 val ScalaTest  = "3.0.0-RC2"
@@ -43,8 +42,7 @@ lazy val metaWeb = crossProject.in(file("."))
   .settings(
     addCompilerPlugin("org.scalamacros" % "paradise" % Paradise cross CrossVersion.full),
     libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      "org.scala-lang.modules" %% "scala-xml" % ScalaXml
+      "org.scala-lang" % "scala-reflect" % scalaVersion.value
     ),
     convertMDN := MDNParser.createFiles(new File("shared/src/main/scala"))
   )
