@@ -5,16 +5,18 @@ private[metaweb] class Reader(str: String) {
 
   def end(): Boolean = offset >= str.length
   def advance(length: Int): Unit = offset += length
+  def prefix(c: Char): Boolean = str(offset) == c
   def prefix(s: String): Boolean = rest().startsWith(s)
+  def current(): Char = str(offset)
   def rest(): String = str.substring(offset)
 
-  def collect(f: Char => Boolean): Option[String] = {
+  def collect(f: () => Boolean): Option[String] = {
     val prevOffset = offset
     var matches = false
 
-    if (!end() && !f(str(offset))) Some("")
+    if (!end() && !f()) Some("")
     else {
-      while (!end() && f(str(offset))) {
+      while (!end() && f()) {
         matches = true
         offset += 1
       }
@@ -27,7 +29,8 @@ private[metaweb] class Reader(str: String) {
     }
   }
 
-  def collectUntil(c: Char): Option[String] = collect(_ != c)
+  def collectUntil(s: String): Option[String] = collect(() => !prefix(s))
+  def collectUntil(c: Char): Option[String] = collect(() => !prefix(c))
 
   def skip(c: Char): Boolean =
     if (end()) false

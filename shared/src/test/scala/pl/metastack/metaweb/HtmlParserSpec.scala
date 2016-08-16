@@ -78,6 +78,12 @@ class HtmlParserSpec extends FunSuite {
     assert(node == (tag.Div() :+ tree.Text("test ") :+ tree.Text("!")))
   }
 
+  test("Ignore comments (2)") {
+    val html = """<div>test <!-- <br/> -->!</div>"""
+    val node = HtmlParser.fromString(html)
+    assert(node == (tag.Div() :+ tree.Text("test ") :+ tree.Text("!")))
+  }
+
   test("Resolve node") {
     val html = """<div id="a"><b>test</b><span id="b"></span></div>"""
     val div = HtmlParser.fromString(html).asInstanceOf[tag.Div]

@@ -3,6 +3,8 @@ package pl.metastack.metaweb.internal
 import pl.metastack.metaweb._
 import pl.metastack.metaweb.tag.HTMLTag
 
+class ParseError(e: String) extends Exception(e)
+
 /* In shared/ because it cannot be used by macros in Scala.js otherwise */
 object HtmlParser {
   def parseAttr(reader: Reader): Option[(String, String)] =
@@ -10,7 +12,7 @@ object HtmlParser {
     else {
       val i = identifier(reader)
       reader.skip('=')
-      val s = string(reader)
+      val s = parseAttrValue(reader)
       Some(i -> s)
     }
 
@@ -22,15 +24,19 @@ object HtmlParser {
         Predef.Map(attr) ++ parseAttrs(reader)
     }
 
-  def string(reader: Reader): String = {
+  def parseAttrValue(reader: Reader): String = {
     reader.skip('"')
-    val str = reader.collectUntil('"').get
+    val str = reader.collectUntil('"')
+      .getOrElse(throw new ParseError(s"""Expected '"', found '${reader.rest()}'"""))
     reader.advance(1)
     HtmlHelpers.decodeAttributeValue(str)
   }
 
   def identifier(reader: Reader): String =
-    reader.collect(x => x.isLetterOrDigit || x == '-' || x == '_' || x == ':').get
+    reader.collect { () =>
+      val c = reader.current()
+      c.isLetterOrDigit || c == '-' || c == '_' || c == ':'
+    }.get
 
   def closingTag(reader: Reader, tagName: String): Boolean =
     reader.prefix(s"</$tagName>")
@@ -62,8 +68,8 @@ object HtmlParser {
 
   def skipComment(reader: Reader): Unit =
     if (reader.prefix("<!--")) {
-      reader.collectUntil('>')
-      reader.advance(1)
+      reader.collectUntil("-->")
+      reader.advance(3)
     }
 
   def skipDocType(reader: Reader): Unit =
@@ -83,6 +89,8 @@ object HtmlParser {
     else {
       reader.advance(1)
       val tagName = identifier(reader)
+      if (tagName.isEmpty)
+        throw new ParseError(s"Identifier cannot be empty (rest: ${reader.rest()})")
       reader.skip(_.isWhitespace)
       val tagAttrs = parseAttrs(reader)
       val tagChildren = parseChildren(reader, tagName)
