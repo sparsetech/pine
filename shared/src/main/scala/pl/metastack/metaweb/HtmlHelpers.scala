@@ -1,5 +1,7 @@
 package pl.metastack.metaweb
 
+import scala.collection.immutable.StringOps
+
 object HtmlHelpers {
   /** An end tag must not specified for void elements. List of elements taken
     * from http://www.w3.org/TR/html-markup/syntax.html#syntax-elements
@@ -31,7 +33,7 @@ object HtmlHelpers {
 
   /** See also scala.xml.Utility.escape() */
   def encodeText(text: String): String =
-    text.flatMap {
+    (text: StringOps).flatMap {
       case '<' => "&lt;"
       case '>' => "&gt;"
       case '&' => "&amp;"

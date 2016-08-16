@@ -9,6 +9,7 @@ sealed trait Node {
 
   def +:[T <: Tag](node: T): node.T = node.prepend(this)
   def map(f: Node => Node): T
+  def flatMap(f: Node => Seq[Node]): T
   def mapFirst(f: PartialFunction[Node, Node]): T
 }
 
@@ -16,6 +17,7 @@ case class Text(text: String) extends Node {
   override type T = Text
 
   def map(f: Node => Node): T = this
+  def flatMap(f: Node => Seq[Node]): T = this
   def mapFirst(f: PartialFunction[Node, Node]): T = this
 }
 
@@ -94,6 +96,9 @@ trait Tag extends Node {
     }
 
   def map(f: Node => Node): T = copy(children = children.map(f(_).map(f)))
+
+  def flatMap(f: Node => Seq[Node]): T =
+    copy(children = children.flatMap(n => f(n.flatMap(f))))
 
   def mapFirst(f: PartialFunction[Node, Node]): T = {
     var done = false

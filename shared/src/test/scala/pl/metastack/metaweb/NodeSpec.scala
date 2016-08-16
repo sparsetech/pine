@@ -132,4 +132,13 @@ class NodeSpec extends FunSuite {
     val html = div.updateFirstByTag[tag.Span](_ +: html"<b>Hello</b>").toHtml
     assert(html == "<div><span><b>Hello</b></span><span></span></div>")
   }
+
+  test("flatMap") {
+    val div = html"<div><span>world</span></div>"
+    val html = div.flatMap {
+      case t: tree.Text => Seq(html"<b>Hello </b>", t)
+      case n => Seq(n)
+    }.toHtml
+    assert(html == "<div><span><b>Hello </b>world</span></div>")
+  }
 }
