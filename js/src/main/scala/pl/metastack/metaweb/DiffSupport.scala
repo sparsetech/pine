@@ -61,6 +61,9 @@ trait DiffSupport extends DiffSupportLowPrio {
   implicit object Span extends JS[tag.Span] { override type X = org.scalajs.dom.html.Span }
   implicit object Style extends JS[tag.Style] { override type X = org.scalajs.dom.html.Style }
   implicit object Table extends JS[tag.Table] { override type X = org.scalajs.dom.html.Table }
+  implicit object TableRow extends JS[tag.Tr] { override type X = org.scalajs.dom.html.TableRow }
+  implicit object TableDataCell extends JS[tag.Td] { override type X = org.scalajs.dom.html.TableDataCell }
+  implicit object TableHeadCell extends JS[tag.Th] { override type X = org.scalajs.dom.html.TableHeaderCell }
   implicit object TextArea extends JS[tag.Textarea] { override type X = org.scalajs.dom.html.TextArea }
   implicit object Title extends JS[tag.Title] { override type X = org.scalajs.dom.html.Title }
   implicit object Track extends JS[tag.Track] { override type X = org.scalajs.dom.html.Track }
