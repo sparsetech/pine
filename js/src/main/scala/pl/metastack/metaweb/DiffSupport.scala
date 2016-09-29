@@ -33,6 +33,12 @@ trait DiffSupport extends DiffSupportLowPrio {
   implicit object Form extends JS[tag.Form] { override type X = org.scalajs.dom.html.Form }
   implicit object Frame extends JS[tag.Frame] { override type X = org.scalajs.dom.html.Frame }
   implicit object FrameSet extends JS[tag.Frameset] { override type X = org.scalajs.dom.html.FrameSet }
+  implicit object H1 extends JS[tag.H1] { override type X = org.scalajs.dom.html.Heading }
+  implicit object H2 extends JS[tag.H2] { override type X = org.scalajs.dom.html.Heading }
+  implicit object H3 extends JS[tag.H3] { override type X = org.scalajs.dom.html.Heading }
+  implicit object H4 extends JS[tag.H4] { override type X = org.scalajs.dom.html.Heading }
+  implicit object H5 extends JS[tag.H5] { override type X = org.scalajs.dom.html.Heading }
+  implicit object H6 extends JS[tag.H6] { override type X = org.scalajs.dom.html.Heading }
   implicit object HR extends JS[tag.Hr] { override type X = org.scalajs.dom.html.HR }
   implicit object Head extends JS[tag.Head] { override type X = org.scalajs.dom.html.Head }
   implicit object Html extends JS[tag.Html] { override type X = org.scalajs.dom.html.Html }
@@ -61,6 +67,9 @@ trait DiffSupport extends DiffSupportLowPrio {
   implicit object Span extends JS[tag.Span] { override type X = org.scalajs.dom.html.Span }
   implicit object Style extends JS[tag.Style] { override type X = org.scalajs.dom.html.Style }
   implicit object Table extends JS[tag.Table] { override type X = org.scalajs.dom.html.Table }
+  implicit object TableRow extends JS[tag.Tr] { override type X = org.scalajs.dom.html.TableRow }
+  implicit object TableDataCell extends JS[tag.Td] { override type X = org.scalajs.dom.html.TableDataCell }
+  implicit object TableHeadCell extends JS[tag.Th] { override type X = org.scalajs.dom.html.TableHeaderCell }
   implicit object TextArea extends JS[tag.Textarea] { override type X = org.scalajs.dom.html.TextArea }
   implicit object Title extends JS[tag.Title] { override type X = org.scalajs.dom.html.Title }
   implicit object Track extends JS[tag.Track] { override type X = org.scalajs.dom.html.Track }
