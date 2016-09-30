@@ -1,8 +1,8 @@
 val Paradise   = "2.1.0"
 val Scala2_11  = "2.11.8"
-val Scala2_12  = "2.12.0-M4"
-val ScalaTest  = "3.0.0-RC2"
-val ScalaCheck = "1.13.1"
+val Scala2_12  = "2.12.0-RC1"
+val ScalaTest  = "3.0.0"
+val ScalaCheck = "1.13.2"
 val ScalaJsDom = "0.9.1"
 
 val SharedSettings = Seq(
@@ -42,22 +42,14 @@ lazy val metaWeb = crossProject.in(file("."))
   .settings(
     addCompilerPlugin("org.scalamacros" % "paradise" % Paradise cross CrossVersion.full),
     libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-reflect" % scalaVersion.value
+      "org.scala-lang" %   "scala-reflect" % scalaVersion.value,
+      "org.scalatest"  %%% "scalatest"     % ScalaTest  % "test",
+      "org.scalacheck" %%% "scalacheck"    % ScalaCheck % "test"
     ),
     convertMDN := MDNParser.createFiles(new File("shared/src/main/scala"))
   )
-  .jvmSettings(
-    libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % ScalaTest % "test",
-      "org.scalacheck" %% "scalacheck" % ScalaCheck % "test"
-    )
-  )
   .jsSettings(
-    libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scalajs-dom" % ScalaJsDom,
-      "org.scalatest" %%% "scalatest" % ScalaTest % "test",
-      "org.scalacheck" %%% "scalacheck" % ScalaCheck % "test"
-    ),
+    libraryDependencies += "org.scala-js" %%% "scalajs-dom" % ScalaJsDom,
 
     requiresDOM := true,  // For test cases
     scalaJSStage in Global := FastOptStage,
@@ -66,5 +58,5 @@ lazy val metaWeb = crossProject.in(file("."))
     scalaJSUseRhino in Global := false
   )
 
-lazy val js = metaWeb.js
+lazy val js  = metaWeb.js
 lazy val jvm = metaWeb.jvm
