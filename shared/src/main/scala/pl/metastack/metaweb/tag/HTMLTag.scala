@@ -183,7 +183,6 @@ object HTMLTag {
       case "div" => Div(attributes, children)
       case "dl" => Dl(attributes, children)
       case "dt" => Dt(attributes, children)
-      case "element" => Element(attributes, children)
       case "em" => Em(attributes, children)
       case "embed" => Embed(attributes, children)
       case "fieldset" => Fieldset(attributes, children)

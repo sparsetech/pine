@@ -27,8 +27,7 @@ trait DiffSupport extends DiffSupportLowPrio {
   implicit object DataList extends JS[tag.Datalist] { override type X = org.scalajs.dom.html.DataList }
   implicit object Directory extends JS[tag.Dir] { override type X = org.scalajs.dom.html.Directory }
   implicit object Div extends JS[tag.Div] { override type X = org.scalajs.dom.html.Div }
-  implicit object Element extends JS[tag.Element] { override type X = org.scalajs.dom.html.Element }
-  implicit object Element2 extends JS[tag.HTMLTag] { override type X = org.scalajs.dom.html.Element }
+  implicit object Element extends JS[tag.HTMLTag] { override type X = org.scalajs.dom.html.Element }
   implicit object Embed extends JS[tag.Embed] { override type X = org.scalajs.dom.html.Embed }
   implicit object FieldSet extends JS[tag.Fieldset] { override type X = org.scalajs.dom.html.FieldSet }
   implicit object Form extends JS[tag.Form] { override type X = org.scalajs.dom.html.Form }
