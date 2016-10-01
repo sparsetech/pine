@@ -13,7 +13,7 @@ object Diff {
   def apply(diffs: Diff*): Diff =
     diffs.headOption match {
       case None => Noop()
-      case Some(head) => new Sequence(head, diffs.tail: _*)
+      case Some(head) => Sequence(head, diffs.tail: _*)
     }
 
   def fromSeq(diffs: Seq[Diff]): Diff = apply(diffs :_*)
@@ -27,6 +27,7 @@ object Diff {
   class Async(val f: () => Future[Diff]) extends Diff
   object Async { def apply(f: => Future[Diff]): Async = new Async(() => f) }
   case class SetAttribute[T <: tree.Tag, U](node: NodeRef[T], attribute: Attribute[T, _, U], value: U) extends Diff
+  case class UpdateAttribute[T <: tree.Tag, U](node: NodeRef[T], attribute: Attribute[T, U, _], f: U => U) extends Diff
   case class RemoveAttribute[T <: tree.Tag](node: NodeRef[T], attribute: Attribute[T, _, _]) extends Diff
   case class ReplaceChildren[T <: tree.Tag](node: NodeRef[T], children: Seq[View]) extends Diff
   case class PrependChild[T <: tree.Tag](node: NodeRef[T], child: View) extends Diff

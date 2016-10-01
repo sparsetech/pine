@@ -36,6 +36,23 @@ object DOM {
             }
           }
 
+        case Diff.UpdateAttribute(ref, attribute, f) =>
+          Future.successful {
+            if (HtmlHelpers.BooleanAttributes.contains(attribute.name)) {
+              val fBoolean = f.asInstanceOf[Boolean => Boolean]
+              val current = ref.dom.hasAttribute(attribute.name)
+              if (fBoolean(current)) ref.dom.setAttribute(attribute.name, "")
+              else                   ref.dom.removeAttribute(attribute.name)
+            } else {
+              val fString = f.asInstanceOf[Option[String] => Option[String]]
+              val current = Option(ref.dom.getAttribute(attribute.name))
+              fString(current) match {
+                case None    => ref.dom.removeAttribute(attribute.name)
+                case Some(s) => ref.dom.setAttribute(attribute.name, s)
+              }
+            }
+          }
+
         case Diff.RemoveAttribute(ref, attribute) =>
           Future.successful(ref.dom.removeAttribute(attribute.name))
 

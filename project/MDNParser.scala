@@ -20,6 +20,7 @@ object MDNParser {
   val GlobalAttributesUrl = "https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes"
   val AdditionalTagUrls = Set("a", "b", "i", "br", "span", "em", "strong", "small", "code")
     .map(ElementsUrl + "/" + _)
+  val FilterTags = Set("element")  // Invalid tags
 
   def encodeFileName(url: String): String =
     url.flatMap {
@@ -183,7 +184,11 @@ object MDNParser {
   }
 
   def writeAttributes(p: PrintWriter, className: String, attributes: Seq[Attribute]): Unit =
-    attributes.filter(_.name != "data-*").foreach { attribute =>
+    attributes
+      .filter(_.name != "data-*")
+      .filter(!_.name.startsWith("on"))
+      .foreach
+    { attribute =>
       val attrName = escapeScalaName(attribute.name)
       val attrType = attribute.tpe.map(mapDomType).getOrElse("String")
       val description = escapeScalaComment(attribute.description)
@@ -337,7 +342,7 @@ object MDNParser {
     }
   }
 
-  def createFiles(destPath: File) = {
+  def createFiles(destPath: File): Seq[File] = {
     val tagsPath = new File(destPath, "pl/metastack/metaweb/tag")
     tagsPath.mkdirs()
 
@@ -349,6 +354,7 @@ object MDNParser {
       .asScala
       .map(_.absUrl("href"))
       .toSet
+      .diff(FilterTags.map(s"$ElementsUrl/" + _))
 
     AdditionalTagUrls.foreach { additionalTag =>
       if (!elements.contains(additionalTag))
