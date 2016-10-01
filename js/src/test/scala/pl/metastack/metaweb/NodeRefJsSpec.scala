@@ -7,7 +7,7 @@ import org.scalatest.FunSuite
 
 import pl.metastack.metaweb.diff.NodeRef
 
-class NodeRefSpec extends FunSuite with DiffSupport {
+class NodeRefJsSpec extends FunSuite with DiffSupport {
   test("Get value of String attribute") {
     val node = dom.document.createElement("a")
     node.setAttribute("id", "test")
@@ -92,10 +92,10 @@ class NodeRefSpec extends FunSuite with DiffSupport {
       f = Predef.Map("test" -> node).get(_)
     })
 
-    diff.render.DOM.RenderDom.render(node, nodeRef.href.update { case x => None })
+    diff.render.DOM.RenderDom.render(node, nodeRef.href.update(_ => None))
     assert(nodeRef.href.get.isEmpty)
 
-    diff.render.DOM.RenderDom.render(node, nodeRef.href.update { case x => Some(x.toString) })
+    diff.render.DOM.RenderDom.render(node, nodeRef.href.update(x => Some(x.toString)))
     assert(nodeRef.href.get.contains("None"))
   }
 
@@ -108,10 +108,27 @@ class NodeRefSpec extends FunSuite with DiffSupport {
       f = Predef.Map("test" -> node).get(_)
     })
 
-    diff.render.DOM.RenderDom.render(node, nodeRef.checked.update { case x => !x })
+    diff.render.DOM.RenderDom.render(node, nodeRef.checked.update(!_))
     assert(nodeRef.checked.get)
 
-    diff.render.DOM.RenderDom.render(node, nodeRef.checked.update { case x => !x })
+    diff.render.DOM.RenderDom.render(node, nodeRef.checked.update(!_))
     assert(!nodeRef.checked.get)
+  }
+
+  test("Use DSL to update CSS tag") {
+    import dsl._
+
+    val node = dom.document.createElement("input")
+    node.setAttribute("id", "test")
+    node.setAttribute("type", "checkbox")
+    node.setAttribute("class", "a b c")
+
+    val nodeRef = NodeRef[tag.Input]("test", idMap = new IdMap {
+      f = Predef.Map("test" -> node).get(_)
+    })
+
+    diff.render.DOM.RenderDom.render(node, nodeRef.css(false, "b"))
+    assert(nodeRef.`class`.get.contains("a c"))
+    assert(nodeRef.dom.className == "a c")
   }
 }

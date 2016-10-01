@@ -28,6 +28,7 @@ trait DiffSupport extends DiffSupportLowPrio {
   implicit object Directory extends JS[tag.Dir] { override type X = org.scalajs.dom.html.Directory }
   implicit object Div extends JS[tag.Div] { override type X = org.scalajs.dom.html.Div }
   implicit object Element extends JS[tag.Element] { override type X = org.scalajs.dom.html.Element }
+  implicit object Element2 extends JS[tag.HTMLTag] { override type X = org.scalajs.dom.html.Element }
   implicit object Embed extends JS[tag.Embed] { override type X = org.scalajs.dom.html.Embed }
   implicit object FieldSet extends JS[tag.Fieldset] { override type X = org.scalajs.dom.html.FieldSet }
   implicit object Form extends JS[tag.Form] { override type X = org.scalajs.dom.html.Form }
@@ -216,19 +217,11 @@ trait DiffSupport extends DiffSupportLowPrio {
   }
 
   /** TODO Introduce BooleanAttribute and StringAttribute for better type-safety? */
-  implicit class AttributeExtensions[T <: tree.Tag, G, S](attribute: Attribute[T, G, S]) {
+  implicit class AttributeExtensions[T <: tree.Tag, G](attribute: Attribute[T, G, _]) {
     def get(implicit js: JS[T]): G =
       if (HtmlHelpers.BooleanAttributes.contains(attribute.name))
         attribute.parent.dom.hasAttribute(attribute.name).asInstanceOf[G]
       else Option(attribute.parent.dom.getAttribute(attribute.name)).asInstanceOf[G]
-
-    def update(f: G => G)(implicit js: JS[T]): Diff =
-      if (HtmlHelpers.BooleanAttributes.contains(attribute.name))
-        attribute := f(get).asInstanceOf[S]
-      else f(get).asInstanceOf[Option[Any]] match {
-        case None    => attribute.remove()
-        case Some(s) => attribute := s.asInstanceOf[S]
-      }
   }
 
   implicit class NodeRefExtensions[T <: tree.Tag](nodeRef: NodeRef[T]) {
@@ -237,18 +230,6 @@ trait DiffSupport extends DiffSupportLowPrio {
         if (e.keyCode == KeyCode.Enter) f(nodeRef.dom.asInstanceOf[org.scalajs.dom.html.Input].value)
         else Diff.Noop()
       }
-
-    /** Toggle `cssTags` depending on `state` */
-    def css(state: Boolean, cssTags: String*)(implicit js: JS[T]): Diff = Diff.Effect {
-      val cur = nodeRef.dom.className
-      val currentTags = cur.split(' ')
-
-      val updated =
-        if (state) currentTags ++ cssTags
-        else currentTags.diff(cssTags)
-
-      nodeRef.dom.className = updated.distinct.mkString(" ")
-    }
 
     /** Underlying DOM node */
     def dom(implicit js: JS[T]): js.X =

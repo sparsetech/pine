@@ -37,6 +37,26 @@ object Tree {
                   Future.successful(tag.copy(attributes =
                     tag.attributes + (attribute.name -> value)))
 
+                case Diff.UpdateAttribute(ref, attribute, f) if ref.matches(tag) =>
+                  val attrs =
+                    if (HtmlHelpers.BooleanAttributes.contains(attribute.name)) {
+                      val fBoolean = f.asInstanceOf[Boolean => Boolean]
+                      if (fBoolean(tag.attributes.contains(attribute.name)))
+                        tag.attributes + (attribute.name -> "")
+                      else
+                        tag.attributes - attribute.name
+                    } else {
+                      val fString = f.asInstanceOf[Option[String] => Option[String]]
+                      val updated = fString(tag.attributes.get(attribute.name)
+                        .asInstanceOf[Option[String]])
+                      updated match {
+                        case None    => tag.attributes - attribute.name
+                        case Some(s) => tag.attributes + (attribute.name -> s)
+                      }
+                    }
+
+                  Future.successful(tag.copy(attributes = attrs))
+
                 case Diff.RemoveAttribute(ref, attribute) if ref.matches(tag) =>
                   Future.successful(tag.copy(attributes = tag.attributes - attribute.name))
 
