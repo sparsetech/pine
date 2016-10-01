@@ -184,7 +184,11 @@ object MDNParser {
   }
 
   def writeAttributes(p: PrintWriter, className: String, attributes: Seq[Attribute]): Unit =
-    attributes.filter(_.name != "data-*").foreach { attribute =>
+    attributes
+      .filter(_.name != "data-*")
+      .filter(!_.name.startsWith("on"))
+      .foreach
+    { attribute =>
       val attrName = escapeScalaName(attribute.name)
       val attrType = attribute.tpe.map(mapDomType).getOrElse("String")
       val description = escapeScalaComment(attribute.description)
