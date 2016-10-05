@@ -1,9 +1,9 @@
-package pl.metastack.metaweb
+package cats.contrib.instances
 
-import _root_.cats.Monoid
+import cats.Monoid
 import pl.metastack.metaweb.diff.Diff
 
-package object cats {
+trait DiffInstances {
   /**
    * A Monoid for Diff, who's `empty` is `Diff.Noop()`
    * and `combine` - the `:+` operation.
@@ -13,3 +13,5 @@ package object cats {
     override def combine(a: Diff, b: Diff): Diff = a :+ b
   }
 }
+
+object diff extends DiffInstances
