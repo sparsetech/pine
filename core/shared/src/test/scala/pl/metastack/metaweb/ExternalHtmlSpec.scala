@@ -14,23 +14,23 @@ class ExternalHtmlSpec extends FunSuite {
 </html>""")
 
   test("Load immutable template") {
-    val tpl = html("shared/src/test/html/test.html")
+    val tpl = html("core/shared/src/test/html/test.html")
     checkTestHtml(tpl.toHtml)
 
-    val tplOneWay = html("shared/src/test/html/test.html")
+    val tplOneWay = html("core/shared/src/test/html/test.html")
     checkTestHtml(tplOneWay.toHtml)
   }
 
   test("Load mutable template") {
-    val tpl = html("shared/src/test/html/test.html")
+    val tpl = html("core/shared/src/test/html/test.html")
     checkTestHtml(tpl.toHtml)
 
-    val tplOneWay = html("shared/src/test/html/test.html")
+    val tplOneWay = html("core/shared/src/test/html/test.html")
     checkTestHtml(tplOneWay.toHtml)
   }
 
   test("Replacing nodes") {
-    val tpl = html("shared/src/test/html/test2.html")
+    val tpl = html("core/shared/src/test/html/test2.html")
 
     val div2 = tpl.byId[tree.Tag]("div2")
     assert(div2.toHtml == """<div id="div2">Div 2 contents</div>""")
@@ -40,7 +40,7 @@ class ExternalHtmlSpec extends FunSuite {
   }
 
   test("Instantiate template") {
-    val tpl = html("shared/src/test/html/list.html")
+    val tpl = html("core/shared/src/test/html/list.html")
     val listItem = tpl.byId[tree.Tag]("list-item")
 
     val inst = listItem.instantiate(
@@ -53,7 +53,7 @@ class ExternalHtmlSpec extends FunSuite {
 
   test("Bind list item from template") {
     // Obtain tree without creating a state object
-    val tpl = html("shared/src/test/html/list.html")
+    val tpl = html("core/shared/src/test/html/list.html")
 
     // When embedding list items, we need to drop the ID attribute
     val listItem = tpl.byId[tree.Tag]("list-item").withoutId
