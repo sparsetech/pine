@@ -1,0 +1,19 @@
+package pl.metastack.metaweb.cats
+
+import org.scalatest._
+import pl.metastack.metaweb.diff.Diff
+
+import _root_.cats.Monoid
+import _root_.cats.syntax.all._
+
+class ExampleSpec extends FlatSpec with Matchers {
+  "Monoid[Diff]" should "have an identity equal to Noop" in {
+    implicitly[Monoid[Diff]].empty shouldBe Diff.Noop()
+  }
+
+  it should "have a composition operation equal to `:+`" in {
+    val e1: Diff = Diff.Effect(println("Foo"))
+    val e2: Diff = Diff.Effect(println("Bar"))
+    e1 |+| e2 shouldBe e1 :+ e2
+  }
+}
