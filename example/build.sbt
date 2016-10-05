@@ -21,6 +21,9 @@ lazy val root = project.in(file("."))
 
 lazy val example = crossProject.in(file("."))
   .settings(SharedSettings: _*)
+  .settings(
+    publishArtifact := false
+  )
   .jvmSettings(Revolver.settings: _*)
   .jvmSettings(
     libraryDependencies ++= Seq(
