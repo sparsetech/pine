@@ -4,6 +4,7 @@ val Scala2_11  = "2.11.8"
 val ScalaTest  = "3.0.0"
 val ScalaCheck = "1.13.2"
 val ScalaJsDom = "0.9.1"
+val Cats       = "0.7.2"
 
 val SharedSettings = Seq(
   name := "MetaWeb",
@@ -31,13 +32,13 @@ val SharedSettings = Seq(
 )
 
 lazy val root = project.in(file("."))
-  .aggregate(js, jvm)
+  .aggregate(coreJS, coreJVM, catsJS, catsJVM)
   .settings(SharedSettings: _*)
   .settings(publishArtifact := false)
 
 val convertMDN = taskKey[Unit]("Generate MDN bindings")
 
-lazy val metaWeb = crossProject.in(file("."))
+lazy val core = crossProject.in(file("core"))
   .settings(SharedSettings: _*)
   .settings(
     addCompilerPlugin("org.scalamacros" % "paradise" % Paradise cross CrossVersion.full),
@@ -46,7 +47,7 @@ lazy val metaWeb = crossProject.in(file("."))
       "org.scalatest"  %%% "scalatest"     % ScalaTest  % "test",
       "org.scalacheck" %%% "scalacheck"    % ScalaCheck % "test"
     ),
-    convertMDN := MDNParser.createFiles(new File("shared/src/main/scala"))
+    convertMDN := MDNParser.createFiles(new File(baseDirectory.value, "shared/src/main/scala"))
   )
   .jsSettings(
     libraryDependencies += "org.scala-js" %%% "scalajs-dom" % ScalaJsDom,
@@ -58,5 +59,21 @@ lazy val metaWeb = crossProject.in(file("."))
     scalaJSUseRhino in Global := false
   )
 
-lazy val js  = metaWeb.js
-lazy val jvm = metaWeb.jvm
+lazy val coreJS  = core.js
+lazy val coreJVM = core.jvm
+
+lazy val examples = project in file("example")
+
+lazy val cats = crossProject.in(file("cats"))
+  .settings(SharedSettings: _*)
+  .dependsOn(core)
+  .settings(
+    name := "MetaWeb-Cats"
+  , libraryDependencies += "org.typelevel" %%% "cats-core" % Cats
+  )
+  .jsSettings(
+    scalaJSUseRhino in Global := false
+  )
+
+lazy val catsJS  = cats.js
+lazy val catsJVM = cats.jvm
