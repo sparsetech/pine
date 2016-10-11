@@ -14,16 +14,12 @@ val SharedSettings = Seq(
   )
 )
 
-lazy val root = project.in(file("."))
+lazy val exampleRoot = project.in(file("."))
   .aggregate(js, jvm)
   .settings(SharedSettings: _*)
-  .settings(publishArtifact := false)
 
 lazy val example = crossProject.in(file("."))
   .settings(SharedSettings: _*)
-  .settings(
-    publishArtifact := false
-  )
   .jvmSettings(Revolver.settings: _*)
   .jvmSettings(
     libraryDependencies ++= Seq(
