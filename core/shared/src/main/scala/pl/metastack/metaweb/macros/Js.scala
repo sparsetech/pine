@@ -22,6 +22,10 @@ object Js {
     }
 
     val result = annottees.map(_.tree) match {
+      case q"$mods def $name: $tpe = (..$args) => $body" :: Nil =>
+        if (!isScalaJs) q"$mods def $name: $tpe = (..$args) => Diff.Noop()"
+        else            q"$mods def $name: $tpe = (..$args) => $body"
+
       case q"$mods val $name = $body" :: Nil =>
         if (!isScalaJs) q"" else q"$mods val $name = $body"
 

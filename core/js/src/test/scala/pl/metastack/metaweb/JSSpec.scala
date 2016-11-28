@@ -11,6 +11,16 @@ class JSSpec extends FunSuite {
     assert(i == 1 && j == ())
   }
 
+  test("Lambda annotation") {
+    trait Diff
+    object Diff { case class Noop() extends Diff }
+    var i = 0
+    type T = (Int, Int) => Diff
+    @Js def f: T = (_, _) => { i = 1; Diff.Noop() }
+    f(1, 2)
+    assert(i == 1)
+  }
+
   test("Variable annotation") {
     var i = 0
     @Js var j = { i = 1 }
