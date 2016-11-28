@@ -40,7 +40,7 @@ trait View {
   def populate(): Diff = Diff.Noop()
 
   /** Registers event handlers. Only called in JavaScript. The overridden
-    * method can should have the @Js annotation.
+    * method may need the @Js annotation.
     */
   def register(): Diff = Diff.Noop()
 
