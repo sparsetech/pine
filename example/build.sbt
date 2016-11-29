@@ -46,6 +46,6 @@ lazy val example = crossProject.in(file("."))
 lazy val js = example.js
 
 lazy val jvm = example.jvm.settings(
-  baseDirectory in Revolver.reStart := new File("."),
-  Revolver.reStart <<= Revolver.reStart dependsOn (fastOptJS in (js, Compile))
+  baseDirectory in reStart := new File("."),
+  reStart <<= reStart.dependsOn(fastOptJS in (js, Compile))
 )

@@ -1,16 +1,16 @@
 val Paradise   = "2.1.0"
 val Scala2_11  = "2.11.8"
-// val Scala2_12  = "2.12.0-RC1"
-val ScalaTest  = "3.0.0"
-val ScalaCheck = "1.13.2"
+val Scala2_12  = "2.12.0"
+val ScalaTest  = "3.0.1"
+val ScalaCheck = "1.13.4"
 val ScalaJsDom = "0.9.1"
-val Cats       = "0.7.2"
+val Cats       = "0.8.1"
 
 val SharedSettings = Seq(
   name := "MetaWeb",
   organization := "pl.metastack",
-  scalaVersion := Scala2_11,
-  // crossScalaVersions := Seq(Scala2_12, Scala2_11),
+  scalaVersion := Scala2_12,
+  crossScalaVersions := Seq(Scala2_12, Scala2_11),
   pomExtra :=
     <url>https://github.com/MetaStack-pl/MetaWeb</url>
     <licenses>
@@ -51,12 +51,8 @@ lazy val core = crossProject.in(file("core"))
   )
   .jsSettings(
     libraryDependencies += "org.scala-js" %%% "scalajs-dom" % ScalaJsDom,
-
-    requiresDOM := true,  // For test cases
-    scalaJSStage in Global := FastOptStage,
-
-    /* Use io.js for faster compilation of test cases */
-    scalaJSUseRhino in Global := false
+    jsDependencies      += RuntimeDOM % "test",
+    scalaJSStage in Global := FastOptStage
   )
 
 lazy val coreJS  = core.js
@@ -71,9 +67,6 @@ lazy val cats = crossProject.in(file("cats"))
     name := "MetaWeb-Cats"
   , libraryDependencies += "org.typelevel" %%% "cats-core" % Cats
   , libraryDependencies += "org.scalatest" %%% "scalatest" % ScalaTest % "test"
-  )
-  .jsSettings(
-    scalaJSUseRhino in Global := false
   )
 
 lazy val catsJS  = cats.js
