@@ -1,6 +1,6 @@
 val Paradise   = "2.1.0"
 val Scala2_11  = "2.11.8"
-val Scala2_12  = "2.12.0"
+val Scala2_12  = "2.12.1"
 val ScalaTest  = "3.0.1"
 val ScalaCheck = "1.13.4"
 val ScalaJsDom = "0.9.1"
