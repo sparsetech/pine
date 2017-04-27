@@ -4,7 +4,6 @@ val Scala2_12  = "2.12.2"
 val ScalaTest  = "3.0.3"
 val ScalaCheck = "1.13.5"
 val ScalaJsDom = "0.9.1"
-val Cats       = "0.9.0"
 
 val SharedSettings = Seq(
   name := "MetaWeb",
@@ -32,7 +31,7 @@ val SharedSettings = Seq(
 )
 
 lazy val root = project.in(file("."))
-  .aggregate(coreJS, coreJVM, catsJS, catsJVM)
+  .aggregate(coreJS, coreJVM)
   .settings(SharedSettings: _*)
   .settings(publishArtifact := false)
 
@@ -59,15 +58,3 @@ lazy val coreJS  = core.js
 lazy val coreJVM = core.jvm
 
 lazy val example = project.in(file("example"))
-
-lazy val cats = crossProject.in(file("cats"))
-  .settings(SharedSettings: _*)
-  .dependsOn(core)
-  .settings(
-    name := "MetaWeb-Cats"
-  , libraryDependencies += "org.typelevel" %%% "cats-core" % Cats
-  , libraryDependencies += "org.scalatest" %%% "scalatest" % ScalaTest % "test"
-  )
-
-lazy val catsJS  = cats.js
-lazy val catsJVM = cats.jvm

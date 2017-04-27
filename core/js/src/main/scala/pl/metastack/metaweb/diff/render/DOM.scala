@@ -9,10 +9,6 @@ object DOM {
   implicit object RenderDom extends Render[dom.Node, Unit] with PlatformSupport {
     def render(node: dom.Node, diff: Diff): Unit =
       diff match {
-        case Diff.Sequence(left, right @ _*) =>
-          render(node, left)
-          right.foreach(render(node, _))
-
         case Diff.SetAttribute(ref, attribute, value) =>
           if (!HtmlHelpers.BooleanAttributes.contains(attribute.name))
             ref.dom.setAttribute(attribute.name, value.toString)

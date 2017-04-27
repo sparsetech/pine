@@ -1,5 +1,7 @@
 package pl.metastack.metaweb.tree
 
+import pl.metastack.metaweb.diff.Diff
+import pl.metastack.metaweb.diff.render.Tree.RenderNode
 import pl.metastack.metaweb.tag.HTMLTag
 
 import scala.reflect.ClassTag
@@ -96,6 +98,11 @@ trait Tag extends Node {
     }
 
   def as[T <: Tag]: T = this.asInstanceOf[T]
+
+  def update(diffs: Diff*): T =
+    diffs.foldLeft(this) { case (a, b) =>
+      RenderNode.render(a, b).asInstanceOf[Tag]
+    }.asInstanceOf[T]
 
   def map(f: Node => Node): T = copy(children = children.map(f(_).map(f)))
 

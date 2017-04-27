@@ -9,11 +9,9 @@ class DiffSpec extends FunSuite {
     val spanAge  = NodeRef[tag.Span]("age")
     val spanName = NodeRef[tag.Span]("name")
 
-    val node  = html"""<div id="child"><span id="age"></span><span id="name"></span></div>"""
-    val diffs = Diff(spanAge := 42, spanName := "Joe")
-
-    val x = diff.render.Tree.RenderNode.render(node, diffs)
-    assert(x == html"""<div id="child"><span id="age">42</span><span id="name">Joe</span></div>""")
+    val node    = html"""<div id="child"><span id="age"></span><span id="name"></span></div>"""
+    val updated = node.update(spanAge := 42, spanName := "Joe")
+    assert(updated == html"""<div id="child"><span id="age">42</span><span id="name">Joe</span></div>""")
   }
 
   /*test("Replace children (views)") {
