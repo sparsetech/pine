@@ -2,7 +2,6 @@ package pl.metastack.metaweb
 
 import org.scalacheck.{Gen, Properties}
 import org.scalacheck.Prop.forAll
-import pl.metastack.metaweb.macros.Js
 import pl.metastack.metaweb.tag.HTMLTag
 
 import scala.collection.mutable.ListBuffer
@@ -112,7 +111,7 @@ class NodePropSpec extends Properties("Node") {
       .forall(x => text.contains(x.asInstanceOf[tree.Text].text.trim.replaceAll("\\s+", " ")))
   }
 
-  /*@Js val js = {
+  /*
     property("toText (DOM)") = forAll(nodeGen) { node: tree.Node =>
       node.toText == node.toDom.textContent
     }
