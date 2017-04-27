@@ -1,7 +1,5 @@
 package pl.metastack.metaweb.diff
 
-import scala.concurrent.Future
-
 import pl.metastack.metaweb._
 
 /** A Diff defines change operations */
@@ -24,8 +22,6 @@ object Diff {
   object Effect { def apply(f: => Unit): Effect = new Effect(() => f) }
   class Map(val f: () => Diff) extends Diff
   object Map { def apply(f: => Diff): Map = new Map(() => f) }
-  class Async(val f: () => Future[Diff]) extends Diff
-  object Async { def apply(f: => Future[Diff]): Async = new Async(() => f) }
   case class SetAttribute[T <: tree.Tag, U](node: NodeRef[T], attribute: Attribute[T, _, U], value: U) extends Diff
   case class UpdateAttribute[T <: tree.Tag, U](node: NodeRef[T], attribute: Attribute[T, U, _], f: U => U) extends Diff
   case class RemoveAttribute[T <: tree.Tag](node: NodeRef[T], attribute: Attribute[T, _, _]) extends Diff

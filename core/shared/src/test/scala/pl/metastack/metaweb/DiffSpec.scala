@@ -1,10 +1,10 @@
 package pl.metastack.metaweb
 
 import scala.concurrent.Future
-import org.scalatest.AsyncFunSuite
-import pl.metastack.metaweb.diff.{Diff, NodeRef}
+import org.scalatest.FunSuite
+import pl.metastack.metaweb.diff._
 
-class DiffSpec extends AsyncFunSuite {
+class DiffSpec extends FunSuite {
   test("Replace children") {
     val spanAge  = NodeRef[tag.Span]("age")
     val spanName = NodeRef[tag.Span]("name")
@@ -12,19 +12,8 @@ class DiffSpec extends AsyncFunSuite {
     val node  = html"""<div id="child"><span id="age"></span><span id="name"></span></div>"""
     val diffs = Diff(spanAge := 42, spanName := "Joe")
 
-    val future = diff.render.Tree.RenderNode.render(node, diffs)
-    future.map(x => assert(x == html"""<div id="child"><span id="age">42</span><span id="name">Joe</span></div>"""))
-  }
-
-  test("Replace children (async)") {
-    val spanAge  = NodeRef[tag.Span]("age")
-    val spanName = NodeRef[tag.Span]("name")
-
-    val node  = html"""<div id="child"><span id="age"></span><span id="name"></span></div>"""
-    val diffs = Diff.Async(Future(Diff(spanAge := 42, spanName := "Joe")))
-
-    val future = diff.render.Tree.RenderNode.render(node, diffs)
-    future.map(x => assert(x == html"""<div id="child"><span id="age">42</span><span id="name">Joe</span></div>"""))
+    val x = diff.render.Tree.RenderNode.render(node, diffs)
+    assert(x == html"""<div id="child"><span id="age">42</span><span id="name">Joe</span></div>""")
   }
 
   /*test("Replace children (views)") {

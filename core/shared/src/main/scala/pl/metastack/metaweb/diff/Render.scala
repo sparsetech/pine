@@ -1,14 +1,13 @@
 package pl.metastack.metaweb.diff
 
-import scala.concurrent.{ExecutionContext, Future}
 import pl.metastack.metaweb.tree
 
 trait Render[T, U] {
-  def render(node: T, diff: Diff)(implicit ec: ExecutionContext): Future[U]
+  def render(node: T, diff: Diff): U
 }
 
 object Render {
-  def render[T, U](value: T, diff: Diff)(implicit r: Render[T, U], ec: ExecutionContext): Future[U] =
+  def render[T, U](value: T, diff: Diff)(implicit r: Render[T, U]): U =
     r.render(value, diff)
 
   /** Recursively adds `suffix` to every ID attribute of `node` */
