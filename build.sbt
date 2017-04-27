@@ -1,15 +1,15 @@
 val Paradise   = "2.1.0"
 val Scala2_11  = "2.11.8"
-val Scala2_12  = "2.12.1"
-val ScalaTest  = "3.0.1"
-val ScalaCheck = "1.13.4"
+val Scala2_12  = "2.12.2"
+val ScalaTest  = "3.0.3"
+val ScalaCheck = "1.13.5"
 val ScalaJsDom = "0.9.1"
-val Cats       = "0.8.1"
+val Cats       = "0.9.0"
 
 val SharedSettings = Seq(
   name := "MetaWeb",
   organization := "pl.metastack",
-  scalaVersion := Scala2_12,
+  scalaVersion := Scala2_11,
   crossScalaVersions := Seq(Scala2_12, Scala2_11),
   pomExtra :=
     <url>https://github.com/MetaStack-pl/MetaWeb</url>
