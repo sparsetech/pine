@@ -20,6 +20,11 @@ class NodeSpec extends FunSuite {
       .byClass[tree.Tag]("test2") == span.children.head)
   }
 
+  test("as") {
+    val list: tag.Div = html"<div>Test</div>".as[tag.Div]
+    assert(list.isInstanceOf[tag.Div])
+  }
+
   test("map") {
     val h = html"""
       <html>

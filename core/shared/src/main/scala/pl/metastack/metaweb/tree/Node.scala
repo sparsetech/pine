@@ -95,6 +95,8 @@ trait Tag extends Node {
       case node => if (f(node)) Seq(node) else Seq.empty
     }
 
+  def as[T <: Tag]: T = this.asInstanceOf[T]
+
   def map(f: Node => Node): T = copy(children = children.map(f(_).map(f)))
 
   def flatMap(f: Node => Seq[Node]): T =
