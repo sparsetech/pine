@@ -10,12 +10,6 @@ object Tree {
         case Diff.Sequence(left, right @ _*) =>
           right.foldLeft(render(node, left))(render)
 
-        case e: Diff.Effect =>
-          e.f()
-          node
-
-        case e: Diff.Map => render(node, e.f())
-
         case _ =>
           node match {
             case text: tree.Text => text

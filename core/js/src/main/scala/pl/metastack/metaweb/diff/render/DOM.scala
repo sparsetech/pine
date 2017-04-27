@@ -44,10 +44,6 @@ object DOM {
           children.foreach(child =>
             ref.dom.appendChild(tree.render.DOM.render(child)))
 
-        case e: Diff.Effect => e.f()
-        case e: Diff.Map => render(node, e.f())
-        case Diff.Noop() => ()
-
         case e: DiffDom.SubscribeEvent[_] =>
           val cast = e.asInstanceOf[DiffDom.SubscribeEvent[dom.Event]]
           cast.set { event: dom.Event =>

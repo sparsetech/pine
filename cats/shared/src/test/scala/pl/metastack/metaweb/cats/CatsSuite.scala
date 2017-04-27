@@ -13,8 +13,8 @@ class ExampleSpec extends FlatSpec with Matchers {
   }
 
   it should "have a composition operation equal to `:+`" in {
-    val e1: Diff = Diff.Effect(println("Foo"))
-    val e2: Diff = Diff.Effect(println("Bar"))
+    val e1: Diff = Diff.Noop()
+    val e2: Diff = Diff.Noop()
     e1 |+| e2 shouldBe e1 :+ e2
   }
 }

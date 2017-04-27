@@ -18,10 +18,6 @@ object Diff {
 
   case class Noop() extends Diff
   case class Sequence(left: Diff, right: Diff*) extends Diff
-  class Effect(val f: () => Unit) extends Diff
-  object Effect { def apply(f: => Unit): Effect = new Effect(() => f) }
-  class Map(val f: () => Diff) extends Diff
-  object Map { def apply(f: => Diff): Map = new Map(() => f) }
   case class SetAttribute[T <: tree.Tag, U](node: NodeRef[T], attribute: Attribute[T, _, U], value: U) extends Diff
   case class UpdateAttribute[T <: tree.Tag, U](node: NodeRef[T], attribute: Attribute[T, U, _], f: U => U) extends Diff
   case class RemoveAttribute[T <: tree.Tag](node: NodeRef[T], attribute: Attribute[T, _, _]) extends Diff
