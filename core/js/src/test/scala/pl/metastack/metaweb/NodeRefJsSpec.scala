@@ -14,11 +14,12 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
     node.setAttribute("href", "http://google.com/")
     node.appendChild(dom.document.createTextNode("Google"))
 
-    val nodeRef = NodeRef[tag.A]("test", idMap = new IdMap {
-      f = Predef.Map("test" -> node).get(_)
-    })
+    dom.document.body.appendChild(node)
 
+    val nodeRef = NodeRef[tag.A]("test")
     assert(nodeRef.href.get.contains("http://google.com/"))
+
+    dom.document.body.removeChild(node)
   }
 
   test("Get value of Boolean attribute") {
@@ -26,11 +27,12 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
     node.setAttribute("id", "test")
     node.setAttribute("type", "checkbox")
 
-    val nodeRef = NodeRef[tag.Input]("test", idMap = new IdMap {
-      f = Predef.Map("test" -> node).get(_)
-    })
+    dom.document.body.appendChild(node)
 
+    val nodeRef = NodeRef[tag.Input]("test")
     assert(!nodeRef.checked.get)
+
+    dom.document.body.removeChild(node)
   }
 
   test("Get value of Boolean attribute (2)") {
@@ -39,11 +41,12 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
     node.setAttribute("type", "checkbox")
     node.setAttribute("checked", "")
 
-    val nodeRef = NodeRef[tag.Input]("test", idMap = new IdMap {
-      f = Predef.Map("test" -> node).get(_)
-    })
+    dom.document.body.appendChild(node)
 
+    val nodeRef = NodeRef[tag.Input]("test")
     assert(nodeRef.checked.get)
+
+    dom.document.body.removeChild(node)
   }
 
   test("Set value of Boolean attribute") {
@@ -51,15 +54,17 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
     node.setAttribute("id", "test")
     node.setAttribute("type", "checkbox")
 
-    val nodeRef = NodeRef[tag.Input]("test", idMap = new IdMap {
-      f = Predef.Map("test" -> node).get(_)
-    })
+    val nodeRef = NodeRef[tag.Input]("test")
+
+    dom.document.body.appendChild(node)
 
     diff.render.DOM.RenderDom.render(node, nodeRef.checked := true)
     assert(nodeRef.checked.get)
 
     diff.render.DOM.RenderDom.render(node, nodeRef.checked := false)
     assert(!nodeRef.checked.get)
+
+    dom.document.body.removeChild(node)
   }
 
   test("Set value of String attribute") {
@@ -68,9 +73,9 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
     node.setAttribute("href", "http://google.com/")
     node.appendChild(dom.document.createTextNode("Google"))
 
-    val nodeRef = NodeRef[tag.A]("test", idMap = new IdMap {
-      f = Predef.Map("test" -> node).get(_)
-    })
+    val nodeRef = NodeRef[tag.A]("test")
+
+    dom.document.body.appendChild(node)
 
     diff.render.DOM.RenderDom.render(node, nodeRef.href := "http://github.com/")
     assert(nodeRef.href.get.contains("http://github.com/"))
@@ -80,6 +85,8 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
 
     diff.render.DOM.RenderDom.render(node, nodeRef.href.remove())
     assert(nodeRef.href.get.isEmpty)
+
+    dom.document.body.removeChild(node)
   }
 
   test("Update value of String attribute") {
@@ -88,15 +95,17 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
     node.setAttribute("href", "http://google.com/")
     node.appendChild(dom.document.createTextNode("Google"))
 
-    val nodeRef = NodeRef[tag.A]("test", idMap = new IdMap {
-      f = Predef.Map("test" -> node).get(_)
-    })
+    val nodeRef = NodeRef[tag.A]("test")
+
+    dom.document.body.appendChild(node)
 
     diff.render.DOM.RenderDom.render(node, nodeRef.href.update(_ => None))
     assert(nodeRef.href.get.isEmpty)
 
     diff.render.DOM.RenderDom.render(node, nodeRef.href.update(x => Some(x.toString)))
     assert(nodeRef.href.get.contains("None"))
+
+    dom.document.body.removeChild(node)
   }
 
   test("Update value of Boolean attribute") {
@@ -104,15 +113,17 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
     node.setAttribute("id", "test")
     node.setAttribute("type", "checkbox")
 
-    val nodeRef = NodeRef[tag.Input]("test", idMap = new IdMap {
-      f = Predef.Map("test" -> node).get(_)
-    })
+    val nodeRef = NodeRef[tag.Input]("test")
+
+    dom.document.body.appendChild(node)
 
     diff.render.DOM.RenderDom.render(node, nodeRef.checked.update(!_))
     assert(nodeRef.checked.get)
 
     diff.render.DOM.RenderDom.render(node, nodeRef.checked.update(!_))
     assert(!nodeRef.checked.get)
+
+    dom.document.body.removeChild(node)
   }
 
   test("Use DSL to update CSS tag") {
@@ -123,12 +134,14 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
     node.setAttribute("type", "checkbox")
     node.setAttribute("class", "a b c")
 
-    val nodeRef = NodeRef[tag.Input]("test", idMap = new IdMap {
-      f = Predef.Map("test" -> node).get(_)
-    })
+    val nodeRef = NodeRef[tag.Input]("test")
+
+    dom.document.body.appendChild(node)
 
     diff.render.DOM.RenderDom.render(node, nodeRef.css(false, "b"))
     assert(nodeRef.`class`.get.contains("a c"))
     assert(nodeRef.dom.className == "a c")
+
+    dom.document.body.removeChild(node)
   }
 }

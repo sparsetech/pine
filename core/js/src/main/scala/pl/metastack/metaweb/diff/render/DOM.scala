@@ -7,12 +7,6 @@ import pl.metastack.metaweb.{HtmlHelpers, PlatformSupport, View, tree}
 import pl.metastack.metaweb.diff._
 
 object DOM {
-  trait Implicit {
-    implicit class ViewToDom(view: View) {
-      def toDom(implicit ec: ExecutionContext): Future[dom.Node] = renderView(view)
-    }
-  }
-
   def logFailingFuture[T](future: Future[T])(implicit ec: ExecutionContext): Future[T] = {
     future.onFailure { case t => t.printStackTrace() }
     future
@@ -58,10 +52,9 @@ object DOM {
 
         case Diff.ReplaceChildren(ref, children) =>
           ref.dom.clear()
-          Future.sequence(children.map(renderView)).map { children =>
-            children.foreach(ref.dom.appendChild)
-            ()
-          }
+          children.foreach(child =>
+            ref.dom.appendChild(tree.render.DOM.render(child)))
+          Future.successful(())
 
         case e: Diff.Effect => Future.successful(e.f())
         case e: Diff.Map => render(node, e.f())
@@ -81,13 +74,11 @@ object DOM {
           Future.successful(cast.set(null))
 
         case Diff.PrependChild(ref, child) =>
-          renderView(child).map(ref.dom.prependChild)
+          Future.successful(ref.dom.prependChild(tree.render.DOM.render(child)))
 
         case Diff.AppendChild(ref, child) =>
-          renderView(child).map { c =>
-            ref.dom.appendChild(c)
-            ()
-          }
+          ref.dom.appendChild(tree.render.DOM.render(child))
+          Future.successful(())
 
         case Diff.RemoveChild(ref) =>
           ref.dom.parentNode.removeChild(ref.dom)
@@ -109,16 +100,4 @@ object DOM {
 
       case _ => Map.empty
     }
-
-  def renderView(view: View)(implicit ec: ExecutionContext): Future[dom.Node] = {
-    import Render._
-    for {
-      n <- if (view.id.value.isEmpty) view.node()
-           else view.node().map(suffixIds(_, view.id.value))
-      d = tree.render.DOM.render(n): dom.Node // TODO Why is downcast needed?
-      _ = view.idMap.f = collectNodes(d).get(_)
-      p <- render(d, view.populate())
-      r <- render(d, view.register())
-    } yield d
-  }
 }

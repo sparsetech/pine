@@ -10,9 +10,7 @@ class NodeRefSpec extends AsyncFunSuite {
     val node = tag.Input()
       .id("test")
 
-    val nodeRef = NodeRef[tag.Input]("test", idMap = new IdMap {
-      f = Predef.Map("test" -> node).get(_)
-    })
+    val nodeRef = NodeRef[tag.Input]("test")
 
     assert(!node.checked)
 
@@ -27,9 +25,7 @@ class NodeRefSpec extends AsyncFunSuite {
       .id("test")
       .checked(true)
 
-    val nodeRef = NodeRef[tag.Input]("test", idMap = new IdMap {
-      f = Predef.Map("test" -> node).get(_)
-    })
+    val nodeRef = NodeRef[tag.Input]("test")
 
     assert(node.checked)
 
@@ -44,9 +40,7 @@ class NodeRefSpec extends AsyncFunSuite {
       .id("test")
       .`type`("checkbox")
 
-    val nodeRef = NodeRef[tag.Input]("test", idMap = new IdMap {
-      f = Predef.Map("test" -> node).get(_)
-    })
+    val nodeRef = NodeRef[tag.Input]("test")
 
     val updated = diff.render.Tree.RenderNode.render(node, nodeRef.css(true, "a"))
     updated.map { n =>
@@ -60,9 +54,7 @@ class NodeRefSpec extends AsyncFunSuite {
       .`type`("checkbox")
       .`class`("a b c")
 
-    val nodeRef = NodeRef[tag.Input]("test", idMap = new IdMap {
-      f = Predef.Map("test" -> node).get(_)
-    })
+    val nodeRef = NodeRef[tag.Input]("test")
 
     val updated = diff.render.Tree.RenderNode.render(node, nodeRef.css(false, "b"))
     updated.map { n =>

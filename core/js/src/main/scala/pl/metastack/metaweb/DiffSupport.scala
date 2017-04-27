@@ -236,7 +236,7 @@ trait DiffSupport extends DiffSupportLowPrio {
 
     /** Underlying DOM node */
     def dom(implicit js: JS[T]): js.X =
-      nodeRef.idMap.f(nodeRef.id).getOrElse(
+      PlatformSupport.DefaultIdMap(nodeRef.id).getOrElse(
         throw new Exception(s"Node with ID '${nodeRef.id}' not found")
       ).asInstanceOf[js.X]
 

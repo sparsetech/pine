@@ -6,13 +6,6 @@ import pl.metastack.metaweb._
 import pl.metastack.metaweb.diff._
 
 object Tree {
-  trait Implicit {
-    implicit class ViewToTree(view: View) {
-      def toTree(implicit ec: ExecutionContext): Future[tree.Node] = renderView(view)
-      def toHtml(implicit ec: ExecutionContext): Future[String] = renderView(view).map(_.toHtml)
-    }
-  }
-
   implicit object RenderNode extends Render[tree.Node, tree.Node] {
     def render(node: tree.Node, diff: Diff)(implicit ec: ExecutionContext): Future[tree.Node] =
       diff match {
@@ -61,19 +54,13 @@ object Tree {
                   Future.successful(tag.copy(attributes = tag.attributes - attribute.name))
 
                 case Diff.PrependChild(ref, child) if ref.matches(tag) =>
-                  renderView(child).map { c =>
-                    tag.copy(children = c +: tag.children)
-                  }
+                  Future.successful(tag.copy(children = child +: tag.children))
 
                 case Diff.AppendChild(ref, child) if ref.matches(tag) =>
-                  renderView(child).map { c =>
-                    tag.copy(children = tag.children :+ c)
-                  }
+                  Future.successful(tag.copy(children = tag.children :+ child))
 
                 case Diff.ReplaceChildren(ref, children) if ref.matches(tag) =>
-                  Future.sequence(children.map(renderView)).map { c =>
-                    tag.copy(children = c)
-                  }
+                  Future.successful(tag.copy(children = children))
 
                 case Diff.RemoveChild(ref) if tag.children.collect { case t: tree.Tag => t }.exists(c => ref.matches(c)) =>
                   val child = tag.children.collect { case t: tree.Tag => t }.find(c => ref.matches(c)).get
@@ -85,14 +72,5 @@ object Tree {
               }
           }
       }
-  }
-
-  def renderView(view: View)(implicit ec: ExecutionContext): Future[tree.Node] = {
-    import Render._
-    for {
-      n <- if (view.id.value.isEmpty) view.node()
-           else view.node().map(suffixIds(_, view.id.value))
-      p <- render(n, view.populate())
-    } yield p
   }
 }
