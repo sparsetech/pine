@@ -11,6 +11,7 @@ trait DiffSupportLowPrio {
 
 trait DiffSupport extends DiffSupportLowPrio {
   implicit object A extends JS[tag.A] { override type X = org.scalajs.dom.html.Anchor }
+  implicit object B extends JS[tag.B] { override type X = org.scalajs.dom.html.Span }
   implicit object Applet extends JS[tag.Applet] { override type X = org.scalajs.dom.html.Applet }
   implicit object Area extends JS[tag.Area] { override type X = org.scalajs.dom.html.Area }
   implicit object Audio extends JS[tag.Audio] { override type X = org.scalajs.dom.html.Audio }
@@ -42,6 +43,7 @@ trait DiffSupport extends DiffSupportLowPrio {
   implicit object HR extends JS[tag.Hr] { override type X = org.scalajs.dom.html.HR }
   implicit object Head extends JS[tag.Head] { override type X = org.scalajs.dom.html.Head }
   implicit object Html extends JS[tag.Html] { override type X = org.scalajs.dom.html.Html }
+  implicit object I extends JS[tag.I] { override type X = org.scalajs.dom.html.Span }
   implicit object IFrame extends JS[tag.Iframe] { override type X = org.scalajs.dom.html.IFrame }
   implicit object Image extends JS[tag.Img] { override type X = org.scalajs.dom.html.Image }
   implicit object Input extends JS[tag.Input] { override type X = org.scalajs.dom.html.Input }
@@ -65,6 +67,8 @@ trait DiffSupport extends DiffSupportLowPrio {
   implicit object Select extends JS[tag.Select] { override type X = org.scalajs.dom.html.Select }
   implicit object Source extends JS[tag.Source] { override type X = org.scalajs.dom.html.Source }
   implicit object Span extends JS[tag.Span] { override type X = org.scalajs.dom.html.Span }
+  implicit object Strong extends JS[tag.Strong] { override type X = org.scalajs.dom.html.Span }
+  implicit object Strike extends JS[tag.Strike] { override type X = org.scalajs.dom.html.Span }
   implicit object Style extends JS[tag.Style] { override type X = org.scalajs.dom.html.Style }
   implicit object Table extends JS[tag.Table] { override type X = org.scalajs.dom.html.Table }
   implicit object TableRow extends JS[tag.Tr] { override type X = org.scalajs.dom.html.TableRow }
