@@ -1,7 +1,5 @@
 package pl.metastack.metaweb.diff.render
 
-import org.scalajs.dom
-
 import pl.metastack.metaweb
 import pl.metastack.metaweb.diff._
 import pl.metastack.metaweb.{DomDiff, HtmlHelpers, PlatformSupport}
@@ -58,12 +56,7 @@ object DOM extends PlatformSupport {
 
   def render(diff: DomDiff): Unit =
     diff match {
-      case e: DomDiff.SetEvent[_] =>
-        val cast = e.asInstanceOf[DomDiff.SetEvent[dom.Event]]
-        cast.set((event: dom.Event) => render(cast.f(event)))
-
-      case e: DomDiff.DetachEvent[_] =>
-        val cast = e.asInstanceOf[DomDiff.SetEvent[dom.Event]]
-        cast.set(null)
+      case DomDiff.SetEvent(set, f) => set(f)
+      case DomDiff.DetachEvent(set) => set(null)
     }
 }

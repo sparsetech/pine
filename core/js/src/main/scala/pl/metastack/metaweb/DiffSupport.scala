@@ -209,13 +209,13 @@ trait DiffSupport extends DiffSupportLowPrio {
   }
 
   class DomEvent[T <: org.scalajs.dom.Event](set: js.Function1[T, _] => Unit) {
-    def set(f: => Diff): DomDiff = DomDiff.SetEvent(set, (_: T) => f)
-    def set(f: T => Diff): DomDiff = DomDiff.SetEvent(set, f)
+    def set(f: => Unit): DomDiff = DomDiff.SetEvent(set, (_: T) => f)
+    def set(f: T => Unit): DomDiff = DomDiff.SetEvent(set, f)
 
     def detach(): DomDiff = DomDiff.DetachEvent(set)
 
-    def :=(diff: => Diff): DomDiff = set(diff)
-    def :=(diff: T => Diff): DomDiff = set(diff)
+    def :=(diff: => Unit): DomDiff = set(diff)
+    def :=(diff: T => Unit): DomDiff = set(diff)
   }
 
   implicit class NodeRefExtensions[T <: tree.Tag](nodeRef: NodeRef[T]) {
