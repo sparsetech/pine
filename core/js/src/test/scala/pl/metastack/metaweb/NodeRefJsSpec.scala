@@ -123,8 +123,6 @@ class NodeRefJsSpec extends FunSuite {
   }
 
   test("Use DSL to update CSS tag") {
-    import dsl._
-
     val node = dom.document.createElement("input")
     node.setAttribute("id", "test")
     node.setAttribute("type", "checkbox")
@@ -137,6 +135,23 @@ class NodeRefJsSpec extends FunSuite {
     assert(DOM.get(nodeRef.`class`).contains("a c"))
     assert(DOM.get(nodeRef).className == "a c")
 
+    dom.document.body.removeChild(node)
+  }
+
+  test("Match by tag") {
+    val node = dom.document.createElement("input")
+    val div  = dom.document.createElement("div")
+
+    dom.document.body.appendChild(node)
+    dom.document.body.appendChild(div)
+
+    val nodeRef1 = NodeRef(tag.Input())
+    val nodeRef2 = NodeRef(tag.Div())
+
+    assert(DOM.get(nodeRef1) == node)
+    assert(DOM.get(nodeRef2) == div)
+
+    dom.document.body.removeChild(div)
     dom.document.body.removeChild(node)
   }
 }

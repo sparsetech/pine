@@ -73,10 +73,16 @@ object DOM {
     toTree[T](dom.document.getElementById(id))
 
   /** Resolve DOM node */
-  def get[T <: tree.Tag](nodeRef: NodeRef[T])(implicit js: Js[T]): js.X =
-    Option(org.scalajs.dom.document.getElementById(nodeRef.id)).getOrElse(
-      throw new Exception(s"Node with ID '${nodeRef.id}' not found")
+  def get[T <: tree.Tag](nodeRef: NodeRef[T])(implicit js: Js[T]): js.X = {
+    val node = nodeRef match {
+      case NodeRef.ById(id)   => dom.document.getElementById(id)
+      case NodeRef.ByTag(tag) => dom.document.getElementsByTagName(tag).item(0)
+    }
+
+    Option(node).getOrElse(
+      throw new Exception(s"Invalid node reference '$nodeRef'")
     ).asInstanceOf[js.X]
+  }
 
   /** TODO Introduce BooleanAttribute and StringAttribute for better type-safety? */
   def get[T <: tree.Tag, G](attribute: Attribute[T, G, _])(implicit js: Js[T]): G =

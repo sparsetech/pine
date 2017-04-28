@@ -1,7 +1,6 @@
 package pl.metastack.metaweb
 
 import org.scalatest.FunSuite
-import pl.metastack.metaweb.dsl._
 import pl.metastack.metaweb.diff.{Id, NodeRef}
 
 class NodeRefSpec extends FunSuite {
@@ -51,6 +50,15 @@ class NodeRefSpec extends FunSuite {
 
     val updated = node.update(nodeRef.css(false, "b"))
     assert(updated == node.`class`("a c"))
+  }
+
+  test("Match by tag") {
+    val node = tag.Div(children = List(tag.Span()))
+    val ref = NodeRef(tag.Span())
+    val updated = node.update(ref := tag.B())
+
+    assert(updated ==
+      tag.Div(children = List(tag.Span(children = List(tag.B())))))
   }
 
   test("Resolve child references") {
