@@ -81,135 +81,140 @@ trait DiffSupport extends DiffSupportLowPrio {
   implicit object Video extends JS[tag.Video] { override type X = org.scalajs.dom.html.Video }
 
   object Window {
-    def dragEnd: DomEventHandler[org.scalajs.dom.DragEvent] =
-      new DomEventHandler(org.scalajs.dom.window.ondragend = _)
-    def keyDown: DomEventHandler[org.scalajs.dom.KeyboardEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onkeydown = _)
-    def dragOver: DomEventHandler[org.scalajs.dom.DragEvent] =
-      new DomEventHandler(org.scalajs.dom.window.ondragover = _)
-    def keyUp: DomEventHandler[org.scalajs.dom.KeyboardEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onkeyup = _)
-    def reset: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onreset = _)
-    def mouseUp: DomEventHandler[org.scalajs.dom.MouseEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onmouseup = _)
-    def dragStart: DomEventHandler[org.scalajs.dom.DragEvent] =
-      new DomEventHandler(org.scalajs.dom.window.ondragstart = _)
-    def drag: DomEventHandler[org.scalajs.dom.DragEvent] =
-      new DomEventHandler(org.scalajs.dom.window.ondrag = _)
-    def mouseOver: DomEventHandler[org.scalajs.dom.MouseEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onmouseover = _)
-    def dragLeave: DomEventHandler[org.scalajs.dom.DragEvent] =
-      new DomEventHandler(org.scalajs.dom.window.ondragleave = _)
-    def afterPrint: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onafterprint = _)
-    def pause: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onpause = _)
-    def beforePrint: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onbeforeprint = _)
-    def mouseDown: DomEventHandler[org.scalajs.dom.MouseEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onmousedown = _)
-    def seeked: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onseeked = _)
-    def click: DomEventHandler[org.scalajs.dom.MouseEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onclick = _)
-    def waiting: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onwaiting = _)
-    def online: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.ononline = _)
-    def durationChange: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.ondurationchange = _)
-    def blur: DomEventHandler[org.scalajs.dom.FocusEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onblur = _)
-    def emptied: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onemptied = _)
-    def seeking: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onseeking = _)
-    def canPlay: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.oncanplay = _)
-    def stalled: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onstalled = _)
-    def mouseMove: DomEventHandler[org.scalajs.dom.MouseEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onmousemove = _)
-    def offline: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onoffline = _)
-    def beforeUnload: DomEventHandler[org.scalajs.dom.BeforeUnloadEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onbeforeunload = _)
-    def rateChange: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onratechange = _)
-    def storage: DomEventHandler[org.scalajs.dom.StorageEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onstorage = _)
-    def loadStart: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onloadstart = _)
-    def dragEnter: DomEventHandler[org.scalajs.dom.DragEvent] =
-      new DomEventHandler(org.scalajs.dom.window.ondragenter = _)
-    def submit: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onsubmit = _)
+    def dragEnd: DomEvent[org.scalajs.dom.DragEvent] =
+      new DomEvent(org.scalajs.dom.window.ondragend = _)
+    def keyDown: DomEvent[org.scalajs.dom.KeyboardEvent] =
+      new DomEvent(org.scalajs.dom.window.onkeydown = _)
+    def dragOver: DomEvent[org.scalajs.dom.DragEvent] =
+      new DomEvent(org.scalajs.dom.window.ondragover = _)
+    def keyUp: DomEvent[org.scalajs.dom.KeyboardEvent] =
+      new DomEvent(org.scalajs.dom.window.onkeyup = _)
+    def reset: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onreset = _)
+    def mouseUp: DomEvent[org.scalajs.dom.MouseEvent] =
+      new DomEvent(org.scalajs.dom.window.onmouseup = _)
+    def dragStart: DomEvent[org.scalajs.dom.DragEvent] =
+      new DomEvent(org.scalajs.dom.window.ondragstart = _)
+    def drag: DomEvent[org.scalajs.dom.DragEvent] =
+      new DomEvent(org.scalajs.dom.window.ondrag = _)
+    def mouseOver: DomEvent[org.scalajs.dom.MouseEvent] =
+      new DomEvent(org.scalajs.dom.window.onmouseover = _)
+    def dragLeave: DomEvent[org.scalajs.dom.DragEvent] =
+      new DomEvent(org.scalajs.dom.window.ondragleave = _)
+    def afterPrint: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onafterprint = _)
+    def pause: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onpause = _)
+    def beforePrint: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onbeforeprint = _)
+    def mouseDown: DomEvent[org.scalajs.dom.MouseEvent] =
+      new DomEvent(org.scalajs.dom.window.onmousedown = _)
+    def seeked: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onseeked = _)
+    def click: DomEvent[org.scalajs.dom.MouseEvent] =
+      new DomEvent(org.scalajs.dom.window.onclick = _)
+    def waiting: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onwaiting = _)
+    def online: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.ononline = _)
+    def durationChange: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.ondurationchange = _)
+    def blur: DomEvent[org.scalajs.dom.FocusEvent] =
+      new DomEvent(org.scalajs.dom.window.onblur = _)
+    def emptied: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onemptied = _)
+    def seeking: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onseeking = _)
+    def canPlay: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.oncanplay = _)
+    def stalled: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onstalled = _)
+    def mouseMove: DomEvent[org.scalajs.dom.MouseEvent] =
+      new DomEvent(org.scalajs.dom.window.onmousemove = _)
+    def offline: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onoffline = _)
+    def beforeUnload: DomEvent[org.scalajs.dom.BeforeUnloadEvent] =
+      new DomEvent(org.scalajs.dom.window.onbeforeunload = _)
+    def rateChange: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onratechange = _)
+    def storage: DomEvent[org.scalajs.dom.StorageEvent] =
+      new DomEvent(org.scalajs.dom.window.onstorage = _)
+    def loadStart: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onloadstart = _)
+    def dragEnter: DomEvent[org.scalajs.dom.DragEvent] =
+      new DomEvent(org.scalajs.dom.window.ondragenter = _)
+    def submit: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onsubmit = _)
     // def progress: DomEventHandler[scala.scalajs.js.Any] =
     //   new DomEventHandler(org.scalajs.dom.window.onprogress = _)
-    def dblClick: DomEventHandler[org.scalajs.dom.MouseEvent] =
-      new DomEventHandler(org.scalajs.dom.window.ondblclick = _)
-    def contextMenu: DomEventHandler[org.scalajs.dom.MouseEvent] =
-      new DomEventHandler(org.scalajs.dom.window.oncontextmenu = _)
-    def change: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onchange = _)
-    def loadedMetadata: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onloadedmetadata = _)
-    def play: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onplay = _)
+    def dblClick: DomEvent[org.scalajs.dom.MouseEvent] =
+      new DomEvent(org.scalajs.dom.window.ondblclick = _)
+    def contextMenu: DomEvent[org.scalajs.dom.MouseEvent] =
+      new DomEvent(org.scalajs.dom.window.oncontextmenu = _)
+    def change: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onchange = _)
+    def loadedMetadata: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onloadedmetadata = _)
+    def play: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onplay = _)
     // def error: DomEventHandler[org.scalajs.dom.Event] =
     //   new DomEventHandler(org.scalajs.dom.window.onerror = _)
-    def playing: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onplaying = _)
-    def canPlayThrough: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.oncanplaythrough = _)
-    def abort: DomEventHandler[org.scalajs.dom.UIEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onabort = _)
-    def readyStateChange: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onreadystatechange = _)
-    def keyPress: DomEventHandler[org.scalajs.dom.KeyboardEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onkeypress = _)
-    def loadedData: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onloadeddata = _)
-    def suspend: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onsuspend = _)
-    def focus: DomEventHandler[org.scalajs.dom.FocusEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onfocus = _)
-    def message: DomEventHandler[org.scalajs.dom.MessageEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onmessage = _)
-    def timeUpdate: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.ontimeupdate = _)
-    def resize: DomEventHandler[org.scalajs.dom.UIEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onresize = _)
-    def select: DomEventHandler[org.scalajs.dom.UIEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onselect = _)
-    def drop: DomEventHandler[org.scalajs.dom.DragEvent] =
-      new DomEventHandler(org.scalajs.dom.window.ondrop = _)
-    def mouseOut: DomEventHandler[org.scalajs.dom.MouseEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onmouseout = _)
-    def ended: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onended = _)
-    def hashChange: DomEventHandler[org.scalajs.dom.HashChangeEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onhashchange = _)
-    def unload: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onunload = _)
-    def scroll: DomEventHandler[org.scalajs.dom.UIEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onscroll = _)
-    def mouseWheel: DomEventHandler[org.scalajs.dom.WheelEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onmousewheel = _)
-    def load: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onload = _)
-    def volumeChange: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.onvolumechange = _)
-    def input: DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(org.scalajs.dom.window.oninput = _)
-    def popState: DomEventHandler[org.scalajs.dom.PopStateEvent] =
-      new DomEventHandler(org.scalajs.dom.window.onpopstate = _)
+    def playing: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onplaying = _)
+    def canPlayThrough: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.oncanplaythrough = _)
+    def abort: DomEvent[org.scalajs.dom.UIEvent] =
+      new DomEvent(org.scalajs.dom.window.onabort = _)
+    def readyStateChange: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onreadystatechange = _)
+    def keyPress: DomEvent[org.scalajs.dom.KeyboardEvent] =
+      new DomEvent(org.scalajs.dom.window.onkeypress = _)
+    def loadedData: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onloadeddata = _)
+    def suspend: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onsuspend = _)
+    def focus: DomEvent[org.scalajs.dom.FocusEvent] =
+      new DomEvent(org.scalajs.dom.window.onfocus = _)
+    def message: DomEvent[org.scalajs.dom.MessageEvent] =
+      new DomEvent(org.scalajs.dom.window.onmessage = _)
+    def timeUpdate: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.ontimeupdate = _)
+    def resize: DomEvent[org.scalajs.dom.UIEvent] =
+      new DomEvent(org.scalajs.dom.window.onresize = _)
+    def select: DomEvent[org.scalajs.dom.UIEvent] =
+      new DomEvent(org.scalajs.dom.window.onselect = _)
+    def drop: DomEvent[org.scalajs.dom.DragEvent] =
+      new DomEvent(org.scalajs.dom.window.ondrop = _)
+    def mouseOut: DomEvent[org.scalajs.dom.MouseEvent] =
+      new DomEvent(org.scalajs.dom.window.onmouseout = _)
+    def ended: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onended = _)
+    def hashChange: DomEvent[org.scalajs.dom.HashChangeEvent] =
+      new DomEvent(org.scalajs.dom.window.onhashchange = _)
+    def unload: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onunload = _)
+    def scroll: DomEvent[org.scalajs.dom.UIEvent] =
+      new DomEvent(org.scalajs.dom.window.onscroll = _)
+    def mouseWheel: DomEvent[org.scalajs.dom.WheelEvent] =
+      new DomEvent(org.scalajs.dom.window.onmousewheel = _)
+    def load: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onload = _)
+    def volumeChange: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.onvolumechange = _)
+    def input: DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(org.scalajs.dom.window.oninput = _)
+    def popState: DomEvent[org.scalajs.dom.PopStateEvent] =
+      new DomEvent(org.scalajs.dom.window.onpopstate = _)
   }
 
-  class DomEventHandler[T <: org.scalajs.dom.Event](set: js.Function1[T, _] => Unit) {
-    def subscribe(f: T => Diff): DomDiff = DomDiff.SubscribeEvent(set, f)
-    def unsubscribe(): DomDiff = DomDiff.UnsubscribeEvent(set)
+  class DomEvent[T <: org.scalajs.dom.Event](set: js.Function1[T, _] => Unit) {
+    def attach(f: => Diff): DomDiff = DomDiff.SubscribeEvent(set, (_: T) => f)
+    def attach(f: T => Diff): DomDiff = DomDiff.SubscribeEvent(set, f)
+
+    def detach(): DomDiff = DomDiff.UnsubscribeEvent(set)
+
+    def :=(diff: => Diff): DomDiff = attach(diff)
+    def :=(diff: T => Diff): DomDiff = attach(diff)
   }
 
   /** TODO Introduce BooleanAttribute and StringAttribute for better type-safety? */
@@ -222,7 +227,7 @@ trait DiffSupport extends DiffSupportLowPrio {
 
   implicit class NodeRefExtensions[T <: tree.Tag](nodeRef: NodeRef[T]) {
     def onEnter(f: String => Diff)(implicit js: JS[T], ev: T <:< tag.Input): DomDiff =
-      nodeRef.keyPress.subscribe { e =>
+      nodeRef.keyPress.attach { e =>
         if (e.keyCode == KeyCode.Enter) f(nodeRef.dom.asInstanceOf[org.scalajs.dom.html.Input].value)
         else Diff.Noop
       }
@@ -233,16 +238,16 @@ trait DiffSupport extends DiffSupportLowPrio {
         throw new Exception(s"Node with ID '${nodeRef.id}' not found")
       ).asInstanceOf[js.X]
 
-    def click(implicit js: JS[T]): DomEventHandler[org.scalajs.dom.MouseEvent] =
-      new DomEventHandler(dom.onclick = _)
+    def click(implicit js: JS[T]): DomEvent[org.scalajs.dom.MouseEvent] =
+      new DomEvent(dom.onclick = _)
 
-    def keyPress(implicit js: JS[T]): DomEventHandler[org.scalajs.dom.KeyboardEvent] =
-      new DomEventHandler(dom.onkeypress = _)
+    def keyPress(implicit js: JS[T]): DomEvent[org.scalajs.dom.KeyboardEvent] =
+      new DomEvent(dom.onkeypress = _)
 
-    def submit(implicit js: JS[T]): DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(dom.onsubmit = _)
+    def submit(implicit js: JS[T]): DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(dom.onsubmit = _)
 
-    def change(implicit js: JS[T]): DomEventHandler[org.scalajs.dom.Event] =
-      new DomEventHandler(dom.onchange = _)
+    def change(implicit js: JS[T]): DomEvent[org.scalajs.dom.Event] =
+      new DomEvent(dom.onchange = _)
   }
 }
