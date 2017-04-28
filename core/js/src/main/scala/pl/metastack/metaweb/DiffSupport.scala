@@ -208,10 +208,10 @@ trait DiffSupport extends DiffSupportLowPrio {
   }
 
   class DomEvent[T <: org.scalajs.dom.Event](set: js.Function1[T, _] => Unit) {
-    def attach(f: => Diff): DomDiff = DomDiff.SubscribeEvent(set, (_: T) => f)
-    def attach(f: T => Diff): DomDiff = DomDiff.SubscribeEvent(set, f)
+    def attach(f: => Diff): DomDiff = DomDiff.AttachEvent(set, (_: T) => f)
+    def attach(f: T => Diff): DomDiff = DomDiff.AttachEvent(set, f)
 
-    def detach(): DomDiff = DomDiff.UnsubscribeEvent(set)
+    def detach(): DomDiff = DomDiff.DetachEvent(set)
 
     def :=(diff: => Diff): DomDiff = attach(diff)
     def :=(diff: T => Diff): DomDiff = attach(diff)

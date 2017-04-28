@@ -55,14 +55,14 @@ object DOM {
   implicit object RenderDomDiff extends Render[dom.Node, DomDiff, Unit] with PlatformSupport {
     def render(node: dom.Node, diff: DomDiff): Unit =
       diff match {
-        case e: DomDiff.SubscribeEvent[_] =>
-          val cast = e.asInstanceOf[DomDiff.SubscribeEvent[dom.Event]]
+        case e: DomDiff.AttachEvent[_] =>
+          val cast = e.asInstanceOf[DomDiff.AttachEvent[dom.Event]]
           cast.set { event: dom.Event =>
             RenderDom.render(node, cast.f(event))
           }
 
-        case e: DomDiff.UnsubscribeEvent[_] =>
-          val cast = e.asInstanceOf[DomDiff.SubscribeEvent[dom.Event]]
+        case e: DomDiff.DetachEvent[_] =>
+          val cast = e.asInstanceOf[DomDiff.AttachEvent[dom.Event]]
           cast.set(null)
       }
   }
