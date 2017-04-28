@@ -31,15 +31,15 @@ object DOM {
     node match {
       case e: dom.Element =>
         val map =
-          if (e.id != "") Predef.Map(e.id -> e)
-          else Predef.Map.empty[String, dom.Element]
+          if (e.id != "") Map(e.id -> e)
+          else Map.empty[String, dom.Element]
 
         import dom.ext._
         e.getElementsByTagName("*").collect {
           case e: dom.Element if e.id.nonEmpty => e.id -> e
         }.toMap ++ map
 
-      case _ => Predef.Map.empty
+      case _ => Map.empty
     }
 
   def toTree[T <: tree.Node](node: dom.Node): T =
@@ -73,13 +73,13 @@ object DOM {
     toTree[T](dom.document.getElementById(id))
 
   /** Resolve DOM node */
-  def get[T <: tree.Tag](nodeRef: NodeRef[T])(implicit js: JS[T]): js.X =
+  def get[T <: tree.Tag](nodeRef: NodeRef[T])(implicit js: Js[T]): js.X =
     Option(org.scalajs.dom.document.getElementById(nodeRef.id)).getOrElse(
       throw new Exception(s"Node with ID '${nodeRef.id}' not found")
     ).asInstanceOf[js.X]
 
   /** TODO Introduce BooleanAttribute and StringAttribute for better type-safety? */
-  def get[T <: tree.Tag, G](attribute: Attribute[T, G, _])(implicit js: JS[T]): G =
+  def get[T <: tree.Tag, G](attribute: Attribute[T, G, _])(implicit js: Js[T]): G =
     if (HtmlHelpers.BooleanAttributes.contains(attribute.name))
       get(attribute.parent).hasAttribute(attribute.name).asInstanceOf[G]
     else Option(get(attribute.parent).getAttribute(attribute.name)).asInstanceOf[G]
