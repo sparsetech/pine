@@ -1,9 +1,9 @@
-package pl.metastack.metaweb
+package pl.metastack.metaweb.dsl
 
 import pl.metastack.metaweb.diff.{Diff, NodeRef}
 import pl.metastack.metaweb.tag.HTMLTag
 
-package object dsl {
+trait Imports {
   implicit class NodeRefDSLExtensions(nodeRef: NodeRef[HTMLTag]) {
     /** Toggle `cssTags` depending on `state` */
     def css(state: Boolean, cssTags: String*): Diff =

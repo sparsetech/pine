@@ -7,4 +7,5 @@ package object metaweb
   with tree.render.Text.Implicit
   with macros.InlineHtml.Implicit
   with macros.ExternalHtml.Method
+  with dsl.Imports
   with PlatformSupport
