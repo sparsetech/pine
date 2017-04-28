@@ -1,6 +1,6 @@
 package pl.metastack.metaweb.tree
 
-import pl.metastack.metaweb.diff.Diff
+import pl.metastack.metaweb.diff.{Diff, Id}
 import pl.metastack.metaweb.diff.render.Tree.RenderNode
 import pl.metastack.metaweb.tag.HTMLTag
 
