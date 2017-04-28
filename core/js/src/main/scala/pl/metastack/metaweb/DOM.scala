@@ -27,6 +27,21 @@ object DOM {
     }
   }
 
+  def collectNodes(node: dom.Node): Map[String, dom.Element] =
+    node match {
+      case e: dom.Element =>
+        val map =
+          if (e.id != "") Predef.Map(e.id -> e)
+          else Predef.Map.empty[String, dom.Element]
+
+        import dom.ext._
+        e.getElementsByTagName("*").collect {
+          case e: dom.Element if e.id.nonEmpty => e.id -> e
+        }.toMap ++ map
+
+      case _ => Predef.Map.empty
+    }
+
   def toTree[T <: tree.Node](node: dom.Node): T =
     node match {
       case t: dom.raw.Text => tree.Text(t.textContent).asInstanceOf[T]

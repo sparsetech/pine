@@ -4,7 +4,7 @@ import pl.metastack.metaweb._
 import pl.metastack.metaweb.diff._
 
 object Tree {
-  implicit object RenderNode extends Render[tree.Node, tree.Node] {
+  implicit object RenderNode extends Render[tree.Node, Diff, tree.Node] {
     def render(node: tree.Node, diff: Diff): tree.Node =
       node match {
         case text: tree.Text => text

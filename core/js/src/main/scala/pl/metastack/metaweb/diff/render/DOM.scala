@@ -1,12 +1,11 @@
 package pl.metastack.metaweb.diff.render
 
 import org.scalajs.dom
-
 import pl.metastack.metaweb.diff._
-import pl.metastack.metaweb.{tree, HtmlHelpers, PlatformSupport}
+import pl.metastack.metaweb.{DomDiff, HtmlHelpers, PlatformSupport, tree}
 
 object DOM {
-  implicit object RenderDom extends Render[dom.Node, Unit] with PlatformSupport {
+  implicit object RenderDom extends Render[dom.Node, Diff, Unit] with PlatformSupport {
     def render(node: dom.Node, diff: Diff): Unit =
       diff match {
         case Diff.SetAttribute(ref, attribute, value) =>
@@ -40,16 +39,6 @@ object DOM {
           children.foreach(child =>
             ref.dom.appendChild(tree.render.DOM.render(child)))
 
-        case e: DiffDom.SubscribeEvent[_] =>
-          val cast = e.asInstanceOf[DiffDom.SubscribeEvent[dom.Event]]
-          cast.set { event: dom.Event =>
-            render(node, cast.f(event))
-          }
-
-        case e: DiffDom.UnsubscribeEvent[_] =>
-          val cast = e.asInstanceOf[DiffDom.SubscribeEvent[dom.Event]]
-          cast.set(null)
-
         case Diff.PrependChild(ref, child) =>
           ref.dom.prependChild(tree.render.DOM.render(child))
 
@@ -58,21 +47,23 @@ object DOM {
 
         case Diff.RemoveChild(ref) =>
           ref.dom.parentNode.removeChild(ref.dom)
+
+        case Diff.Noop =>
       }
   }
 
-  def collectNodes(node: dom.Node): Map[String, dom.Element] =
-    node match {
-      case e: dom.Element =>
-        val map =
-          if (e.id != "") Map(e.id -> e)
-          else Map.empty[String, dom.Element]
+  implicit object RenderDomDiff extends Render[dom.Node, DomDiff, Unit] with PlatformSupport {
+    def render(node: dom.Node, diff: DomDiff): Unit =
+      diff match {
+        case e: DomDiff.SubscribeEvent[_] =>
+          val cast = e.asInstanceOf[DomDiff.SubscribeEvent[dom.Event]]
+          cast.set { event: dom.Event =>
+            RenderDom.render(node, cast.f(event))
+          }
 
-        import dom.ext._
-        e.getElementsByTagName("*").collect {
-          case e: dom.Element if e.id.nonEmpty => e.id -> e
-        }.toMap ++ map
-
-      case _ => Map.empty
-    }
+        case e: DomDiff.UnsubscribeEvent[_] =>
+          val cast = e.asInstanceOf[DomDiff.SubscribeEvent[dom.Event]]
+          cast.set(null)
+      }
+  }
 }

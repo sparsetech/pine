@@ -2,13 +2,14 @@ package pl.metastack.metaweb.diff
 
 import pl.metastack.metaweb.tree
 
-trait Render[T, U] {
-  def render(node: T, diff: Diff): U
+trait Render[Node, Diff, Result] {
+  def render(node: Node, diff: Diff): Result
 }
 
 object Render {
-  def render[T, U](value: T, diff: Diff)(implicit r: Render[T, U]): U =
-    r.render(value, diff)
+  def render[Node, Diff, Result](node: Node, diff: Diff)
+                                (implicit r: Render[Node, Diff, Result]): Result =
+    r.render(node, diff)
 
   /** Recursively adds `suffix` to every ID attribute of `node` */
   def suffixIds(node: tree.Node, suffix: String): tree.Node =

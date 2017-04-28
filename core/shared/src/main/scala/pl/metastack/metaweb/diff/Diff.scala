@@ -3,9 +3,9 @@ package pl.metastack.metaweb.diff
 import pl.metastack.metaweb._
 
 /** A Diff defines change operations */
-trait Diff
+sealed trait Diff
 object Diff {
-  case class Noop() extends Diff
+  case object Noop extends Diff
   case class SetAttribute[T <: tree.Tag, U](node: NodeRef[T], attribute: Attribute[T, _, U], value: U) extends Diff
   case class UpdateAttribute[T <: tree.Tag, U](node: NodeRef[T], attribute: Attribute[T, U, _], f: U => U) extends Diff
   case class RemoveAttribute[T <: tree.Tag](node: NodeRef[T], attribute: Attribute[T, _, _]) extends Diff

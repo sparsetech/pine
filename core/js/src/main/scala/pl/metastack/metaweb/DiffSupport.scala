@@ -80,11 +80,6 @@ trait DiffSupport extends DiffSupportLowPrio {
   implicit object Ul extends JS[tag.Ul] { override type X = org.scalajs.dom.html.UList }
   implicit object Video extends JS[tag.Video] { override type X = org.scalajs.dom.html.Video }
 
-  object DiffDom {
-    case class SubscribeEvent[T <: org.scalajs.dom.Event](set: js.Function1[T, _] => Unit, f: T => Diff) extends Diff
-    case class UnsubscribeEvent[T <: org.scalajs.dom.Event](set: js.Function1[T, _] => Unit) extends Diff
-  }
-
   object Window {
     def dragEnd: DomEventHandler[org.scalajs.dom.DragEvent] =
       new DomEventHandler(org.scalajs.dom.window.ondragend = _)
@@ -213,10 +208,8 @@ trait DiffSupport extends DiffSupportLowPrio {
   }
 
   class DomEventHandler[T <: org.scalajs.dom.Event](set: js.Function1[T, _] => Unit) {
-    import DiffDom._
-
-    def subscribe(f: T => Diff): Diff = SubscribeEvent(set, f)
-    def unsubscribe(): Diff = UnsubscribeEvent(set)
+    def subscribe(f: T => Diff): DomDiff = DomDiff.SubscribeEvent(set, f)
+    def unsubscribe(): DomDiff = DomDiff.UnsubscribeEvent(set)
   }
 
   /** TODO Introduce BooleanAttribute and StringAttribute for better type-safety? */
@@ -228,10 +221,10 @@ trait DiffSupport extends DiffSupportLowPrio {
   }
 
   implicit class NodeRefExtensions[T <: tree.Tag](nodeRef: NodeRef[T]) {
-    def onEnter(f: String => Diff)(implicit js: JS[T], ev: T <:< tag.Input): Diff =
+    def onEnter(f: String => Diff)(implicit js: JS[T], ev: T <:< tag.Input): DomDiff =
       nodeRef.keyPress.subscribe { e =>
         if (e.keyCode == KeyCode.Enter) f(nodeRef.dom.asInstanceOf[org.scalajs.dom.html.Input].value)
-        else Diff.Noop()
+        else Diff.Noop
       }
 
     /** Underlying DOM node */
