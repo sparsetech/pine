@@ -229,7 +229,7 @@ trait DiffSupport extends DiffSupportLowPrio {
 
     /** Underlying DOM node */
     def dom(implicit js: JS[T]): js.X =
-      PlatformSupport.DefaultIdMap(nodeRef.id).getOrElse(
+      Option(org.scalajs.dom.document.getElementById(nodeRef.id)).getOrElse(
         throw new Exception(s"Node with ID '${nodeRef.id}' not found")
       ).asInstanceOf[js.X]
 
