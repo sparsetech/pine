@@ -8,14 +8,15 @@ sealed trait NodeRef[+T <: tree.Tag] {
 
   def set[U](values: List[U], value: U => tree.Tag)(implicit id: Id[U]): Diff =
     Diff.ReplaceChildren(this, values.map(v => Render.suffixIds(value(v), id.f(v))))
-  def set(value: List[tree.Node]): Diff = Diff.ReplaceChildren(this, value)
-  def set(value: tree.Node): Diff = set(List(value))
+  def set(nodes: List[tree.Node]): Diff = Diff.ReplaceChildren(this, nodes)
+  def set(node: tree.Node): Diff = set(List(node))
+  def replace(node: tree.Node): Diff = Diff.Replace(this, node)
   def remove(): Diff = Diff.RemoveChild(this)
-  def append(value: tree.Node): Diff = Diff.AppendChild(this, value)
+  def append(node: tree.Node): Diff = Diff.AppendChild(this, node)
 
-  def :=(value: List[tree.Node]) = set(value)
-  def :=(value: tree.Node) = set(value)
-  def +=(value: tree.Node) = append(value)
+  def :=(value: List[tree.Node]): Diff = set(value)
+  def :=(value: tree.Node): Diff = set(value)
+  def +=(value: tree.Node): Diff = append(value)
 }
 
 object NodeRef {

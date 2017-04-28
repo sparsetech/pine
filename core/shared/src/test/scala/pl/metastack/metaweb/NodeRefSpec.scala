@@ -61,6 +61,14 @@ class NodeRefSpec extends FunSuite {
       tag.Div(children = List(tag.Span(children = List(tag.B())))))
   }
 
+  test("Replace node") {
+    val node = tag.Div(children = List(tag.Span()))
+    val ref = NodeRef(tag.Span())
+    val updated = node.update(ref.replace(tag.B()))
+
+    assert(updated == tag.Div(children = List(tag.B())))
+  }
+
   test("Resolve child references") {
     case class Item(id: Int, name: String)
     implicit def itemId: Id[Item] = Id(_.id.toString)

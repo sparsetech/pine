@@ -38,8 +38,11 @@ object DOM extends PlatformSupport {
       case Diff.ReplaceChildren(ref, children) =>
         val dom = metaweb.DOM.get(ref)
         dom.clear()
-        children.foreach(child =>
-          dom.appendChild(metaweb.DOM.render(child)))
+        children.foreach(child => dom.appendChild(metaweb.DOM.render(child)))
+
+      case Diff.Replace(ref, replacement) =>
+        val dom = metaweb.DOM.get(ref)
+        dom.parentNode.replaceChild(metaweb.DOM.render(replacement), dom)
 
       case Diff.PrependChild(ref, child) =>
         metaweb.DOM.get(ref).prependChild(metaweb.DOM.render(child))

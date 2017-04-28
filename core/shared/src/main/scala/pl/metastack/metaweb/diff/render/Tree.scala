@@ -42,6 +42,9 @@ object Tree {
           case Diff.AppendChild(ref, child) if ref.matches(tag) =>
             tag.copy(children = tag.children :+ child)
 
+          case Diff.Replace(ref, replacement) if ref.matches(tag) =>
+            replacement
+
           case Diff.ReplaceChildren(ref, children) if ref.matches(tag) =>
             tag.copy(children = children)
 

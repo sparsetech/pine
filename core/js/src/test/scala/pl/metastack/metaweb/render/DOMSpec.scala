@@ -3,6 +3,7 @@ package pl.metastack.metaweb.render
 import org.scalajs.dom
 import org.scalatest.FunSuite
 import pl.metastack.metaweb._
+import pl.metastack.metaweb.diff.NodeRef
 
 class DOMSpec extends FunSuite {
   /*
@@ -257,6 +258,19 @@ class DOMSpec extends FunSuite {
 
     assert(node.childNodes.length == 1)
     assert(node2.childNodes.length == 0)
+  }
+
+  test("Replace node") {
+    val div = DOM.render(html"""<div id="test"><span id="hello">Hello</span></div>""")
+    dom.document.body.appendChild(div)
+
+    val ref = NodeRef(tag.Span())
+    DOM.render(ref.replace(html"<div>World</div>"))
+
+    assert(
+      DOM.toTree[tree.Tag](dom.document.getElementById("test")) ==
+      html"""<div id="test"><div>World</div></div>""")
+    dom.document.body.removeChild(div)
   }
 
   /*
