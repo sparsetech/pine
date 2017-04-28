@@ -2,7 +2,7 @@ package pl.metastack.metaweb
 
 import org.scalatest.FunSuite
 import pl.metastack.metaweb.dsl._
-import pl.metastack.metaweb.diff.NodeRef
+import pl.metastack.metaweb.diff.{Id, NodeRef}
 
 class NodeRefSpec extends FunSuite {
   test("Use DSL to set boolean attribute to true") {
@@ -51,5 +51,13 @@ class NodeRefSpec extends FunSuite {
 
     val updated = diff.render.Tree.RenderNode.render(node, nodeRef.css(false, "b"))
     assert(updated == node.`class`("a c"))
+  }
+
+  test("Resolve child references") {
+    case class Item(id: Int, name: String)
+    implicit def itemId: Id[Item] = Id(_.id.toString)
+
+    val itemRef = NodeRef[tag.Div]("item")
+    assert(itemRef(Item(0, "test")) == NodeRef[tag.Div]("item0"))
   }
 }
