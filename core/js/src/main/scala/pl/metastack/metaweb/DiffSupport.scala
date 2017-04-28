@@ -4,8 +4,9 @@ import scala.scalajs.js
 import org.scalajs.dom.ext.KeyCode
 import pl.metastack.metaweb.diff._
 
+trait JS[T <: tree.Tag] { type X <: org.scalajs.dom.html.Element }
+
 trait DiffSupportLowPrio {
-  trait JS[T <: tree.Tag] { type X <: org.scalajs.dom.html.Element }
   implicit object Tag extends JS[tree.Tag] { override type X = org.scalajs.dom.html.Element }
 }
 
@@ -208,46 +209,33 @@ trait DiffSupport extends DiffSupportLowPrio {
   }
 
   class DomEvent[T <: org.scalajs.dom.Event](set: js.Function1[T, _] => Unit) {
-    def attach(f: => Diff): DomDiff = DomDiff.AttachEvent(set, (_: T) => f)
-    def attach(f: T => Diff): DomDiff = DomDiff.AttachEvent(set, f)
+    def set(f: => Diff): DomDiff = DomDiff.SetEvent(set, (_: T) => f)
+    def set(f: T => Diff): DomDiff = DomDiff.SetEvent(set, f)
 
     def detach(): DomDiff = DomDiff.DetachEvent(set)
 
-    def :=(diff: => Diff): DomDiff = attach(diff)
-    def :=(diff: T => Diff): DomDiff = attach(diff)
-  }
-
-  /** TODO Introduce BooleanAttribute and StringAttribute for better type-safety? */
-  implicit class AttributeExtensions[T <: tree.Tag, G](attribute: Attribute[T, G, _]) {
-    def get(implicit js: JS[T]): G =
-      if (HtmlHelpers.BooleanAttributes.contains(attribute.name))
-        attribute.parent.dom.hasAttribute(attribute.name).asInstanceOf[G]
-      else Option(attribute.parent.dom.getAttribute(attribute.name)).asInstanceOf[G]
+    def :=(diff: => Diff): DomDiff = set(diff)
+    def :=(diff: T => Diff): DomDiff = set(diff)
   }
 
   implicit class NodeRefExtensions[T <: tree.Tag](nodeRef: NodeRef[T]) {
     def onEnter(f: String => Diff)(implicit js: JS[T], ev: T <:< tag.Input): DomDiff =
-      nodeRef.keyPress.attach { e =>
-        if (e.keyCode == KeyCode.Enter) f(nodeRef.dom.asInstanceOf[org.scalajs.dom.html.Input].value)
+      nodeRef.keyPress := { e =>
+        if (e.keyCode == KeyCode.Enter)
+          f(DOM.get(nodeRef).asInstanceOf[org.scalajs.dom.html.Input].value)
         else Diff.Noop
       }
 
-    /** Underlying DOM node */
-    def dom(implicit js: JS[T]): js.X =
-      Option(org.scalajs.dom.document.getElementById(nodeRef.id)).getOrElse(
-        throw new Exception(s"Node with ID '${nodeRef.id}' not found")
-      ).asInstanceOf[js.X]
-
     def click(implicit js: JS[T]): DomEvent[org.scalajs.dom.MouseEvent] =
-      new DomEvent(dom.onclick = _)
+      new DomEvent(DOM.get(nodeRef).onclick = _)
 
     def keyPress(implicit js: JS[T]): DomEvent[org.scalajs.dom.KeyboardEvent] =
-      new DomEvent(dom.onkeypress = _)
+      new DomEvent(DOM.get(nodeRef).onkeypress = _)
 
     def submit(implicit js: JS[T]): DomEvent[org.scalajs.dom.Event] =
-      new DomEvent(dom.onsubmit = _)
+      new DomEvent(DOM.get(nodeRef).onsubmit = _)
 
     def change(implicit js: JS[T]): DomEvent[org.scalajs.dom.Event] =
-      new DomEvent(dom.onchange = _)
+      new DomEvent(DOM.get(nodeRef).onchange = _)
   }
 }

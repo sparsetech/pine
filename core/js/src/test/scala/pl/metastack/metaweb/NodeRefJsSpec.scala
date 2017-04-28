@@ -1,13 +1,11 @@
 package pl.metastack.metaweb
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
 import org.scalajs.dom
 import org.scalatest.FunSuite
 
 import pl.metastack.metaweb.diff.NodeRef
 
-class NodeRefJsSpec extends FunSuite with DiffSupport {
+class NodeRefJsSpec extends FunSuite {
   test("Get value of String attribute") {
     val node = dom.document.createElement("a")
     node.setAttribute("id", "test")
@@ -17,7 +15,7 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
     dom.document.body.appendChild(node)
 
     val nodeRef = NodeRef[tag.A]("test")
-    assert(nodeRef.href.get.contains("http://google.com/"))
+    assert(DOM.get(nodeRef.href).contains("http://google.com/"))
 
     dom.document.body.removeChild(node)
   }
@@ -30,7 +28,7 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
     dom.document.body.appendChild(node)
 
     val nodeRef = NodeRef[tag.Input]("test")
-    assert(!nodeRef.checked.get)
+    assert(!DOM.get(nodeRef.checked))
 
     dom.document.body.removeChild(node)
   }
@@ -44,7 +42,7 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
     dom.document.body.appendChild(node)
 
     val nodeRef = NodeRef[tag.Input]("test")
-    assert(nodeRef.checked.get)
+    assert(DOM.get(nodeRef.checked))
 
     dom.document.body.removeChild(node)
   }
@@ -58,11 +56,11 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
 
     dom.document.body.appendChild(node)
 
-    diff.render.DOM.RenderDom.render(node, nodeRef.checked := true)
-    assert(nodeRef.checked.get)
+    DOM.render(nodeRef.checked := true)
+    assert(DOM.get(nodeRef.checked))
 
-    diff.render.DOM.RenderDom.render(node, nodeRef.checked := false)
-    assert(!nodeRef.checked.get)
+    DOM.render(nodeRef.checked := false)
+    assert(!DOM.get(nodeRef.checked))
 
     dom.document.body.removeChild(node)
   }
@@ -77,14 +75,14 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
 
     dom.document.body.appendChild(node)
 
-    diff.render.DOM.RenderDom.render(node, nodeRef.href := "http://github.com/")
-    assert(nodeRef.href.get.contains("http://github.com/"))
+    DOM.render(nodeRef.href := "http://github.com/")
+    assert(DOM.get(nodeRef.href).contains("http://github.com/"))
 
-    diff.render.DOM.RenderDom.render(node, nodeRef.href := "")
-    assert(nodeRef.href.get.contains(""))
+    DOM.render(nodeRef.href := "")
+    assert(DOM.get(nodeRef.href).contains(""))
 
-    diff.render.DOM.RenderDom.render(node, nodeRef.href.remove())
-    assert(nodeRef.href.get.isEmpty)
+    DOM.render(nodeRef.href.remove())
+    assert(DOM.get(nodeRef.href).isEmpty)
 
     dom.document.body.removeChild(node)
   }
@@ -96,14 +94,13 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
     node.appendChild(dom.document.createTextNode("Google"))
 
     val nodeRef = NodeRef[tag.A]("test")
-
     dom.document.body.appendChild(node)
 
-    diff.render.DOM.RenderDom.render(node, nodeRef.href.update(_ => None))
-    assert(nodeRef.href.get.isEmpty)
+    DOM.render(nodeRef.href.update(_ => None))
+    assert(DOM.get(nodeRef.href).isEmpty)
 
-    diff.render.DOM.RenderDom.render(node, nodeRef.href.update(x => Some(x.toString)))
-    assert(nodeRef.href.get.contains("None"))
+    DOM.render(nodeRef.href.update(x => Some(x.toString)))
+    assert(DOM.get(nodeRef.href).contains("None"))
 
     dom.document.body.removeChild(node)
   }
@@ -114,14 +111,13 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
     node.setAttribute("type", "checkbox")
 
     val nodeRef = NodeRef[tag.Input]("test")
-
     dom.document.body.appendChild(node)
 
-    diff.render.DOM.RenderDom.render(node, nodeRef.checked.update(!_))
-    assert(nodeRef.checked.get)
+    DOM.render(nodeRef.checked.update(!_))
+    assert(DOM.get(nodeRef.checked))
 
-    diff.render.DOM.RenderDom.render(node, nodeRef.checked.update(!_))
-    assert(!nodeRef.checked.get)
+    DOM.render(nodeRef.checked.update(!_))
+    assert(!DOM.get(nodeRef.checked))
 
     dom.document.body.removeChild(node)
   }
@@ -135,12 +131,11 @@ class NodeRefJsSpec extends FunSuite with DiffSupport {
     node.setAttribute("class", "a b c")
 
     val nodeRef = NodeRef[tag.Input]("test")
-
     dom.document.body.appendChild(node)
 
-    diff.render.DOM.RenderDom.render(node, nodeRef.css(false, "b"))
-    assert(nodeRef.`class`.get.contains("a c"))
-    assert(nodeRef.dom.className == "a c")
+    DOM.render(nodeRef.css(false, "b"))
+    assert(DOM.get(nodeRef.`class`).contains("a c"))
+    assert(DOM.get(nodeRef).className == "a c")
 
     dom.document.body.removeChild(node)
   }

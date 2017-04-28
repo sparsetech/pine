@@ -13,7 +13,7 @@ class NodeRefSpec extends FunSuite {
 
     assert(!node.checked)
 
-    val updated = diff.render.Tree.RenderNode.render(node, nodeRef.checked.update(!_))
+    val updated = node.update(nodeRef.checked.update(!_))
     assert(updated == node.checked(true))
   }
 
@@ -26,7 +26,7 @@ class NodeRefSpec extends FunSuite {
 
     assert(node.checked)
 
-    val updated = diff.render.Tree.RenderNode.render(node, nodeRef.checked.update(!_))
+    val updated = node.update(nodeRef.checked.update(!_))
     assert(updated == node.checked(false))
   }
 
@@ -37,7 +37,7 @@ class NodeRefSpec extends FunSuite {
 
     val nodeRef = NodeRef[tag.Input]("test")
 
-    val updated = diff.render.Tree.RenderNode.render(node, nodeRef.css(true, "a"))
+    val updated = node.update(nodeRef.css(true, "a"))
     assert(updated == node.`class`("a"))
   }
 
@@ -49,7 +49,7 @@ class NodeRefSpec extends FunSuite {
 
     val nodeRef = NodeRef[tag.Input]("test")
 
-    val updated = diff.render.Tree.RenderNode.render(node, nodeRef.css(false, "b"))
+    val updated = node.update(nodeRef.css(false, "b"))
     assert(updated == node.`class`("a c"))
   }
 

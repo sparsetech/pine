@@ -1,69 +1,69 @@
 package pl.metastack.metaweb.diff.render
 
 import org.scalajs.dom
+
+import pl.metastack.metaweb
 import pl.metastack.metaweb.diff._
-import pl.metastack.metaweb.{DomDiff, HtmlHelpers, PlatformSupport, tree}
+import pl.metastack.metaweb.{DomDiff, HtmlHelpers, PlatformSupport}
 
-object DOM {
-  implicit object RenderDom extends Render[dom.Node, Diff, Unit] with PlatformSupport {
-    def render(node: dom.Node, diff: Diff): Unit =
-      diff match {
-        case Diff.SetAttribute(ref, attribute, value) =>
-          if (!HtmlHelpers.BooleanAttributes.contains(attribute.name))
-            ref.dom.setAttribute(attribute.name, value.toString)
-          else {
-            if (value.asInstanceOf[Boolean]) ref.dom.setAttribute(attribute.name, "")
-            else ref.dom.removeAttribute(attribute.name)
+object DOM extends PlatformSupport {
+  def render(diff: Diff): Unit =
+    diff match {
+      case Diff.SetAttribute(ref, attribute, value) =>
+        val dom = metaweb.DOM.get(ref)
+        if (!HtmlHelpers.BooleanAttributes.contains(attribute.name))
+          dom.setAttribute(attribute.name, value.toString)
+        else {
+          if (value.asInstanceOf[Boolean]) dom.setAttribute(attribute.name, "")
+          else dom.removeAttribute(attribute.name)
+        }
+
+      case Diff.UpdateAttribute(ref, attribute, f) =>
+        val dom = metaweb.DOM.get(ref)
+        if (HtmlHelpers.BooleanAttributes.contains(attribute.name)) {
+          val fBoolean = f.asInstanceOf[Boolean => Boolean]
+          val current = dom.hasAttribute(attribute.name)
+          if (fBoolean(current)) dom.setAttribute(attribute.name, "")
+          else                   dom.removeAttribute(attribute.name)
+        } else {
+          val fString = f.asInstanceOf[Option[String] => Option[String]]
+          val current = Option(dom.getAttribute(attribute.name))
+          fString(current) match {
+            case None    => dom.removeAttribute(attribute.name)
+            case Some(s) => dom.setAttribute(attribute.name, s)
           }
+        }
 
-        case Diff.UpdateAttribute(ref, attribute, f) =>
-          if (HtmlHelpers.BooleanAttributes.contains(attribute.name)) {
-            val fBoolean = f.asInstanceOf[Boolean => Boolean]
-            val current = ref.dom.hasAttribute(attribute.name)
-            if (fBoolean(current)) ref.dom.setAttribute(attribute.name, "")
-            else                   ref.dom.removeAttribute(attribute.name)
-          } else {
-            val fString = f.asInstanceOf[Option[String] => Option[String]]
-            val current = Option(ref.dom.getAttribute(attribute.name))
-            fString(current) match {
-              case None    => ref.dom.removeAttribute(attribute.name)
-              case Some(s) => ref.dom.setAttribute(attribute.name, s)
-            }
-          }
+      case Diff.RemoveAttribute(ref, attribute) =>
+        metaweb.DOM.get(ref).removeAttribute(attribute.name)
 
-        case Diff.RemoveAttribute(ref, attribute) =>
-          ref.dom.removeAttribute(attribute.name)
+      case Diff.ReplaceChildren(ref, children) =>
+        val dom = metaweb.DOM.get(ref)
+        dom.clear()
+        children.foreach(child =>
+          dom.appendChild(metaweb.DOM.render(child)))
 
-        case Diff.ReplaceChildren(ref, children) =>
-          ref.dom.clear()
-          children.foreach(child =>
-            ref.dom.appendChild(tree.render.DOM.render(child)))
+      case Diff.PrependChild(ref, child) =>
+        metaweb.DOM.get(ref).prependChild(metaweb.DOM.render(child))
 
-        case Diff.PrependChild(ref, child) =>
-          ref.dom.prependChild(tree.render.DOM.render(child))
+      case Diff.AppendChild(ref, child) =>
+        metaweb.DOM.get(ref).appendChild(metaweb.DOM.render(child))
 
-        case Diff.AppendChild(ref, child) =>
-          ref.dom.appendChild(tree.render.DOM.render(child))
+      case Diff.RemoveChild(ref) =>
+        val dom = metaweb.DOM.get(ref)
+        dom.parentNode.removeChild(dom)
 
-        case Diff.RemoveChild(ref) =>
-          ref.dom.parentNode.removeChild(ref.dom)
+      case Diff.Noop =>
+    }
 
-        case Diff.Noop =>
-      }
-  }
+  def render(diff: DomDiff): Unit =
+    diff match {
+      case e: DomDiff.SetEvent[_] =>
+        val cast = e.asInstanceOf[DomDiff.SetEvent[dom.Event]]
+        cast.set((event: dom.Event) => render(cast.f(event)))
 
-  implicit object RenderDomDiff extends Render[dom.Node, DomDiff, Unit] with PlatformSupport {
-    def render(node: dom.Node, diff: DomDiff): Unit =
-      diff match {
-        case e: DomDiff.AttachEvent[_] =>
-          val cast = e.asInstanceOf[DomDiff.AttachEvent[dom.Event]]
-          cast.set { event: dom.Event =>
-            RenderDom.render(node, cast.f(event))
-          }
-
-        case e: DomDiff.DetachEvent[_] =>
-          val cast = e.asInstanceOf[DomDiff.AttachEvent[dom.Event]]
-          cast.set(null)
-      }
-  }
+      case e: DomDiff.DetachEvent[_] =>
+        val cast = e.asInstanceOf[DomDiff.SetEvent[dom.Event]]
+        cast.set(null)
+    }
 }

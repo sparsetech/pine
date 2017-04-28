@@ -1,7 +1,7 @@
 package pl.metastack.metaweb
 
 import org.scalajs.dom
-
+import pl.metastack.metaweb.diff.{Attribute, Diff, NodeRef}
 import pl.metastack.metaweb.tag.HTMLTag
 
 object DOM {
@@ -71,4 +71,20 @@ object DOM {
 
   def toTree[T <: tree.Tag](id: String): T =
     toTree[T](dom.document.getElementById(id))
+
+  /** Resolve DOM node */
+  def get[T <: tree.Tag](nodeRef: NodeRef[T])(implicit js: JS[T]): js.X =
+    Option(org.scalajs.dom.document.getElementById(nodeRef.id)).getOrElse(
+      throw new Exception(s"Node with ID '${nodeRef.id}' not found")
+    ).asInstanceOf[js.X]
+
+  /** TODO Introduce BooleanAttribute and StringAttribute for better type-safety? */
+  def get[T <: tree.Tag, G](attribute: Attribute[T, G, _])(implicit js: JS[T]): G =
+    if (HtmlHelpers.BooleanAttributes.contains(attribute.name))
+      get(attribute.parent).hasAttribute(attribute.name).asInstanceOf[G]
+    else Option(get(attribute.parent).getAttribute(attribute.name)).asInstanceOf[G]
+
+  def render(node: tree.Node): dom.Element = tree.render.DOM.render(node)
+  def render(diffs: Diff*): Unit = diffs.foreach(diff.render.DOM.render)
+  def renderDom(diffs: DomDiff*): Unit = diffs.foreach(diff.render.DOM.render)
 }
