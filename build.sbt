@@ -1,5 +1,5 @@
 val Paradise   = "2.1.0"
-val Scala2_11  = "2.11.8"
+val Scala2_11  = "2.11.11"
 val Scala2_12  = "2.12.2"
 val ScalaTest  = "3.0.3"
 val ScalaCheck = "1.13.5"

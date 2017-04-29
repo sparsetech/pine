@@ -39,13 +39,12 @@ lazy val example = crossProject.in(file("."))
       "io.circe" %%% "circe-generic" % Circe,
       "io.circe" %%% "circe-parser" % Circe
     ),
-    persistLauncher in Compile := true,
-    persistLauncher in Test := false
+    scalaJSUseMainModuleInitializer := true
   )
 
 lazy val js = example.js
 
 lazy val jvm = example.jvm.settings(
   baseDirectory in reStart := new File("."),
-  reStart <<= reStart.dependsOn(fastOptJS in (js, Compile))
+  reStart := reStart.dependsOn(fastOptJS in (js, Compile)).evaluated
 )
