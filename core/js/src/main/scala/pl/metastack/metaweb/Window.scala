@@ -67,10 +67,10 @@ object Window {
     new DomEvent(dom.window.ondragenter = _)
   def submit: DomEvent[dom.Event] =
     new DomEvent(dom.window.onsubmit = _)
-  // def progress: DomEventHandler[scala.scalajs.js.Any] =
-  //   new DomEventHandler(dom.window.onprogress = _)
+  // def progress: DomEvent[js.Any] =
+  //   new DomEvent(dom.window.onprogress = _)
   def dblClick: DomEvent[dom.MouseEvent] =
-  new DomEvent(dom.window.ondblclick = _)
+    new DomEvent(dom.window.ondblclick = _)
   def contextMenu: DomEvent[dom.MouseEvent] =
     new DomEvent(dom.window.oncontextmenu = _)
   def change: DomEvent[dom.Event] =
@@ -79,10 +79,10 @@ object Window {
     new DomEvent(dom.window.onloadedmetadata = _)
   def play: DomEvent[dom.Event] =
     new DomEvent(dom.window.onplay = _)
-  // def error: DomEventHandler[dom.Event] =
-  //   new DomEventHandler(dom.window.onerror = _)
+  // def error: DomEvent[dom.Event] =
+  //   new DomEvent(dom.window.onerror = _)
   def playing: DomEvent[dom.Event] =
-  new DomEvent(dom.window.onplaying = _)
+    new DomEvent(dom.window.onplaying = _)
   def canPlayThrough: DomEvent[dom.Event] =
     new DomEvent(dom.window.oncanplaythrough = _)
   def abort: DomEvent[dom.UIEvent] =
