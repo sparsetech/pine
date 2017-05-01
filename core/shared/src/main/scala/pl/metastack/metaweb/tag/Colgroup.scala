@@ -1,14 +1,14 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The&nbsp;<em>HTML Table Column Group Element</em>&nbsp;(<strong>&lt;colgroup&gt;</strong>) defines a group of columns within a table.
  */
-case class Colgroup(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Colgroup(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Colgroup
   override def tagName = "colgroup"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Colgroup = Colgroup(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Colgroup = Colgroup(attributes, children)
   /**
    * This enumerated attribute specifies how horizontal alignment of each column cell content will be handled. Possible values are: 
 <ul> 

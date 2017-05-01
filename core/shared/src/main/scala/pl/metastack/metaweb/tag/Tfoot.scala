@@ -1,14 +1,14 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The <em>HTML Table Foot Element</em> (<code>&lt;tfoot&gt;</code>) defines a set of rows summarizing the columns of the table.
  */
-case class Tfoot(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Tfoot(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Tfoot
   override def tagName = "tfoot"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Tfoot = Tfoot(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Tfoot = Tfoot(attributes, children)
   /**
    * This enumerated attribute specifies how horizontal alignment of each cell content will be handled. Possible values are: 
 <ul> 

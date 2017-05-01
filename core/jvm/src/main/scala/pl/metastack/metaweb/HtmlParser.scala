@@ -1,7 +1,6 @@
 package pl.metastack.metaweb
 
 object HtmlParser {
-  def fromString(html: String): tree.Node =
-    internal.HtmlParser.fromString(html)
+  def fromString(html: String): Node = internal.HtmlParser.fromString(html)
 }
 

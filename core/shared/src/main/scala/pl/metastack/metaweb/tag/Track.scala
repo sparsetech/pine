@@ -1,6 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * <tbody> 
@@ -26,10 +26,10 @@ import pl.metastack.metaweb.tree
  </tr> 
 </tbody>
  */
-case class Track(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Track(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Track
   override def tagName = "track"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Track = Track(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Track = Track(attributes, children)
   /**
    * This attribute indicates that the track should be enabled unless the user's preferences indicate that another track is more appropriate. This may only be used on one 
 <code>track</code> element per media element.

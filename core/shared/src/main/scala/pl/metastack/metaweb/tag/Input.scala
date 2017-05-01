@@ -1,14 +1,14 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The HTML <strong><code>&lt;input&gt;</code> element</strong> is used to create interactive controls for web-based forms in order to accept data from the user. How an <code>&lt;input&gt;</code> works varies considerably depending on the value of its <code>type</code> attribute.
  */
-case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Input(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Input
   override def tagName = "input"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Input = Input(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Input = Input(attributes, children)
   /**
    * The type of control to display. The default type is text, if this attribute is not specified. Possible values are: 
 <ul> 

@@ -1,12 +1,11 @@
 package pl.metastack.metaweb
 
 import org.scalatest.FunSuite
-import pl.metastack.metaweb.diff._
 
 class DiffSpec extends FunSuite {
   test("Replace nodes") {
-    val spanAge  = NodeRef[tag.Span]("age")
-    val spanName = NodeRef[tag.Span]("name")
+    val spanAge  = TagRef[tag.Span]("age")
+    val spanName = TagRef[tag.Span]("name")
 
     val node   = html"""<div id="child"><span id="age"></span><span id="name"></span></div>"""
     val result = node.update(spanAge := 42, spanName := "Joe")
@@ -18,14 +17,14 @@ class DiffSpec extends FunSuite {
     case class Item(id: Int, name: String)
     implicit def itemId: Id[Item] = Id(_.id.toString)
 
-    def render(item: Item): tree.Tag = {
+    def render(item: Item): Tag = {
       val node     = html"""<div id="child"><span id="name"></span></div>"""
-      val spanName = NodeRef[tag.Span]("name")
+      val spanName = TagRef[tag.Span]("name")
       node.update(spanName := item.name)
     }
 
     val node   = html"""<div id="page"></div>"""
-    val root   = NodeRef[tag.Div]("page")
+    val root   = TagRef[tag.Div]("page")
     val items  = List(Item(0, "Joe"), Item(1, "Jeff"))
     val result = node.update(root.set(items, render))
     assert(result == html"""<div id="page"><div id="child0"><span id="name0">Joe</span></div><div id="child1"><span id="name1">Jeff</span></div></div>""")

@@ -1,14 +1,11 @@
-package pl.metastack.metaweb.diff.render
+package pl.metastack.metaweb
 
-import pl.metastack.metaweb._
-import pl.metastack.metaweb.diff._
-
-object Tree {
-  def render(node: tree.Node, diff: Diff): tree.Node =
+object DiffRender {
+  def render(node: Node, diff: Diff): Node =
     node match {
-      case text: tree.Text => text
+      case text: Text => text
 
-      case tag: tree.Tag =>
+      case tag: Tag =>
         diff match {
           case Diff.SetAttribute(ref, attribute, value) if ref.matches(tag) =>
             tag.copy(attributes = tag.attributes + (attribute.name -> value))
@@ -49,10 +46,10 @@ object Tree {
             tag.copy(children = children)
 
           case Diff.RemoveChild(ref)
-            if tag.children.collect { case t: tree.Tag => t }
-                           .exists(c => ref.matches(c)) =>
+            if tag.children.collect { case t: Tag => t }
+              .exists(c => ref.matches(c)) =>
             val child = tag.children
-              .collect { case t: tree.Tag => t }
+              .collect { case t: Tag => t }
               .find(c => ref.matches(c)).get
 
             tag.copy(children = tag.children.diff(Seq(child)))

@@ -1,6 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The <strong>HTML <code>&lt;meter&gt;</code> Element</strong> represents either a scalar value within a known range or a fractional value.
@@ -10,10 +10,10 @@ import pl.metastack.metaweb.tree
 <strong>max</strong> attribute should define the range so that the 
 <strong>value</strong> attribute's value is within it.
  */
-case class Meter(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Meter(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Meter
   override def tagName = "meter"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Meter = Meter(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Meter = Meter(attributes, children)
   /**
    * The current numeric value. This must be between the minimum and maximum values (
 <strong>min</strong> attribute and 

@@ -24,7 +24,7 @@ class InlineHtmlSpec extends FunSuite {
       html"""<div id="a"></div>""",
       html"""<div id="b"></div>""")
 
-    assert(appended.byIdOpt[tree.Tag]("b").nonEmpty)
+    assert(appended.byIdOpt[Tag]("b").nonEmpty)
   }
 
   test("String attribute placeholder") {
@@ -135,14 +135,14 @@ class InlineHtmlSpec extends FunSuite {
     ))
 
     val atomLink = xml
-      .children.head.asInstanceOf[tree.Tag]
-      .children.head.asInstanceOf[tree.Tag]
+      .children.head.asInstanceOf[Tag]
+      .children.head.asInstanceOf[Tag]
     assert(atomLink.tagName == "atom:link")
   }
 
   test("Resolve node") {
     val div = html"""<div id="a"><b>test</b><span id="b"></span></div>"""
-    assert(div.byId[tree.Tag]("b") == html"""<span id="b"></span>""")
+    assert(div.byId[Tag]("b") == html"""<span id="b"></span>""")
   }
 
   test("Resolve node (2)") {
@@ -162,7 +162,7 @@ class InlineHtmlSpec extends FunSuite {
       </body>
       </html>
     """
-    assert(div.byIdOpt[tree.Tag]("page").nonEmpty)
+    assert(div.byIdOpt[Tag]("page").nonEmpty)
   }
 
   test("Getting value of Boolean attributes") {

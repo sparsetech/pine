@@ -44,16 +44,16 @@ object HtmlParser {
   def advanceClosingTag(reader: Reader, tagName: String): Unit =
     reader.advance(s"</$tagName>".length)
 
-  def parseChildren(reader: Reader, tagName: String): List[tree.Node] =
+  def parseChildren(reader: Reader, tagName: String): List[Node] =
     if (reader.prefix("/>")) {
       reader.advance(2)
       List.empty
     } else if (reader.prefix(">")) {
       reader.advance(1)
 
-      if (HtmlHelpers.VoidElements.contains(tagName)) List.empty[tree.Tag]
+      if (HtmlHelpers.VoidElements.contains(tagName)) List.empty[Tag]
       else {
-        def f(): List[tree.Node] =
+        def f(): List[Node] =
           if (closingTag(reader, tagName)) {
             advanceClosingTag(reader, tagName)
             List.empty
@@ -84,7 +84,7 @@ object HtmlParser {
       reader.advance(1)
     }
 
-  def parseTag(reader: Reader): Option[tree.Tag] =
+  def parseTag(reader: Reader): Option[Tag] =
     if (!reader.prefix("<")) None
     else {
       reader.advance(1)
@@ -97,24 +97,24 @@ object HtmlParser {
       Some(HTMLTag.fromTag(tagName, tagAttrs, tagChildren))
     }
 
-  def parseText(reader: Reader): Option[tree.Text] = {
+  def parseText(reader: Reader): Option[Text] = {
     val text = reader.collectUntil('<').getOrElse(reader.rest())
     if (text.isEmpty) None
-    else Some(tree.Text(HtmlHelpers.decodeText(text)))
+    else Some(Text(HtmlHelpers.decodeText(text)))
   }
 
-  def parseNode(reader: Reader): Option[tree.Node] = {
+  def parseNode(reader: Reader): Option[Node] = {
     skipComment(reader)
     parseTag(reader).orElse(parseText(reader))
   }
 
-  def fromString(html: String): tree.Node = {
+  def fromString(html: String): Node = {
     val reader = new Reader(html)
     reader.skip(_.isWhitespace)
     skipDocType(reader)
     reader.skip(_.isWhitespace)
     skipXml(reader)
     reader.skip(_.isWhitespace)
-    parseNode(reader).getOrElse(tree.Text(""))
+    parseNode(reader).getOrElse(Text(""))
   }
 }

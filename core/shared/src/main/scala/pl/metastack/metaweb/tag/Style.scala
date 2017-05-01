@@ -1,14 +1,14 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The <em>HTML Style Element</em> (<strong>&lt;style&gt;</strong>) contains style information for a document, or part of a document. By default, the style instructions written inside that element are expected to be <a href="/en-US/docs/Web/CSS">CSS</a>.
  */
-case class Style(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Style(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Style
   override def tagName = "style"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Style = Style(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Style = Style(attributes, children)
   /**
    * This attribute defines the styling language as a MIME type (charset should not be specified). This attribute is optional and default to 
 <code>text/css</code> if it's missing.

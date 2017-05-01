@@ -4,18 +4,18 @@ import org.scalatest.FunSuite
 
 class HtmlParserSpec extends FunSuite {
   test("Empty text node") {
-    val node = tree.Text("")
+    val node = Text("")
     assert(HtmlParser.fromString(node.toHtml) == node)
   }
 
   test("Parse text") {
     val text = "Hello world"
     val node = HtmlParser.fromString(text)
-    assert(node == tree.Text(text))
+    assert(node == Text(text))
   }
 
   test("Parse text (2)") {
-    val node = tree.Text("'\"")
+    val node = Text("'\"")
     assert(HtmlParser.fromString(node.toHtml) == node)
   }
 
@@ -27,25 +27,25 @@ class HtmlParserSpec extends FunSuite {
   test("Parse text with entities") {
     val html = "&lpar;Hello world&rpar;"
     val node = HtmlParser.fromString(html)
-    assert(node == tree.Text("(Hello world)"))
+    assert(node == Text("(Hello world)"))
   }
 
   test("Parse text with entities (2)") {
     val html = "&grave;&DiacriticalGrave;&#x00060;&#96;"
     val node = HtmlParser.fromString(html)
-    assert(node == tree.Text("````"))
+    assert(node == Text("````"))
   }
 
   test("Parse text with hex entities") {
     val html = "Hello world&#33;"
     val node = HtmlParser.fromString(html)
-    assert(node == tree.Text("Hello world!"))
+    assert(node == Text("Hello world!"))
   }
 
   test("Parse invalid entities") {
     val text = "&;"
     val node = HtmlParser.fromString(text)
-    assert(node == tree.Text(text))
+    assert(node == Text(text))
   }
 
   test("Parse simple tag") {
@@ -57,7 +57,7 @@ class HtmlParserSpec extends FunSuite {
   test("Parse tag") {
     val html = """<a href="http://google.com/">Google</a>"""
     val node = HtmlParser.fromString(html)
-    assert(node == (tag.A().href("http://google.com/") :+ tree.Text("Google")))
+    assert(node == (tag.A().href("http://google.com/") :+ Text("Google")))
   }
 
   test("Parse HTML") {
@@ -75,13 +75,13 @@ class HtmlParserSpec extends FunSuite {
   test("Ignore comments") {
     val html = """<div>test <!-- Ignore -->!</div>"""
     val node = HtmlParser.fromString(html)
-    assert(node == (tag.Div() :+ tree.Text("test ") :+ tree.Text("!")))
+    assert(node == (tag.Div() :+ Text("test ") :+ Text("!")))
   }
 
   test("Ignore comments (2)") {
     val html = """<div>test <!-- <br/> -->!</div>"""
     val node = HtmlParser.fromString(html)
-    assert(node == (tag.Div() :+ tree.Text("test ") :+ tree.Text("!")))
+    assert(node == (tag.Div() :+ Text("test ") :+ Text("!")))
   }
 
   test("Resolve node") {

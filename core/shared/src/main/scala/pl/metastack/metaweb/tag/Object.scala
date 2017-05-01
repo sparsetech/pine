@@ -1,14 +1,14 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The&nbsp;<em>HTML Embedded Object Element</em>&nbsp;(<strong>&lt;object&gt;</strong>) represents an external resource, which can be treated as an image, a nested browsing context, or a resource to be handled by a plugin.
  */
-case class Object(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Object(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Object
   override def tagName = "object"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Object = Object(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Object = Object(attributes, children)
   /**
    * A space-separated list of URIs for archives of resources for the object.
    */

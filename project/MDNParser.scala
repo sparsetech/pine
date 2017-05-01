@@ -63,17 +63,17 @@ object MDNParser {
     val file = new File(path, "HTMLTag.scala")
     printToFile(file) { p =>
       writeHeader(p)
-      p.println(s"""trait HTMLTag extends tree.Tag {""")
+      p.println(s"""trait HTMLTag extends Tag {""")
       writeAttributes(p, "T", attributes)
       p.println("}")
       p.println("""object HTMLTag {""")
-      p.println(s"""  def fromTag(tagName: String, attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty): tree.Tag =""")
+      p.println(s"""  def fromTag(tagName: String, attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty): Tag =""")
       p.println("""    tagName.toLowerCase match {""")
       elements.toList.sortBy(_.tag).foreach { element =>
         val className = escapeScalaName(element.tag.capitalize)
         p.println(s"""      case "${element.tag}" => $className(attributes, children)""")
       }
-      p.println("""      case _ => tree.CustomTag(tagName, attributes, children)""")
+      p.println("""      case _ => CustomTag(tagName, attributes, children)""")
       p.println("""    }""")
       p.println("""}""")
     }
@@ -83,7 +83,7 @@ object MDNParser {
   def writeHeader(p: PrintWriter) {
     p.println(s"package pl.metastack.metaweb.tag")
     p.println()
-    p.println("import pl.metastack.metaweb.tree")
+    p.println("import pl.metastack.metaweb._")
     p.println()
   }
 
@@ -102,10 +102,10 @@ object MDNParser {
       p.println( s"""/**""")
       p.println( s""" * $description""")
       p.println( s""" */""")
-      p.println(s"""case class $className(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {""")
+      p.println(s"""case class $className(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {""")
       p.println(s"  override type T = $className")
       p.println(s"""  override def tagName = "${element.tag}"""")
-      p.println(s"""  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): $className = $className(attributes, children)""")
+      p.println(s"""  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): $className = $className(attributes, children)""")
 
       val uniqueAttrs = element.attributes.filter { attr =>
         val exists = globalAttributes.exists(_.name == attr.name)
@@ -140,40 +140,40 @@ object MDNParser {
       case _ => tpe
     }
 
-  def writeNodeRefAttributesClass(p: PrintWriter,
+  def writeTagRefAttributesClass(p: PrintWriter,
                                   className: String,
                                   attributes: Seq[Attribute]): Unit = {
-    p.println(s"  implicit class NodeRefAttributes$className(nodeRef: NodeRef[$className]) {")
+    p.println(s"  implicit class TagRefAttributes$className(tagRef: TagRef[$className]) {")
     attributes.filter(_.name != "data-*").foreach { attribute =>
       val attrName = escapeScalaName(attribute.name)
       val attrType = attribute.tpe.map(mapDomType).getOrElse("String")
 
       if (attrType == "Boolean")
-        p.println(s"""    val $attrName = new Attribute[$className, Boolean, Boolean](nodeRef, "${attribute.name}")""")
+        p.println(s"""    val $attrName = new Attribute[$className, Boolean, Boolean](tagRef, "${attribute.name}")""")
       else
-        p.println(s"""    val $attrName = new Attribute[$className, scala.Option[$attrType], $attrType](nodeRef, "${attribute.name}")""")
+        p.println(s"""    val $attrName = new Attribute[$className, scala.Option[$attrType], $attrType](tagRef, "${attribute.name}")""")
     }
     p.println("  }")
     p.println()
   }
 
-  def writeNodeRefAttributs(path: File,
+  def writeTagRefAttributs(path: File,
                             elements: Set[Element],
                             globalAttributes: Seq[Attribute]): File = {
-    val file = new File(path, "NodeRefAttributes.scala")
+    val file = new File(path, "TagRefAttributes.scala")
 
     printToFile(file) { p =>
       p.println("package pl.metastack.metaweb.tag")
       p.println()
-      p.println("import pl.metastack.metaweb.diff.{Attribute, NodeRef}")
+      p.println("import pl.metastack.metaweb._")
       p.println()
-      p.println("trait NodeRefAttributes {")
-      writeNodeRefAttributesClass(p, "HTMLTag", globalAttributes)
+      p.println("trait TagRefAttributes {")
+      writeTagRefAttributesClass(p, "HTMLTag", globalAttributes)
 
       elements.toList.sortBy(_.tag).foreach { element =>
         if (element.attributes.nonEmpty) {
           val className = escapeScalaName(element.tag.capitalize)
-          writeNodeRefAttributesClass(p, className, element.attributes)
+          writeTagRefAttributesClass(p, className, element.attributes)
         }
       }
 
@@ -365,8 +365,8 @@ object MDNParser {
     val globalAttrs = globalAttributes()
     val elemsFiles = parsedElements.map(writeElement(tagsPath, globalAttrs, _))
     val attrsFile = writeGlobalAttrs(tagsPath, parsedElements, globalAttrs)
-    val attrsNodeRefFile = writeNodeRefAttributs(tagsPath, parsedElements, globalAttrs)
+    val attrsTagRefFile = writeTagRefAttributs(tagsPath, parsedElements, globalAttrs)
 
-    elemsFiles.toSeq :+ attrsFile :+ attrsNodeRefFile
+    elemsFiles.toSeq :+ attrsFile :+ attrsTagRefFile
   }
 }

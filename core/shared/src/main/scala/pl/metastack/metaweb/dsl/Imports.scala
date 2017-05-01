@@ -1,13 +1,13 @@
 package pl.metastack.metaweb.dsl
 
-import pl.metastack.metaweb.diff.{Diff, NodeRef}
+import pl.metastack.metaweb._
 import pl.metastack.metaweb.tag.HTMLTag
 
 trait Imports {
-  implicit class NodeRefDSLExtensions(nodeRef: NodeRef[HTMLTag]) {
+  implicit class NodeRefDSLExtensions(tagRef: TagRef[HTMLTag]) {
     /** Toggle `cssTags` depending on `state` */
     def css(state: Boolean, cssTags: String*): Diff =
-      nodeRef.`class`.update {
+      tagRef.`class`.update {
         case None      => if (state) Some(cssTags.mkString(" ")) else None
         case Some(cur) =>
           val currentTags = cur.split(' ')
@@ -23,7 +23,7 @@ trait Imports {
       * sets `style` to `showDisplay` (empty string if None).
       */
     def hide(state: Boolean, showDisplay: Option[Display] = None): Diff =
-      nodeRef.style := (
+      tagRef.style := (
         if (state) Display.None.property
         else showDisplay.map(_.property).getOrElse(""))
   }

@@ -1,7 +1,9 @@
-package pl.metastack.metaweb
+package pl.metastack.metaweb.dom
 
 import org.scalajs.dom
-import pl.metastack.metaweb.diff.{Attribute, Diff, NodeRef}
+
+import pl.metastack.metaweb
+import pl.metastack.metaweb._
 import pl.metastack.metaweb.tag.HTMLTag
 
 object DOM {
@@ -23,7 +25,7 @@ object DOM {
         if (reference == null || reference.nextSibling == null) parent.appendChild(node)
         else parent.insertBefore(node, reference.nextSibling)
 
-      def toTree[T <: tree.Node]: T = DOM.toTree(parent)
+      def toTree[T <: Node]: T = DOM.toTree(parent)
     }
   }
 
@@ -42,9 +44,9 @@ object DOM {
       case _ => Map.empty
     }
 
-  def toTree[T <: tree.Node](node: dom.Node): T =
+  def toTree[T <: Node](node: dom.Node): T =
     node match {
-      case t: dom.raw.Text => tree.Text(t.textContent).asInstanceOf[T]
+      case t: dom.raw.Text => Text(t.textContent).asInstanceOf[T]
 
       case e: dom.Element =>
         val attributes = (0 until e.attributes.length)
@@ -60,7 +62,7 @@ object DOM {
           .filter {
             case _: dom.Comment => false
             case _              => true
-          }.map(toTree[tree.Node])
+          }.map(toTree[Node])
 
         HTMLTag.fromTag(
           tagName    = e.tagName,
@@ -69,28 +71,28 @@ object DOM {
         ).asInstanceOf[T]
     }
 
-  def toTree[T <: tree.Tag](id: String): T =
+  def toTree[T <: Tag](id: String): T =
     toTree[T](dom.document.getElementById(id))
 
   /** Resolve DOM node */
-  def get[T <: tree.Tag](nodeRef: NodeRef[T])(implicit js: Js[T]): js.X = {
-    val node = nodeRef match {
-      case NodeRef.ById(id)   => dom.document.getElementById(id)
-      case NodeRef.ByTag(tag) => dom.document.getElementsByTagName(tag).item(0)
+  def get[T <: Tag](tagRef: TagRef[T])(implicit js: Js[T]): js.X = {
+    val node = tagRef match {
+      case TagRef.ById(id)   => dom.document.getElementById(id)
+      case TagRef.ByTag(tag) => dom.document.getElementsByTagName(tag).item(0)
     }
 
     Option(node).getOrElse(
-      throw new Exception(s"Invalid node reference '$nodeRef'")
+      throw new Exception(s"Invalid node reference '$tagRef'")
     ).asInstanceOf[js.X]
   }
 
   /** TODO Introduce BooleanAttribute and StringAttribute for better type-safety? */
-  def get[T <: tree.Tag, G](attribute: Attribute[T, G, _])(implicit js: Js[T]): G =
+  def get[T <: Tag, G](attribute: Attribute[T, G, _])(implicit js: Js[T]): G =
     if (HtmlHelpers.BooleanAttributes.contains(attribute.name))
       get(attribute.parent).hasAttribute(attribute.name).asInstanceOf[G]
     else Option(get(attribute.parent).getAttribute(attribute.name)).asInstanceOf[G]
 
-  def render(node: tree.Node): dom.Element = tree.render.DOM.render(node)
-  def render(diffs: Diff*): Unit = diffs.foreach(diff.render.DOM.render)
-  def renderDom(diffs: DomDiff*): Unit = diffs.foreach(diff.render.DOM.render)
+  def render(node: Node): dom.Element = NodeRender.render(node)
+  def render(diffs: metaweb.Diff*): Unit = diffs.foreach(DiffRender.render)
+  def renderDom(diffs: Diff*): Unit = diffs.foreach(DiffRender.render)
 }

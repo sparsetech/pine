@@ -1,15 +1,15 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The <em>HTML Script Element</em> (<strong><code>&lt;script&gt;</code></strong>) is used to embed or reference an executable script within an <abbr title="Hypertext Markup Language">HTML</abbr> or <abbr title="Extensible Hypertext Markup Language">XHTML</abbr> document.
 Scripts without <code>async</code> or <code>defer</code> attributes, as well as inline scripts, are fetched and executed immediately, before the browser continues to parse the page.
  */
-case class Script(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Script(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Script
   override def tagName = "script"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Script = Script(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Script = Script(attributes, children)
   /**
    * Set this Boolean attribute to indicate that the browser should, if possible, execute the script asynchronously. It has no effect on inline scripts (i.e., scripts that don't have the 
 <strong>src</strong> attribute).

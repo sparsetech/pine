@@ -1,6 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The <em>HTML Navigation Element</em> (<code>&lt;nav&gt;</code>) represents a section of a page that links to other pages or to parts within the page: a section with navigation links.
@@ -11,8 +11,8 @@ import pl.metastack.metaweb.tree
  <li>User agents, such as screen readers targeting disabled users, can use this element to determine whether to omit the initial rendering of this content.</li> 
 </ul>
  */
-case class Nav(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Nav(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Nav
   override def tagName = "nav"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Nav = Nav(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Nav = Nav(attributes, children)
 }

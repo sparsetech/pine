@@ -1,14 +1,14 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The&nbsp;<em>HTML Deleted Text Element</em>&nbsp;(<strong>&lt;del&gt;</strong>) represents a range of text that has been deleted from a document. This element is often (but need not be) rendered with strike-through text.
  */
-case class Del(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Del(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Del
   override def tagName = "del"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Del = Del(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Del = Del(attributes, children)
   /**
    * A URI for a resource that explains the change (for example, meeting minutes).
    */

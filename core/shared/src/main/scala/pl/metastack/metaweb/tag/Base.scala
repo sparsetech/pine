@@ -1,6 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The <em>HTML Base Element</em> (<strong>&lt;base&gt;</strong>) specifies the base URL to use for all relative URLs contained within a document. There can be only one &lt;base&gt; element in a document.&nbsp;
@@ -10,10 +10,10 @@ The base URL of a document can be queried from a script using <a class="new" hre
 <strong>href</strong> and first 
 <strong>target</strong> value are used; all others are ignored.
  */
-case class Base(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Base(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Base
   override def tagName = "base"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Base = Base(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Base = Base(attributes, children)
   /**
    * The base URL to be used throughout the document for relative URL addresses. If this attribute is specified, this element must come before any other elements with attributes whose values are URLs.
 <br> Absolute and relative URIs are allowed (but see note section below).

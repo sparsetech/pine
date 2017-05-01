@@ -1,18 +1,17 @@
 package pl.metastack.metaweb
 
 import org.scalatest.FunSuite
-import pl.metastack.metaweb.diff.{Id, NodeRef}
 
-class NodeRefSpec extends FunSuite {
+class TagRefSpec extends FunSuite {
   test("Use DSL to set boolean attribute to true") {
     val node = tag.Input()
       .id("test")
 
-    val nodeRef = NodeRef[tag.Input]("test")
+    val tagRef = TagRef[tag.Input]("test")
 
     assert(!node.checked)
 
-    val updated = node.update(nodeRef.checked.update(!_))
+    val updated = node.update(tagRef.checked.update(!_))
     assert(updated == node.checked(true))
   }
 
@@ -21,11 +20,11 @@ class NodeRefSpec extends FunSuite {
       .id("test")
       .checked(true)
 
-    val nodeRef = NodeRef[tag.Input]("test")
+    val tagRef = TagRef[tag.Input]("test")
 
     assert(node.checked)
 
-    val updated = node.update(nodeRef.checked.update(!_))
+    val updated = node.update(tagRef.checked.update(!_))
     assert(updated == node.checked(false))
   }
 
@@ -34,9 +33,9 @@ class NodeRefSpec extends FunSuite {
       .id("test")
       .`type`("checkbox")
 
-    val nodeRef = NodeRef[tag.Input]("test")
+    val tagRef = TagRef[tag.Input]("test")
 
-    val updated = node.update(nodeRef.css(true, "a"))
+    val updated = node.update(tagRef.css(true, "a"))
     assert(updated == node.`class`("a"))
   }
 
@@ -46,15 +45,15 @@ class NodeRefSpec extends FunSuite {
       .`type`("checkbox")
       .`class`("a b c")
 
-    val nodeRef = NodeRef[tag.Input]("test")
+    val tagRef = TagRef[tag.Input]("test")
 
-    val updated = node.update(nodeRef.css(false, "b"))
+    val updated = node.update(tagRef.css(false, "b"))
     assert(updated == node.`class`("a c"))
   }
 
   test("Match by tag") {
     val node = tag.Div(children = List(tag.Span()))
-    val ref = NodeRef(tag.Span())
+    val ref = TagRef(tag.Span())
     val updated = node.update(ref := tag.B())
 
     assert(updated ==
@@ -63,7 +62,7 @@ class NodeRefSpec extends FunSuite {
 
   test("Replace node") {
     val node = tag.Div(children = List(tag.Span()))
-    val ref = NodeRef(tag.Span())
+    val ref = TagRef(tag.Span())
     val updated = node.update(ref.replace(tag.B()))
 
     assert(updated == tag.Div(children = List(tag.B())))
@@ -73,7 +72,7 @@ class NodeRefSpec extends FunSuite {
     case class Item(id: Int, name: String)
     implicit def itemId: Id[Item] = Id(_.id.toString)
 
-    val itemRef = NodeRef[tag.Div]("item")
-    assert(itemRef(Item(0, "test")) == NodeRef[tag.Div]("item0"))
+    val itemRef = TagRef[tag.Div]("item")
+    assert(itemRef(Item(0, "test")) == TagRef[tag.Div]("item0"))
   }
 }

@@ -23,7 +23,7 @@ object GenerateEntities extends App {
   val fw = new FileWriter(new File("shared/src/main/scala/pl/metastack/metaweb/HtmlEntities.scala"))
   fw.append("package pl.metastack.metaweb\n\n")
   fw.append("object HtmlEntities {\n")
-  fw.append("  val entities: scala.collection.Map[String, String] = scala.collection.Map(\n")
+  fw.append("  val entities: Map[String, String] = Map(\n")
   entities.zipWithIndex.foreach { case (entity, i) =>
     if (i + 1 == entities.length) fw.append("    " + entity + "\n")
     else fw.append("    " + entity + ",\n")

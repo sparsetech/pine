@@ -1,10 +1,8 @@
-package pl.metastack.metaweb.diff
+package pl.metastack.metaweb
 
-import pl.metastack.metaweb.tree
-
-class Attribute[+T <: tree.Tag, G, S](val parent: NodeRef[T], val name: String) {
+case class Attribute[+T <: Tag, G, S](parent: TagRef[T], name: String) {
   def set(value: S): Diff = Diff.SetAttribute(parent, this, value)
-  def :=(value: S) = set(value)
+  def :=(value: S): Diff = set(value)
 
   def update(f: G => G): Diff = Diff.UpdateAttribute(parent, this, f)
   def remove(): Diff = Diff.RemoveAttribute(parent, this)

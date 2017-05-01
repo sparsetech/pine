@@ -1,14 +1,14 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The<em> </em><em>HTML Label&nbsp;Element</em> (<code><strong>&lt;label&gt;</strong></code>) represents a caption for an item in a user interface. It can be associated with a control either by placing the control element inside the <code>&lt;label&gt;</code> element, or by using the <code>for</code> attribute. Such a control is called the <em>labeled control</em> of the label element.
  */
-case class Label(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Label(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Label
   override def tagName = "label"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Label = Label(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Label = Label(attributes, children)
   /**
    * The ID of a labelable form-related element in the same document as the label element. The first such element in the document with an ID matching the value of the 
 <code>for</code> attribute is the 

@@ -1,7 +1,7 @@
 package pl.metastack.metaweb
 
 object HtmlEntities {
-  val entities: scala.collection.Map[String, String] = scala.collection.Map(
+  val entities: Map[String, String] = Map(
     "Aacute" -> "\u00C1",
     "aacute" -> "\u00E1",
     "Abreve" -> "\u0102",

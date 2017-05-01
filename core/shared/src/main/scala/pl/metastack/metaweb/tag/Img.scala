@@ -1,15 +1,15 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * <span class="seoSummary">The&nbsp;<em>HTML Image Element</em>&nbsp;(<strong>&lt;img&gt;</strong>) represents an image of the document.</span>
 <p><strong>Usage note:</strong><br> Browsers do not always display the image referenced by the element. This is the case for non-graphical browsers (including those used by people with vision impairments), if the user chooses not to display images, or if the browser is unable to display the image because it is invalid or an <a href="#Supported_image_formats" title="HTML/Element/Img#Supported_Image_Formats">unsupported type</a>. In these cases, the browser may replace the image with the text defined in this element's <strong>alt</strong> attribute.</p>
  */
-case class Img(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Img(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Img
   override def tagName = "img"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Img = Img(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Img = Img(attributes, children)
   /**
    * The alignment of the image with respect to its surrounding context.
    */

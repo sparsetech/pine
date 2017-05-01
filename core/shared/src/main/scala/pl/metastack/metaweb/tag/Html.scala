@@ -1,14 +1,14 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The <em>HTML Root Element</em> (<strong><code>&lt;html&gt;</code></strong>) represents the root of an HTML document. All other elements must be descendants of this element.
  */
-case class Html(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Html(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Html
   override def tagName = "html"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Html = Html(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Html = Html(attributes, children)
   /**
    * Specifies the URI of a resource manifest indicating resources that should be cached locally. See 
 <a href="/en-US/docs/HTML/Using_the_application_cache" title="/en-US/docs/HTML/Using_the_application_cache">Using the application cache</a> for details.

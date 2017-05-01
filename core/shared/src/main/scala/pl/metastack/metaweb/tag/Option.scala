@@ -1,6 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * This element includes the <a href="/en-US/docs/Web/HTML/Global_attributes">global attributes</a>.
@@ -42,10 +42,10 @@ import pl.metastack.metaweb.tree
  The content of this attribute represents the value to be submitted with the form, should this option be selected.&nbsp;If this attribute is omitted, the value is taken from the text content of the option element.
 </dd>
  */
-case class Option(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Option(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Option
   override def tagName = "option"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Option = Option(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Option = Option(attributes, children)
   /**
    * If this Boolean attribute is set, this option is not checkable. Often browsers grey out such control and it won't receive any browsing event, like mouse clicks or focus-related ones. If this attribute is not set, the element can still be disabled if one its ancestors is a disabled 
 <a href="/en-US/docs/Web/HTML/Element/optgroup" title="In a Web form, the HTML <optgroup> element&nbsp; creates a grouping of options within a <select> element."><code>&lt;optgroup&gt;</code></a> element.

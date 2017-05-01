@@ -6,22 +6,21 @@ import scala.language.reflectiveCalls
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 import pl.metastack.metaweb.internal.HtmlParser
 
 object ExternalHtml {
   trait Method {
     /** Expose `html` as a global method */
-    def html(fileName: String): tree.Tag = macro HtmlImpl
+    def html(fileName: String): Tag = macro HtmlImpl
   }
 
-  def convert(c: Context)(node: tree.Node,
-                          root: Boolean): c.Expr[tree.Node] = {
+  def convert(c: Context)(node: Node, root: Boolean): c.Expr[Node] = {
     import c.universe._
 
     node match {
-      case tree.Text(text) => c.Expr(q"pl.metastack.metaweb.tree.Text($text)")
-      case tag: tree.Tag =>
+      case Text(text) => c.Expr(q"pl.metastack.metaweb.Text($text)")
+      case tag: Tag =>
         val tagType = TypeName(tag.tagName.capitalize)
         val tagAttrs = tag.attributes.mapValues(_.toString)
         val tagChildren = tag.children.map(convert(c)(_, root = false))
@@ -35,11 +34,11 @@ object ExternalHtml {
     }
   }
 
-  def HtmlImpl(c: Context)(fileName: c.Expr[String]): c.Expr[tree.Tag] = {
+  def HtmlImpl(c: Context)(fileName: c.Expr[String]): c.Expr[Tag] = {
     val fileNameValue = Helpers.literalValueExpr(c)(fileName)
     val html = io.Source.fromFile(new File(fileNameValue)).mkString
     val node = HtmlParser.fromString(html)
     convert(c)(node, root = true)
-      .asInstanceOf[c.Expr[tree.Tag]]
+      .asInstanceOf[c.Expr[Tag]]
   }
 }

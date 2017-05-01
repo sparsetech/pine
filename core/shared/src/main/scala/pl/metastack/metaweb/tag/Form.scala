@@ -1,15 +1,15 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The <strong>HTML <code>&lt;form&gt;</code> element</strong> represents a document section that contains interactive controls to submit information to a web server.
 It is possible to use the <a href="/en-US/docs/Web/CSS/:valid" title="The :valid CSS pseudo-class represents any <input> or <form> element whose content validates correctly according to the input's type setting. This allows to easily make valid fields adopt an appearance that helps the user confirm that their data is formatted properly."><code>:valid</code></a> and <a href="/en-US/docs/Web/CSS/:invalid" title="The :invalid CSS pseudo-class represents any <input> or <form> element whose content fails to validate according to the input's type setting. This allows you to easily have invalid fields adopt an appearance that helps the user identify and correct errors."><code>:invalid</code></a> CSS pseudo-classes to style a <code>&lt;form&gt;</code> element.
  */
-case class Form(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Form(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Form
   override def tagName = "form"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Form = Form(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Form = Form(attributes, children)
   /**
    * A comma-separated list of content types that the server accepts. 
 <div class="note">

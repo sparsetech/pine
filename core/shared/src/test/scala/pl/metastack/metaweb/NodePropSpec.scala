@@ -21,11 +21,11 @@ class NodePropSpec extends Properties("Node") {
 
   val textGen = for {
     s <- attributeValueGen
-  } yield tree.Text(s)
+  } yield Text(s)
 
-  def tagGen(sz: Int): Gen[tree.Tag] = tagGen(sz, Seq.empty)
+  def tagGen(sz: Int): Gen[Tag] = tagGen(sz, Seq.empty)
 
-  def tagGen(sz: Int, parentTags: Seq[String]): Gen[tree.Tag] =
+  def tagGen(sz: Int, parentTags: Seq[String]): Gen[Tag] =
     for {
       // TODO Consider nesting rules (tag.Input cannot have children)
       tag <- Gen.oneOf("a", "b", "div", "span").filter { t =>
@@ -39,56 +39,56 @@ class NodePropSpec extends Properties("Node") {
         l.length <= 1 || !l.zip(l.tail).exists {
           // Two adjacent nodes cannot be text nodes
           case (left, right) =>
-            left.isInstanceOf[tree.Text] &&
-              right.isInstanceOf[tree.Text]
+            left.isInstanceOf[Text] &&
+              right.isInstanceOf[Text]
         }
       }.filter { l =>
         // Ignore empty text nodes
         !l.exists {
-          case t: tree.Text => t.text.isEmpty
+          case t: Text => t.text.isEmpty
           case _ => false
         }
       }
     } yield HTMLTag.fromTag(tag, attributes, children)
 
-  def sizedTree(sz: Int): Gen[tree.Node] = sizedTree(sz, Seq.empty)
+  def sizedTree(sz: Int): Gen[Node] = sizedTree(sz, Seq.empty)
 
-  def sizedTree(sz: Int, parentTags: Seq[String]): Gen[tree.Node] =
+  def sizedTree(sz: Int, parentTags: Seq[String]): Gen[Node] =
     if (sz <= 0) textGen
     else Gen.frequency((1, textGen), (3, tagGen(sz, parentTags)))
 
   val sized = Gen.choose(0, 20)
 
-  def nodeGen: Gen[tree.Node] = sized.flatMap(sizedTree)
+  def nodeGen: Gen[Node] = sized.flatMap(sizedTree)
 
   // Ignore text nodes that start with whitespaces on root level
-  def rootNodeGen: Gen[tree.Node] = nodeGen.filter {
-    case tree.Text(t) => !t.startsWith(" ")
+  def rootNodeGen: Gen[Node] = nodeGen.filter {
+    case Text(t) => !t.startsWith(" ")
     case _ => true
   }
 
-  def fun1: tree.Node => Boolean = {
-    case n: tree.Tag => true
+  def fun1: Node => Boolean = {
+    case n: Tag => true
     case _ => false
   }
 
-  def fun2: tree.Node => Boolean = {
-    case n: tree.Text => true
+  def fun2: Node => Boolean = {
+    case n: Text => true
     case _ => false
   }
 
-  def filterFunGen: Gen[tree.Node => Boolean] = Gen.oneOf(fun1, fun2)
+  def filterFunGen: Gen[Node => Boolean] = Gen.oneOf(fun1, fun2)
 
-  property("toHtml") = forAll(rootNodeGen) { node: tree.Node =>
+  property("toHtml") = forAll(rootNodeGen) { node: Node =>
     HtmlParser.fromString(node.toHtml) == node
   }
 
-  def myFilter(node: tree.Tag, f: tree.Node => Boolean): Seq[tree.Node] = {
-    val collected = ListBuffer.empty[tree.Node]
-    def iter(node: tree.Node): Unit = {
+  def myFilter(node: Tag, f: Node => Boolean): Seq[Node] = {
+    val collected = ListBuffer.empty[Node]
+    def iter(node: Node): Unit = {
       if (f(node)) collected += node
       node match {
-        case x: tree.Tag => x.children.foreach(iter)
+        case x: Tag => x.children.foreach(iter)
         case _ =>
       }
     }
@@ -104,15 +104,15 @@ class NodePropSpec extends Properties("Node") {
     tag.filter(f) == myFilter(tag, f)
   }
 
-  property("toText") = forAll(sized.flatMap(tagGen)) { tag: tree.Tag =>
+  property("toText") = forAll(sized.flatMap(tagGen)) { tag: Tag =>
     val text = tag.toText
     tag
-      .filter(_.isInstanceOf[tree.Text])
-      .forall(x => text.contains(x.asInstanceOf[tree.Text].text.trim.replaceAll("\\s+", " ")))
+      .filter(_.isInstanceOf[Text])
+      .forall(x => text.contains(x.asInstanceOf[Text].text.trim.replaceAll("\\s+", " ")))
   }
 
   /*
-    property("toText (DOM)") = forAll(nodeGen) { node: tree.Node =>
+    property("toText (DOM)") = forAll(nodeGen) { node: Node =>
       node.toText == node.toDom.textContent
     }
   }*/

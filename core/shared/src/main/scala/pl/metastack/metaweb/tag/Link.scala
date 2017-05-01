@@ -1,15 +1,15 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The <em>HTML Link Element</em> (<strong>&lt;link&gt;</strong>) specifies relationships between the current document and an external resource. Possible uses for this element include defining a relational framework for navigation. This Element is most used to link to style sheets.
 &lt;link href="style.css" rel="stylesheet"&gt;
  */
-case class Link(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Link(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Link
   override def tagName = "link"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Link = Link(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Link = Link(attributes, children)
   /**
    * This attribute defines the character encoding of the linked resource. The value is a space- and/or comma-delimited list of character sets as defined in 
 <a href="http://tools.ietf.org/html/rfc2045" class="external">RFC 2045</a>. The default value is ISO-8859-1. 

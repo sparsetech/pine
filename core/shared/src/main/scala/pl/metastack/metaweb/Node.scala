@@ -1,10 +1,17 @@
-package pl.metastack.metaweb.tree
+package pl.metastack.metaweb
 
-import pl.metastack.metaweb.diff.Diff
-import pl.metastack.metaweb.diff.render.Tree
 import pl.metastack.metaweb.tag.HTMLTag
 
 import scala.reflect.ClassTag
+
+object Node {
+  trait Implicits {
+    implicit def StringToTree(value: String): Node = Text(value)
+    implicit def BooleanToNode(value: Boolean): Node = Text(value.toString)
+    implicit def NumericToNode[T](value: T)(implicit num: Numeric[T]): Node =
+      Text(value.toString)
+  }
+}
 
 sealed trait Node {
   type T <: Node
@@ -101,7 +108,7 @@ trait Tag extends Node {
 
   def update(diffs: Diff*): T =
     diffs.foldLeft(this) { case (a, b) =>
-      Tree.render(a, b).asInstanceOf[Tag]
+      DiffRender.render(a, b).asInstanceOf[Tag]
     }.asInstanceOf[T]
 
   def map(f: Node => Node): T = copy(children = children.map(f(_).map(f)))

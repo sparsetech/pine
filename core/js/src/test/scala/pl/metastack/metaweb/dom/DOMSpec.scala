@@ -1,9 +1,9 @@
-package pl.metastack.metaweb.render
+package pl.metastack.metaweb.dom
 
 import org.scalajs.dom
 import org.scalatest.FunSuite
+
 import pl.metastack.metaweb._
-import pl.metastack.metaweb.diff.NodeRef
 
 class DOMSpec extends FunSuite {
   /*
@@ -224,7 +224,7 @@ class DOMSpec extends FunSuite {
     assert(s.isInstanceOf[tag.Span])
     assert(s.children.size == 1)
     s.children.head match {
-      case t: tree.Text => assert(t.text == "Hello world")
+      case t: Text => assert(t.text == "Hello world")
       case _ => fail()
     }
   }
@@ -237,7 +237,7 @@ class DOMSpec extends FunSuite {
     val test = DOM.toTree[tag.Span](node)
     assert(test.children.nonEmpty)
 
-    val text = test.children.head.asInstanceOf[tree.Text]
+    val text = test.children.head.asInstanceOf[Text]
     assert(text.text == "Hello world")
   }
 
@@ -264,11 +264,11 @@ class DOMSpec extends FunSuite {
     val div = DOM.render(html"""<div id="test"><span id="hello">Hello</span></div>""")
     dom.document.body.appendChild(div)
 
-    val ref = NodeRef(tag.Span())
+    val ref = TagRef(tag.Span())
     DOM.render(ref.replace(html"<div>World</div>"))
 
     assert(
-      DOM.toTree[tree.Tag](dom.document.getElementById("test")) ==
+      DOM.toTree[Tag](dom.document.getElementById("test")) ==
       html"""<div id="test"><div>World</div></div>""")
     dom.document.body.removeChild(div)
   }

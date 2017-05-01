@@ -1,6 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * This element includes the <a href="/en-US/docs/HTML/Global_attributes">global attributes</a>.
@@ -35,10 +35,10 @@ import pl.metastack.metaweb.tree
  </div> 
 </dd>
  */
-case class Fieldset(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Fieldset(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Fieldset
   override def tagName = "fieldset"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Fieldset = Fieldset(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Fieldset = Fieldset(attributes, children)
   /**
    * If this Boolean attribute is set, the form controls that are its descendants, except descendants of its first optional 
 <a href="/en-US/docs/Web/HTML/Element/legend" title="The HTML <legend> Element (or HTML Legend Field Element) represents a caption for the content of its parent <fieldset>."><code>&lt;legend&gt;</code></a> element, are disabled, i.e., not editable. They won't receive any browsing events, like mouse clicks or focus-related ones. Often browsers display such controls as gray.

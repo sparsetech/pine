@@ -6,7 +6,7 @@ class NodeSpec extends FunSuite {
   test("Instantiate") {
     val a = tag.A()
       .href("http://github.com/")
-      .set(tree.Text("GitHub"))
+      .set(Text("GitHub"))
     assert((a: tag.A) == a)
     assert(a == html"""<a href="http://github.com/">GitHub</a>""")
     assert(a.toHtml == """<a href="http://github.com/">GitHub</a>""")
@@ -16,8 +16,8 @@ class NodeSpec extends FunSuite {
     val span = html"""<div class="test"><span class="test2">42</span></div>"""
 
     assert(span
-      .byClass[tree.Tag]("test")
-      .byClass[tree.Tag]("test2") == span.children.head)
+      .byClass[Tag]("test")
+      .byClass[Tag]("test2") == span.children.head)
   }
 
   test("as") {
@@ -141,7 +141,7 @@ class NodeSpec extends FunSuite {
   test("flatMap") {
     val div = html"<div><span>world</span></div>"
     val html = div.flatMap {
-      case t: tree.Text => Seq(html"<b>Hello </b>", t)
+      case t: Text => Seq(html"<b>Hello </b>", t)
       case n => Seq(n)
     }.toHtml
     assert(html == "<div><span><b>Hello </b>world</span></div>")

@@ -1,6 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * This element includes the <a href="https://developer.mozilla.org/en-US/docs/HTML/Global_attributes">global attributes</a>.
@@ -24,10 +24,10 @@ import pl.metastack.metaweb.tree
  The width of the coordinate space in CSS pixels. Defaults to 300.
 </dd>
  */
-case class Canvas(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Canvas(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Canvas
   override def tagName = "canvas"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Canvas = Canvas(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Canvas = Canvas(attributes, children)
   /**
    * The height of the coordinate space in CSS pixels. Defaults to 150.
    */

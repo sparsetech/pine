@@ -1,8 +1,8 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
-trait HTMLTag extends tree.Tag {
+trait HTMLTag extends Tag {
   /**
    * Provides a hint for generating a keyboard shortcut for the current element. This attribute consists of a space-separated list of characters. The browser should use the first one that exists on the computer keyboard layout.
    */
@@ -151,7 +151,7 @@ trait HTMLTag extends tree.Tag {
   def translate(value: String): T = copy(attributes = attributes + ("translate" -> value))
 }
 object HTMLTag {
-  def fromTag(tagName: String, attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty): tree.Tag =
+  def fromTag(tagName: String, attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty): Tag =
     tagName.toLowerCase match {
       case "a" => A(attributes, children)
       case "acronym" => Acronym(attributes, children)
@@ -260,6 +260,6 @@ object HTMLTag {
       case "ul" => Ul(attributes, children)
       case "video" => Video(attributes, children)
       case "xmp" => Xmp(attributes, children)
-      case _ => tree.CustomTag(tagName, attributes, children)
+      case _ => CustomTag(tagName, attributes, children)
     }
 }

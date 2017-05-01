@@ -42,7 +42,7 @@ object HtmlHelpers {
       case '\r' => "\r"
       case '\t' => "\t"
       case c if c >= ' ' => c.toString
-      case c => ""
+      case _ => ""
     }
 
   /** From http://hohonuuli.blogspot.com/2012/10/simple-hex-string-to-ascii-function-for.html */

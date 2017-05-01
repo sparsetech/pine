@@ -1,15 +1,15 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The HTML Applet Element (<code>&lt;applet&gt;</code>) identifies the inclusion of a Java applet.
 <p><strong>Usage note: </strong>This element has been removed in HTML5 and shouldn't be used anymore. Instead web developers should use the more generic <a href="/en-US/docs/Web/HTML/Element/object" title="The&nbsp;HTML Embedded Object Element&nbsp;(<object>) represents an external resource, which can be treated as an image, a nested browsing context, or a resource to be handled by a plugin."><code>&lt;object&gt;</code></a> element.</p>
  */
-case class Applet(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Applet(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Applet
   override def tagName = "applet"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Applet = Applet(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Applet = Applet(attributes, children)
   /**
    * This attribute is used to position the applet on the page relative to content that might flow around it. The HTML 4.01 specification defines values of bottom, left, middle, right, and top, whereas Microsoft and Netscape also might support 
 <strong>absbottom</strong>, 

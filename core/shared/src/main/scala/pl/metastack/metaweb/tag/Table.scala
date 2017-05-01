@@ -1,6 +1,6 @@
 package pl.metastack.metaweb.tag
 
-import pl.metastack.metaweb.tree
+import pl.metastack.metaweb._
 
 /**
  * The <em>HTML Table Element </em>(<code>&lt;table&gt;</code>) represents data in two dimensions or more.
@@ -11,10 +11,10 @@ import pl.metastack.metaweb.tree
 <strong style="font-weight: bold;">should</strong>
 <strong> not</strong> be used for layout purposes. However, HTML emails are an&nbsp;exception, where tables are still commonly used for layout purposes.
  */
-case class Table(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[tree.Node] = Seq.empty) extends HTMLTag {
+case class Table(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {
   override type T = Table
   override def tagName = "table"
-  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[tree.Node] = children): Table = Table(attributes, children)
+  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): Table = Table(attributes, children)
   /**
    * &nbsp;This enumerated attribute indicates how the table must be aligned in regard of the containing document. It may have the following values: 
 <ul> 
