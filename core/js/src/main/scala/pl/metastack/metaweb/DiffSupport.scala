@@ -10,7 +10,7 @@ trait DiffSupportLowPrio {
   implicit object JsTag extends Js[tree.Tag] { override type X = dom.html.Element }
 }
 
-trait DiffSupport extends DiffSupportLowPrio {
+object Js extends DiffSupportLowPrio {
   implicit object JsA extends Js[tag.A] { override type X = dom.html.Anchor }
   implicit object JsB extends Js[tag.B] { override type X = dom.html.Span }
   implicit object JsApplet extends Js[tag.Applet] { override type X = dom.html.Applet }
@@ -80,7 +80,9 @@ trait DiffSupport extends DiffSupportLowPrio {
   implicit object JsTrack extends Js[tag.Track] { override type X = dom.html.Track }
   implicit object JsUl extends Js[tag.Ul] { override type X = dom.html.UList }
   implicit object JsVideo extends Js[tag.Video] { override type X = dom.html.Video }
+}
 
+trait DiffSupport {
   implicit class NodeRefExtensions[T <: tree.Tag](nodeRef: NodeRef[T]) {
     def onEnter(f: String => Diff)(implicit js: Js[T], ev: T <:< tag.Input): DomDiff =
       nodeRef.keyPress := { e =>
@@ -89,16 +91,103 @@ trait DiffSupport extends DiffSupportLowPrio {
         else Diff.Noop
       }
 
+    def dragEnd(implicit js: Js[T]): DomEvent[dom.DragEvent] =
+      new DomEvent(DOM.get(nodeRef).ondragend = _)
+    def keyDown(implicit js: Js[T]): DomEvent[dom.KeyboardEvent] =
+      new DomEvent(DOM.get(nodeRef).onkeydown = _)
+    def dragOver(implicit js: Js[T]): DomEvent[dom.DragEvent] =
+      new DomEvent(DOM.get(nodeRef).ondragover = _)
+    def keyUp(implicit js: Js[T]): DomEvent[dom.KeyboardEvent] =
+      new DomEvent(DOM.get(nodeRef).onkeyup = _)
+    def reset(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onreset = _)
+    def mouseUp(implicit js: Js[T]): DomEvent[dom.MouseEvent] =
+      new DomEvent(DOM.get(nodeRef).onmouseup = _)
+    def dragStart(implicit js: Js[T]): DomEvent[dom.DragEvent] =
+      new DomEvent(DOM.get(nodeRef).ondragstart = _)
+    def drag(implicit js: Js[T]): DomEvent[dom.DragEvent] =
+      new DomEvent(DOM.get(nodeRef).ondrag = _)
+    def mouseOver(implicit js: Js[T]): DomEvent[dom.MouseEvent] =
+      new DomEvent(DOM.get(nodeRef).onmouseover = _)
+    def dragLeave(implicit js: Js[T]): DomEvent[dom.DragEvent] =
+      new DomEvent(DOM.get(nodeRef).ondragleave = _)
+    def pause(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onpause = _)
+    def mouseDown(implicit js: Js[T]): DomEvent[dom.MouseEvent] =
+      new DomEvent(DOM.get(nodeRef).onmousedown = _)
+    def seeked(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onseeked = _)
     def click(implicit js: Js[T]): DomEvent[dom.MouseEvent] =
       new DomEvent(DOM.get(nodeRef).onclick = _)
-
-    def keyPress(implicit js: Js[T]): DomEvent[dom.KeyboardEvent] =
-      new DomEvent(DOM.get(nodeRef).onkeypress = _)
-
+    def waiting(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onwaiting = _)
+    def durationChange(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).ondurationchange = _)
+    def blur(implicit js: Js[T]): DomEvent[dom.FocusEvent] =
+      new DomEvent(DOM.get(nodeRef).onblur = _)
+    def emptied(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onemptied = _)
+    def seeking(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onseeking = _)
+    def canPlay(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).oncanplay = _)
+    def stalled(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onstalled = _)
+    def mouseMove(implicit js: Js[T]): DomEvent[dom.MouseEvent] =
+      new DomEvent(DOM.get(nodeRef).onmousemove = _)
+    def rateChange(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onratechange = _)
+    def loadStart(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onloadstart = _)
+    def dragEnter(implicit js: Js[T]): DomEvent[dom.DragEvent] =
+      new DomEvent(DOM.get(nodeRef).ondragenter = _)
     def submit(implicit js: Js[T]): DomEvent[dom.Event] =
       new DomEvent(DOM.get(nodeRef).onsubmit = _)
-
+    // def progress(implicit js: Js[T]): DomEvent[scalajs.js.Any] =
+    //   new DomEvent(DOM.get(nodeRef).onprogress = _)
+    def dblClick(implicit js: Js[T]): DomEvent[dom.MouseEvent] =
+      new DomEvent(DOM.get(nodeRef).ondblclick = _)
+    def contextMenu(implicit js: Js[T]): DomEvent[dom.MouseEvent] =
+      new DomEvent(DOM.get(nodeRef).oncontextmenu = _)
     def change(implicit js: Js[T]): DomEvent[dom.Event] =
       new DomEvent(DOM.get(nodeRef).onchange = _)
+    def loadedMetadata(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onloadedmetadata = _)
+    def play(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onplay = _)
+    def playing(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onplaying = _)
+    def canPlayThrough(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).oncanplaythrough = _)
+    def abort(implicit js: Js[T]): DomEvent[dom.UIEvent] =
+      new DomEvent(DOM.get(nodeRef).onabort = _)
+    def readyStateChange(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onreadystatechange = _)
+    def keyPress(implicit js: Js[T]): DomEvent[dom.KeyboardEvent] =
+      new DomEvent(DOM.get(nodeRef).onkeypress = _)
+    def loadedData(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onloadeddata = _)
+    def suspend(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onsuspend = _)
+    def focus(implicit js: Js[T]): DomEvent[dom.FocusEvent] =
+      new DomEvent(DOM.get(nodeRef).onfocus = _)
+    def timeUpdate(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).ontimeupdate = _)
+    def select(implicit js: Js[T]): DomEvent[dom.UIEvent] =
+      new DomEvent(DOM.get(nodeRef).onselect = _)
+    def drop(implicit js: Js[T]): DomEvent[dom.DragEvent] =
+      new DomEvent(DOM.get(nodeRef).ondrop = _)
+    def mouseOut(implicit js: Js[T]): DomEvent[dom.MouseEvent] =
+      new DomEvent(DOM.get(nodeRef).onmouseout = _)
+    def ended(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onended = _)
+    def scroll(implicit js: Js[T]): DomEvent[dom.UIEvent] =
+      new DomEvent(DOM.get(nodeRef).onscroll = _)
+    def mouseWheel(implicit js: Js[T]): DomEvent[dom.WheelEvent] =
+      new DomEvent(DOM.get(nodeRef).onmousewheel = _)
+    def volumeChange(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).onvolumechange = _)
+    def input(implicit js: Js[T]): DomEvent[dom.Event] =
+      new DomEvent(DOM.get(nodeRef).oninput = _)
   }
 }
