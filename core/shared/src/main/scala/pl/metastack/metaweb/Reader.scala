@@ -5,19 +5,35 @@ import scala.annotation.tailrec
 private[metaweb] class Reader(data: String) {
   private var offset = 0
 
-  def end()               : Boolean = offset >= data.length
-  def advance(length: Int): Unit    = offset += length
+  def rest(): String = data.drop(offset)
 
-  def current(): Char   = data(offset)
-  def rest()   : String = data.drop(offset)
+  /** Returns true if `value` matches */
+  def lookahead(value: Char): Boolean = data(offset) == value
 
-  def prefix(value : Char  ): Boolean = data(offset) == value
-  def prefix(values: String): Boolean = rest().startsWith(values)
+  /** Returns true if `value` matches */
+  def lookahead(value: String): Boolean = rest().startsWith(value)
 
+  /** Returns true if `value` matches and places pointer afterwards */
+  def prefix(value: Char): Boolean =
+    if (data(offset) != value) false
+    else {
+      offset += 1
+      true
+    }
+
+  /** Returns true if `value` matches and places pointer afterwards */
+  def prefix(value: String): Boolean =
+    if (!rest().startsWith(value)) false
+    else {
+      offset += value.length
+      true
+    }
+
+  /** Aggregates all characters until f(c) returns true */
   def collectUntil(f: Char => Boolean): Option[String] = {
     @tailrec def iter(ofs: Int): Option[Int] =
       if (ofs == data.length) None
-      else if (!f(data(ofs))) Some(ofs)
+      else if (f(data(ofs))) Some(ofs)
       else iter(ofs + 1)
 
     iter(offset).map { ofs =>
@@ -27,22 +43,31 @@ private[metaweb] class Reader(data: String) {
     }
   }
 
-  def collectUntil(value : Char  ): Option[String] = collectUntil(value != _)
-  def collectUntil(values: String): Option[String] = {
+  /** Aggregates all characters until `value` */
+  def collectUntil(value: Char): Option[String] = collectUntil(_ == value)
+
+  /** Aggregates all characters until `value` and places pointer afterwards */
+  def collect(value: Char): Option[String] =
+    collectUntil(_ == value).map { result =>
+      offset += 1
+      result
+    }
+
+  /** Aggregates all characters until `value` and places pointer afterwards */
+  def collect(value: String): Option[String] = {
     val sub = data.drop(offset)
-    sub.indexOf(values) match {
+    sub.indexOf(value) match {
       case -1  => None
       case len =>
-        offset += len
+        offset += len + value.length
         Some(sub.take(len))
     }
   }
 
-  def skip(value: Char): Unit = if (!end() && current() == value) advance(1)
-
+  /** Advances pointer while f(c) returns true */
   @tailrec final def skip(f: Char => Boolean): Unit =
-    if (!end() && f(current())) {
-      advance(1)
+    if (offset < data.length && f(data(offset))) {
+      offset += 1
       skip(f)
     }
 }

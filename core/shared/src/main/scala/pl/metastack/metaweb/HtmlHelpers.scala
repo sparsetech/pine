@@ -81,15 +81,12 @@ object HtmlHelpers {
     val reader = new Reader(text)
 
     def f(): String =
-      reader.collectUntil('&') match {
-        case None => reader.rest()
+      reader.collect('&') match {
+        case None         => reader.rest()
         case Some(prefix) =>
-          reader.advance(1)
-          reader.collectUntil(';') match {
-            case None => reader.rest()
-            case Some(e) =>
-              reader.advance(1)
-              prefix + decodeEntity(e) + f()
+          reader.collect(';') match {
+            case None    => reader.rest()
+            case Some(e) => prefix + decodeEntity(e) + f()
           }
       }
 

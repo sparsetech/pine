@@ -20,7 +20,7 @@ class HtmlParserSpec extends FunSuite {
   }
 
   test("Parse attributes") {
-    val node = tag.Span(Predef.Map("ä-ö_ü" -> "äöü"))
+    val node = tag.Span(Map("ä-ö_ü" -> "äöü"))
     assert(HtmlParser.fromString(node.toHtml) == node)
   }
 

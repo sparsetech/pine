@@ -8,14 +8,12 @@ class ParseError(e: String) extends Exception(e)
 /* In shared/, otherwise it cannot be used by macros in Scala.js */
 object HtmlParser {
   def parseAttr(reader: Reader): Option[(String, String)] =
-    if (reader.prefix("/>") || reader.prefix(">")) None
+    if (reader.lookahead("/>") || reader.lookahead(">")) None
     else {
       val name  = identifier(reader)
       val value =
-        if (reader.current() == '=') {
-          reader.advance(1)
-          parseAttrValue(reader)
-        } else if (HtmlHelpers.BooleanAttributes.contains(name)) name
+        if (reader.prefix('=')) parseAttrValue(reader)
+        else if (HtmlHelpers.BooleanAttributes.contains(name)) name
         else ""
 
       Some(name -> value)
@@ -29,38 +27,32 @@ object HtmlParser {
         Map(attr) ++ parseAttrs(reader)
     }
 
+  def rest(reader: Reader): String = reader.rest().take(20) + "[...]"
+  def expected(reader: Reader, expected: String) =
+    throw new ParseError(s"""Expected '$expected', found '${rest(reader)}'""")
+
   def parseAttrValue(reader: Reader): String = {
-    reader.skip('"')
-    val str = reader.collectUntil('"')
-      .getOrElse(throw new ParseError(s"""Expected '"', found '${reader.rest()}'"""))
-    reader.advance(1)
+    reader.collect('"').getOrElse(expected(reader, "\""))
+    val str = reader.collect('"').getOrElse(expected(reader, "\""))
     HtmlHelpers.decodeAttributeValue(str)
   }
 
   def identifier(reader: Reader): String =
     reader.collectUntil { c =>
-      c.isLetterOrDigit || c == '-' || c == '_' || c == ':'
-    }.get
-
-  def closingTag(reader: Reader, tagName: String): Boolean =
-    reader.prefix(s"</$tagName>")
-
-  def advanceClosingTag(reader: Reader, tagName: String): Unit =
-    reader.advance(s"</$tagName>".length)
+      !c.isLetterOrDigit && c != '-' && c != '_' && c != ':'
+    }.getOrElse(
+      throw new ParseError(s"Identifier expected, found '${rest(reader)}'"))
 
   def parseChildren(reader: Reader, tagName: String): List[Node] =
     if (HtmlHelpers.VoidElements.contains(tagName)) List.empty
     else if (HtmlHelpers.CdataElements.contains(tagName)) {
-      val result = reader.collectUntil("</").getOrElse(
-        throw new ParseError(s"Missing </ (rest: ${reader.rest()})"))
-      advanceClosingTag(reader, tagName)
+      val result = reader.collect(s"</$tagName>").getOrElse(
+        expected(reader, s"</$tagName>"))
       List(Text(result))
     } else {
       def f(): List[Node] =
-        if (closingTag(reader, tagName)) {
-          advanceClosingTag(reader, tagName)
-          List.empty
-        } else parseNode(reader) match {
+        if (reader.prefix(s"</$tagName>")) List.empty
+        else parseNode(reader) match {
           case None => List.empty
           case Some(t) => t +: f()
         }
@@ -69,41 +61,28 @@ object HtmlParser {
     }
 
   def skipComment(reader: Reader): Unit =
-    if (reader.prefix("<!--")) {
-      reader.collectUntil("-->")
-      reader.advance(3)
-    }
+    if (reader.prefix("<!--"))
+      reader.collect("-->").orElse(expected(reader, "-->"))
 
   def skipDocType(reader: Reader): Unit =
-    if (reader.prefix("<!DOCTYPE")) {
-      reader.collectUntil('>')
-      reader.advance(1)
-    }
+    if (reader.prefix("<!DOCTYPE"))
+      reader.collect('>').orElse(expected(reader, ">"))
 
   def skipXml(reader: Reader): Unit =
-    if (reader.prefix("<?xml")) {
-      reader.collectUntil('>')
-      reader.advance(1)
-    }
+    if (reader.prefix("<?xml"))
+      reader.collect('>').orElse(expected(reader, ">"))
 
   def parseTag(reader: Reader): Option[Tag] =
     if (!reader.prefix("<")) None
     else {
-      reader.advance(1)
       val tagName = identifier(reader)
-      if (tagName.isEmpty)
-        throw new ParseError(s"Identifier cannot be empty (rest: ${reader.rest()})")
       reader.skip(_.isWhitespace)
       val tagAttrs = parseAttrs(reader)
 
       val tagChildren =
-        if (reader.prefix("/>")) {
-          reader.advance(2)
-          List.empty
-        } else if (reader.prefix(">")) {
-          reader.advance(1)
-          parseChildren(reader, tagName)
-        } else throw new ParseError(s"Tag '$tagName' was not closed (rest: ${reader.rest()})")
+        if (reader.prefix("/>")) List.empty
+        else if (reader.prefix(">")) parseChildren(reader, tagName)
+        else expected(reader, "/>")
 
       Some(HTMLTag.fromTag(tagName, tagAttrs, tagChildren))
     }

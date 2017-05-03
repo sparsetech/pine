@@ -5,15 +5,15 @@ import org.scalatest.FunSuite
 class HtmlHelpersSpec extends FunSuite {
   test("Reader") {
     val reader = new Reader("test;bc")
-    assert(reader.collectUntil(';').contains("test"))
-    assert(reader.rest() == ";bc")
+    assert(reader.collect(';').contains("test"))
+    assert(reader.rest() == "bc")
 
     val reader2 = new Reader(";bc")
-    assert(reader2.collectUntil(';').contains(""))
-    assert(reader2.rest() == ";bc")
+    assert(reader2.collect(';').contains(""))
+    assert(reader2.rest() == "bc")
 
     val reader3 = new Reader(";bc")
-    assert(reader3.collectUntil('!').isEmpty)
+    assert(reader3.collect('!').isEmpty)
     assert(reader3.rest() == ";bc")
   }
 
