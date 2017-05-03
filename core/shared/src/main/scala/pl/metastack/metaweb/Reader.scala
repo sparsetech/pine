@@ -1,53 +1,48 @@
 package pl.metastack.metaweb
 
-private[metaweb] class Reader(str: String) {
+import scala.annotation.tailrec
+
+private[metaweb] class Reader(data: String) {
   private var offset = 0
 
-  def end(): Boolean = offset >= str.length
-  def advance(length: Int): Unit = offset += length
-  def prefix(c: Char): Boolean = str(offset) == c
-  def prefix(s: String): Boolean = rest().startsWith(s)
-  def current(): Char = str(offset)
-  def rest(): String = str.substring(offset)
+  def end()               : Boolean = offset >= data.length
+  def advance(length: Int): Unit    = offset += length
 
-  def collect(f: () => Boolean): Option[String] = {
-    val prevOffset = offset
-    var matches = false
+  def current(): Char   = data(offset)
+  def rest()   : String = data.drop(offset)
 
-    if (!end() && !f()) Some("")
-    else {
-      while (!end() && f()) {
-        matches = true
-        offset += 1
-      }
+  def prefix(value : Char  ): Boolean = data(offset) == value
+  def prefix(values: String): Boolean = rest().startsWith(values)
 
-      if (!end()) Some(str.substring(prevOffset, offset))
-      else {
-        offset = prevOffset
-        None
-      }
+  def collectUntil(f: Char => Boolean): Option[String] = {
+    @tailrec def iter(ofs: Int): Option[Int] =
+      if (ofs == data.length) None
+      else if (!f(data(ofs))) Some(ofs)
+      else iter(ofs + 1)
+
+    iter(offset).map { ofs =>
+      val result = data.slice(offset, ofs)
+      offset = ofs
+      result
     }
   }
 
-  def collectUntil(s: String): Option[String] = collect(() => !prefix(s))
-  def collectUntil(c: Char): Option[String] = collect(() => !prefix(c))
-
-  def skip(c: Char): Boolean =
-    if (end()) false
-    else if (str(offset) != c) false
-    else {
-      offset += 1
-      true
+  def collectUntil(value : Char  ): Option[String] = collectUntil(value != _)
+  def collectUntil(values: String): Option[String] = {
+    val sub = data.drop(offset)
+    sub.indexOf(values) match {
+      case -1  => None
+      case len =>
+        offset += len
+        Some(sub.take(len))
     }
-
-  def skip(f: Char => Boolean): Boolean = {
-    var skipped = false
-
-    while (!end() && f(str(offset))) {
-      skipped = true
-      offset += 1
-    }
-
-    skipped
   }
+
+  def skip(value: Char): Unit = if (!end() && current() == value) advance(1)
+
+  @tailrec final def skip(f: Char => Boolean): Unit =
+    if (!end() && f(current())) {
+      advance(1)
+      skip(f)
+    }
 }

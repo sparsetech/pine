@@ -38,8 +38,7 @@ object HtmlParser {
   }
 
   def identifier(reader: Reader): String =
-    reader.collect { () =>
-      val c = reader.current()
+    reader.collectUntil { c =>
       c.isLetterOrDigit || c == '-' || c == '_' || c == ':'
     }.get
 
