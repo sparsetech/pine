@@ -3,29 +3,33 @@ package pl.metastack.metaweb.internal
 import pl.metastack.metaweb._
 import pl.metastack.metaweb.tag.HTMLTag
 
+import scala.annotation.tailrec
+
 class ParseError(e: String) extends Exception(e)
 
 /* In shared/, otherwise it cannot be used by macros in Scala.js */
 object HtmlParser {
-  def parseAttr(reader: Reader): Option[(String, String)] =
-    if (reader.lookahead("/>") || reader.lookahead(">")) None
-    else {
-      val name  = identifier(reader)
-      val value =
-        if (reader.prefix('=')) parseAttrValue(reader)
-        else if (HtmlHelpers.BooleanAttributes.contains(name)) name
-        else ""
+  def parseAttr(reader: Reader): (String, String) = {
+    val name  = identifier(reader)
+    val value =
+      if (reader.prefix('=')) parseAttrValue(reader)
+      else if (HtmlHelpers.BooleanAttributes.contains(name)) name
+      else ""
 
-      Some(name -> value)
-    }
+    name -> value
+  }
 
-  def parseAttrs(reader: Reader): Map[String, String] =
-    parseAttr(reader) match {
-      case None => Map.empty
-      case Some(attr) =>
+  def parseAttrs(reader: Reader): Map[String, String] = {
+    @tailrec def f(acc: Map[String, String]): Map[String, String] =
+      if (reader.lookahead("/>") || reader.lookahead(">")) acc
+      else {
+        val attr = parseAttr(reader)
         reader.skip(_.isWhitespace)
-        Map(attr) ++ parseAttrs(reader)
-    }
+        f(acc + attr)
+      }
+
+    f(Map.empty)
+  }
 
   def rest(reader: Reader): String = reader.rest().take(20) + "[...]"
   def expected(reader: Reader, expected: String) =
@@ -50,14 +54,14 @@ object HtmlParser {
         expected(reader, s"</$tagName>"))
       List(Text(result))
     } else {
-      def f(): List[Node] =
-        if (reader.prefix(s"</$tagName>")) List.empty
+      @tailrec def f(nodes: List[Node]): List[Node] =
+        if (reader.prefix(s"</$tagName>")) nodes
         else parseNode(reader) match {
-          case None => List.empty
-          case Some(t) => t +: f()
+          case None    => nodes
+          case Some(t) => f(nodes :+ t)
         }
 
-      f()
+      f(List.empty)
     }
 
   def skipComment(reader: Reader): Unit =
