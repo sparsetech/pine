@@ -12,11 +12,11 @@ object HtmlParser {
     else {
       val name  = identifier(reader)
       val value =
-        if (reader.current() != '=') name
-        else {
+        if (reader.current() == '=') {
           reader.advance(1)
           parseAttrValue(reader)
-        }
+        } else if (HtmlHelpers.BooleanAttributes.contains(name)) name
+        else ""
 
       Some(name -> value)
     }

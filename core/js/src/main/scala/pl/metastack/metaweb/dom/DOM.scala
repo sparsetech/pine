@@ -53,7 +53,7 @@ object DOM {
           .map(e.attributes(_))
           .map { attr =>
             val isBooleanAttr = HtmlHelpers.BooleanAttributes.contains(attr.name)
-            if (isBooleanAttr) attr.name -> true
+            if (isBooleanAttr) attr.name -> attr.name
             else attr.name -> attr.value
           }.toMap
 
