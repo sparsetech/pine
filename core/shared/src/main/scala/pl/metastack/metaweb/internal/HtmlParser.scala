@@ -5,23 +5,28 @@ import pl.metastack.metaweb.tag.HTMLTag
 
 class ParseError(e: String) extends Exception(e)
 
-/* In shared/ because it cannot be used by macros in Scala.js otherwise */
+/* In shared/, otherwise it cannot be used by macros in Scala.js */
 object HtmlParser {
   def parseAttr(reader: Reader): Option[(String, String)] =
     if (reader.prefix("/>") || reader.prefix(">")) None
     else {
-      val i = identifier(reader)
-      reader.skip('=')
-      val s = parseAttrValue(reader)
-      Some(i -> s)
+      val name  = identifier(reader)
+      val value =
+        if (reader.current() != '=') name
+        else {
+          reader.advance(1)
+          parseAttrValue(reader)
+        }
+
+      Some(name -> value)
     }
 
-  def parseAttrs(reader: Reader): Predef.Map[String, String] =
+  def parseAttrs(reader: Reader): Map[String, String] =
     parseAttr(reader) match {
-      case None => Predef.Map.empty
+      case None => Map.empty
       case Some(attr) =>
         reader.skip(_.isWhitespace)
-        Predef.Map(attr) ++ parseAttrs(reader)
+        Map(attr) ++ parseAttrs(reader)
     }
 
   def parseAttrValue(reader: Reader): String = {

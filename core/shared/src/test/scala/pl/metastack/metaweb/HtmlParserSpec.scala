@@ -72,6 +72,13 @@ class HtmlParserSpec extends FunSuite {
     assert(node == tag.A().href("a&b"))
   }
 
+  test("Parse node with unspecified parameter value") {
+    val html = """<input type="checkbox" checked/>"""
+    val htmlCorrect = """<input type="checkbox" checked="checked"/>"""
+    val node = HtmlParser.fromString(html)
+    assert(node.toHtml == htmlCorrect)
+  }
+
   test("Ignore comments") {
     val html = """<div>test <!-- Ignore -->!</div>"""
     val node = HtmlParser.fromString(html)
