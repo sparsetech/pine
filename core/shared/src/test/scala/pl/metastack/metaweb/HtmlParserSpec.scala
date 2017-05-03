@@ -102,4 +102,10 @@ class HtmlParserSpec extends FunSuite {
     val node = HtmlParser.fromString(html)
     assert(node.toHtml == html)
   }
+
+  test("Parse script nodes") {
+    val html = """<script>i < len</script>"""
+    val node = HtmlParser.fromString(html)
+    assert(node.toHtml == html)
+  }
 }

@@ -9,6 +9,9 @@ object HtmlHelpers {
   val VoidElements = Set("area", "base", "br", "col", "command", "embed", "hr",
     "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr")
 
+  /** Content of these tags is treated as raw text */
+  val CdataElements = Set("script", "style")
+
   /** Boolean attributes don't require a value */
   val BooleanAttributes = Set("allowfullscreen", "async", "autofocus",
     "autoplay", "checked", "compact", "controls", "declare", "default",

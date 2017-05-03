@@ -49,26 +49,24 @@ object HtmlParser {
     reader.advance(s"</$tagName>".length)
 
   def parseChildren(reader: Reader, tagName: String): List[Node] =
-    if (reader.prefix("/>")) {
-      reader.advance(2)
-      List.empty
-    } else if (reader.prefix(">")) {
-      reader.advance(1)
+    if (HtmlHelpers.VoidElements.contains(tagName)) List.empty
+    else if (HtmlHelpers.CdataElements.contains(tagName)) {
+      val result = reader.collectUntil("</").getOrElse(
+        throw new ParseError(s"Missing </ (rest: ${reader.rest()})"))
+      advanceClosingTag(reader, tagName)
+      List(Text(result))
+    } else {
+      def f(): List[Node] =
+        if (closingTag(reader, tagName)) {
+          advanceClosingTag(reader, tagName)
+          List.empty
+        } else parseNode(reader) match {
+          case None => List.empty
+          case Some(t) => t +: f()
+        }
 
-      if (HtmlHelpers.VoidElements.contains(tagName)) List.empty[Tag]
-      else {
-        def f(): List[Node] =
-          if (closingTag(reader, tagName)) {
-            advanceClosingTag(reader, tagName)
-            List.empty
-          } else parseNode(reader) match {
-            case None => List.empty
-            case Some(t) => t +: f()
-          }
-
-        f()
-      }
-    } else List.empty
+      f()
+    }
 
   def skipComment(reader: Reader): Unit =
     if (reader.prefix("<!--")) {
@@ -97,7 +95,16 @@ object HtmlParser {
         throw new ParseError(s"Identifier cannot be empty (rest: ${reader.rest()})")
       reader.skip(_.isWhitespace)
       val tagAttrs = parseAttrs(reader)
-      val tagChildren = parseChildren(reader, tagName)
+
+      val tagChildren =
+        if (reader.prefix("/>")) {
+          reader.advance(2)
+          List.empty
+        } else if (reader.prefix(">")) {
+          reader.advance(1)
+          parseChildren(reader, tagName)
+        } else throw new ParseError(s"Tag '$tagName' was not closed (rest: ${reader.rest()})")
+
       Some(HTMLTag.fromTag(tagName, tagAttrs, tagChildren))
     }
 
