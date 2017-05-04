@@ -18,12 +18,14 @@ sealed trait TagRef[+T <: Tag] {
       case n => n
     }
 
-  def set[U](values: List[U], value: U => Tag)(implicit id: Id[U]): Diff =
-    Diff.ReplaceChildren(this, values.map(v => suffixIds(value(v), id.f(v))))
+  def set[U](values: List[U], f: U => Tag)(implicit id: Id[U]): Diff =
+    Diff.ReplaceChildren(this, values.map(v => suffixIds(f(v), id.f(v))))
   def set(nodes: List[Node]): Diff = Diff.ReplaceChildren(this, nodes)
   def set(node: Node): Diff = set(List(node))
   def replace(node: Node): Diff = Diff.Replace(this, node)
   def remove(): Diff = Diff.RemoveChild(this)
+  def append[U](value: U, f: U => Tag)(implicit id: Id[U]): Diff =
+    Diff.AppendChild(this, suffixIds(f(value), id.f(value)))
   def append(node: Node): Diff = Diff.AppendChild(this, node)
 
   def :=(value: List[Node]): Diff = set(value)
