@@ -81,9 +81,9 @@ object MDNParser {
   }
 
   def writeHeader(p: PrintWriter) {
-    p.println(s"package pl.metastack.metaweb.tag")
+    p.println(s"package pine.tag")
     p.println()
-    p.println("import pl.metastack.metaweb._")
+    p.println("import pine._")
     p.println()
   }
 
@@ -163,9 +163,9 @@ object MDNParser {
     val file = new File(path, "TagRefAttributes.scala")
 
     printToFile(file) { p =>
-      p.println("package pl.metastack.metaweb.tag")
+      p.println("package pine.tag")
       p.println()
-      p.println("import pl.metastack.metaweb._")
+      p.println("import pine._")
       p.println()
       p.println("trait TagRefAttributes {")
       writeTagRefAttributesClass(p, "HTMLTag", globalAttributes)
@@ -343,7 +343,7 @@ object MDNParser {
   }
 
   def createFiles(destPath: File): Seq[File] = {
-    val tagsPath = new File(destPath, "pl/metastack/metaweb/tag")
+    val tagsPath = new File(destPath, "pine/tag")
     tagsPath.mkdirs()
 
     val document = Jsoup.parse(request(ElementsUrl))

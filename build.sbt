@@ -9,12 +9,12 @@ val ScalaCheck = "1.13.5"
 val ScalaJsDom = "0.9.1"
 
 val SharedSettings = Seq(
-  name := "MetaWeb",
-  organization := "pl.metastack",
+  name := "pine",
+  organization := "tech.sparse",
   scalaVersion := Scala2_12,
   crossScalaVersions := Seq(Scala2_12, Scala2_11),
   pomExtra :=
-    <url>https://github.com/MetaStack-pl/MetaWeb</url>
+    <url>https://github.com/sparsetech/pine</url>
     <licenses>
       <license>
         <name>Apache-2.0</name>
@@ -22,7 +22,7 @@ val SharedSettings = Seq(
       </license>
     </licenses>
     <scm>
-      <url>git@github.com:MetaStack-pl/MetaWeb.git</url>
+      <url>git@github.com:sparsetech/pine.git</url>
     </scm>
     <developers>
       <developer>
@@ -34,19 +34,19 @@ val SharedSettings = Seq(
 )
 
 lazy val root = project.in(file("."))
-  .aggregate(coreJS, coreJVM)
+  .aggregate(pineJS, pineJVM, pineNative)
   .settings(SharedSettings: _*)
   .settings(publishArtifact := false)
 
 val convertMDN = taskKey[Unit]("Generate MDN bindings")
 
-lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
-  .in(file("core"))
+lazy val pine = crossProject(JSPlatform, JVMPlatform, NativePlatform)
+  .in(file("."))
   .settings(SharedSettings: _*)
   .settings(
     addCompilerPlugin("org.scalamacros" % "paradise" % Paradise cross CrossVersion.full),
     libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-    convertMDN := MDNParser.createFiles(new File("core/shared/src/main/scala"))
+    convertMDN := MDNParser.createFiles(new File("shared/src/main/scala"))
   )
   .jvmSettings(
     libraryDependencies ++= Seq(
@@ -55,9 +55,9 @@ lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     )
   ).jsSettings(
     libraryDependencies ++= Seq(
-      "org.scala-js"   %%% "scalajs-dom"   % ScalaJsDom,
-      "org.scalatest"  %%% "scalatest"     % ScalaTest  % "test",
-      "org.scalacheck" %%% "scalacheck"    % ScalaCheck % "test"
+      "org.scala-js"   %%% "scalajs-dom" % ScalaJsDom,
+      "org.scalatest"  %%% "scalatest"   % ScalaTest  % "test",
+      "org.scalacheck" %%% "scalacheck"  % ScalaCheck % "test"
     ),
     jsDependencies += RuntimeDOM % "test",
     scalaJSStage in Global := FastOptStage
@@ -67,6 +67,6 @@ lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     crossScalaVersions := Seq.empty
   )
 
-lazy val coreJS     = core.js
-lazy val coreJVM    = core.jvm
-lazy val coreNative = core.native
+lazy val pineJS     = pine.js
+lazy val pineJVM    = pine.jvm
+lazy val pineNative = pine.native

@@ -1,41 +1,41 @@
-# MetaWeb
-[![Build Status](https://travis-ci.org/MetaStack-pl/MetaWeb.svg)](https://travis-ci.org/MetaStack-pl/MetaWeb)
+# Pine
+[![Build Status](https://travis-ci.org/sparsetech/pine.svg)](https://travis-ci.org/sparsetech/pine)
 
-MetaWeb is a functional low-level web framework for Scala and Scala.js.
+Pine is a functional low-level web framework for Scala and Scala.js.
 
-It provides type-safe bindings for HTML5 generated from [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element). MetaWeb implements an immutable document tree that can be materialised as DOM nodes or HTML. Trees can be created from statically or dynamically loaded HTML content.
+It provides type-safe bindings for HTML5 generated from [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element). Pine implements an immutable document tree that can be materialised as DOM nodes or HTML. Trees can be created from statically or dynamically loaded HTML content.
 
-MetaWeb advocates web development in an FP style and tries to reduce state and side-effects to a minimum. Pages are split into reusable components, called _views_. A view models changes of nodes in terms of _diffs_ that are interpreted by a separate processing unit. This allows us to render a pre-populated version of the page (i.e. server-side rendering), such that upon browser load only the event handlers need to be attached and the diffs will get applied directly to the DOM.
+Pine advocates web development in an FP style and tries to reduce state and side-effects to a minimum. Pages are split into reusable components, called _views_. A view models changes of nodes in terms of _diffs_ that are interpreted by a separate processing unit. This allows us to render a pre-populated version of the page (i.e. server-side rendering), such that upon browser load only the event handlers need to be attached and the diffs will get applied directly to the DOM.
 
-Please refer to the [example application](https://github.com/MetaStack-pl/MetaWeb/tree/master/example) for an introduction.
+Please refer to the [example application](https://github.com/sparsetech/pine/tree/master/example) for an introduction.
 
 ## sbt
 ```scala
-libraryDependencies += "pl.metastack" %%  "metaweb" % "0.2.0"  // Scala
-libraryDependencies += "pl.metastack" %%% "metaweb" % "0.2.0"  // Scala.js
+libraryDependencies += "tech.sparse" %%  "pine" % "0.1.0"  // Scala
+libraryDependencies += "tech.sparse" %%% "pine" % "0.1.0"  // Scala.js, Scala Native
 ```
 
 ## Example
 An excerpt from the example application:
 
 ```scala
-import pl.metastack.metaweb._
-import pl.metastack.metaweb.dsl._
-import pl.metastack.metaweb.diff._
-import pl.metastack.metaweb.macros.Js
+import pine._
+import pine.dsl._
+import pine.diff._
+import pine.macros.Js
 
 class ItemView(book: BookListItem) extends View {
   var hidden = true
 
   override implicit def id = ViewId(book.id.toString)
 
-  val root = NodeRef[tag.Li]("book")
-  val title = NodeRef[tag.A]("title")
-  val btnRemove = NodeRef[tag.Button]("remove")
-  val btnRenameToggle = NodeRef[tag.Button]("rename-toggle")
-  val divRenameBox = NodeRef[tag.Div]("rename-box")
-  val txtRename = NodeRef[tag.Input]("rename-text")
-  val btnRenameSave = NodeRef[tag.Button]("rename-save")
+  val root = TagRef[tag.Li]("book")
+  val title = TagRef[tag.A]("title")
+  val btnRemove = TagRef[tag.Button]("remove")
+  val btnRenameToggle = TagRef[tag.Button]("rename-toggle")
+  val divRenameBox = TagRef[tag.Div]("rename-box")
+  val txtRename = TagRef[tag.Input]("rename-text")
+  val btnRenameSave = TagRef[tag.Button]("rename-save")
 
   override def node(): Future[tree.Node] =
     Templates.Books.map(_.byId[tree.Tag]("book"))
@@ -70,7 +70,7 @@ class ItemView(book: BookListItem) extends View {
 ```
 
 ## Tree
-MetaWeb offers a tree allowing to create documents defined in terms of immutable objects:
+Pine offers a tree allowing to create documents defined in terms of immutable objects:
 
 ```scala
 val a = tag.A()
@@ -83,7 +83,7 @@ a.toHtml  // <a href="http://github.com/">GitHub</a>
 The bindings are derived from the MDN documentation. For all attributes, we provide getters and setters. `set()` replaces the children of a node.
 
 ## Macros
-MetaWeb defines several compile-time macros for increased comfort or performance.
+Pine defines several compile-time macros for increased comfort or performance.
 
 ### Js
 The `@Js` annotation replaces the body of methods by a no-op diff when compiled for JVM. If applied to objects, classes, traits, the body will be removed. If applied to variables, the declaration will be removed entirely.
@@ -124,7 +124,7 @@ tpl.toHtml  // <html>...</html>
 ```
 
 ## Runtime HTML parser
-MetaWeb provides an HTML parser backed by the DOM in Scala.js, but uses its own parser for the JVM.
+Pine provides an HTML parser backed by the DOM in Scala.js, but uses its own parser for the JVM.
 
 ```scala
 val html = """<div id="a"><span>42</span></div>"""
@@ -185,7 +185,7 @@ A view is defined by this simplified trait:
 
 ```scala
 trait View {
-  val root: NodeRef[tree.Tag]
+  val root: TagRef[tree.Tag]
   implicit def id: ViewId
 
   def node(): Future[tree.Node]
@@ -199,14 +199,14 @@ Every view must must be identifiable such that we can remove it in `destroy()`. 
 
 Furthermore, there may be several instances of a view. As elements have a global ID in the DOM, we need to give each view a unique name. This is done by overriding `id`, which will be used as the suffix for all ID attributes in the tree. The ID will also be used to re-identify elements on the client that have been rendered on the server.
 
-### NodeRef
-To access and modify a node, the `id` attribute must be set. Afterwards, it can be accessed in the view by defining a `NodeRef` instance:
+### TagRef
+To access and modify a node, the `id` attribute must be set. Afterwards, it can be accessed in the view by defining a `TagRef` instance:
 
 ```scala
-val root = NodeRef[tag.Li]("book")
+val root = TagRef[tag.Li]("book")
 ```
 
-Each `NodeRef` instance provides a `dom` method that allows to access the underlying DOM node.
+Each `TagRef` instance provides a `dom` method that allows to access the underlying DOM node.
 
 ### Life cycle
 A view has the following life cycle:
@@ -217,12 +217,12 @@ A view has the following life cycle:
 4. `destroy()`: Removes node from the document tree
 
 ## DSL
-To facilitate interaction with nodes, MetaWeb provides helper methods in the `dsl` package object:
+To facilitate interaction with nodes, Pine provides helper methods in the `dsl` package object:
 
 ```scala
-import pl.metastack.metaweb.dsl._
+import pine.dsl._
 
-val div: NodeRef[tag.Div] =  ...
+val div: TagRef[tag.Div] =  ...
 div.hide(true)  // Sets `style` attribute to hide the element in the browser
 ```
 
@@ -246,10 +246,10 @@ When loading the example project in IntelliJ, some references in the `shared` mo
 To fix this, please go to `File -> Project Structure... -> Modules -> example-Sources -> Dependencies`. Then, add a module dependency to `exampleJVM` and `exampleJS`.
 
 ## Links
-* [ScalaDoc](https://www.javadoc.io/doc/pl.metastack/metaweb_2.11/)
+* [ScalaDoc](https://www.javadoc.io/doc/tech.sparse/pine_2.12/)
 
 ## License
-MetaWeb is licensed under the terms of the Apache v2.0 license.
+Pine is licensed under the terms of the Apache v2.0 license.
 
 ## Authors
 * Tim Nieradzik
