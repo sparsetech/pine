@@ -7,7 +7,7 @@ import pl.metastack.metaweb
 import pl.metastack.metaweb._
 
 trait Implicits {
-  implicit class NodeRefExtensions[T <: Tag](tagRef: TagRef[T]) {
+  implicit class TagRefExtensions[T <: Tag](tagRef: TagRef[T]) {
     def onEnter(f: String => Diff)(implicit js: Js[T], ev: T <:< tag.Input): Diff =
       tagRef.keyPress := { e =>
         if (e.keyCode == KeyCode.Enter)

@@ -4,7 +4,7 @@ import pl.metastack.metaweb._
 import pl.metastack.metaweb.tag.HTMLTag
 
 trait Imports {
-  implicit class NodeRefDSLExtensions(tagRef: TagRef[HTMLTag]) {
+  implicit class TagRefDSLExtensions(tagRef: TagRef[HTMLTag]) {
     /** Toggle `cssTags` depending on `state` */
     def css(state: Boolean, cssTags: String*): Diff =
       tagRef.`class`.update {
