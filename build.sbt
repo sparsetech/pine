@@ -1,3 +1,6 @@
+// Shadow sbt-scalajs' crossProject and CrossType until Scala.js 1.0.0 is released
+import sbtcrossproject.{crossProject, CrossType}
+
 val Paradise   = "2.1.0"
 val Scala2_11  = "2.11.11"
 val Scala2_12  = "2.12.2"
@@ -8,7 +11,7 @@ val ScalaJsDom = "0.9.1"
 val SharedSettings = Seq(
   name := "MetaWeb",
   organization := "pl.metastack",
-  scalaVersion := Scala2_11,
+  scalaVersion := Scala2_12,
   crossScalaVersions := Seq(Scala2_12, Scala2_11),
   pomExtra :=
     <url>https://github.com/MetaStack-pl/MetaWeb</url>
@@ -37,24 +40,33 @@ lazy val root = project.in(file("."))
 
 val convertMDN = taskKey[Unit]("Generate MDN bindings")
 
-lazy val core = crossProject.in(file("core"))
+lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
+  .in(file("core"))
   .settings(SharedSettings: _*)
   .settings(
     addCompilerPlugin("org.scalamacros" % "paradise" % Paradise cross CrossVersion.full),
+    libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+    convertMDN := MDNParser.createFiles(new File("core/shared/src/main/scala"))
+  )
+  .jvmSettings(
     libraryDependencies ++= Seq(
-      "org.scala-lang" %   "scala-reflect" % scalaVersion.value,
+      "org.scalatest"  %% "scalatest"  % ScalaTest  % "test",
+      "org.scalacheck" %% "scalacheck" % ScalaCheck % "test"
+    )
+  ).jsSettings(
+    libraryDependencies ++= Seq(
+      "org.scala-js"   %%% "scalajs-dom"   % ScalaJsDom,
       "org.scalatest"  %%% "scalatest"     % ScalaTest  % "test",
       "org.scalacheck" %%% "scalacheck"    % ScalaCheck % "test"
     ),
-    convertMDN := MDNParser.createFiles(new File("core/shared/src/main/scala"))
-  )
-  .jsSettings(
-    libraryDependencies += "org.scala-js" %%% "scalajs-dom" % ScalaJsDom,
-    jsDependencies      += RuntimeDOM % "test",
+    jsDependencies += RuntimeDOM % "test",
     scalaJSStage in Global := FastOptStage
+  ).nativeSettings(
+    // Not available for 2.12 yet
+    scalaVersion := Scala2_11,
+    crossScalaVersions := Seq.empty
   )
 
-lazy val coreJS  = core.js
-lazy val coreJVM = core.jvm
-
-lazy val example = project.in(file("example"))
+lazy val coreJS     = core.js
+lazy val coreJVM    = core.jvm
+lazy val coreNative = core.native
