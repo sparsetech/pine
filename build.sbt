@@ -64,7 +64,7 @@ lazy val pine = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   ).nativeSettings(
     // Not available for 2.12 yet
     scalaVersion := Scala2_11,
-    crossScalaVersions := Seq.empty
+    crossScalaVersions := Seq(Scala2_11)
   )
 
 lazy val pineJS     = pine.js
