@@ -10,6 +10,8 @@ _Server_ refers to either the JVM or LLVM back end, whereas _client_ refers to J
 
 We will add sample projects for some of the architectures to let you get started quickly.
 
+All examples require a prior `import pine.dom._`.
+
 ## Architectures
 Pine advocates web development in the FP style. You are advised to split your HTML rendering into composable functions and share the code across platforms. Pine does not provide any abstractions for pages or components to maximise its use cases.
 
