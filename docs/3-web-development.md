@@ -27,7 +27,21 @@ This architecture has the following life cycle for a page `p`, which you could d
 ## Access DOM node
 ```scala
 val text = TagRef[tag.Div]("text")
-DOM.get(text)  // Returns browser node, of type org.scalajs.dom.html.Div
+text.dom  // Returns browser node, of type org.scalajs.dom.html.Div
+```
+
+## Access DOM attribute
+```scala
+val text = TagRef[tag.Div]("text")
+text.`class`.get  // Retrieves 'class' attribute from DOM node, of type Option[String]
+```
+
+Note that in JavaScript, DOM attributes may not represent the current state of a node. If this is the case, you can retrieve the value via `dom`:
+
+```scala
+val name = TagRef[tag.Input]("name")
+name.value.get  // Returns value the DOM node was initialised with
+name.dom.value  // Returns current value
 ```
 
 ## Diffs

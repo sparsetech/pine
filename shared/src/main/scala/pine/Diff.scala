@@ -3,7 +3,6 @@ package pine
 /** A Diff defines change operations */
 sealed trait Diff
 object Diff {
-  case object Noop extends Diff
   case class SetAttribute[T <: Tag, U](node: TagRef[T], attribute: Attribute[T, _, U], value: U) extends Diff
   case class UpdateAttribute[T <: Tag, U](node: TagRef[T], attribute: Attribute[T, U, _], f: U => U) extends Diff
   case class RemoveAttribute[T <: Tag](node: TagRef[T], attribute: Attribute[T, _, _]) extends Diff

@@ -73,24 +73,6 @@ object DOM {
   def toTree[T <: Tag](id: String): T =
     toTree[T](dom.document.getElementById(id))
 
-  /** Resolve DOM node */
-  def get[T <: Tag](tagRef: TagRef[T])(implicit js: Js[T]): js.X = {
-    val node = tagRef match {
-      case TagRef.ById(id)   => dom.document.getElementById(id)
-      case TagRef.ByTag(tag) => dom.document.getElementsByTagName(tag).item(0)
-    }
-
-    Option(node).getOrElse(
-      throw new Exception(s"Invalid node reference '$tagRef'")
-    ).asInstanceOf[js.X]
-  }
-
-  /** TODO Introduce BooleanAttribute and StringAttribute for better type-safety? */
-  def get[T <: Tag, G](attribute: Attribute[T, G, _])(implicit js: Js[T]): G =
-    if (HtmlHelpers.BooleanAttributes.contains(attribute.name))
-      get(attribute.parent).hasAttribute(attribute.name).asInstanceOf[G]
-    else Option(get(attribute.parent).getAttribute(attribute.name)).asInstanceOf[G]
-
   def render(node: Node): dom.Element = NodeRender.render(node)
 
   def render(f: DomRenderContext => Unit): Unit = {

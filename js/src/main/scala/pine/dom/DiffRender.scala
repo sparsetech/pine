@@ -8,7 +8,7 @@ object DiffRender {
   def render(diff: Diff): Unit =
     diff match {
       case Diff.SetAttribute(ref, attribute, value) =>
-        val dom = DOM.get(ref)
+        val dom = ref.dom
         if (!HtmlHelpers.BooleanAttributes.contains(attribute.name))
           dom.setAttribute(attribute.name, value.toString)
         else {
@@ -17,7 +17,7 @@ object DiffRender {
         }
 
       case Diff.UpdateAttribute(ref, attribute, f) =>
-        val dom = DOM.get(ref)
+        val dom = ref.dom
         if (HtmlHelpers.BooleanAttributes.contains(attribute.name)) {
           val fBoolean = f.asInstanceOf[Boolean => Boolean]
           val current = dom.hasAttribute(attribute.name)
@@ -33,28 +33,26 @@ object DiffRender {
         }
 
       case Diff.RemoveAttribute(ref, attribute) =>
-        DOM.get(ref).removeAttribute(attribute.name)
+        ref.dom.removeAttribute(attribute.name)
 
       case Diff.ReplaceChildren(ref, children) =>
-        val dom = DOM.get(ref)
+        val dom = ref.dom
         dom.clear()
         children.foreach(child => dom.appendChild(DOM.render(child)))
 
       case Diff.Replace(ref, replacement) =>
-        val dom = DOM.get(ref)
+        val dom = ref.dom
         dom.parentNode.replaceChild(DOM.render(replacement), dom)
 
       case Diff.PrependChild(ref, child) =>
-        DOM.get(ref).prependChild(DOM.render(child))
+        ref.dom.prependChild(DOM.render(child))
 
       case Diff.AppendChild(ref, child) =>
-        DOM.get(ref).appendChild(DOM.render(child))
+        ref.dom.appendChild(DOM.render(child))
 
       case Diff.RemoveChild(ref) =>
-        val dom = DOM.get(ref)
+        val dom = ref.dom
         dom.parentNode.removeChild(dom)
-
-      case Diff.Noop =>
     }
 }
 

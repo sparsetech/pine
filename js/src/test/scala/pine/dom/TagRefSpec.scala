@@ -15,7 +15,7 @@ class TagRefSpec extends FunSuite {
     document.body.appendChild(node)
 
     val tagRef = TagRef[tag.A]("test")
-    assert(DOM.get(tagRef.href).contains("http://google.com/"))
+    assert(tagRef.href.get.contains("http://google.com/"))
 
     document.body.removeChild(node)
   }
@@ -28,7 +28,7 @@ class TagRefSpec extends FunSuite {
     document.body.appendChild(node)
 
     val tagRef = TagRef[tag.Input]("test")
-    assert(!DOM.get(tagRef.checked))
+    assert(!tagRef.checked.get)
 
     document.body.removeChild(node)
   }
@@ -42,7 +42,7 @@ class TagRefSpec extends FunSuite {
     document.body.appendChild(node)
 
     val tagRef = TagRef[tag.Input]("test")
-    assert(DOM.get(tagRef.checked))
+    assert(tagRef.checked.get)
 
     document.body.removeChild(node)
   }
@@ -57,10 +57,10 @@ class TagRefSpec extends FunSuite {
     document.body.appendChild(node)
 
     DOM.render(implicit ctx => tagRef.checked := true)
-    assert(DOM.get(tagRef.checked))
+    assert(tagRef.checked.get)
 
     DOM.render(implicit ctx => tagRef.checked := false)
-    assert(!DOM.get(tagRef.checked))
+    assert(!tagRef.checked.get)
 
     document.body.removeChild(node)
   }
@@ -76,13 +76,13 @@ class TagRefSpec extends FunSuite {
     document.body.appendChild(node)
 
     DOM.render(implicit ctx => tagRef.href := "http://github.com/")
-    assert(DOM.get(tagRef.href).contains("http://github.com/"))
+    assert(tagRef.href.get.contains("http://github.com/"))
 
     DOM.render(implicit ctx => tagRef.href := "")
-    assert(DOM.get(tagRef.href).contains(""))
+    assert(tagRef.href.get.contains(""))
 
     DOM.render(implicit ctx => tagRef.href.remove())
-    assert(DOM.get(tagRef.href).isEmpty)
+    assert(tagRef.href.get.isEmpty)
 
     document.body.removeChild(node)
   }
@@ -97,10 +97,10 @@ class TagRefSpec extends FunSuite {
     document.body.appendChild(node)
 
     DOM.render(implicit ctx => tagRef.href.update(_ => None))
-    assert(DOM.get(tagRef.href).isEmpty)
+    assert(tagRef.href.get.isEmpty)
 
     DOM.render(implicit ctx => tagRef.href.update(x => Some(x.toString)))
-    assert(DOM.get(tagRef.href).contains("None"))
+    assert(tagRef.href.get.contains("None"))
 
     document.body.removeChild(node)
   }
@@ -114,10 +114,10 @@ class TagRefSpec extends FunSuite {
     document.body.appendChild(node)
 
     DOM.render(implicit ctx => tagRef.checked.update(!_))
-    assert(DOM.get(tagRef.checked))
+    assert(tagRef.checked.get)
 
     DOM.render(implicit ctx => tagRef.checked.update(!_))
-    assert(!DOM.get(tagRef.checked))
+    assert(!tagRef.checked.get)
 
     document.body.removeChild(node)
   }
@@ -132,8 +132,8 @@ class TagRefSpec extends FunSuite {
     document.body.appendChild(node)
 
     DOM.render(implicit ctx => tagRef.css(false, "b"))
-    assert(DOM.get(tagRef.`class`).contains("a c"))
-    assert(DOM.get(tagRef).className == "a c")
+    assert(tagRef.`class`.get.contains("a c"))
+    assert(tagRef.dom.className == "a c")
 
     document.body.removeChild(node)
   }
@@ -148,8 +148,8 @@ class TagRefSpec extends FunSuite {
     val tagRef1 = TagRef(tag.Input())
     val tagRef2 = TagRef(tag.Div())
 
-    assert(DOM.get(tagRef1) == node)
-    assert(DOM.get(tagRef2) == div)
+    assert(tagRef1.dom == node)
+    assert(tagRef2.dom == div)
 
     document.body.removeChild(div)
     document.body.removeChild(node)
