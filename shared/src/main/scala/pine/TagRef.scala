@@ -36,7 +36,7 @@ sealed trait TagRef[+T <: Tag] {
 object TagRef {
   case class ById[+T <: Tag](id: String) extends TagRef[T] {
     override def matches(tag: Tag): Boolean = tag.id.contains(id)
-    def apply[U](value: U)(implicit id: Id[U]): TagRef[T] =
+    def apply[U](value: U)(implicit id: Id[U]): TagRef.ById[T] =
       copy(id = this.id + id.f(value))
   }
 
