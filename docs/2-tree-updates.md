@@ -21,7 +21,7 @@ val spanName = TagRef[tag.Span]("name")
 ## Updating nodes
 You can use the `update()` method to change the node:
 
-```
+```scala
 val result = node.update { implicit ctx =>
   spanAge  := 42
   spanName := "Joe"
@@ -42,7 +42,7 @@ The changes (_diffs_) take an implicit rendering context. When you call `update(
 ## Replacing nodes
 If you would like to replace the node itself, you can use `replace()`:
 
-```
+```scala
 val result = node.update { implicit ctx =>
   spanAge .replace(42)
   spanName.replace("Joe")
@@ -137,7 +137,7 @@ Diffs encapsulate changes. The operations you have seen before like `:=` (`set`)
 
 So far, these changes were performed directly on the tree. However, for the JavaScript back end, we have an additional rendering context that can apply those changes to the DOM. This will be explained in the next chapter.
 
-A full list of supported diffs can be found [here](https://github.com/sparsetech/pine/tree/master/core/shared/src/main/scala/Diff.scala).
+A full list of supported diffs can be found [here](https://github.com/sparsetech/pine/blob/master/shared/src/main/scala/pine/Diff.scala).
 
 ## DSL
 To facilitate interaction with nodes, Pine provides a small DSL with extensions.
