@@ -49,8 +49,8 @@ libraryDependencies += "tech.sparse" %%% "pine" % "0.1.0"  // JavaScript, LLVM
 * [Documentation](docs/)
 * [ScalaDoc](https://www.javadoc.io/doc/tech.sparse/pine_2.12/)
 
-## License
-Pine is licensed under the terms of the Apache v2.0 license.
+## Licence
+Pine is licensed under the terms of the Apache v2.0 licence.
 
 ## Contributors
 * Tim Nieradzik
