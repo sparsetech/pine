@@ -4,12 +4,12 @@ import org.scalajs.dom
 
 import scala.scalajs.js
 
-class Event[T <: dom.Event](set: js.Function1[T, _] => Unit) {
-  def set(f: => Unit): Diff = Diff.SetEvent(set, (_: T) => f)
-  def set(f: T => Unit): Diff = Diff.SetEvent(set, f)
+class Event[T <: dom.Event](setF: js.Function1[T, _] => Unit) {
+  def set(f: => Unit): Unit = set((_: T) => f)
+  def set(f: T => Unit): Unit = setF(f)
 
-  def detach(): Diff = Diff.DetachEvent(set)
+  def detach(): Unit = setF(null)
 
-  def :=(diff: => Unit): Diff = set(diff)
-  def :=(diff: T => Unit): Diff = set(diff)
+  def :=(diff: => Unit): Unit = set(diff)
+  def :=(diff: T => Unit): Unit = set(diff)
 }

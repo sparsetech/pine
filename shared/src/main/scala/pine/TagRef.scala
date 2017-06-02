@@ -3,15 +3,24 @@ package pine
 sealed trait TagRef[+T <: Tag] {
   def matches(tag: Tag): Boolean
 
-  def set(nodes: List[Node]): Diff = Diff.ReplaceChildren(this, nodes)
-  def set(node: Node): Diff = set(List(node))
-  def replace(node: Node): Diff = Diff.Replace(this, node)
-  def remove(): Diff = Diff.RemoveChild(this)
-  def append(node: Node): Diff = Diff.AppendChild(this, node)
+  def set(nodes: List[Node])(implicit renderCtx: RenderContext): Unit =
+    renderCtx.render(Diff.ReplaceChildren(this, nodes))
 
-  def :=(value: List[Node]): Diff = set(value)
-  def :=(value: Node): Diff = set(value)
-  def +=(value: Node): Diff = append(value)
+  def set(node: Node)(implicit renderCtx: RenderContext): Unit =
+    renderCtx.render(Diff.ReplaceChildren(this, List(node)))
+
+  def replace(node: Node)(implicit renderCtx: RenderContext): Unit =
+    renderCtx.render(Diff.Replace(this, node))
+
+  def remove()(implicit renderCtx: RenderContext): Unit =
+    renderCtx.render(Diff.RemoveChild(this))
+
+  def append(node: Node)(implicit renderCtx: RenderContext): Unit =
+    renderCtx.render(Diff.AppendChild(this, node))
+
+  def :=(value: List[Node])(implicit renderCtx: RenderContext): Unit = set(value)
+  def :=(value: Node)(implicit renderCtx: RenderContext): Unit = set(value)
+  def +=(value: Node)(implicit renderCtx: RenderContext): Unit = append(value)
 }
 
 object TagRef {

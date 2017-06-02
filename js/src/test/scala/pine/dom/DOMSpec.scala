@@ -265,7 +265,9 @@ class DOMSpec extends FunSuite {
     dom.document.body.appendChild(div)
 
     val ref = TagRef(tag.Span())
-    DOM.render(ref.replace(html"<div>World</div>"))
+    DOM.render { implicit ctx =>
+      ref.replace(html"<div>World</div>")
+    }
 
     assert(
       DOM.toTree[Tag](dom.document.getElementById("test")) ==

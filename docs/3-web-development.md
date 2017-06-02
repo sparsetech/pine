@@ -34,16 +34,15 @@ DOM.get(text)  // Returns browser node, of type org.scalajs.dom.html.Div
 Previously, we used `update` to perform the changes on the nodes. To carry out the changes in the DOM, we have to use `DOM.render`:
 
 ```scala
-DOM.render(text := "Hello, world!")
+DOM.render(implicit ctx => text := "Hello, world!")
 ```
 
-As an extension to regular server-side diffs, there are DOM-specific diffs for events that need to be rendered using `renderDom`:
+### Events
+As an extension to content updates, you can set event handlers. In JavaScript projects, a `TagRef` exposes all event handlers which the underlying DOM element supports. These changes are side-effecting and therefore do not require a rendering context. The motivation is that event handlers do not change the visual page content. Therefore, instantiating `Diff`s and performing a batch execution would be redundant.
 
 ```scala
 val btnRemove = TagRef[tag.Button]("remove")
-DOM.renderDom(
-  btnRemove.click := println("Remove click")
-)
+btnRemove.click := println("Remove click")
 ```
 
 See also `dom.Window` and `dom.Document` for global events.

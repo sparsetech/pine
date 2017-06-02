@@ -22,13 +22,13 @@ val spanName = TagRef[tag.Span]("name")
 You can use the `update()` method to change the node:
 
 ```
-val result = node.update(
+val result = node.update { implicit ctx =>
   spanAge  := 42
-, spanName := "Joe"
-)
+  spanName := "Joe"
+}
 ```
 
-The changes `update()` takes are called _diffs_, more on that later.
+The changes (_diffs_) take an implicit rendering context. When you call `update()`, the changes will be queued up in the rendering context and processed in a batch.
 
 `result` will be equivalent to:
 
@@ -43,10 +43,10 @@ The changes `update()` takes are called _diffs_, more on that later.
 If you would like to replace the node itself, you can use `replace()`:
 
 ```
-val result = node.update(
+val result = node.update { implicit ctx =>
   spanAge .replace(42)
-, spanName.replace("Joe")
-)
+  spanName.replace("Joe")
+}
 ```
 
 `result` will be equivalent to:
@@ -67,12 +67,12 @@ val root = TagRef[tag.Div]("page")
 In order to render a list, you can use the `:=` function (alias for `set`):
 
 ```scala
-root.update(
+root.update { implicit ctx =>
   root := List(
     html"<div>Hello, </div>",
     html"<div>world!</div>"
   )
-)
+}
 ```
 
 But if you would like to later access those child nodes they need unique IDs. This is particularly useful when you render your HTML on the server and want to access it in JavaScript, e.g. in order to attach event handlers.
@@ -92,7 +92,7 @@ def renderItem(item: Item): Tag = {
   val id   = idOf(item)
   val node = itemView.suffixIds(id)
   val spanName = TagRef[tag.Span]("name", id)
-  node.update(spanName := item.name)
+  node.update(implicit ctx => spanName := item.name)
 }
 ```
 
@@ -100,7 +100,7 @@ Finally, we render a list of items using the `set` method.
 
 ```scala
 val items  = List(Item(0, "Joe"), Item(1, "Jeff"))
-val result = node.update(root.set(items.map(renderItem)))
+val result = node.update(implicit ctx => root.set(items.map(renderItem)))
 ```
 
 `result` will be equivalent to:
@@ -127,15 +127,15 @@ As our `TagRef` objects are typed, we can provide implicits for supported attrib
 
 ```scala
 val node = html"""<a id="lnk">GitHub</a>"""
-node.update(
+node.update(implicit ctx =>
   NodeRef[tag.A]("lnk").href := "https://github.com/"
 )
 ```
 
 ## Diffs
-Diffs encapsulate changes. The operations you have seen before like `:=` (`set`), `replace` etc. are immutable objects describing the change you would like to perform.
+Diffs encapsulate changes. The operations you have seen before like `:=` (`set`), `replace` etc. create immutable objects describing the change you would like to perform.
 
-So far, these changes were performed directly on the tree. However, for the JavaScript back end, we have an additional processing unit that can apply those changes to the DOM. This will be explained in the next chapter.
+So far, these changes were performed directly on the tree. However, for the JavaScript back end, we have an additional rendering context that can apply those changes to the DOM. This will be explained in the next chapter.
 
 A full list of supported diffs can be found [here](https://github.com/sparsetech/pine/tree/master/core/shared/src/main/scala/Diff.scala).
 

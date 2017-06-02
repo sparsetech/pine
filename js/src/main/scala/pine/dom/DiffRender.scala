@@ -1,11 +1,13 @@
 package pine.dom
 
-import pine.HtmlHelpers
+import pine._
+
+import scala.collection.mutable
 
 object DiffRender {
-  def render(diff: pine.Diff): Unit =
+  def render(diff: Diff): Unit =
     diff match {
-      case pine.Diff.SetAttribute(ref, attribute, value) =>
+      case Diff.SetAttribute(ref, attribute, value) =>
         val dom = DOM.get(ref)
         if (!HtmlHelpers.BooleanAttributes.contains(attribute.name))
           dom.setAttribute(attribute.name, value.toString)
@@ -14,7 +16,7 @@ object DiffRender {
           else dom.removeAttribute(attribute.name)
         }
 
-      case pine.Diff.UpdateAttribute(ref, attribute, f) =>
+      case Diff.UpdateAttribute(ref, attribute, f) =>
         val dom = DOM.get(ref)
         if (HtmlHelpers.BooleanAttributes.contains(attribute.name)) {
           val fBoolean = f.asInstanceOf[Boolean => Boolean]
@@ -30,34 +32,44 @@ object DiffRender {
           }
         }
 
-      case pine.Diff.RemoveAttribute(ref, attribute) =>
+      case Diff.RemoveAttribute(ref, attribute) =>
         DOM.get(ref).removeAttribute(attribute.name)
 
-      case pine.Diff.ReplaceChildren(ref, children) =>
+      case Diff.ReplaceChildren(ref, children) =>
         val dom = DOM.get(ref)
         dom.clear()
         children.foreach(child => dom.appendChild(DOM.render(child)))
 
-      case pine.Diff.Replace(ref, replacement) =>
+      case Diff.Replace(ref, replacement) =>
         val dom = DOM.get(ref)
         dom.parentNode.replaceChild(DOM.render(replacement), dom)
 
-      case pine.Diff.PrependChild(ref, child) =>
+      case Diff.PrependChild(ref, child) =>
         DOM.get(ref).prependChild(DOM.render(child))
 
-      case pine.Diff.AppendChild(ref, child) =>
+      case Diff.AppendChild(ref, child) =>
         DOM.get(ref).appendChild(DOM.render(child))
 
-      case pine.Diff.RemoveChild(ref) =>
+      case Diff.RemoveChild(ref) =>
         val dom = DOM.get(ref)
         dom.parentNode.removeChild(dom)
 
-      case pine.Diff.Noop =>
+      case Diff.Noop =>
     }
+}
 
-  def render(diff: Diff): Unit =
-    diff match {
-      case Diff.SetEvent(set, f) => set(f)
-      case Diff.DetachEvent(set) => set(null)
-    }
+class DomRenderContext extends RenderContext {
+  var committed = false
+  val diffs = mutable.Queue.empty[Diff]
+
+  override def render(diff: Diff): Unit = {
+    if (committed) throw new Exception("Dangling rendering context")
+    diffs += diff
+  }
+
+  def commit(): Unit = {
+    diffs.foreach(DiffRender.render)
+    diffs.clear()
+    committed = true
+  }
 }

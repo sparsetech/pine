@@ -56,10 +56,10 @@ class TagRefSpec extends FunSuite {
 
     document.body.appendChild(node)
 
-    DOM.render(tagRef.checked := true)
+    DOM.render(implicit ctx => tagRef.checked := true)
     assert(DOM.get(tagRef.checked))
 
-    DOM.render(tagRef.checked := false)
+    DOM.render(implicit ctx => tagRef.checked := false)
     assert(!DOM.get(tagRef.checked))
 
     document.body.removeChild(node)
@@ -75,13 +75,13 @@ class TagRefSpec extends FunSuite {
 
     document.body.appendChild(node)
 
-    DOM.render(tagRef.href := "http://github.com/")
+    DOM.render(implicit ctx => tagRef.href := "http://github.com/")
     assert(DOM.get(tagRef.href).contains("http://github.com/"))
 
-    DOM.render(tagRef.href := "")
+    DOM.render(implicit ctx => tagRef.href := "")
     assert(DOM.get(tagRef.href).contains(""))
 
-    DOM.render(tagRef.href.remove())
+    DOM.render(implicit ctx => tagRef.href.remove())
     assert(DOM.get(tagRef.href).isEmpty)
 
     document.body.removeChild(node)
@@ -96,10 +96,10 @@ class TagRefSpec extends FunSuite {
     val tagRef = TagRef[tag.A]("test")
     document.body.appendChild(node)
 
-    DOM.render(tagRef.href.update(_ => None))
+    DOM.render(implicit ctx => tagRef.href.update(_ => None))
     assert(DOM.get(tagRef.href).isEmpty)
 
-    DOM.render(tagRef.href.update(x => Some(x.toString)))
+    DOM.render(implicit ctx => tagRef.href.update(x => Some(x.toString)))
     assert(DOM.get(tagRef.href).contains("None"))
 
     document.body.removeChild(node)
@@ -113,10 +113,10 @@ class TagRefSpec extends FunSuite {
     val tagRef = TagRef[tag.Input]("test")
     document.body.appendChild(node)
 
-    DOM.render(tagRef.checked.update(!_))
+    DOM.render(implicit ctx => tagRef.checked.update(!_))
     assert(DOM.get(tagRef.checked))
 
-    DOM.render(tagRef.checked.update(!_))
+    DOM.render(implicit ctx => tagRef.checked.update(!_))
     assert(!DOM.get(tagRef.checked))
 
     document.body.removeChild(node)
@@ -131,7 +131,7 @@ class TagRefSpec extends FunSuite {
     val tagRef = TagRef[tag.Input]("test")
     document.body.appendChild(node)
 
-    DOM.render(tagRef.css(false, "b"))
+    DOM.render(implicit ctx => tagRef.css(false, "b"))
     assert(DOM.get(tagRef.`class`).contains("a c"))
     assert(DOM.get(tagRef).className == "a c")
 

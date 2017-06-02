@@ -7,7 +7,7 @@ import pine._
 
 trait Implicits {
   implicit class TagRefExtensions[T <: Tag](tagRef: TagRef[T]) {
-    def onEnter(f: String => Diff)(implicit js: Js[T], ev: T <:< tag.Input): Diff =
+    def onEnter(f: String => Diff)(implicit js: Js[T], ev: T <:< tag.Input): Unit =
       tagRef.keyPress := { e =>
         if (e.keyCode == KeyCode.Enter)
           f(DOM.get(tagRef).asInstanceOf[org.scalajs.dom.html.Input].value)

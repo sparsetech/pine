@@ -106,10 +106,11 @@ trait Tag extends Node {
 
   def as[T <: Tag]: T = this.asInstanceOf[T]
 
-  def update(diffs: Diff*): T =
-    diffs.foldLeft(this) { case (a, b) =>
-      DiffRender.render(a, b).asInstanceOf[Tag]
-    }.asInstanceOf[T]
+  def update(f: NodeRenderContext => Unit): T = {
+    val ctx = new NodeRenderContext()
+    f(ctx)
+    ctx.commit(this).asInstanceOf[T]
+  }
 
   /** Recursively map children, excluding root node */
   def map(f: Node => Node): T = copy(children = children.map(f(_).map(f)))

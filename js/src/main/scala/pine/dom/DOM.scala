@@ -92,6 +92,10 @@ object DOM {
     else Option(get(attribute.parent).getAttribute(attribute.name)).asInstanceOf[G]
 
   def render(node: Node): dom.Element = NodeRender.render(node)
-  def render(diffs: pine.Diff*): Unit = diffs.foreach(DiffRender.render)
-  def renderDom(diffs: Diff*): Unit = diffs.foreach(DiffRender.render)
+
+  def render(f: DomRenderContext => Unit): Unit = {
+    val ctx = new DomRenderContext
+    f(ctx)
+    ctx.commit()
+  }
 }
