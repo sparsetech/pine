@@ -111,7 +111,19 @@ trait Tag extends Node {
       DiffRender.render(a, b).asInstanceOf[Tag]
     }.asInstanceOf[T]
 
+  /** Recursively map children, excluding root node */
   def map(f: Node => Node): T = copy(children = children.map(f(_).map(f)))
+
+  /** Recursively map tag children, including root node */
+  def mapRoot(f: Tag => Tag): T = {
+    def iter(node: Node): Node =
+      node match {
+        case tag: Tag => f(tag.copy(children = tag.children.map(iter)))
+        case n => n
+      }
+
+    iter(this).asInstanceOf[T]
+  }
 
   def flatMap(f: Node => Seq[Node]): T =
     copy(children = children.flatMap(n => f(n.flatMap(f))))
@@ -138,6 +150,14 @@ trait Tag extends Node {
 
   def partialMap(f: PartialFunction[Node, Node]): T =
     map(node => f.lift(node).getOrElse(node))
+
+  /** Recursively adds `suffix` to every ID attribute */
+  def suffixIds(suffix: String): T =
+    if (suffix.isEmpty) copy()
+    else mapRoot {
+      case t: Tag if t.id.nonEmpty => t.id(t.id.get + suffix)
+      case n => n
+    }
 
   def withoutId: T = copy(attributes = attributes - "id")
 

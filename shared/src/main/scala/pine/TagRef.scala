@@ -3,29 +3,14 @@ package pine
 sealed trait TagRef[+T <: Tag] {
   def matches(tag: Tag): Boolean
 
-  /** Recursively adds `suffix` to every ID attribute of `node` */
-  def suffixIds(node: Node, suffix: String): Node =
-    if (suffix.isEmpty) node
-    else node match {
-      case tag: Tag if tag.id.nonEmpty =>
-        tag.copy(
-          attributes = tag.attributes + ("id" -> (tag.id.get + suffix)),
-          children   = tag.children.map(suffixIds(_, suffix)))
-
-      case tag: Tag =>
-        tag.copy(children = tag.children.map(suffixIds(_, suffix)))
-
-      case n => n
-    }
-
   def set[U](values: List[U], f: U => Tag)(implicit id: Id[U]): Diff =
-    Diff.ReplaceChildren(this, values.map(v => suffixIds(f(v), id.f(v))))
+    Diff.ReplaceChildren(this, values.map(v => f(v).suffixIds(id.f(v))))
   def set(nodes: List[Node]): Diff = Diff.ReplaceChildren(this, nodes)
   def set(node: Node): Diff = set(List(node))
   def replace(node: Node): Diff = Diff.Replace(this, node)
   def remove(): Diff = Diff.RemoveChild(this)
   def append[U](value: U, f: U => Tag)(implicit id: Id[U]): Diff =
-    Diff.AppendChild(this, suffixIds(f(value), id.f(value)))
+    Diff.AppendChild(this, f(value).suffixIds(id.f(value)))
   def append(node: Node): Diff = Diff.AppendChild(this, node)
 
   def :=(value: List[Node]): Diff = set(value)
