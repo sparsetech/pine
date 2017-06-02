@@ -61,6 +61,12 @@ trait Tag extends Node {
     }
   }
 
+  def findTag(f: Tag => Boolean): Option[Tag] =
+    find {
+      case t: Tag => f(t)
+      case _      => false
+    }.map(_.asInstanceOf[Tag])
+
   def prepend(node: Node): T = copy(children = node +: children)
 
   def append(node: Node): T = copy(children = children :+ node)
@@ -94,15 +100,21 @@ trait Tag extends Node {
     val seq = if (f(this)) Seq(this) else Seq.empty
     seq ++ children.flatMap {
       case t: Tag => t.filterChildren(f)
-      case n => if (f(n)) Seq(n) else Seq.empty
+      case n      => if (f(n)) Seq(n) else Seq.empty
     }
   }
 
   def filter(f: Node => Boolean): Seq[Node] =
     children.flatMap {
       case tag: Tag => tag.filterChildren(f)
-      case node => if (f(node)) Seq(node) else Seq.empty
+      case node     => if (f(node)) Seq(node) else Seq.empty
     }
+
+  def filterTags(f: Tag => Boolean): Seq[Tag] =
+    filter {
+      case t: Tag if f(t) => true
+      case _              => false
+    }.map(_.asInstanceOf[Tag])
 
   def as[T <: Tag]: T = this.asInstanceOf[T]
 
