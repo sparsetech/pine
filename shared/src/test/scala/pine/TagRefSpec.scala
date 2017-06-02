@@ -69,10 +69,7 @@ class TagRefSpec extends FunSuite {
   }
 
   test("Resolve child references") {
-    case class Item(id: Int, name: String)
-    implicit def itemId: Id[Item] = Id(_.id.toString)
-
-    val itemRef = TagRef[tag.Div]("item")
-    assert(itemRef(Item(0, "test")) == TagRef[tag.Div]("item0"))
+    val itemRef = TagRef[tag.Div]("item", "0")
+    assert(itemRef == TagRef[tag.Div]("item0"))
   }
 }

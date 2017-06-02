@@ -15,18 +15,19 @@ class DiffSpec extends FunSuite {
 
   test("Render lists") {
     case class Item(id: Int, name: String)
-    implicit def itemId: Id[Item] = Id(_.id.toString)
+    val itemView = html"""<div id="child"><span id="name"></span></div>"""
 
-    def render(item: Item): Tag = {
-      val node     = html"""<div id="child"><span id="name"></span></div>"""
-      val spanName = TagRef[tag.Span]("name")
+    def renderItem(item: Item): Tag = {
+      val id   = item.id.toString
+      val node = itemView.suffixIds(id)
+      val spanName = TagRef[tag.Span]("name", id)
       node.update(spanName := item.name)
     }
 
     val node   = html"""<div id="page"></div>"""
     val root   = TagRef[tag.Div]("page")
     val items  = List(Item(0, "Joe"), Item(1, "Jeff"))
-    val result = node.update(root.set(items, render))
+    val result = node.update(root.set(items.map(renderItem)))
     assert(result == html"""<div id="page"><div id="child0"><span id="name0">Joe</span></div><div id="child1"><span id="name1">Jeff</span></div></div>""")
   }
 }

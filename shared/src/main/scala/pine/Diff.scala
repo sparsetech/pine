@@ -1,7 +1,5 @@
 package pine
 
-case class Id[T](f: T => String)
-
 /** A Diff defines change operations */
 sealed trait Diff
 object Diff {

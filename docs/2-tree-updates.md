@@ -75,35 +75,32 @@ root.update(
 )
 ```
 
-But if you would like to later access those child nodes they should have an ID. This is particularly useful if you render your HTML on the server and then want to modify it in JavaScript.
+But if you would like to later access those child nodes they need unique IDs. This is particularly useful when you render your HTML on the server and want to access it in JavaScript, e.g. in order to attach event handlers.
 
-First, we need to define a data type we would like to render:
+First, we define a data type we would like to render:
 
 ```scala
 case class Item(id: Int, name: String)
 ```
 
-Next, we will implement Pine's `Id` type class:
+Next, we define a function that returns a child node given an item.
 
 ```scala
-implicit def itemId: Id[Item] = Id(_.id.toString)
-```
-
-We define a function that returns a node. Also, those nodes we want to access later, such as the root node, have an ID:
-
-```scala
-def render(item: Item): Tag = {
-  val node     = html"""<div id="child"><span id="name"></span></div>"""
-  val spanName = TagRef[tag.Span]("name")
+val itemView = html"""<div id="child"><span id="name"></span></div>"""
+def idOf(item: Item): String = item.id.toString
+def renderItem(item: Item): Tag = {
+  val id   = idOf(item)
+  val node = itemView.suffixIds(id)
+  val spanName = TagRef[tag.Span]("name", id)
   node.update(spanName := item.name)
 }
 ```
 
-The `set` method resolves our `Id` typeclass and appends our custom `ID` where needed:
+Finally, we render a list of items using the `set` method.
 
 ```scala
 val items  = List(Item(0, "Joe"), Item(1, "Jeff"))
-val result = node.update(root.set(items, render))
+val result = node.update(root.set(items.map(renderItem)))
 ```
 
 `result` will be equivalent to:
@@ -119,11 +116,10 @@ val result = node.update(root.set(items, render))
 </div>
 ```
 
-Now, we can reference child nodes using the `apply` method of `TagRef`:
+Now, we can reference child nodes using a `TagRef`:
 
 ```scala
-val child = TagRef[tag.Div]("child")
-child(items.head)  // TagRef[tag.Child]("child0")
+TagRef[tag.Div]("child", idOf(items.head))  // TagRef[tag.Child]("child0")
 ```
 
 ## Updating attributes
