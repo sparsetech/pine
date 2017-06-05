@@ -20,7 +20,7 @@ object HtmlParser {
     }
 
     Option(node)
-      .map(DOM.toTree[Node])
+      .map(DOM.toTree[SString])
       .getOrElse(Text(""))
   }
 }

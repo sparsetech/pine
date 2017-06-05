@@ -1,7 +1,6 @@
 package pine.internal
 
 import pine._
-import pine.tag.HTMLTag
 
 import scala.annotation.tailrec
 
@@ -76,7 +75,7 @@ object HtmlParser {
     if (reader.prefix("<?xml"))
       reader.collect('>').orElse(expected(reader, ">"))
 
-  def parseTag(reader: Reader): Option[Tag] =
+  def parseTag(reader: Reader): Option[Tag[SString]] =
     if (!reader.prefix("<")) None
     else {
       val tagName = identifier(reader)
@@ -88,7 +87,8 @@ object HtmlParser {
         else if (reader.prefix(">")) parseChildren(reader, tagName)
         else expected(reader, "/>")
 
-      Some(HTMLTag.fromTag(tagName, tagAttrs, tagChildren))
+      // TODO
+      Some(Tag(tagName.asInstanceOf[SString], tagAttrs, tagChildren))
     }
 
   def parseText(reader: Reader): Option[Text] = {

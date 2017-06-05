@@ -1,9 +1,5 @@
 package pine
 
-import pine.tag.HTMLTag
-
-import scala.reflect.ClassTag
-
 object Node {
   trait Implicits {
     implicit def StringToTree(value: String): Node = Text(value)
@@ -16,7 +12,7 @@ object Node {
 sealed trait Node {
   type T <: Node
 
-  def +:[T <: Tag](node: T): node.T = node.prepend(this)
+  def +:[T <: Tag[_]](node: T): node.T = node.prepend(this)
   def map(f: Node => Node): T
   def flatMap(f: Node => Seq[Node]): T
   def mapFirst(f: PartialFunction[Node, Node]): T
@@ -30,17 +26,11 @@ case class Text(text: String) extends Node {
   def mapFirst(f: PartialFunction[Node, Node]): T = this
 }
 
-trait Tag extends Node {
-  type T <: Tag
-
-  def tagName: String
-  def children: Seq[Node]
-  def attributes: Map[String, Any]
-  def copy(attributes: Map[String, Any] = attributes,
-           children: Seq[Node] = children): T
-
-  def id: Option[String]
-  def id(value: String): T
+case class Tag[TagName <: SString](tagName: TagName,
+                                   attributes: Map[String, Any] = Map.empty,
+                                   children: Seq[Node] = Seq.empty
+                                  ) extends Node {
+  override type T = Tag[TagName]
 
   // TODO Rewrite in a more functional style
   def find(f: Node => Boolean): Option[Node] = {
@@ -49,7 +39,7 @@ trait Tag extends Node {
       for (child <- children) {
         if (f(child)) return Some(child)
         else child match {
-          case t: Tag =>
+          case t: Tag[_] =>
             val result = t.find(f)
             if (result.nonEmpty) return result
 
@@ -61,11 +51,11 @@ trait Tag extends Node {
     }
   }
 
-  def findTag(f: Tag => Boolean): Option[Tag] =
+  def findTag(f: Tag[_] => Boolean): Option[Tag[_]] =
     find {
-      case t: Tag => f(t)
-      case _      => false
-    }.map(_.asInstanceOf[Tag])
+      case t: Tag[_] => f(t)
+      case _         => false
+    }.map(_.asInstanceOf[Tag[_]])
 
   def prepend(node: Node): T = copy(children = node +: children)
 
@@ -99,39 +89,39 @@ trait Tag extends Node {
   private def filterChildren(f: Node => Boolean): Seq[Node] = {
     val seq = if (f(this)) Seq(this) else Seq.empty
     seq ++ children.flatMap {
-      case t: Tag => t.filterChildren(f)
-      case n      => if (f(n)) Seq(n) else Seq.empty
+      case t: Tag[_] => t.filterChildren(f)
+      case n         => if (f(n)) Seq(n) else Seq.empty
     }
   }
 
   def filter(f: Node => Boolean): Seq[Node] =
     children.flatMap {
-      case tag: Tag => tag.filterChildren(f)
-      case node     => if (f(node)) Seq(node) else Seq.empty
+      case tag: Tag[_] => tag.filterChildren(f)
+      case node        => if (f(node)) Seq(node) else Seq.empty
     }
 
-  def filterTags(f: Tag => Boolean): Seq[Tag] =
+  def filterTags(f: Tag[_] => Boolean): Seq[Tag[_]] =
     filter {
-      case t: Tag if f(t) => true
-      case _              => false
-    }.map(_.asInstanceOf[Tag])
+      case t: Tag[_] if f(t) => true
+      case _                 => false
+    }.map(_.asInstanceOf[Tag[_]])
 
-  def as[T <: Tag]: T = this.asInstanceOf[T]
+  def as[T <: SString]: Tag[T] = this.asInstanceOf[Tag[T]]
 
   def update(f: NodeRenderContext => Unit): T = {
     val ctx = new NodeRenderContext()
     f(ctx)
-    ctx.commit(this).asInstanceOf[T]
+    ctx.commit(this)
   }
 
   /** Recursively map children, excluding root node */
   def map(f: Node => Node): T = copy(children = children.map(f(_).map(f)))
 
   /** Recursively map tag children, including root node */
-  def mapRoot(f: Tag => Tag): T = {
+  def mapRoot(f: Tag[_] => Tag[_]): T = {
     def iter(node: Node): Node =
       node match {
-        case tag: Tag => f(tag.copy(children = tag.children.map(iter)))
+        case tag: Tag[_] => f(tag.copy(children = tag.children.map(iter)))
         case n => n
       }
 
@@ -153,8 +143,8 @@ trait Tag extends Node {
 
         case None =>
           n match {
-            case t: Tag => t.copy(children = t.children.map(child => m(child)))
-            case _      => n
+            case t: Tag[_] => t.copy(children = t.children.map(child => m(child)))
+            case _         => n
           }
       }
 
@@ -168,7 +158,7 @@ trait Tag extends Node {
   def suffixIds(suffix: String): T =
     if (suffix.isEmpty) copy()
     else mapRoot {
-      case t: Tag if t.id.nonEmpty => t.id(t.id.get + suffix)
+      case t: Tag[_] if t.id.nonEmpty => t.id(t.id.get + suffix)
       case n => n
     }
 
@@ -185,7 +175,7 @@ trait Tag extends Node {
     } else
       copy(
         children = children.map {
-          case tag: Tag => tag.instantiateMap(nodes)
+          case tag: Tag[_] => tag.instantiateMap(nodes)
           case n => n
         }
       )
@@ -194,60 +184,50 @@ trait Tag extends Node {
   def instantiate(nodes: (String, Node)*): T =
     instantiateMap(nodes.toMap)
 
-  def updateByTag[U <: Tag](f: U => Tag)(implicit ct: ClassTag[U]): Node =
+  def updateByTag[U <: SString](f: Tag[U] => Tag[_])(implicit vu: ValueOf[U]): Node =
     partialMap {
-      case n if n.getClass == ct.runtimeClass => f(n.asInstanceOf[U])
+      case t @ Tag(vu.value, _, _) => f(t.asInstanceOf[Tag[U]])
     }
 
-  def updateFirstByTag[U <: Tag](f: U => Tag)(implicit ct: ClassTag[U]): Node =
+  def updateFirstByTag[U <: SString](f: Tag[U] => Tag[_])(implicit vu: ValueOf[U]): Node =
     mapFirst {
-      case n if n.getClass == ct.runtimeClass => f(n.asInstanceOf[U])
+      case t @ Tag(vu.value, _, _) => f(t.asInstanceOf[Tag[U]])
     }
 
-  def updateById[U <: Tag](id: String, f: U => Node): Node =
+  def updateById[U <: SString](id: String, f: Tag[U] => Node): Node =
     mapFirst {
-      case tag: Tag if tag.attributes.get("id").contains(id) =>
-        f(tag.asInstanceOf[U])
+      case tag: Tag[_] if tag.attributes.get("id").contains(id) =>
+        f(tag.asInstanceOf[Tag[U]])
     }
 
-  def byIdOpt[U <: Tag](id: String): Option[U] =
+  def byIdOpt[U <: SString](id: String): Option[Tag[U]] =
     find {
-      case t: Tag => t.id.contains(id)
-      case _      => false
-    }.map(_.asInstanceOf[U])
+      case t: Tag[_] => t.id.contains(id)
+      case _         => false
+    }.map(_.asInstanceOf[Tag[U]])
 
-  def byId[U <: Tag](id: String): U = byIdOpt(id)
+  def byId[U <: SString](id: String): Tag[U] = byIdOpt[U](id)
     .getOrElse(throw new IllegalArgumentException(s"Invalid node ID '$id'"))
 
-  def byTagOpt[U <: Tag](implicit ct: ClassTag[U]): Option[U] =
+  def byTagOpt[U <: SString](implicit vu: ValueOf[U]): Option[Tag[U]] =
     find {
-      case t: Tag => t.getClass == ct.runtimeClass
-      case _      => false
-    }.map(_.asInstanceOf[U])
+      case Tag(vu.value, _, _) => true
+      case _                   => false
+    }.map(_.asInstanceOf[Tag[U]])
 
-  def byTag[U <: Tag](implicit ct: ClassTag[U]): U =
+  def byTag[U <: SString](implicit ct: ValueOf[U]): Tag[U] =
     byTagOpt[U].getOrElse(
       throw new IllegalArgumentException(s"Invalid tag name '$tagName'"))
 
-  def byClassOpt[U <: HTMLTag](`class`: String): Option[U] =
+  def byClassOpt[U <: SString](`class`: String): Option[Tag[U]] =
     find {
-      case t: HTMLTag => t.`class`.exists(_.split(' ').toSet.contains(`class`))
-      case _          => false
-    }.map(_.asInstanceOf[U])
+      case t: Tag[_] => t.`class`.exists(_.split(' ').toSet.contains(`class`))
+      case _         => false
+    }.map(_.asInstanceOf[Tag[U]])
 
-  def byClass[U <: Tag](`class`: String): U = byClassOpt(`class`).get
-}
+  def byClass[U <: SString](`class`: String): Tag[U] = byClassOpt(`class`).get
 
-case class CustomTag(tagName: String,
-                     attributes: Map[String, Any] = Map.empty,
-                     children: Seq[Node] = Seq.empty) extends Tag {
-  override type T = CustomTag
-
-  override def copy(attributes: Map[String, Any] = attributes,
-                    children: Seq[Node] = children): CustomTag =
-    CustomTag(tagName, attributes, children)
-
-  override def id: Option[String] = attributes.get("id")
+  def id: Option[String] = attributes.get("id")
     .asInstanceOf[Option[String]]
-  override def id(value: String): CustomTag = setAttr("id", value)
+  def id(value: String): Tag[TagName] = setAttr("id", value)
 }

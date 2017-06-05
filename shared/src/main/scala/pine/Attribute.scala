@@ -1,6 +1,6 @@
 package pine
 
-case class Attribute[+T <: Tag, G, S](parent: TagRef[T], name: String) {
+case class Attribute[TagName <: SString, G, S](parent: TagRef[TagName], name: String) {
   def set(value: S)(implicit renderCtx: RenderContext): Unit =
     renderCtx.render(Diff.SetAttribute(parent, this, value))
 

@@ -253,7 +253,7 @@ class DOMSpec extends FunSuite {
     assert(test.id.get == "test")
     assert(test.children.nonEmpty)
 
-    val input = test.children.head.asInstanceOf[tag.Input]
+    val input = test.children.head.asInstanceOf[Tag[tag.Input]]
     assert(input.checked)
 
     assert(node.childNodes.length == 1)
@@ -264,13 +264,13 @@ class DOMSpec extends FunSuite {
     val div = DOM.render(html"""<div id="test"><span id="hello">Hello</span></div>""")
     dom.document.body.appendChild(div)
 
-    val ref = TagRef(tag.Span())
+    val ref = TagRef[tag.Span]
     DOM.render { implicit ctx =>
       ref.replace(html"<div>World</div>")
     }
 
     assert(
-      DOM.toTree[Tag](dom.document.getElementById("test")) ==
+      DOM.toTree(dom.document.getElementById("test")) ==
       html"""<div id="test"><div>World</div></div>""")
     dom.document.body.removeChild(div)
   }

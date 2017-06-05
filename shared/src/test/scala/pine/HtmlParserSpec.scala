@@ -20,7 +20,7 @@ class HtmlParserSpec extends FunSuite {
   }
 
   test("Parse attributes") {
-    val node = tag.Span(Map("ä-ö_ü" -> "äöü"))
+    val node = tag.Span.setAttr("ä-ö_ü", "äöü")
     assert(HtmlParser.fromString(node.toHtml) == node)
   }
 
@@ -51,13 +51,13 @@ class HtmlParserSpec extends FunSuite {
   test("Parse simple tag") {
     val html = "<br/>"
     val node = HtmlParser.fromString(html)
-    assert(node == tag.Br())
+    assert(node == tag.Br)
   }
 
   test("Parse tag") {
     val html = """<a href="http://google.com/">Google</a>"""
     val node = HtmlParser.fromString(html)
-    assert(node == (tag.A().href("http://google.com/") :+ Text("Google")))
+    assert(node == (tag.A.href("http://google.com/") :+ Text("Google")))
   }
 
   test("Parse HTML") {
@@ -69,7 +69,7 @@ class HtmlParserSpec extends FunSuite {
   test("Decode arguments") {
     val html = """<a href="a&amp;b"></a>"""
     val node = HtmlParser.fromString(html)
-    assert(node == tag.A().href("a&b"))
+    assert(node == tag.A.href("a&b"))
   }
 
   test("Parse node with boolean attribute") {
@@ -89,19 +89,19 @@ class HtmlParserSpec extends FunSuite {
   test("Ignore comments") {
     val html = """<div>test <!-- Ignore -->!</div>"""
     val node = HtmlParser.fromString(html)
-    assert(node == (tag.Div() :+ Text("test ") :+ Text("!")))
+    assert(node == (tag.Div :+ Text("test ") :+ Text("!")))
   }
 
   test("Ignore comments (2)") {
     val html = """<div>test <!-- <br/> -->!</div>"""
     val node = HtmlParser.fromString(html)
-    assert(node == (tag.Div() :+ Text("test ") :+ Text("!")))
+    assert(node == (tag.Div :+ Text("test ") :+ Text("!")))
   }
 
   test("Resolve node") {
     val html = """<div id="a"><b>test</b><span id="b"></span></div>"""
-    val div = HtmlParser.fromString(html).asInstanceOf[tag.Div]
-    assert(div.byId[tag.Span]("b") == html"""<span id="b"></span>""")
+    val div = HtmlParser.fromString(html).asInstanceOf[Tag["div"]]
+    assert(div.byId["span"]("b") == html"""<span id="b"></span>""")
   }
 
   test("Parse DOCTYPE") {

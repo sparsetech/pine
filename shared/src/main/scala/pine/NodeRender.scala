@@ -18,13 +18,13 @@ object NodeRender {
   object HTML extends NodeRender[Node, String] {
     override def render(node: Node): String =
       node match {
-        case n: Tag  => RenderTag.render(n)
-        case n: Text => RenderText.render(n)
+        case n: Tag[SString] => RenderTag.render(n)
+        case n: Text         => RenderText.render(n)
       }
 
-    implicit case object RenderTag extends NodeRender[Tag, String] {
-      def render(node: Tag): String = {
-        val isLiteral = node.isInstanceOf[tag.Script]
+    implicit case object RenderTag extends NodeRender[Tag[SString], String] {
+      def render(node: Tag[SString]): String = {
+        val isLiteral = node.tagName == "script"
         val children =
           if (isLiteral) node.children.collect { case t: Text => t.text }
           else node.children.map(HTML.render)
@@ -44,12 +44,12 @@ object NodeRender {
 
     override def render(node: Node): String =
       node match {
-        case n: Tag  => RenderTag.render(n)
-        case n: Text => RenderText.render(n)
+        case n: Tag[SString] => RenderTag.render(n)
+        case n: Text         => RenderText.render(n)
       }
 
-    implicit case object RenderTag extends NodeRender[Tag, String] {
-      def render(node: Tag): String = {
+    implicit case object RenderTag extends NodeRender[Tag[SString], String] {
+      def render(node: Tag[SString]): String = {
         def children(): String =
           node.children.map { child =>
             if (!lineBreak) Text.render(child)
@@ -60,23 +60,23 @@ object NodeRender {
             }
           }.mkString
 
-        node match {
-          case _: tag.Script => ""
-          case _: tag.Br =>
+        node.tagName match {
+          case tag.Script.tagName => ""
+          case tag.Br.tagName =>
             lineBreak = true
             "\n"
-          case _: tag.Ul =>
+          case tag.Ul.tagName =>
             node.children.map {
-              case li: tag.Li => "- " + Text.render(li).trim + "\n"
+              case li @ Tag("li", _, _) => "- " + Text.render(li).trim + "\n"
               case _ => ""
             }.mkString + "\n" + { lineBreak = true; "" }
-          case _: tag.Div =>
+          case tag.Div.tagName =>
             children() + "\n" + { lineBreak = true; "" }
-          case _: tag.H1 | _: tag.H2 | _: tag.H3 | _: tag.H4 | _: tag.H5 | _: tag.H6 =>
+          case tag.H1.tagName | tag.H2.tagName | tag.H3.tagName | tag.H4.tagName | tag.H5.tagName | tag.H6.tagName =>
             children() + "\n\n" + { lineBreak = true; "" }
-          case _: tag.P =>
+          case tag.P.tagName =>
             children() + "\n\n" + { lineBreak = true; "" }
-          case _: Tag => children()
+          case _ => children()
         }
       }
     }

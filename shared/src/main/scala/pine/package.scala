@@ -3,5 +3,7 @@ package object pine
      with NodeRender.Implicits
      with macros.InlineHtml.Implicit
      with macros.ExternalHtml.Method
-     with tag.TagRefAttributes
-     with dsl.Imports
+     with tag.Attributes
+     with dsl.Imports {
+  type SString = String with Singleton
+}

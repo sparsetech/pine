@@ -24,7 +24,7 @@ class InlineHtmlSpec extends FunSuite {
       html"""<div id="a"></div>""",
       html"""<div id="b"></div>""")
 
-    assert(appended.byIdOpt[Tag]("b").nonEmpty)
+    assert(appended.byIdOpt[SString]("b").nonEmpty)
   }
 
   test("String attribute placeholder") {
@@ -135,14 +135,14 @@ class InlineHtmlSpec extends FunSuite {
     ))
 
     val atomLink = xml
-      .children.head.asInstanceOf[Tag]
-      .children.head.asInstanceOf[Tag]
+      .children.head.asInstanceOf[Tag[SString]]
+      .children.head.asInstanceOf[Tag[SString]]
     assert(atomLink.tagName == "atom:link")
   }
 
   test("Resolve node") {
     val div = html"""<div id="a"><b>test</b><span id="b"></span></div>"""
-    assert(div.byId[Tag]("b") == html"""<span id="b"></span>""")
+    assert(div.byId[SString]("b") == html"""<span id="b"></span>""")
   }
 
   test("Resolve node (2)") {
@@ -151,7 +151,7 @@ class InlineHtmlSpec extends FunSuite {
       <html>
       <head>
         <meta charset="utf-8"/>
-        <title>MetaWeb example</title>
+        <title>Example</title>
       </head>
       <body>
         <div id="page">
@@ -162,19 +162,19 @@ class InlineHtmlSpec extends FunSuite {
       </body>
       </html>
     """
-    assert(div.byIdOpt[Tag]("page").nonEmpty)
+    assert(div.byIdOpt[SString]("page").nonEmpty)
   }
 
   test("Getting value of Boolean attributes") {
-    val input = html"""<input type="checkbox" />""".as[tag.Input]
+    val input = html"""<input type="checkbox" />""".as["input"]
     assert(!input.checked)
 
-    val input2 = html"""<input type="checkbox" checked="" />""".as[tag.Input]
+    val input2 = html"""<input type="checkbox" checked="" />""".as["input"]
     assert(input2.checked)
   }
 
   test("Setting value of Boolean attributes") {
-    val input = html"""<input type="checkbox" />""".as[tag.Input]
+    val input = html"""<input type="checkbox" />""".as["input"]
     val input2 = input.checked(true)
     assert(input2.checked)
     assert(input2.toHtml == """<input type="checkbox" checked=""/>""")

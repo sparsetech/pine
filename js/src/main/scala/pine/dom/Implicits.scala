@@ -6,7 +6,7 @@ import org.scalajs.dom.ext.KeyCode
 import pine._
 
 trait Implicits {
-  implicit class TagRefExtensions[T <: Tag](tagRef: TagRef[T]) {
+  implicit class TagRefExtensions[T <: SString](tagRef: TagRef[T]) {
     def onEnter(f: String => Unit)(implicit js: Js[T], ev: T <:< tag.Input): Unit =
       tagRef.keyPress := { e =>
         if (e.keyCode == KeyCode.Enter)
@@ -125,7 +125,7 @@ trait Implicits {
       new Event(dom.oninput = _)
   }
 
-  implicit class AttributeExtensions[T <: Tag, G](attribute: Attribute[T, G, _]) {
+  implicit class AttributeExtensions[T <: SString, G](attribute: Attribute[T, G, _]) {
     /** TODO Introduce BooleanAttribute and StringAttribute for better type-safety? */
     def get(implicit js: Js[T]): G =
       if (HtmlHelpers.BooleanAttributes.contains(attribute.name))

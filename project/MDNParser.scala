@@ -57,33 +57,31 @@ object MDNParser {
     }
   }
 
-  def writeGlobalAttrs(path: File,
+  def writePackageFile(path: File,
                        elements: Set[Element],
                        attributes: Seq[Attribute]): File = {
-    val file = new File(path, "HTMLTag.scala")
+    val tagPath = new File(path, "tag")
+    tagPath.mkdir()
+
+    val file = new File(tagPath, "package.scala")
+
     printToFile(file) { p =>
       writeHeader(p)
-      p.println(s"""trait HTMLTag extends Tag {""")
-      writeAttributes(p, "T", attributes)
-      p.println("}")
-      p.println("""object HTMLTag {""")
-      p.println(s"""  def fromTag(tagName: String, attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty): Tag =""")
-      p.println("""    tagName.toLowerCase match {""")
+
+      p.println("""package object tag {""")
       elements.toList.sortBy(_.tag).foreach { element =>
         val className = escapeScalaName(element.tag.capitalize)
-        p.println(s"""      case "${element.tag}" => $className(attributes, children)""")
+        p.println(s"""  type $className = "${element.tag}"""")
+        p.println(s"""  val $className = Tag("${element.tag}")""")
       }
-      p.println("""      case _ => CustomTag(tagName, attributes, children)""")
-      p.println("""    }""")
       p.println("""}""")
     }
+
     file
   }
 
   def writeHeader(p: PrintWriter) {
-    p.println(s"package pine.tag")
-    p.println()
-    p.println("import pine._")
+    p.println(s"package pine")
     p.println()
   }
 
@@ -96,25 +94,6 @@ object MDNParser {
       writeHeader(p)
       val className = escapeScalaName(scalaTagName)
 
-      // TODO Use absolute URLs
-      val description = escapeScalaComment(element.description)
-
-      p.println( s"""/**""")
-      p.println( s""" * $description""")
-      p.println( s""" */""")
-      p.println(s"""case class $className(attributes: Predef.Map[String, Any] = Predef.Map.empty, children: Seq[Node] = Seq.empty) extends HTMLTag {""")
-      p.println(s"  override type T = $className")
-      p.println(s"""  override def tagName = "${element.tag}"""")
-      p.println(s"""  override def copy(attributes: Predef.Map[String, Any] = attributes, children: Seq[Node] = children): $className = $className(attributes, children)""")
-
-      val uniqueAttrs = element.attributes.filter { attr =>
-        val exists = globalAttributes.exists(_.name == attr.name)
-        if (exists) println(s"`${element.tag}` redefines global attribute `${attr.name}`")
-        !exists
-      }
-
-      writeAttributes(p, className, uniqueAttrs)
-      p.println("}")
     }
     file
   }
@@ -140,40 +119,82 @@ object MDNParser {
       case _ => tpe
     }
 
+  def writeTagAttributesClass(p: PrintWriter,
+                              element: Element,
+                              attributes: Seq[Attribute]): Unit = {
+    val className = element.tag.capitalize
+
+    /*
+    // TODO Use absolute URLs
+    val description = escapeScalaComment(element.description)
+
+    p.println( s"""  /**""")
+    p.println( s"""   * $description""")
+    p.println( s"""   */""")
+    */
+
+    p.println(s"""  implicit class ${className}Extensions(tag: Tag["${element.tag}"]) {""")
+
+    val uniqueAttrs = element.attributes.filter { attr =>
+      val exists = globalAttributes().exists(_.name == attr.name)
+      if (exists) println(s"`${element.tag}` redefines global attribute `${attr.name}`")
+      !exists
+    }
+
+    val elementName = s""""${element.tag}""""
+    writeAttributes(p, elementName, uniqueAttrs)
+    p.println("  }")
+  }
+
   def writeTagRefAttributesClass(p: PrintWriter,
-                                  className: String,
-                                  attributes: Seq[Attribute]): Unit = {
-    p.println(s"  implicit class TagRefAttributes$className(tagRef: TagRef[$className]) {")
+                                 elementName: Option[String],
+                                 attributes: Seq[Attribute]): Unit = {
+    elementName match {
+      case None =>
+        p.println(s"""  implicit class TagRefAttributes[T <: SString](tagRef: TagRef[T]) {""")
+
+      case Some(n) =>
+        val className = n.capitalize
+        p.println(s"""  implicit class TagRefAttributes$className(tagRef: TagRef["$n"]) {""")
+    }
+
     attributes.filter(_.name != "data-*").foreach { attribute =>
       val attrName = escapeScalaName(attribute.name)
       val attrType = attribute.tpe.map(mapDomType).getOrElse("String")
+      val elementNameAttr = elementName.fold("T")(el => s""""$el"""")
 
       if (attrType == "Boolean")
-        p.println(s"""    val $attrName = new Attribute[$className, Boolean, Boolean](tagRef, "${attribute.name}")""")
+        p.println(s"""    val $attrName = new Attribute[$elementNameAttr, Boolean, Boolean](tagRef, "${attribute.name}")""")
       else
-        p.println(s"""    val $attrName = new Attribute[$className, scala.Option[$attrType], $attrType](tagRef, "${attribute.name}")""")
+        p.println(s"""    val $attrName = new Attribute[$elementNameAttr, scala.Option[$attrType], $attrType](tagRef, "${attribute.name}")""")
     }
     p.println("  }")
     p.println()
   }
 
-  def writeTagRefAttributs(path: File,
+  def writeTagRefAttributes(path: File,
                             elements: Set[Element],
                             globalAttributes: Seq[Attribute]): File = {
-    val file = new File(path, "TagRefAttributes.scala")
+    val tagPath = new File(path, "tag")
+    val file = new File(tagPath, "Attributes.scala")
 
     printToFile(file) { p =>
       p.println("package pine.tag")
       p.println()
       p.println("import pine._")
       p.println()
-      p.println("trait TagRefAttributes {")
-      writeTagRefAttributesClass(p, "HTMLTag", globalAttributes)
+      p.println("trait Attributes {")
+      writeTagRefAttributesClass(p, None, globalAttributes)
+
+      p.println(s"""  implicit class TagExtensions[T <: SString](tag: Tag[T]) {""")
+      writeAttributes(p, "T", globalAttributes)
+      p.println("  }")
 
       elements.toList.sortBy(_.tag).foreach { element =>
         if (element.attributes.nonEmpty) {
-          val className = escapeScalaName(element.tag.capitalize)
-          writeTagRefAttributesClass(p, className, element.attributes)
+          writeTagAttributesClass(p, element, element.attributes)
+          p.println()
+          writeTagRefAttributesClass(p, Some(element.tag), element.attributes)
         }
       }
 
@@ -183,7 +204,7 @@ object MDNParser {
     file
   }
 
-  def writeAttributes(p: PrintWriter, className: String, attributes: Seq[Attribute]): Unit =
+  def writeAttributes(p: PrintWriter, elementName: String, attributes: Seq[Attribute]): Unit =
     attributes
       .filter(_.name != "data-*")
       .filter(!_.name.startsWith("on"))
@@ -191,21 +212,24 @@ object MDNParser {
     { attribute =>
       val attrName = escapeScalaName(attribute.name)
       val attrType = attribute.tpe.map(mapDomType).getOrElse("String")
+
+      /*
       val description = escapeScalaComment(attribute.description)
 
-      p.println( s"""  /**""")
-      p.println( s"""   * $description""")
-      p.println( s"""   */""")
+      p.println( s"""    /**""")
+      p.println( s"""     * $description""")
+      p.println( s"""     */""")
+      */
 
       if (attrType == "Boolean")
-        p.println( s"""  def $attrName: $attrType = attributes.contains("${attribute.name}")""")
+        p.println( s"""    def $attrName: $attrType = tag.attributes.contains("${attribute.name}")""")
       else
-        p.println( s"""  def $attrName: scala.Option[$attrType] = attributes.get("${attribute.name}").asInstanceOf[scala.Option[$attrType]]""")
+        p.println( s"""    def $attrName: scala.Option[$attrType] = tag.attr("${attribute.name}").asInstanceOf[scala.Option[$attrType]]""")
 
       if (attrType == "Boolean")
-        p.println( s"""  def $attrName(value: $attrType): $className = (if (value) copy(attributes = attributes + ("${attribute.name}" -> "")) else copy(attributes = attributes - "${attribute.name}"))""")
+        p.println( s"""    def $attrName(value: $attrType): Tag[$elementName] = (if (value) tag.setAttr("${attribute.name}", "") else tag.remAttr("${attribute.name}"))""")
       else
-        p.println( s"""  def $attrName(value: $attrType): $className = copy(attributes = attributes + ("${attribute.name}" -> value))""")
+        p.println( s"""    def $attrName(value: $attrType): Tag[$elementName] = tag.setAttr("${attribute.name}", value)""")
     }
 
   def globalAttributes(): Seq[Attribute] = {
@@ -343,8 +367,7 @@ object MDNParser {
   }
 
   def createFiles(destPath: File): Seq[File] = {
-    val tagsPath = new File(destPath, "pine/tag")
-    tagsPath.mkdirs()
+    val pinePath = new File(destPath, "pine")
 
     val document = Jsoup.parse(request(ElementsUrl))
     document.setBaseUri(ElementsUrl)
@@ -363,10 +386,10 @@ object MDNParser {
 
     val parsedElements = (elements ++ AdditionalTagUrls).flatMap(processElement)
     val globalAttrs = globalAttributes()
-    val elemsFiles = parsedElements.map(writeElement(tagsPath, globalAttrs, _))
-    val attrsFile = writeGlobalAttrs(tagsPath, parsedElements, globalAttrs)
-    val attrsTagRefFile = writeTagRefAttributs(tagsPath, parsedElements, globalAttrs)
 
-    elemsFiles.toSeq :+ attrsFile :+ attrsTagRefFile
+    val attrsFile = writePackageFile(pinePath, parsedElements, globalAttrs)
+    val attrsTagRefFile = writeTagRefAttributes(pinePath, parsedElements, globalAttrs)
+
+    Seq(attrsFile, attrsTagRefFile)
   }
 }

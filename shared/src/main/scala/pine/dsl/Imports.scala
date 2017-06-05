@@ -1,10 +1,9 @@
 package pine.dsl
 
 import pine._
-import pine.tag.HTMLTag
 
 trait Imports {
-  implicit class TagRefDSLExtensions(tagRef: TagRef[HTMLTag]) {
+  implicit class TagRefDSLExtensions[T <: SString](tagRef: TagRef[T]) {
     /** Toggle `cssTags` depending on `state` */
     def css(state: Boolean, cssTags: String*)
            (implicit renderCtx: RenderContext): Unit =

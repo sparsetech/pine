@@ -3,7 +3,6 @@ package pine.dom
 import org.scalajs.dom
 
 import pine._
-import pine.tag.HTMLTag
 
 object DOM {
   trait Extensions {
@@ -24,7 +23,7 @@ object DOM {
         if (reference == null || reference.nextSibling == null) parent.appendChild(node)
         else parent.insertBefore(node, reference.nextSibling)
 
-      def toTree[T <: Node]: T = DOM.toTree(parent)
+      def toTree[T <: SString]: Tag[T] = DOM.toTree[T](parent)
     }
   }
 
@@ -43,9 +42,9 @@ object DOM {
       case _ => Map.empty
     }
 
-  def toTree[T <: Node](node: dom.Node): T =
+  private def _toTree(node: dom.Node): Node =
     node match {
-      case t: dom.raw.Text => Text(t.textContent).asInstanceOf[T]
+      case t: dom.raw.Text => Text(t.textContent)
 
       case e: dom.Element =>
         val attributes = (0 until e.attributes.length)
@@ -61,17 +60,20 @@ object DOM {
           .filter {
             case _: dom.Comment => false
             case _              => true
-          }.map(toTree[Node])
+          }.map(_toTree)
 
-        HTMLTag.fromTag(
-          tagName    = e.tagName,
+        Tag(
+          tagName    = e.tagName.asInstanceOf[SString],  // TODO Remove cast
           attributes = attributes,
           children   = children
-        ).asInstanceOf[T]
+        )
     }
 
-  def toTree[T <: Tag](id: String): T =
-    toTree[T](dom.document.getElementById(id))
+  def toTree[T <: SString](node: dom.Node): Tag[T] =
+    _toTree(node).asInstanceOf[Tag[T]]
+
+  def toTree[T <: SString](id: String): Tag[T] =
+    toTree(dom.document.getElementById(id)).as[T]
 
   def render(node: Node): dom.Element = NodeRender.render(node)
 

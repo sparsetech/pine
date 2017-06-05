@@ -4,10 +4,10 @@ import org.scalatest.FunSuite
 
 class NodeSpec extends FunSuite {
   test("Instantiate") {
-    val a = tag.A()
+    val a = tag.A
       .href("http://github.com/")
       .set(Text("GitHub"))
-    assert((a: tag.A) == a)
+    assert((a: Tag["a"]) == a)
     assert(a == html"""<a href="http://github.com/">GitHub</a>""")
     assert(a.toHtml == """<a href="http://github.com/">GitHub</a>""")
   }
@@ -16,13 +16,14 @@ class NodeSpec extends FunSuite {
     val span = html"""<div class="test"><span class="test2">42</span></div>"""
 
     assert(span
-      .byClass[Tag]("test")
-      .byClass[Tag]("test2") == span.children.head)
+      .byClass[SString]("test")
+      .byClass[SString]("test2") == span.children.head)
   }
 
   test("as") {
-    val list: tag.Div = html"<div>Test</div>".as[tag.Div]
-    assert(list.isInstanceOf[tag.Div])
+    val list: Tag["div"] = html"<div>Test</div>".as["div"]
+    assert(list.tagName == "div")
+    assert(list.isInstanceOf[Tag["div"]])
   }
 
   test("map") {
@@ -34,15 +35,15 @@ class NodeSpec extends FunSuite {
       </head>
       <body></body>
       </html>
-    """.asInstanceOf[tag.Html]
+    """.as["html"]
 
     val modified = h.map {
-      case t: tag.Title => html"<title>Changed</title>"
+      case Tag("title", _, _) => html"<title>Changed</title>"
       case n => n
     }
 
-    assert((modified: tag.Html) == modified)
-    assert(modified.byTag[tag.Title] == html"<title>Changed</title>")
+    assert((modified: Tag["html"]) == modified)
+    assert(modified.byTag["title"] == html"<title>Changed</title>")
   }
 
   test("map with multiple occurrences") {
@@ -57,7 +58,7 @@ class NodeSpec extends FunSuite {
     """
 
     val modified = div.map {
-      case t: tag.B => tag.I(t.attributes, t.children)
+      case t @ Tag("b", _, _) => t.copy(tagName = "i")
       case n => n
     }
 
@@ -86,7 +87,7 @@ class NodeSpec extends FunSuite {
     """
 
     val modified = div.mapFirst {
-      case t: tag.B => tag.I(t.attributes, t.children)
+      case t @ Tag("b", _, _) => t.copy(tagName = "i")
     }
 
     val div2 = html"""
@@ -116,25 +117,25 @@ class NodeSpec extends FunSuite {
 
   test("Update by tag") {
     val div = html"""<div><span></span></div>"""
-    val html = div.updateByTag[tag.Span](_ +: html"<b>Hello</b>").toHtml
+    val html = div.updateByTag["span"](_ +: html"<b>Hello</b>").toHtml
     assert(html == "<div><span><b>Hello</b></span></div>")
   }
 
   test("Update by ID") {
     val div = html"""<div><span id="test"></span></div>"""
-    val html = div.updateById[tag.Span]("test", _ +: html"<b>Hello</b>").toHtml
+    val html = div.updateById["span"]("test", _ +: html"<b>Hello</b>").toHtml
     assert(html == """<div><span id="test"><b>Hello</b></span></div>""")
   }
 
   test("Update by tag with multiple matches") {
     val div = html"""<div><span></span><span></span></div>"""
-    val html = div.updateByTag[tag.Span](_ +: html"<b>Hello</b>").toHtml
+    val html = div.updateByTag["span"](_ +: html"<b>Hello</b>").toHtml
     assert(html == "<div><span><b>Hello</b></span><span><b>Hello</b></span></div>")
   }
 
   test("Update first by tag") {
     val div = html"""<div><span></span><span></span></div>"""
-    val html = div.updateFirstByTag[tag.Span](_ +: html"<b>Hello</b>").toHtml
+    val html = div.updateFirstByTag["span"](_ +: html"<b>Hello</b>").toHtml
     assert(html == "<div><span><b>Hello</b></span><span></span></div>")
   }
 

@@ -1,7 +1,9 @@
 package pine
 
-sealed trait TagRef[+T <: Tag] {
-  def matches(tag: Tag): Boolean
+import scala.reflect.ClassTag
+
+sealed trait TagRef[T <: SString] {
+  def matches(tag: Tag[T]): Boolean
 
   def set(nodes: List[Node])(implicit renderCtx: RenderContext): Unit =
     renderCtx.render(Diff.ReplaceChildren(this, nodes))
@@ -24,16 +26,15 @@ sealed trait TagRef[+T <: Tag] {
 }
 
 object TagRef {
-  case class ById[+T <: Tag](id: String) extends TagRef[T] {
-    override def matches(tag: Tag): Boolean = tag.id.contains(id)
+  case class ById[T <: SString](id: String) extends TagRef[T] {
+    override def matches(tag: Tag[T]): Boolean = tag.id.contains(id)
   }
 
-  case class ByTag[+T <: Tag](tagName: String) extends TagRef[T] {
-    override def matches(tag: Tag): Boolean =
-      tag.tagName.equalsIgnoreCase(tagName)
+  case class ByTag[T <: SString](tagName: T) extends TagRef[T] {
+    override def matches(tag: Tag[T]): Boolean = tag.tagName == tagName
   }
 
-  def apply[T <: Tag](id: String): TagRef.ById[T] = TagRef.ById[T](id)
-  def apply[T <: Tag](id: String, child: String): TagRef.ById[T] = TagRef.ById[T](id + child)
-  def apply[T <: Tag](node: T): TagRef.ByTag[T] = TagRef.ByTag[T](node.tagName)
+  def apply[T <: SString](id: String): TagRef.ById[T] = TagRef.ById[T](id)
+  def apply[T <: SString](id: String, child: String): TagRef.ById[T] = TagRef.ById[T](id + child)
+  def apply[T <: SString](implicit vt: ValueOf[T]): TagRef.ByTag[T] = TagRef.ByTag[T](vt.value)
 }

@@ -2,7 +2,6 @@ package pine
 
 import org.scalacheck.{Gen, Properties}
 import org.scalacheck.Prop.forAll
-import pine.tag.HTMLTag
 
 import scala.collection.mutable.ListBuffer
 
@@ -23,9 +22,9 @@ class NodePropSpec extends Properties("Node") {
     s <- attributeValueGen
   } yield Text(s)
 
-  def tagGen(sz: Int): Gen[Tag] = tagGen(sz, Seq.empty)
+  def tagGen(sz: Int): Gen[Tag[SString]] = tagGen(sz, Seq.empty)
 
-  def tagGen(sz: Int, parentTags: Seq[String]): Gen[Tag] =
+  def tagGen(sz: Int, parentTags: Seq[String]): Gen[Tag[SString]] =
     for {
       // TODO Consider nesting rules (tag.Input cannot have children)
       tag <- Gen.oneOf("a", "b", "div", "span").filter { t =>
@@ -49,7 +48,7 @@ class NodePropSpec extends Properties("Node") {
           case _ => false
         }
       }
-    } yield HTMLTag.fromTag(tag, attributes, children)
+    } yield Tag(tag, attributes, children)
 
   def sizedTree(sz: Int): Gen[Node] = sizedTree(sz, Seq.empty)
 
@@ -68,13 +67,13 @@ class NodePropSpec extends Properties("Node") {
   }
 
   def fun1: Node => Boolean = {
-    case n: Tag => true
-    case _ => false
+    case _: Tag[SString] => true
+    case _               => false
   }
 
   def fun2: Node => Boolean = {
-    case n: Text => true
-    case _ => false
+    case _: Text => true
+    case _       => false
   }
 
   def filterFunGen: Gen[Node => Boolean] = Gen.oneOf(fun1, fun2)
@@ -83,12 +82,12 @@ class NodePropSpec extends Properties("Node") {
     HtmlParser.fromString(node.toHtml) == node
   }
 
-  def myFilter(node: Tag, f: Node => Boolean): Seq[Node] = {
+  def myFilter(node: Tag[SString], f: Node => Boolean): Seq[Node] = {
     val collected = ListBuffer.empty[Node]
     def iter(node: Node): Unit = {
       if (f(node)) collected += node
       node match {
-        case x: Tag => x.children.foreach(iter)
+        case x: Tag[SString] => x.children.foreach(iter)
         case _ =>
       }
     }
@@ -104,7 +103,7 @@ class NodePropSpec extends Properties("Node") {
     tag.filter(f) == myFilter(tag, f)
   }
 
-  property("toText") = forAll(sized.flatMap(tagGen)) { tag: Tag =>
+  property("toText") = forAll(sized.flatMap(tagGen)) { tag: Tag[SString] =>
     val text = tag.toText
     tag
       .filter(_.isInstanceOf[Text])

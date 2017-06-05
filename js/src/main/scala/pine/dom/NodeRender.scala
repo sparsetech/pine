@@ -13,12 +13,12 @@ object NodeRender extends NodeRender[Node, dom.Element] {
 
   override def render(node: Node): dom.Element =
     node match {
-      case n: Tag  => RenderTag.render(n)
-      case n: Text => RenderText.render(n)
+      case n: Tag[SString] => RenderTag.render(n)
+      case n: Text         => RenderText.render(n)
     }
 
-  implicit case object RenderTag extends NodeRender[Tag, dom.Element] {
-    def render(node: Tag): dom.Element = {
+  implicit case object RenderTag extends NodeRender[Tag[SString], dom.Element] {
+    def render(node: Tag[SString]): dom.Element = {
       val element = dom.document.createElement(node.tagName)
 
       node.attributes.foreach { case (k, v) =>

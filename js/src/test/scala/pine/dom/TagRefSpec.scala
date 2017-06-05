@@ -145,8 +145,8 @@ class TagRefSpec extends FunSuite {
     document.body.appendChild(node)
     document.body.appendChild(div)
 
-    val tagRef1 = TagRef(tag.Input())
-    val tagRef2 = TagRef(tag.Div())
+    val tagRef1 = TagRef[tag.Input]
+    val tagRef2 = TagRef[tag.Div]
 
     assert(tagRef1.dom == node)
     assert(tagRef2.dom == div)

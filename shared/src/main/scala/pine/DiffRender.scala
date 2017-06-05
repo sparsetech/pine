@@ -5,7 +5,7 @@ object DiffRender {
     node match {
       case text: Text => text
 
-      case tag: Tag =>
+      case tag: Tag[SString] =>
         diff match {
           case Diff.SetAttribute(ref, attribute, value) if ref.matches(tag) =>
             tag.copy(attributes = tag.attributes + (attribute.name -> value))
@@ -46,10 +46,10 @@ object DiffRender {
             tag.copy(children = children)
 
           case Diff.RemoveChild(ref)
-            if tag.children.collect { case t: Tag => t }
+            if tag.children.collect { case t: Tag[SString] => t }
               .exists(c => ref.matches(c)) =>
             val child = tag.children
-              .collect { case t: Tag => t }
+              .collect { case t: Tag[SString] => t }
               .find(c => ref.matches(c)).get
 
             tag.copy(children = tag.children.diff(Seq(child)))

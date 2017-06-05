@@ -11,7 +11,13 @@ val ScalaJsDom = "0.9.1"
 val SharedSettings = Seq(
   name := "pine",
   organization := "tech.sparse",
-  scalaVersion := Scala2_12,
+
+  // scalaVersion := Scala2_12,
+  scalaOrganization := "org.typelevel",
+  scalaVersion := "2.12.2-bin-typelevel-4",
+
+  scalacOptions += "-Yliteral-types",
+
   crossScalaVersions := Seq(Scala2_12, Scala2_11),
   pomExtra :=
     <url>https://github.com/sparsetech/pine</url>
@@ -44,8 +50,11 @@ lazy val pine = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .in(file("."))
   .settings(SharedSettings: _*)
   .settings(
-    addCompilerPlugin("org.scalamacros" % "paradise" % Paradise cross CrossVersion.full),
-    libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+    addCompilerPlugin("org.scalamacros" % "paradise" % Paradise cross CrossVersion.patch),
+    libraryDependencies ++= Seq(
+      scalaOrganization.value % "scala-reflect" % scalaVersion.value % "provided",
+      scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided"
+    ),
     convertMDN := MDNParser.createFiles(new File("shared/src/main/scala"))
   )
   .jvmSettings(
@@ -54,6 +63,9 @@ lazy val pine = crossProject(JSPlatform, JVMPlatform, NativePlatform)
       "org.scalacheck" %% "scalacheck" % ScalaCheck % "test"
     )
   ).jsSettings(
+    // From https://github.com/scala-js/scala-js/pull/2954
+    libraryDependencies := libraryDependencies.value.filterNot(_.name == "scalajs-compiler"),
+    addCompilerPlugin("org.scala-js" % "scalajs-compiler" % scalaJSVersion cross CrossVersion.patch),
     libraryDependencies ++= Seq(
       "org.scala-js"   %%% "scalajs-dom" % ScalaJsDom,
       "org.scalatest"  %%% "scalatest"   % ScalaTest  % "test",

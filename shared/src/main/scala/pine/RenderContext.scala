@@ -11,8 +11,8 @@ class NodeRenderContext extends RenderContext {
 
   // TODO Optimise by recursively iterating over `tag`'s children and applying
   // changes in place while `diffs.nonEmpty`
-  def commit(tag: Tag): Tag =
+  def commit[T <: SString](tag: Tag[T]): Tag[T] =
     diffs.foldLeft(tag) { case (a, b) =>
-      DiffRender.render(a, b).asInstanceOf[Tag]
+      DiffRender.render(a, b).asInstanceOf[Tag[T]]
     }
 }

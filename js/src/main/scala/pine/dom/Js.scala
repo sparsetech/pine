@@ -3,10 +3,10 @@ package pine.dom
 import org.scalajs.dom
 import pine._
 
-trait Js[T <: Tag] { type X <: dom.html.Element }
+trait Js[T <: SString] { type X <: dom.html.Element }
 
 trait JsLowPrio {
-  implicit object JsTag extends Js[Tag] { override type X = dom.html.Element }
+  implicit object JsTag extends Js[SString] { override type X = dom.html.Element }
 }
 
 object Js extends JsLowPrio {
@@ -28,7 +28,6 @@ object Js extends JsLowPrio {
   implicit object JsDataList extends Js[tag.Datalist] { override type X = dom.html.DataList }
   implicit object JsDirectory extends Js[tag.Dir] { override type X = dom.html.Directory }
   implicit object JsDiv extends Js[tag.Div] { override type X = dom.html.Div }
-  implicit object JsElement extends Js[tag.HTMLTag] { override type X = dom.html.Element }
   implicit object JsEmbed extends Js[tag.Embed] { override type X = dom.html.Embed }
   implicit object JsFieldSet extends Js[tag.Fieldset] { override type X = dom.html.FieldSet }
   implicit object JsForm extends Js[tag.Form] { override type X = dom.html.Form }
