@@ -96,11 +96,11 @@ case class Tag[TagName <: SString](tagName: TagName,
       case node        => if (f(node)) Seq(node) else Seq.empty
     }
 
-  def filterTags(f: Tag[_] => Boolean): Seq[Tag[_]] =
+  def filterTags(f: Tag[_] => Boolean): Seq[Tag[SString]] =
     filter {
       case t: Tag[_] if f(t) => true
       case _                 => false
-    }.map(_.asInstanceOf[Tag[_]])
+    }.map(_.asInstanceOf[Tag[SString]])
 
   def as[T <: SString]: Tag[T] = this.asInstanceOf[Tag[T]]
 
@@ -154,11 +154,11 @@ case class Tag[TagName <: SString](tagName: TagName,
   def suffixIds(suffix: String): Tag[TagName] =
     if (suffix.isEmpty) copy()
     else mapRoot {
-      case t: Tag[_] if t.id.nonEmpty => t.id(t.id.get + suffix)
+      case t @ Tag(_, _, _) if t.id.nonEmpty => t.id(t.id.get + suffix)
       case n => n
     }
 
-  def withoutId: Tag[TagName] = copy(attributes = attributes - "id")
+  def withoutId: Tag[TagName] = remAttr("id")
 
   def instantiateMap(nodes: Map[String, Node]): Tag[TagName] = {
     val attrId = attributes.get("id")
@@ -180,30 +180,30 @@ case class Tag[TagName <: SString](tagName: TagName,
   def instantiate(nodes: (String, Node)*): Tag[TagName] =
     instantiateMap(nodes.toMap)
 
-  def updateByTag[U <: SString](f: Tag[U] => Tag[_])(implicit vu: ValueOf[U]): Node =
+  def updateByTag[U <: SString](f: Tag[U] => Tag[_])(implicit vu: ValueOf[U]): Tag[TagName] =
     partialMap {
       case t @ Tag(vu.value, _, _) => f(t.asInstanceOf[Tag[U]])
     }
 
-  def updateFirstByTag[U <: SString](f: Tag[U] => Tag[_])(implicit vu: ValueOf[U]): Node =
+  def updateFirstByTag[U <: SString](f: Tag[U] => Tag[_])(implicit vu: ValueOf[U]): Tag[TagName] =
     mapFirst {
       case t @ Tag(vu.value, _, _) => f(t.asInstanceOf[Tag[U]])
     }
 
-  def updateById[U <: SString](id: String, f: Tag[U] => Node): Node =
+  def updateById(id: String, f: Tag[SString] => Node): Tag[TagName] =
     mapFirst {
-      case tag: Tag[_] if tag.attributes.get("id").contains(id) =>
-        f(tag.asInstanceOf[Tag[U]])
+      case t @ Tag(_, _, _) if t.id.contains(id) => f(t)
     }
 
-  def byIdOpt[U <: SString](id: String): Option[Tag[U]] =
+  def byIdOpt(id: String): Option[Tag[SString]] =
     find {
-      case t: Tag[_] => t.id.contains(id)
-      case _         => false
-    }.map(_.asInstanceOf[Tag[U]])
+      case t @ Tag(_, _, _) => t.id.contains(id)
+      case _                => false
+    }.map(_.asInstanceOf[Tag[SString]])
 
-  def byId[U <: SString](id: String): Tag[U] = byIdOpt[U](id)
-    .getOrElse(throw new IllegalArgumentException(s"Invalid node ID '$id'"))
+  def byId(id: String): Tag[SString] =
+    byIdOpt(id)
+      .getOrElse(throw new IllegalArgumentException(s"Invalid node ID '$id'"))
 
   def byTagOpt[U <: SString](implicit vu: ValueOf[U]): Option[Tag[U]] =
     find {
@@ -222,8 +222,4 @@ case class Tag[TagName <: SString](tagName: TagName,
     }.map(_.asInstanceOf[Tag[U]])
 
   def byClass[U <: SString](`class`: String): Tag[U] = byClassOpt(`class`).get
-
-  def id: Option[String] = attributes.get("id")
-    .asInstanceOf[Option[String]]
-  def id(value: String): Tag[TagName] = setAttr("id", value)
 }

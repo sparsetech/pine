@@ -123,7 +123,7 @@ class NodeSpec extends FunSuite {
 
   test("Update by ID") {
     val div = html"""<div><span id="test"></span></div>"""
-    val html = div.updateById["span"]("test", _ +: html"<b>Hello</b>").toHtml
+    val html = div.updateById("test", _ +: html"<b>Hello</b>").toHtml
     assert(html == """<div><span id="test"><b>Hello</b></span></div>""")
   }
 

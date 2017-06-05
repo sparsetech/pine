@@ -24,7 +24,7 @@ class InlineHtmlSpec extends FunSuite {
       html"""<div id="a"></div>""",
       html"""<div id="b"></div>""")
 
-    assert(appended.byIdOpt[SString]("b").nonEmpty)
+    assert(appended.byIdOpt("b").nonEmpty)
   }
 
   test("String attribute placeholder") {
@@ -142,7 +142,7 @@ class InlineHtmlSpec extends FunSuite {
 
   test("Resolve node") {
     val div = html"""<div id="a"><b>test</b><span id="b"></span></div>"""
-    assert(div.byId[SString]("b") == html"""<span id="b"></span>""")
+    assert(div.byId("b") == html"""<span id="b"></span>""")
   }
 
   test("Resolve node (2)") {
@@ -162,7 +162,7 @@ class InlineHtmlSpec extends FunSuite {
       </body>
       </html>
     """
-    assert(div.byIdOpt[SString]("page").nonEmpty)
+    assert(div.byIdOpt("page").nonEmpty)
   }
 
   test("Getting value of Boolean attributes") {

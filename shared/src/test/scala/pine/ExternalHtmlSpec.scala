@@ -32,7 +32,7 @@ class ExternalHtmlSpec extends FunSuite {
   test("Replacing nodes") {
     val tpl = html("shared/src/test/html/test2.html")
 
-    val div2 = tpl.byId[SString]("div2")
+    val div2 = tpl.byId("div2")
     assert(div2.toHtml == """<div id="div2">Div 2 contents</div>""")
 
     val updated = div2.set(Text("42"))
@@ -41,7 +41,7 @@ class ExternalHtmlSpec extends FunSuite {
 
   test("Instantiate template") {
     val tpl = html("shared/src/test/html/list.html")
-    val listItem = tpl.byId[SString]("list-item")
+    val listItem = tpl.byId("list-item")
 
     val inst = listItem.instantiate(
       "list-item-title" -> Text(s"Title"),
@@ -56,7 +56,7 @@ class ExternalHtmlSpec extends FunSuite {
     val tpl = html("shared/src/test/html/list.html")
 
     // When embedding list items, we need to drop the ID attribute
-    val listItem = tpl.byId[SString]("list-item").withoutId
+    val listItem = tpl.byId("list-item").withoutId
 
     val items = Seq("a", "b", "c").map { i =>
       listItem.instantiate(
@@ -66,10 +66,9 @@ class ExternalHtmlSpec extends FunSuite {
     }
 
     // Instantiate template and replace list
-    val replaced = tpl.updateById[SString]("list", _.set(items))
-      .asInstanceOf[Tag[SString]]
+    val replaced = tpl.updateById("list", _.set(items))
 
-    val list = replaced.byId[SString]("list")
+    val list = replaced.byId("list")
     assert(list.children.size == 3)
     assert(list.children.last.toHtml ==
       """<div><div>Title c</div><div>Subtitle c</div></div>""")
