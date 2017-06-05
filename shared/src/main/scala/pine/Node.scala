@@ -53,12 +53,6 @@ case class Tag[TagName <: SString](tagName: TagName,
     }
   }
 
-  def findTag(f: Tag[_] => Boolean): Option[Tag[_]] =
-    find {
-      case t: Tag[_] => f(t)
-      case _         => false
-    }.map(_.asInstanceOf[Tag[_]])
-
   def prepend(node: Node): Tag[TagName] = copy(children = node +: children)
 
   def append(node: Node): Tag[TagName] = copy(children = children :+ node)
