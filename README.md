@@ -6,6 +6,7 @@ Pine is a functional HTML5 library for the Scala platform. It supports parsing, 
 ## Features
 * Immutable and typed trees
 * Type-safe bindings, generated from MDN
+* Support for custom elements and attributes
 * HTML parser (recursive descent)
 * Macros for compile-time HTML string/file parsing
 * Tree manipulation
