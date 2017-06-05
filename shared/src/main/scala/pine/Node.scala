@@ -53,12 +53,12 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
     }
   }
 
-  def prepend(node: Node): Tag[TagName] = copy(children = node +: children)
+  def prepend(node: Node): Tag[TagName] = set(node +: children)
 
-  def append(node: Node): Tag[TagName] = copy(children = children :+ node)
+  def append(node: Node): Tag[TagName] = set(children :+ node)
   def :+(node: Node): Tag[TagName] = append(node)
 
-  def appendAll(nodes: Seq[Node]): Tag[TagName] = copy(children = children ++ nodes)
+  def appendAll(nodes: Seq[Node]): Tag[TagName] = set(children ++ nodes)
   def ++(nodes: Seq[Node]): Tag[TagName] = appendAll(nodes)
 
   def set(node: Node): Tag[TagName] = copy(children = Seq(node))
@@ -66,10 +66,10 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
 
   def clearAll: Tag[TagName] = copy(children = Seq.empty)
 
-  def remove(node: Node): Tag[TagName] = copy(children = children.diff(Seq(node)))
+  def remove(node: Node): Tag[TagName] = set(children.diff(Seq(node)))
   def -(node: Node): Tag[TagName] = remove(node)
 
-  def removeAll(node: Seq[Node]): Tag[TagName] = copy(children = children.diff(Seq(node)))
+  def removeAll(node: Seq[Node]): Tag[TagName] = set(children.diff(Seq(node)))
   def --(node: Seq[Node]): Tag[TagName] = removeAll(node)
 
   def replace(reference: Node, node: Node): Tag[TagName] =
@@ -114,7 +114,7 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
   }
 
   /** Recursively map children, excluding root node */
-  def map(f: Node => Node): Tag[TagName] = copy(children = children.map(f(_).map(f)))
+  def map(f: Node => Node): Tag[TagName] = set(children.map(f(_).map(f)))
 
   /** Recursively map tag children, including root node */
   def mapRoot(f: Tag[_] => Tag[_]): Tag[TagName] = {
@@ -183,12 +183,14 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
   def instantiate(nodes: (String, Node)*): Tag[TagName] =
     instantiateMap(nodes.toMap)
 
-  def updateByTag[U <: Singleton](f: Tag[U] => Node)(implicit vu: ValueOf[U]): Tag[TagName] =
+  def updateByTag[U <: Singleton](f: Tag[U] => Node)
+                                 (implicit vu: ValueOf[U]): Tag[TagName] =
     partialMap {
       case t @ Tag(vu.value, _, _) => f(t.asInstanceOf[Tag[U]])
     }
 
-  def updateFirstByTag[U <: Singleton](f: Tag[U] => Node)(implicit vu: ValueOf[U]): Tag[TagName] =
+  def updateFirstByTag[U <: Singleton](f: Tag[U] => Node)
+                                      (implicit vu: ValueOf[U]): Tag[TagName] =
     mapFirst {
       case t @ Tag(vu.value, _, _) => f(t.asInstanceOf[Tag[U]])
     }
