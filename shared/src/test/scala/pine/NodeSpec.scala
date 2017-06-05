@@ -22,6 +22,10 @@ class NodeSpec extends FunSuite {
     val list: Tag["div"] = html"<div>Test</div>".as["div"]
     assert(list.tagName == "div")
     assert(list.isInstanceOf[Tag["div"]])
+
+    assertThrows[java.lang.AssertionError] {
+      list.as["span"]  // Invalid type
+    }
   }
 
   test("map") {
@@ -123,8 +127,8 @@ class NodeSpec extends FunSuite {
     val div = html"""<div><span id="test"></span></div>"""
 
     val html  = div.updateById("test", _.prepend(html"<b>Hello</b>")).toHtml
-    // TODO as[Singleton] is a workaround for https://github.com/typelevel/scala/issues/156
-    val html2 = div.updateById("test", _.as[Singleton] +: html"<b>Hello</b>").toHtml
+    // TODO See https://github.com/typelevel/scala/issues/156
+    val html2 = div.updateById("test", _.asInstanceOf[Tag[Singleton]] +: html"<b>Hello</b>").toHtml
 
     assert(html == """<div><span id="test"><b>Hello</b></span></div>""")
     assert(html == html2)

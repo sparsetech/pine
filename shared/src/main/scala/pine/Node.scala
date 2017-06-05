@@ -102,7 +102,10 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
       case _                 => false
     }.map(_.asInstanceOf[Tag[_]])
 
-  def as[T <: Singleton]: Tag[T] = this.asInstanceOf[Tag[T]]
+  def as[T <: Singleton with String](implicit vu: ValueOf[T]): Tag[T] = {
+    assert(tagName == vu.value)
+    this.asInstanceOf[Tag[T]]
+  }
 
   def update(f: NodeRenderContext => Unit): Tag[TagName] = {
     val ctx = new NodeRenderContext()
