@@ -5,7 +5,7 @@ Unless otherwise stated, all code samples require a prior `import pine._`.
 Pine offers a DSL that allows to create trees in terms of immutable objects:
 
 ```scala
-val a = tag.A()
+val a = tag.A
   .href("http://github.com/")
   .set(Text("GitHub"))
 
@@ -58,6 +58,50 @@ node.toHtml == html  // true
 ```
 
 HTML code is parsed during compile-time and then translated to an immutable tree. This reduces any runtime overhead. HTML can be specified inline or loaded from external files.
+
+## Conversion
+Some functions return `Tag[_]` when the tag type cannot be statically determined. A more concrete type is useful if you want to access element-specific attributes, like `href` on anchor nodes. You can use `as` to convert a tag to its correct type:
+
+```scala
+val tag = html"<div></div>"
+val div = tag.as[tag.Div]
+```
+
+Unlike `asInstanceOf`, this function ensures that the conversion is well-defined.
+
+## Custom tags
+So far, we have used elements from the `tag` namespace. For each HTML element, Pine defines a type and an empty instance, i.e. without attributes and children. If you want to support a new element such as `<custom-type>`, you could define it as follows:
+
+```scala
+type CustomType = "custom-type"
+val  CustomType = Tag("CustomType")
+```
+
+The feature we use here is called a literal type which is provided by the Typelevel Scala compiler.
+
+Additionally, you can define methods to access attributes conveniently:
+
+```scala
+implicit class TagAttributesCustomType(tag: Tag[CustomType]) {
+  def myValue: Option[String] = tag.attr("my-value").map(_.toString)
+  def myValue(value: String): Tag[CustomType] = tag.setAttr("my-value", value)
+}
+```
+
+Now, you can access and modify your custom HTML element while preserving type-safety:
+
+```scala
+val tag = html"""<custom-type my-value="value"></custom-type>"""
+val ct  = tag.as[CustomType]
+ct.myValue                   // Some(value)
+ct.myValue("value2").toHtml  // <custom-type my-value="value2"></custom-type>
+```
+
+Note that the type definition above is optional and you could also write the literal type directly:
+
+```scala
+val ct2 = tag.as["custom-type"]
+```
 
 ## Rendering
 A node defines two rendering methods:

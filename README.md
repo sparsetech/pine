@@ -39,7 +39,29 @@ val root = html"<a href=$url>GitHub</a>"
 println(root.toHtml)  // <a href="http://github.com/">GitHub</a>
 ```
 
-## Dependency
+## sbt
+Pine makes use of a language extension called *literal types*, see [SIP-23](http://docs.scala-lang.org/sips/pending/42.type.html). As of now, only [Typelevel Scala](https://github.com/typelevel/scala) implements this feature. However, it is likely to be included in future versions of Lightbend Scala (see this [pull request](https://github.com/scala/scala/pull/5310)).
+
+### Global settings
+```scala
+scalaVersion      := "2.12.2-bin-typelevel-4"
+scalaOrganization := "org.typelevel"
+scalacOptions     += "-Yliteral-types"
+```
+
+### Scala.js settings
+```scala
+libraryDependencies := libraryDependencies.value.filterNot(_.name == "scalajs-compiler")
+addCompilerPlugin("org.scala-js" % "scalajs-compiler" % scalaJSVersion cross CrossVersion.patch)
+```
+
+### Scala Native settings
+```scala
+libraryDependencies := libraryDependencies.value.filterNot(_.name == "nscplugin")
+addCompilerPlugin("org.scala-native" % "nscplugin" % "0.2.1" cross CrossVersion.patch)
+```
+
+### Dependencies
 ```scala
 libraryDependencies += "tech.sparse" %%  "pine" % "0.1.0"  // JVM
 libraryDependencies += "tech.sparse" %%% "pine" % "0.1.0"  // JavaScript, LLVM

@@ -88,7 +88,7 @@ Next, we define a function that returns a child node given an item.
 ```scala
 val itemView = html"""<div id="child"><span id="name"></span></div>"""
 def idOf(item: Item): String = item.id.toString
-def renderItem(item: Item): Tag = {
+def renderItem(item: Item): Tag[_] = {
   val id   = idOf(item)
   val node = itemView.suffixIds(id)
   val spanName = TagRef[tag.Span]("name", id)
@@ -153,4 +153,16 @@ For toggling the visibility of a node, use `hide()`:
 
 ```scala
 div.hide(true)  // Sets `style` attribute to hide the element in the browser
+```
+
+## Custom attributes
+If you would like to support custom attributes, you can extend the functionality of any tag by defining an implicit class. This is the same approach which Pine uses internally to define attributes for HTML elements.
+
+For example, to define attributes on anchor nodes, you would write:
+
+```scala
+implicit class TagRefAttributesA(tagRef: TagRef[tag.A]) {
+  val dataTooltip = new Attribute[tag.A, Option[String], String](tagRef, "data-tooltip")
+  val dataShow    = new Attribute[tag.A, Boolean, Boolean](tagRef, "data-show")
+}
 ```
