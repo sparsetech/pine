@@ -87,7 +87,7 @@ object HtmlParser {
         else if (reader.prefix(">")) parseChildren(reader, tagName)
         else expected(reader, "/>")
 
-      // TODO
+      // TODO See https://github.com/typelevel/scala/issues/154
       Some(Tag(tagName.asInstanceOf[SString], tagAttrs, tagChildren))
     }
 

@@ -63,7 +63,8 @@ object DOM {
           }.map(_toTree)
 
         Tag(
-          tagName    = e.tagName.asInstanceOf[SString],  // TODO Remove cast
+          // TODO See https://github.com/typelevel/scala/issues/154
+          tagName    = e.tagName.asInstanceOf[SString],
           attributes = attributes,
           children   = children
         )
