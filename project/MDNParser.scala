@@ -85,19 +85,6 @@ object MDNParser {
     p.println()
   }
 
-  def writeElement(path: File,
-                   globalAttributes: Seq[Attribute],
-                   element: Element): File = {
-    val scalaTagName = element.tag.capitalize
-    val file = new File(path, s"$scalaTagName.scala")
-    printToFile(file) { p =>
-      writeHeader(p)
-      val className = escapeScalaName(scalaTagName)
-
-    }
-    file
-  }
-
   def escapeScalaName(name: String): String =
     name match {
       case "type" | "class" | "object" | "for" => "`" + name + "`"
@@ -124,16 +111,7 @@ object MDNParser {
                               attributes: Seq[Attribute]): Unit = {
     val className = element.tag.capitalize
 
-    /*
-    // TODO Use absolute URLs
-    val description = escapeScalaComment(element.description)
-
-    p.println( s"""  /**""")
-    p.println( s"""   * $description""")
-    p.println( s"""   */""")
-    */
-
-    p.println(s"""  implicit class ${className}Extensions(tag: Tag["${element.tag}"]) {""")
+    p.println(s"""  implicit class TagAttributes$className(tag: Tag[pine.tag.$className]) {""")
 
     val uniqueAttrs = element.attributes.filter { attr =>
       val exists = globalAttributes().exists(_.name == attr.name)
@@ -141,7 +119,7 @@ object MDNParser {
       !exists
     }
 
-    val elementName = s""""${element.tag}""""
+    val elementName = s"pine.tag.$className"
     writeAttributes(p, elementName, uniqueAttrs)
     p.println("  }")
   }
@@ -155,13 +133,13 @@ object MDNParser {
 
       case Some(n) =>
         val className = n.capitalize
-        p.println(s"""  implicit class TagRefAttributes$className(tagRef: TagRef["$n"]) {""")
+        p.println(s"""  implicit class TagRefAttributes$className(tagRef: TagRef[tag.$className]) {""")
     }
 
     attributes.filter(_.name != "data-*").foreach { attribute =>
       val attrName = escapeScalaName(attribute.name)
       val attrType = attribute.tpe.map(mapDomType).getOrElse("String")
-      val elementNameAttr = elementName.fold("T")(el => s""""$el"""")
+      val elementNameAttr = elementName.fold("T")(el => s"tag.${el.capitalize}")
 
       if (attrType == "Boolean")
         p.println(s"""    val $attrName = new Attribute[$elementNameAttr, Boolean, Boolean](tagRef, "${attribute.name}")""")
@@ -169,7 +147,6 @@ object MDNParser {
         p.println(s"""    val $attrName = new Attribute[$elementNameAttr, scala.Option[$attrType], $attrType](tagRef, "${attribute.name}")""")
     }
     p.println("  }")
-    p.println()
   }
 
   def writeTagRefAttributes(path: File,
@@ -185,16 +162,19 @@ object MDNParser {
       p.println()
       p.println("trait Attributes {")
       writeTagRefAttributesClass(p, None, globalAttributes)
+      p.println()
 
-      p.println(s"""  implicit class TagExtensions[T <: SString](tag: Tag[T]) {""")
+      p.println("  implicit class TagExtensions[T <: SString](tag: Tag[T]) {")
       writeAttributes(p, "T", globalAttributes)
       p.println("  }")
+      p.println()
 
       elements.toList.sortBy(_.tag).foreach { element =>
         if (element.attributes.nonEmpty) {
           writeTagAttributesClass(p, element, element.attributes)
           p.println()
           writeTagRefAttributesClass(p, Some(element.tag), element.attributes)
+          p.println()
         }
       }
 
@@ -213,21 +193,13 @@ object MDNParser {
       val attrName = escapeScalaName(attribute.name)
       val attrType = attribute.tpe.map(mapDomType).getOrElse("String")
 
-      /*
-      val description = escapeScalaComment(attribute.description)
-
-      p.println( s"""    /**""")
-      p.println( s"""     * $description""")
-      p.println( s"""     */""")
-      */
-
       if (attrType == "Boolean")
         p.println( s"""    def $attrName: $attrType = tag.attributes.contains("${attribute.name}")""")
       else
         p.println( s"""    def $attrName: scala.Option[$attrType] = tag.attr("${attribute.name}").asInstanceOf[scala.Option[$attrType]]""")
 
       if (attrType == "Boolean")
-        p.println( s"""    def $attrName(value: $attrType): Tag[$elementName] = (if (value) tag.setAttr("${attribute.name}", "") else tag.remAttr("${attribute.name}"))""")
+        p.println( s"""    def $attrName(value: $attrType): Tag[$elementName] = if (value) tag.setAttr("${attribute.name}", "") else tag.remAttr("${attribute.name}")""")
       else
         p.println( s"""    def $attrName(value: $attrType): Tag[$elementName] = tag.setAttr("${attribute.name}", value)""")
     }
