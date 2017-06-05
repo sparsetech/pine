@@ -164,7 +164,7 @@ object MDNParser {
       writeTagRefAttributesClass(p, None, globalAttributes)
       p.println()
 
-      p.println("  implicit class TagExtensions[T <: Singleton](tag: Tag[T]) {")
+      p.println("  implicit class TagAttributes[T <: Singleton](tag: Tag[T]) {")
       writeAttributes(p, "T", globalAttributes)
       p.println("  }")
       p.println()

@@ -26,7 +26,7 @@ trait Attributes {
     val translate = new Attribute[T, scala.Option[String], String](tagRef, "translate")
   }
 
-  implicit class TagExtensions[T <: Singleton](tag: Tag[T]) {
+  implicit class TagAttributes[T <: Singleton](tag: Tag[T]) {
     def accesskey: scala.Option[String] = tag.attr("accesskey").asInstanceOf[scala.Option[String]]
     def accesskey(value: String): Tag[T] = tag.setAttr("accesskey", value)
     def `class`: scala.Option[String] = tag.attr("class").asInstanceOf[scala.Option[String]]
