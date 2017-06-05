@@ -43,12 +43,12 @@ class ExternalHtmlSpec extends FunSuite {
     val tpl = html("shared/src/test/html/list.html")
     val listItem = tpl.byId("list-item")
 
-    val inst = listItem.instantiate(
-      "list-item-title" -> Text(s"Title"),
-      "list-item-subtitle" -> Text(s"Subtitle")
-    ).toHtml
+    val inst = listItem.update { implicit ctx =>
+      TagRef("list-item-title")    := "Title"
+      TagRef("list-item-subtitle") := "Subtitle"
+    }.toHtml
 
-    assert(inst == """<div id="list-item"><div>Title</div><div>Subtitle</div></div>""")
+    assert(inst == """<div id="list-item"><div id="list-item-title">Title</div><div id="list-item-subtitle">Subtitle</div></div>""")
   }
 
   test("Bind list item from template") {
@@ -56,17 +56,20 @@ class ExternalHtmlSpec extends FunSuite {
     val tpl = html("shared/src/test/html/list.html")
 
     // When embedding list items, we need to drop the ID attribute
-    val listItem = tpl.byId("list-item").withoutId
+    val listItem = tpl.byId("list-item").remAttr("id")
 
-    val items = Seq("a", "b", "c").map { i =>
-      listItem.instantiate(
-        "list-item-title" -> Text(s"Title $i"),
-        "list-item-subtitle" -> Text(s"Subtitle $i")
-      )
+    val items = List("a", "b", "c").map { i =>
+      listItem.update { implicit ctx =>
+        TagRef("list-item-title") := s"Title $i"
+        TagRef("list-item-title").id.remove()
+
+        TagRef("list-item-subtitle") := s"Subtitle $i"
+        TagRef("list-item-subtitle").id.remove()
+      }
     }
 
     // Instantiate template and replace list
-    val replaced = tpl.updateById("list", _.set(items))
+    val replaced = tpl.update(implicit ctx => TagRef("list").set(items))
 
     val list = replaced.byId("list")
     assert(list.children.size == 3)

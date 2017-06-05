@@ -24,15 +24,19 @@ sealed trait TagRef[T <: Singleton] {
 }
 
 object TagRef {
-  case class ById[T <: Singleton](id: String) extends TagRef[T] {
-    override def matches(tag: Tag[T]): Boolean = tag.id.contains(id)
+  // Do not rename `tagRefId` to `id`, otherwise it shadows `TagRefAttributes.id`
+  case class ById[T <: Singleton](tagRefId: String) extends TagRef[T] {
+    override def matches(tag: Tag[T]): Boolean = tag.id.contains(tagRefId)
   }
 
   case class ByTag[T <: Singleton](tagName: String with T) extends TagRef[T] {
     override def matches(tag: Tag[T]): Boolean = tag.tagName == tagName
+    def each: TagRef[T] = ByTag(tagName)
   }
 
   def apply[T <: Singleton](id: String): TagRef.ById[T] = TagRef.ById[T](id)
-  def apply[T <: Singleton](id: String, child: String): TagRef.ById[T] = TagRef.ById[T](id + child)
-  def apply[T <: String with Singleton](implicit vt: ValueOf[T]): TagRef.ByTag[T] = TagRef.ByTag[T](vt.value)
+  def apply[T <: Singleton](id: String, child: String): TagRef.ById[T] =
+    TagRef.ById[T](id + child)
+  def apply[T <: String with Singleton](implicit vt: ValueOf[T]): TagRef.ByTag[T] =
+    TagRef.ByTag[T](vt.value)
 }

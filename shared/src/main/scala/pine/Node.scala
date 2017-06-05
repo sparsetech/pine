@@ -161,45 +161,6 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
       case n => n
     }
 
-  def withoutId: Tag[TagName] = remAttr("id")
-
-  def instantiateMap(nodes: Map[String, Node]): Tag[TagName] = {
-    val attrId = attributes.get("id")
-
-    if (nodes.exists { case (id, _) => attrId.contains(id) }) {
-      val idString = attrId.get.toString
-      copy(
-        attributes = attributes - "id",
-        children = Seq(nodes(idString)))
-    } else
-      copy(
-        children = children.map {
-          case tag: Tag[_] => tag.instantiateMap(nodes)
-          case n => n
-        }
-      )
-  }
-
-  def instantiate(nodes: (String, Node)*): Tag[TagName] =
-    instantiateMap(nodes.toMap)
-
-  def updateByTag[U <: Singleton](f: Tag[U] => Node)
-                                 (implicit vu: ValueOf[U]): Tag[TagName] =
-    partialMap {
-      case t @ Tag(vu.value, _, _) => f(t.asInstanceOf[Tag[U]])
-    }
-
-  def updateFirstByTag[U <: Singleton](f: Tag[U] => Node)
-                                      (implicit vu: ValueOf[U]): Tag[TagName] =
-    mapFirst {
-      case t @ Tag(vu.value, _, _) => f(t.asInstanceOf[Tag[U]])
-    }
-
-  def updateById(id: String, f: Tag[_] => Node): Tag[TagName] =
-    mapFirst {
-      case t @ Tag(_, _, _) if t.id.contains(id) => f(t)
-    }
-
   def byIdOpt(id: String): Option[Tag[_]] =
     find {
       case t @ Tag(_, _, _) => t.id.contains(id)
