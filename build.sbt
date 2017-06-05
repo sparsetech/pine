@@ -67,6 +67,7 @@ lazy val pine = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     // From https://github.com/scala-js/scala-js/pull/2954
     libraryDependencies := libraryDependencies.value.filterNot(_.name == "scalajs-compiler"),
     addCompilerPlugin("org.scala-js" % "scalajs-compiler" % scalaJSVersion cross CrossVersion.patch),
+
     libraryDependencies ++= Seq(
       "org.scala-js"   %%% "scalajs-dom" % ScalaJsDom,
       "org.scalatest"  %%% "scalatest"   % ScalaTest  % "test",
@@ -75,6 +76,9 @@ lazy val pine = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     jsDependencies += RuntimeDOM % "test",
     scalaJSStage in Global := FastOptStage
   ).nativeSettings(
+    libraryDependencies := libraryDependencies.value.filterNot(_.name == "nscplugin"),
+    addCompilerPlugin("org.scala-native" % "nscplugin" % "0.2.1" cross CrossVersion.patch),
+
     // Not available for 2.12 yet
     scalaVersion := Scala2_11,
     crossScalaVersions := Seq(Scala2_11)
