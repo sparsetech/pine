@@ -13,8 +13,8 @@ object NodeRender extends NodeRender[Node, dom.Element] {
 
   override def render(node: Node): dom.Element =
     node match {
-      case n: Tag[SString] => RenderTag.render(n)
-      case n: Text         => RenderText.render(n)
+      case n @ Tag(_, _, _) => RenderTag.render(n)
+      case n: Text          => RenderText.render(n)
     }
 
   implicit case object RenderTag extends NodeRender[Tag[SString], dom.Element] {

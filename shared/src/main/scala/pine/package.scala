@@ -6,4 +6,5 @@ package object pine
      with tag.Attributes
      with dsl.Imports {
   type SString = String with Singleton
+  type AnyTag  = Tag[SString]
 }

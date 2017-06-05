@@ -1,8 +1,10 @@
 package pine
 
+import scala.language.implicitConversions
+
 object Node {
   trait Implicits {
-    implicit def StringToTree(value: String): Node = Text(value)
+    implicit def StringToNode(value: String): Node = Text(value)
     implicit def BooleanToNode(value: Boolean): Node = Text(value.toString)
     implicit def NumericToNode[T](value: T)(implicit num: Numeric[T]): Node =
       Text(value.toString)

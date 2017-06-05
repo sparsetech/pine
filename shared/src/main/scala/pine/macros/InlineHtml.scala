@@ -59,7 +59,7 @@ object InlineHtml {
           }
         }
 
-      case tag: Tag[SString] =>
+      case tag @ Tag(_, _, _) =>
         val tagAttrs = mutable.ArrayBuffer.empty[c.Expr[Option[(String, Any)]]]
 
         tag.attributes.mapValues(_.toString).foreach { case (k, v) =>

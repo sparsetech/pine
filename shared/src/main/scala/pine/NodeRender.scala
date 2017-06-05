@@ -18,8 +18,8 @@ object NodeRender {
   object HTML extends NodeRender[Node, String] {
     override def render(node: Node): String =
       node match {
-        case n: Tag[SString] => RenderTag.render(n)
-        case n: Text         => RenderText.render(n)
+        case t @ Tag(_, _, _) => RenderTag.render(t)
+        case n: Text          => RenderText.render(n)
       }
 
     implicit case object RenderTag extends NodeRender[Tag[SString], String] {
@@ -44,8 +44,8 @@ object NodeRender {
 
     override def render(node: Node): String =
       node match {
-        case n: Tag[SString] => RenderTag.render(n)
-        case n: Text         => RenderText.render(n)
+        case t @ Tag(_, _, _) => RenderTag.render(t)
+        case n: Text          => RenderText.render(n)
       }
 
     implicit case object RenderTag extends NodeRender[Tag[SString], String] {

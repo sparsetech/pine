@@ -2,8 +2,8 @@
 import sbtcrossproject.{crossProject, CrossType}
 
 val Paradise   = "2.1.0"
-val Scala2_11  = "2.11.11"
-val Scala2_12  = "2.12.2"
+val Scala2_11  = "2.11.11-bin-typelevel-4"
+val Scala2_12  = "2.12.2-bin-typelevel-4"
 val ScalaTest  = "3.0.3"
 val ScalaCheck = "1.13.5"
 val ScalaJsDom = "0.9.1"
@@ -12,11 +12,12 @@ val SharedSettings = Seq(
   name := "pine",
   organization := "tech.sparse",
 
-  // scalaVersion := Scala2_12,
   scalaOrganization := "org.typelevel",
-  scalaVersion := "2.12.2-bin-typelevel-4",
-
+  scalaVersion := Scala2_12,
   scalacOptions += "-Yliteral-types",
+
+  // See https://github.com/sbt/sbt/pull/2659
+  incOptions := incOptions.value.withLogRecompileOnMacro(false),
 
   crossScalaVersions := Seq(Scala2_12, Scala2_11),
   pomExtra :=

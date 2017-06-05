@@ -20,7 +20,7 @@ object ExternalHtml {
 
     node match {
       case Text(text) => c.Expr(q"pine.Text($text)")
-      case tag: Tag[SString] =>
+      case tag @ Tag(_, _, _) =>
         val tagAttrs    = tag.attributes.mapValues(_.toString)
         val tagChildren = tag.children.map(convert(c)(_, root = false))
 

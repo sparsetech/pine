@@ -67,8 +67,8 @@ class NodePropSpec extends Properties("Node") {
   }
 
   def fun1: Node => Boolean = {
-    case _: Tag[SString] => true
-    case _               => false
+    case Tag(_, _, _) => true
+    case _            => false
   }
 
   def fun2: Node => Boolean = {
@@ -87,7 +87,7 @@ class NodePropSpec extends Properties("Node") {
     def iter(node: Node): Unit = {
       if (f(node)) collected += node
       node match {
-        case x: Tag[SString] => x.children.foreach(iter)
+        case t @ Tag(_, _, _) => t.children.foreach(iter)
         case _ =>
       }
     }
