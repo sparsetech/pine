@@ -75,7 +75,7 @@ object HtmlParser {
     if (reader.prefix("<?xml"))
       reader.collect('>').orElse(expected(reader, ">"))
 
-  def parseTag(reader: Reader): Option[Tag[SString]] =
+  def parseTag(reader: Reader): Option[Tag[_]] =
     if (!reader.prefix("<")) None
     else {
       val tagName = identifier(reader)
@@ -87,8 +87,7 @@ object HtmlParser {
         else if (reader.prefix(">")) parseChildren(reader, tagName)
         else expected(reader, "/>")
 
-      // TODO See https://github.com/typelevel/scala/issues/154
-      Some(Tag(tagName.asInstanceOf[SString], tagAttrs, tagChildren))
+      Some(Tag(tagName, tagAttrs, tagChildren))
     }
 
   def parseText(reader: Reader): Option[Text] = {

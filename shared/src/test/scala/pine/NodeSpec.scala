@@ -14,10 +14,8 @@ class NodeSpec extends FunSuite {
 
   test("byClass") {
     val span = html"""<div class="test"><span class="test2">42</span></div>"""
-
-    assert(span
-      .byClass[SString]("test")
-      .byClass[SString]("test2") == span.children.head)
+    val result = span.byClass("test").byClass("test2")
+    assert(result == span.children.head)
   }
 
   test("as") {
@@ -123,8 +121,13 @@ class NodeSpec extends FunSuite {
 
   test("Update by ID") {
     val div = html"""<div><span id="test"></span></div>"""
-    val html = div.updateById("test", _ +: html"<b>Hello</b>").toHtml
+
+    val html  = div.updateById("test", _.prepend(html"<b>Hello</b>")).toHtml
+    // TODO as[Singleton] is a workaround for https://github.com/typelevel/scala/issues/156
+    val html2 = div.updateById("test", _.as[Singleton] +: html"<b>Hello</b>").toHtml
+
     assert(html == """<div><span id="test"><b>Hello</b></span></div>""")
+    assert(html == html2)
   }
 
   test("Update by tag with multiple matches") {

@@ -23,7 +23,7 @@ object DOM {
         if (reference == null || reference.nextSibling == null) parent.appendChild(node)
         else parent.insertBefore(node, reference.nextSibling)
 
-      def toTree[T <: SString]: Tag[T] = DOM.toTree[T](parent)
+      def toTree: Node = DOM.toTree(parent)
     }
   }
 
@@ -42,7 +42,7 @@ object DOM {
       case _ => Map.empty
     }
 
-  private def _toTree(node: dom.Node): Node =
+  def toTree(node: dom.Node): Node =
     node match {
       case t: dom.raw.Text => Text(t.textContent)
 
@@ -60,21 +60,18 @@ object DOM {
           .filter {
             case _: dom.Comment => false
             case _              => true
-          }.map(_toTree)
+          }.map(toTree)
 
         Tag(
           // TODO See https://github.com/typelevel/scala/issues/154
-          tagName    = e.tagName.asInstanceOf[SString],
+          tagName    = e.tagName.asInstanceOf[String with Singleton],
           attributes = attributes,
           children   = children
         )
     }
 
-  def toTree[T <: SString](node: dom.Node): Tag[T] =
-    _toTree(node).asInstanceOf[Tag[T]]
-
-  def toTree[T <: SString](id: String): Tag[T] =
-    toTree(dom.document.getElementById(id)).as[T]
+  def toTree(id: String): Tag[_] =
+    toTree(dom.document.getElementById(id)).asInstanceOf[Tag[_]]
 
   def render(node: Node): dom.Element = NodeRender.render(node)
 

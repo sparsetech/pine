@@ -13,7 +13,7 @@ import pine.internal.HtmlParser
 object InlineHtml {
   trait Implicit {
     implicit class HtmlString(sc: StringContext) {
-      def html(args: Any*): Tag[SString] = macro HtmlImpl
+      def html(args: Any*): Tag[Singleton] = macro HtmlImpl
     }
   }
 
@@ -82,7 +82,7 @@ object InlineHtml {
 
         val tagChildren = tag.children.flatMap(n => iter(c)(n, args, root = false))
         val qAttrs = q"Seq[Option[(String, String)]](..$tagAttrs).collect { case Some(x) => x }.toMap"
-        Seq(c.Expr(q"Seq(pine.Tag(${tag.tagName}.asInstanceOf[SString], $qAttrs, Seq(..$tagChildren).flatten))"))
+        Seq(c.Expr(q"Seq(pine.Tag(${tag.tagName}, $qAttrs, Seq(..$tagChildren).flatten))"))
     }
   }
 
@@ -96,15 +96,15 @@ object InlineHtml {
     }.mkString
 
   def convert(c: Context)(parts: Seq[c.universe.Tree],
-                          args: Seq[c.Expr[Any]]): c.Expr[Tag[SString]] = {
+                          args: Seq[c.Expr[Any]]): c.Expr[Tag[Singleton]] = {
     import c.universe._
     val html = insertPlaceholders(c)(parts)
     val node = HtmlParser.fromString(html)
     val nodes = iter(c)(node, args, root = true).head
-    c.Expr(q"$nodes.head").asInstanceOf[c.Expr[Tag[SString]]]
+    c.Expr(q"$nodes.head.asInstanceOf[pine.Tag[Singleton]]")
   }
 
-  def HtmlImpl(c: Context)(args: c.Expr[Any]*): c.Expr[Tag[SString]] = {
+  def HtmlImpl(c: Context)(args: c.Expr[Any]*): c.Expr[Tag[Singleton]] = {
     import c.universe._
 
     c.prefix.tree match {

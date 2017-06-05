@@ -4,7 +4,4 @@ package object pine
      with macros.InlineHtml.Implicit
      with macros.ExternalHtml.Method
      with tag.Attributes
-     with dsl.Imports {
-  type SString = String with Singleton
-  type AnyTag  = Tag[SString]
-}
+     with dsl.Imports

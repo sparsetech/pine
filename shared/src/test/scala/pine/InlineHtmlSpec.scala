@@ -135,14 +135,15 @@ class InlineHtmlSpec extends FunSuite {
     ))
 
     val atomLink = xml
-      .children.head.asInstanceOf[Tag[SString]]
-      .children.head.asInstanceOf[Tag[SString]]
+      .children.head.asInstanceOf[Tag[_]]
+      .children.head.asInstanceOf[Tag[_]]
     assert(atomLink.tagName == "atom:link")
   }
 
   test("Resolve node") {
     val div = html"""<div id="a"><b>test</b><span id="b"></span></div>"""
-    assert(div.byId("b") == html"""<span id="b"></span>""")
+    val resolved = div.byId("b")
+    assert(resolved == html"""<span id="b"></span>""")
   }
 
   test("Resolve node (2)") {

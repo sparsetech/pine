@@ -129,7 +129,7 @@ object MDNParser {
                                  attributes: Seq[Attribute]): Unit = {
     elementName match {
       case None =>
-        p.println(s"""  implicit class TagRefAttributes[T <: SString](tagRef: TagRef[T]) {""")
+        p.println(s"""  implicit class TagRefAttributes[T <: Singleton](tagRef: TagRef[T]) {""")
 
       case Some(n) =>
         val className = n.capitalize
@@ -164,7 +164,7 @@ object MDNParser {
       writeTagRefAttributesClass(p, None, globalAttributes)
       p.println()
 
-      p.println("  implicit class TagExtensions[T <: SString](tag: Tag[T]) {")
+      p.println("  implicit class TagExtensions[T <: Singleton](tag: Tag[T]) {")
       writeAttributes(p, "T", globalAttributes)
       p.println("  }")
       p.println()

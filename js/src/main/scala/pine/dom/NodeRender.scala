@@ -17,8 +17,8 @@ object NodeRender extends NodeRender[Node, dom.Element] {
       case n: Text          => RenderText.render(n)
     }
 
-  implicit case object RenderTag extends NodeRender[Tag[SString], dom.Element] {
-    def render(node: Tag[SString]): dom.Element = {
+  implicit case object RenderTag extends NodeRender[Tag[_], dom.Element] {
+    def render(node: Tag[_]): dom.Element = {
       val element = dom.document.createElement(node.tagName)
 
       node.attributes.foreach { case (k, v) =>

@@ -1,8 +1,6 @@
 package pine
 
-import scala.reflect.ClassTag
-
-sealed trait TagRef[T <: SString] {
+sealed trait TagRef[T <: Singleton] {
   def matches(tag: Tag[T]): Boolean
 
   def set(nodes: List[Node])(implicit renderCtx: RenderContext): Unit =
@@ -26,15 +24,15 @@ sealed trait TagRef[T <: SString] {
 }
 
 object TagRef {
-  case class ById[T <: SString](id: String) extends TagRef[T] {
+  case class ById[T <: Singleton](id: String) extends TagRef[T] {
     override def matches(tag: Tag[T]): Boolean = tag.id.contains(id)
   }
 
-  case class ByTag[T <: SString](tagName: T) extends TagRef[T] {
+  case class ByTag[T <: Singleton](tagName: String with T) extends TagRef[T] {
     override def matches(tag: Tag[T]): Boolean = tag.tagName == tagName
   }
 
-  def apply[T <: SString](id: String): TagRef.ById[T] = TagRef.ById[T](id)
-  def apply[T <: SString](id: String, child: String): TagRef.ById[T] = TagRef.ById[T](id + child)
-  def apply[T <: SString](implicit vt: ValueOf[T]): TagRef.ByTag[T] = TagRef.ByTag[T](vt.value)
+  def apply[T <: Singleton](id: String): TagRef.ById[T] = TagRef.ById[T](id)
+  def apply[T <: Singleton](id: String, child: String): TagRef.ById[T] = TagRef.ById[T](id + child)
+  def apply[T <: String with Singleton](implicit vt: ValueOf[T]): TagRef.ByTag[T] = TagRef.ByTag[T](vt.value)
 }

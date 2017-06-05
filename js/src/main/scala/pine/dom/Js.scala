@@ -3,10 +3,10 @@ package pine.dom
 import org.scalajs.dom
 import pine._
 
-trait Js[T <: SString] { type X <: dom.html.Element }
+trait Js[T <: Singleton] { type X <: dom.html.Element }
 
 trait JsLowPrio {
-  implicit object JsTag extends Js[SString] { override type X = dom.html.Element }
+  implicit object JsTag extends Js[Singleton] { override type X = dom.html.Element }
 }
 
 object Js extends JsLowPrio {

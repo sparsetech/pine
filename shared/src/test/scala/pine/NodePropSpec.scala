@@ -22,9 +22,9 @@ class NodePropSpec extends Properties("Node") {
     s <- attributeValueGen
   } yield Text(s)
 
-  def tagGen(sz: Int): Gen[Tag[SString]] = tagGen(sz, Seq.empty)
+  def tagGen(sz: Int): Gen[Tag[_]] = tagGen(sz, Seq.empty)
 
-  def tagGen(sz: Int, parentTags: Seq[String]): Gen[Tag[SString]] =
+  def tagGen(sz: Int, parentTags: Seq[String]): Gen[Tag[_]] =
     for {
       // TODO Consider nesting rules (tag.Input cannot have children)
       tag <- Gen.oneOf("a", "b", "div", "span").filter { t =>
@@ -48,7 +48,7 @@ class NodePropSpec extends Properties("Node") {
           case _ => false
         }
       }
-    } yield Tag(tag, attributes, children)
+    } yield Tag(tag.asInstanceOf[String with Singleton], attributes, children)
 
   def sizedTree(sz: Int): Gen[Node] = sizedTree(sz, Seq.empty)
 
@@ -82,7 +82,7 @@ class NodePropSpec extends Properties("Node") {
     HtmlParser.fromString(node.toHtml) == node
   }
 
-  def myFilter(node: Tag[SString], f: Node => Boolean): Seq[Node] = {
+  def myFilter(node: Tag[_], f: Node => Boolean): Seq[Node] = {
     val collected = ListBuffer.empty[Node]
     def iter(node: Node): Unit = {
       if (f(node)) collected += node
@@ -103,7 +103,7 @@ class NodePropSpec extends Properties("Node") {
     tag.filter(f) == myFilter(tag, f)
   }
 
-  property("toText") = forAll(sized.flatMap(tagGen)) { tag: Tag[SString] =>
+  property("toText") = forAll(sized.flatMap(tagGen)) { tag: Tag[_] =>
     val text = tag.toText
     tag
       .filter(_.isInstanceOf[Text])

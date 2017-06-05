@@ -3,7 +3,7 @@ package pine.tag
 import pine._
 
 trait Attributes {
-  implicit class TagRefAttributes[T <: SString](tagRef: TagRef[T]) {
+  implicit class TagRefAttributes[T <: Singleton](tagRef: TagRef[T]) {
     val accesskey = new Attribute[T, scala.Option[String], String](tagRef, "accesskey")
     val `class` = new Attribute[T, scala.Option[String], String](tagRef, "class")
     val contenteditable = new Attribute[T, scala.Option[String], String](tagRef, "contenteditable")
@@ -26,7 +26,7 @@ trait Attributes {
     val translate = new Attribute[T, scala.Option[String], String](tagRef, "translate")
   }
 
-  implicit class TagExtensions[T <: SString](tag: Tag[T]) {
+  implicit class TagExtensions[T <: Singleton](tag: Tag[T]) {
     def accesskey: scala.Option[String] = tag.attr("accesskey").asInstanceOf[scala.Option[String]]
     def accesskey(value: String): Tag[T] = tag.setAttr("accesskey", value)
     def `class`: scala.Option[String] = tag.attr("class").asInstanceOf[scala.Option[String]]

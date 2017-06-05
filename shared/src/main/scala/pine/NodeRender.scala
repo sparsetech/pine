@@ -22,8 +22,8 @@ object NodeRender {
         case n: Text          => RenderText.render(n)
       }
 
-    implicit case object RenderTag extends NodeRender[Tag[SString], String] {
-      def render(node: Tag[SString]): String = {
+    implicit case object RenderTag extends NodeRender[Tag[_], String] {
+      def render(node: Tag[_]): String = {
         val isLiteral = node.tagName == "script"
         val children =
           if (isLiteral) node.children.collect { case t: Text => t.text }
@@ -48,8 +48,8 @@ object NodeRender {
         case n: Text          => RenderText.render(n)
       }
 
-    implicit case object RenderTag extends NodeRender[Tag[SString], String] {
-      def render(node: Tag[SString]): String = {
+    implicit case object RenderTag extends NodeRender[Tag[_], String] {
+      def render(node: Tag[_]): String = {
         def children(): String =
           node.children.map { child =>
             if (!lineBreak) Text.render(child)
