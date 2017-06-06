@@ -64,7 +64,7 @@ object DOM {
 
         Tag(
           // TODO See https://github.com/typelevel/scala/issues/154
-          tagName    = e.tagName.asInstanceOf[String with Singleton],
+          tagName    = e.tagName.toLowerCase.asInstanceOf[String with Singleton],
           attributes = attributes,
           children   = children
         )

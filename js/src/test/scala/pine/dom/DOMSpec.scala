@@ -220,8 +220,7 @@ class DOMSpec extends FunSuite {
     node.setAttribute("id", "test")
     node.appendChild(dom.document.createTextNode("Hello world"))
 
-    val s = DOM.toTree[tag.Span](node)
-    assert(s.isInstanceOf[tag.Span])
+    val s = DOM.toTree(node).asInstanceOf[Tag[tag.Span]]
     assert(s.children.size == 1)
     s.children.head match {
       case t: Text => assert(t.text == "Hello world")
@@ -234,7 +233,7 @@ class DOMSpec extends FunSuite {
     val node2 = dom.document.createTextNode("Hello world")
     node.appendChild(node2)
 
-    val test = DOM.toTree[tag.Span](node)
+    val test = DOM.toTree(node).asInstanceOf[Tag[tag.Span]]
     assert(test.children.nonEmpty)
 
     val text = test.children.head.asInstanceOf[Text]
@@ -249,7 +248,7 @@ class DOMSpec extends FunSuite {
     node2.setAttribute("checked", "")
     node.appendChild(node2)
 
-    val test = DOM.toTree[tag.Span](node)
+    val test = DOM.toTree(node).asInstanceOf[Tag[tag.Span]]
     assert(test.id.get == "test")
     assert(test.children.nonEmpty)
 
