@@ -76,6 +76,8 @@ lazy val pine = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     jsDependencies += RuntimeDOM % "test",
     scalaJSStage in Global := FastOptStage
   ).nativeSettings(
+    excludeFilter in Test := "*",
+
     libraryDependencies := libraryDependencies.value.filterNot(_.name == "nscplugin"),
     addCompilerPlugin("org.scala-native" % "nscplugin" % "0.2.1" cross CrossVersion.patch),
 
