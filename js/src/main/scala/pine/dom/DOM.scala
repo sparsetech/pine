@@ -73,8 +73,6 @@ object DOM {
   def toTree(id: String): Tag[_] =
     toTree(dom.document.getElementById(id)).asInstanceOf[Tag[_]]
 
-  def render(node: Node): dom.Element = NodeRender.render(node)
-
   def render(f: DomRenderContext => Unit): Unit = {
     val ctx = new DomRenderContext
     f(ctx)

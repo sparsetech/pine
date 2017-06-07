@@ -4,14 +4,19 @@ import org.scalajs.dom
 
 import pine._
 
-object NodeRender extends NodeRender[Node, dom.Element] {
+object NodeRender extends NodeRender[Node, dom.Node] {
   trait Implicit {
-    implicit class NodeToDom(node: Node) {
-      def toDom: dom.Element = DOM.render(node)
+    implicit class TextToDom(node: Text) {
+      def toDom: dom.raw.Text = RenderText.render(node)
+    }
+
+    implicit class TagToDom[T <: Singleton](node: Tag[T]) {
+      def toDom(implicit js: Js[T]): js.X =
+        RenderTag.render(node).asInstanceOf[js.X]
     }
   }
 
-  override def render(node: Node): dom.Element =
+  override def render(node: Node): dom.Node =
     node match {
       case n @ Tag(_, _, _) => RenderTag.render(n)
       case n: Text          => RenderText.render(n)
@@ -25,13 +30,13 @@ object NodeRender extends NodeRender[Node, dom.Element] {
         element.setAttribute(k, v.toString)
       }
 
-      node.children.map(DOM.render).foreach(element.appendChild)
+      node.children.map(NodeRender.render).foreach(element.appendChild)
       element
     }
   }
 
-  implicit case object RenderText extends NodeRender[Text, dom.Element] {
-    def render(node: Text): dom.Element =
-      dom.document.createTextNode(node.text).asInstanceOf[dom.Element]
+  implicit case object RenderText extends NodeRender[Text, dom.raw.Text] {
+    def render(node: Text): dom.raw.Text =
+      dom.document.createTextNode(node.text)
   }
 }
