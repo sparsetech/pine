@@ -1,7 +1,6 @@
 package pine
 
 sealed trait TagRef[T <: Singleton] {
-  def matches(tag: Tag[T]): Boolean
   def enqueue: Boolean
 
   def set(nodes: List[Node])(implicit renderCtx: RenderContext): Unit =
@@ -27,18 +26,15 @@ sealed trait TagRef[T <: Singleton] {
 object TagRef {
   // Do not rename `tagRefId` to `id`, otherwise it shadows `TagRefAttributes.id`
   case class ById[T <: Singleton](tagRefId: String) extends TagRef[T] {
-    override def matches(tag: Tag[T]): Boolean = tag.id.contains(tagRefId)
     override def enqueue: Boolean = false
   }
 
   case class ByTag[T <: Singleton](tagName: String with T, _each: Boolean = false) extends TagRef[T] {
-    override def matches(tag: Tag[T]): Boolean = tag.tagName == tagName
     override def enqueue: Boolean = _each
     def each: TagRef[T] = ByTag(tagName, true)
   }
 
   case class ByClass[T <: Singleton](`class`: String, _each: Boolean = false) extends TagRef[T] {
-    override def matches(tag: Tag[T]): Boolean = tag.hasClass(`class`)
     override def enqueue: Boolean = _each
     def each: TagRef[T] = ByClass(`class`, true)
   }

@@ -12,12 +12,19 @@ class NodeRenderContext extends RenderContext {
   override def render[T <: Singleton](tagRef: TagRef[T], diff: Diff): Unit =
     diffs.enqueue((tagRef.asInstanceOf[TagRef[Singleton]], diff))
 
+  def matches[T <: Singleton](tagRef: TagRef[T], tag: Tag[T]): Boolean =
+    tagRef match {
+      case TagRef.ById(tagRefId)    => tag.id.contains(tagRefId)
+      case TagRef.ByTag(tagName, _) => tag.tagName == tagName
+      case TagRef.ByClass(cls, _)   => tag.hasClass(cls)
+    }
+
   /** Recursively iterates over `node` and applies changes in place while
     * `diffs.nonEmpty` */
   def render(tag: Node): Option[Node] =
     tag match {
       case acc @ Tag(_, _, _) if diffs.nonEmpty =>
-        diffs.find(_._1.matches(acc)) match {
+        diffs.find { case (ref, _) => matches(ref, acc) } match {
           case None => Some(acc.set(acc.children.flatMap(render(_).toList)))
           case Some(rd @ (ref, diff)) =>
             val result = DiffRender.render(acc)(diff)
