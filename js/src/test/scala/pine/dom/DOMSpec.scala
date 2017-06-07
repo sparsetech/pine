@@ -156,22 +156,17 @@ class DOMSpec extends FunSuite {
 
     text := "Changed value"
     assert(node.outerHTML, """<div>Changed value</div>""")
-  }
+  }*/
 
   test("Obtain `options` from `select` node") {
-    ignore()
     val select = html"""<select id="type">
       <option value="opt1">Option 1</option>
       <option value="opt2" selected="true">Option 2</option>
     </select>"""
 
-    val node = select.toDom
-
-    val options = select.attribute("options").get.asInstanceOf[js.Dynamic]
-    val selectedIndex = select.attribute("selectedIndex").get.asInstanceOf[Int]
-
-    assert(options(selectedIndex).value, "opt2")
-  }*/
+    val node = select.toDom.asInstanceOf[dom.html.Select]
+    assert(node.options(node.selectedIndex).value == "opt2")
+  }
 
   test("Convert DOM node") {
     val node = dom.document.createElement("span")
