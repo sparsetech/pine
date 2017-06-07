@@ -2,8 +2,10 @@ package pine.dom
 
 import org.scalajs.dom
 import org.scalatest.FunSuite
-
 import pine._
+
+import scala.collection.mutable.ListBuffer
+import scala.scalajs.js
 
 class DOMSpec extends FunSuite {
   /*
@@ -91,50 +93,6 @@ class DOMSpec extends FunSuite {
 
     value := false
     assert(node.disabled, false)
-  }
-
-  test("Call `focus` on `input` node") {
-    val input = html"""<input type="text" />"""
-    val node = input.toDom.head.asInstanceOf[dom.html.Input]
-
-    var eventTriggered = 0
-    input.setEvent("focus", (event: Any) => eventTriggered += 1)
-
-    node.focus()  // Should not trigger event
-    assert(eventTriggered, 0)
-
-    input.triggerAction("focus")
-    assert(eventTriggered, 1)
-  }
-
-  test("Listen to `onclick` on `button` node") {
-    val input = html"""<button />"""
-    val node = input.toDom.head.asInstanceOf[dom.html.Input]
-
-    var eventTriggered = 0
-    input.setEvent("click", (event: Any) => eventTriggered += 1)
-
-    // TODO Support `new dom.Event("change")` in scala-js-dom
-    val event = js.Dynamic.newInstance(js.Dynamic.global.Event)("click")
-      .asInstanceOf[dom.raw.Event]
-    node.dispatchEvent(event)
-
-    assert(eventTriggered, 1)
-  }
-
-  test("Override event handler") {
-    val input = html"""<button />"""
-    val node = input.toDom.head.asInstanceOf[dom.html.Input]
-
-    val eventTriggered = ListBuffer.empty[Int]
-    input.setEvent("click", (event: Any) => eventTriggered += 23)
-    input.setEvent("click", (event: Any) => eventTriggered += 42)
-
-    val event = js.Dynamic.newInstance(js.Dynamic.global.Event)("click")
-      .asInstanceOf[dom.raw.Event]
-    node.dispatchEvent(event)
-
-    assert(eventTriggered, Seq(42))
   }
 
   test("Listen to child channel on `span` node") {
@@ -314,4 +272,52 @@ class DOMSpec extends FunSuite {
 
     assert(node2.asInstanceOf[js.Dynamic].className, "changed")
   }*/
+
+  test("Call `focus` on `input` node") {
+    val input = html"""<input type="text" />""".as[tag.Input]
+    val node = input.toDom.asInstanceOf[dom.html.Input]
+    dom.document.body.appendChild(node)
+
+    var eventTriggered = 0
+    TagRef[tag.Input].focus := { eventTriggered += 1 }
+
+    node.focus()
+    assert(eventTriggered == 1)
+
+    dom.document.body.removeChild(node)
+  }
+
+  test("Listen to `onclick` on `button` node") {
+    val input = html"""<button />"""
+    val node = input.toDom.asInstanceOf[dom.html.Button]
+    dom.document.body.appendChild(node)
+
+    var eventTriggered = 0
+    TagRef[tag.Button].click := { eventTriggered += 1 }
+
+    // TODO Support `new dom.Event("change")` in scala-js-dom
+    val event = js.Dynamic.newInstance(js.Dynamic.global.Event)("click")
+      .asInstanceOf[dom.raw.Event]
+    node.dispatchEvent(event)
+
+    assert(eventTriggered == 1)
+    dom.document.body.removeChild(node)
+  }
+
+  test("Override event handler") {
+    val input = html"""<button />"""
+    val node = input.toDom.asInstanceOf[dom.html.Button]
+    dom.document.body.appendChild(node)
+
+    val eventTriggered = ListBuffer.empty[Int]
+    TagRef[tag.Button].click := { _ => eventTriggered += 23 }
+    TagRef[tag.Button].click := { _ => eventTriggered += 42 }
+
+    val event = js.Dynamic.newInstance(js.Dynamic.global.Event)("click")
+      .asInstanceOf[dom.raw.Event]
+    node.dispatchEvent(event)
+
+    assert(eventTriggered == Seq(42))
+    dom.document.body.removeChild(node)
+  }
 }
