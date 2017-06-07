@@ -30,7 +30,7 @@ Pine is a functional HTML5 library for the Scala platform. It supports parsing, 
 * (1) Adds support for browser DOM
 * (2) Presently, Scala Native does not support running ScalaTest/ScalaCheck test suites
 
-## Example
+## Examples
 ```scala
 import pine._
 
@@ -38,6 +38,12 @@ val url  = "http://github.com/"
 val root = html"<a href=$url>GitHub</a>"
 
 println(root.toHtml)  // <a href="http://github.com/">GitHub</a>
+```
+
+### JavaScript
+```scala
+import pine.dom._
+println(root.toDom)  // [object HTMLAnchorElement]
 ```
 
 ## sbt
