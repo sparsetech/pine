@@ -268,7 +268,7 @@ class DOMSpec extends FunSuite {
     assert(node2.asInstanceOf[js.Dynamic].className, "changed")
   }*/
 
-  test("Call `focus` on `input` node") {
+  test("Listen to `onfocus` on `input` node") {
     val input = html"""<input type="text" />""".as[tag.Input]
     val node = input.toDom.asInstanceOf[dom.html.Input]
     dom.document.body.appendChild(node)
@@ -278,6 +278,23 @@ class DOMSpec extends FunSuite {
 
     node.focus()
     assert(eventTriggered == 1)
+
+    dom.document.body.removeChild(node)
+  }
+
+  test("Listen to `onclick` on `input` nodes") {
+    val div = html"""<div><input type="text" /><input type="test" /></div>""".as[tag.Div]
+    val node = div.toDom.asInstanceOf[dom.html.Div]
+    dom.document.body.appendChild(node)
+
+    val input = TagRef[tag.Input].each
+    assert(input.domAll.length == 2)
+
+    var eventTriggered = 0
+    input.click := { eventTriggered += 1 }
+
+    input.domAll.foreach(_.click())
+    assert(eventTriggered == 2)
 
     dom.document.body.removeChild(node)
   }
