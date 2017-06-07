@@ -70,4 +70,13 @@ class TagRefSpec extends FunSuite {
     val itemRef = TagRef["div"]("item", "0")
     assert(itemRef == TagRef["div"]("item0"))
   }
+
+  test("Invalid reference") {
+    val node = tag.Div
+    val ref = TagRef["span"]
+
+    assertThrows[Exception] {
+      node.update(implicit ctx => ref.replace(tag.B))
+    }
+  }
 }
