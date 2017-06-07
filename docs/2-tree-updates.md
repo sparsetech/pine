@@ -132,6 +132,22 @@ node.update(implicit ctx =>
 )
 ```
 
+## Tag references
+Tags can be referenced using:
+
+* ID attribute: `TagRef[tag.A]("id")`
+* Tag type: `TagRef[tag.A]`
+* Class name: `TagRef.byClass[tag.A]("class-name")`
+
+If you would like to perform a change on all occurrences, use the `each` attribute:
+
+```scala
+val div = html"""<div><span></span><span></span></div>"""
+div.update(implicit ctx =>
+  TagRef["span"].each += html"<b>Hello</b>").toHtml
+// <div><span><b>Hello</b></span><span><b>Hello</b></span></div>
+```
+
 ## Diffs
 Diffs encapsulate changes. The operations you have seen before like `:=` (`set`), `replace` etc. create immutable objects describing the change you would like to perform.
 

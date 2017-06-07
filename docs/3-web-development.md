@@ -24,10 +24,39 @@ This architecture has the following life cycle for a page `p`, which you could d
 3. `attach(p)`: Attach event handlers, only called in JavaScript (`js` project)
 4. `detach(p)`: Detach event handlers, only called in JavaScript (`js` project)
 
+## Render JavaScript node
+To render a Pine node as a JavaScript node, use the function `toDom`:
+
+```scala
+val div    = html"""<div><input type="text" /><input type="test" /></div>""".as[tag.Div]
+val jsNode = div.toDom  // dom.html.Div
+```
+
+`toDom` returns the correct JavaScript type depending on your node type:
+
+```scala
+Text("test").toDom  // dom.raw.Text
+```
+
+You need to add the JavaScript node manually to the DOM to be able to access it via a `TagRef`:
+
+```scala
+dom.document.body.appendChild(jsNode)
+```
+
 ## Access DOM node
+Use `dom` on a `TagRef` to access the underlying DOM node:
+
 ```scala
 val text = TagRef[tag.Div]("text")
 text.dom  // Returns browser node, of type org.scalajs.dom.html.Div
+```
+
+If you would like to retrieve all matching nodes, use `each` and `domAll` instead:
+
+```scala
+val input = TagRef[tag.Input].each
+input.domAll  // List[org.scalajs.dom.html.Input]
 ```
 
 ## Access DOM attribute
@@ -57,6 +86,13 @@ As an extension to content updates, you can set event handlers. In JavaScript pr
 ```scala
 val btnRemove = TagRef[tag.Button]("remove")
 btnRemove.click := println("Remove click")
+```
+
+It is possible to attach an event to all matching elements using `each`:
+
+```scala
+val input = TagRef[tag.Div].each
+input.click := println("Any div was clicked")
 ```
 
 See also `dom.Window` and `dom.Document` for global events.
