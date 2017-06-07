@@ -1,62 +1,33 @@
 package pine
 
 object DiffRender {
-  def render(node: Node, diff: Diff): Node =
-    node match {
-      case text: Text => text
+  def render[T <: Singleton](tag: Tag[T]): Diff => Option[Node] = {
+    case Diff.SetAttribute(attribute, value) =>
+      Some(tag.setAttr(attribute.name, value))
 
-      case tag @ Tag(_, _, _) =>
-        diff match {
-          case Diff.SetAttribute(ref, attribute, value) if ref.matches(tag) =>
-            tag.copy(attributes = tag.attributes + (attribute.name -> value))
-
-          case Diff.UpdateAttribute(ref, attribute, f) if ref.matches(tag) =>
-            val attrs =
-              if (HtmlHelpers.BooleanAttributes.contains(attribute.name)) {
-                val fBoolean = f.asInstanceOf[Boolean => Boolean]
-                if (fBoolean(tag.attributes.contains(attribute.name)))
-                  tag.attributes + (attribute.name -> "")
-                else
-                  tag.attributes - attribute.name
-              } else {
-                val fString = f.asInstanceOf[Option[String] => Option[String]]
-                val updated = fString(tag.attributes.get(attribute.name)
-                  .asInstanceOf[Option[String]])
-                updated match {
-                  case None    => tag.attributes - attribute.name
-                  case Some(s) => tag.attributes + (attribute.name -> s)
-                }
-              }
-
-            tag.copy(attributes = attrs)
-
-          case Diff.RemoveAttribute(ref, attribute) if ref.matches(tag) =>
-            tag.copy(attributes = tag.attributes - attribute.name)
-
-          case Diff.PrependChild(ref, child) if ref.matches(tag) =>
-            tag.copy(children = child +: tag.children)
-
-          case Diff.AppendChild(ref, child) if ref.matches(tag) =>
-            tag.copy(children = tag.children :+ child)
-
-          case Diff.Replace(ref, replacement) if ref.matches(tag) =>
-            replacement
-
-          case Diff.ReplaceChildren(ref, children) if ref.matches(tag) =>
-            tag.copy(children = children)
-
-          case Diff.RemoveChild(ref)
-            if tag.children.collect { case t @ Tag(_, _, _) => t }
-              .exists(c => ref.matches(c)) =>
-            val child = tag.children
-              .collect { case t @ Tag(_, _, _) => t }
-              .find(c => ref.matches(c)).get
-
-            tag.copy(children = tag.children.diff(Seq(child)))
-
-          case _ =>
-            val children = tag.children.map(render(_, diff))
-            tag.copy(children = children)
+    case Diff.UpdateAttribute(attribute, f) =>
+      // TODO May not work for custom boolean attributes
+      if (HtmlHelpers.BooleanAttributes.contains(attribute.name)) {
+        val fBoolean = f.asInstanceOf[Boolean => Boolean]
+        if (fBoolean(tag.attributes.contains(attribute.name)))
+          Some(tag.setAttr(attribute.name, ""))
+        else
+          Some(tag.remAttr(attribute.name))
+      } else {
+        val fString = f.asInstanceOf[Option[String] => Option[String]]
+        val updated = fString(tag.attributes.get(attribute.name)
+          .asInstanceOf[Option[String]])
+        updated match {
+          case None => Some(tag.remAttr(attribute.name))
+          case Some(s) => Some(tag.setAttr(attribute.name, s))
         }
-    }
+      }
+
+    case Diff.RemoveAttribute(attribute) => Some(tag.remAttr(attribute.name))
+    case Diff.PrependChild(child) => Some(tag.prepend(child))
+    case Diff.AppendChild(child) => Some(tag.append(child))
+    case Diff.Replace(replacement) => Some(replacement)
+    case Diff.ReplaceChildren(children) => Some(tag.set(children))
+    case Diff.RemoveChild() => None
+  }
 }

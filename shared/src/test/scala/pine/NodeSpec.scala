@@ -132,6 +132,13 @@ class NodeSpec extends FunSuite {
     assert(html == """<div><span id="test"><b>Hello</b></span></div>""")
   }
 
+  test("Update first by tag") {
+    val div = html"""<div><span></span><span></span></div>"""
+    val html = div.update(implicit ctx =>
+      TagRef["span"] := html"<b>Hello</b>").toHtml
+    assert(html == "<div><span><b>Hello</b></span><span></span></div>")
+  }
+
   test("Update by tag with multiple matches") {
     val div = html"""<div><span></span><span></span></div>"""
     val html = div.update(implicit ctx =>
@@ -139,11 +146,16 @@ class NodeSpec extends FunSuite {
     assert(html == "<div><span><b>Hello</b></span><span><b>Hello</b></span></div>")
   }
 
-  ignore("Update first by tag") {
+  test("Remove first by tag") {
     val div = html"""<div><span></span><span></span></div>"""
-    val html = div.update(implicit ctx =>
-      TagRef["span"] := html"<b>Hello</b>").toHtml
-    assert(html == "<div><span><b>Hello</b></span><span></span></div>")
+    val html = div.update(implicit ctx => TagRef["span"].remove()).toHtml
+    assert(html == "<div><span></span></div>")
+  }
+
+  test("Remove by tag with multiple matches") {
+    val div = html"""<div><span></span><span></span></div>"""
+    val html = div.update(implicit ctx => TagRef["span"].each.remove()).toHtml
+    assert(html == "<div></div>")
   }
 
   test("flatMap") {

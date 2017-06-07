@@ -1,7 +1,7 @@
 package pine.dom
 
 import org.scalajs.dom._
-import org.scalajs.dom.ext.KeyCode
+import org.scalajs.dom.ext._
 
 import pine._
 
@@ -16,14 +16,22 @@ trait Implicits {
     /** Resolve DOM node */
     def dom(implicit js: Js[T]): js.X = {
       val node = tagRef match {
-        case TagRef.ById(id)   => document.getElementById(id)
-        case TagRef.ByTag(tag) => document.getElementsByTagName(tag).item(0)
+        case TagRef.ById(id)      => document.getElementById(id)
+        case TagRef.ByTag(tag, _) => document.getElementsByTagName(tag).item(0)
       }
 
       Option(node).getOrElse(
         throw new Exception(s"Invalid node reference '$tagRef'")
       ).asInstanceOf[js.X]
     }
+
+    /** Resolve all DOM nodes */
+    def domAll(implicit js: Js[T]): List[js.X] =
+      tagRef match {
+        case TagRef.ByTag(tag, true) =>
+          document.getElementsByTagName(tag).toList.asInstanceOf[List[js.X]]
+        case _ => List(dom)
+      }
 
     def dragEnd(implicit js: Js[T]): Event[DragEvent] =
       new Event(dom.ondragend = _)

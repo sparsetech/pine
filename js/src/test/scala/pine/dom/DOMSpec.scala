@@ -259,7 +259,7 @@ class DOMSpec extends FunSuite {
     assert(node2.childNodes.length == 0)
   }
 
-  test("Replace node") {
+  test("Replace first occurrence") {
     val div = DOM.render(html"""<div id="test"><span id="hello">Hello</span></div>""")
     dom.document.body.appendChild(div)
 
@@ -269,8 +269,23 @@ class DOMSpec extends FunSuite {
     }
 
     assert(
-      DOM.toTree(dom.document.getElementById("test")) ==
-      html"""<div id="test"><div>World</div></div>""")
+      DOM.toTree(dom.document.getElementById("test")).toHtml ==
+      """<div id="test"><div>World</div></div>""")
+    dom.document.body.removeChild(div)
+  }
+
+  test("Replace all occurrences") {
+    val div = DOM.render(html"""<div id="test"><span></span><span></span></div>""")
+    dom.document.body.appendChild(div)
+
+    val ref = TagRef[tag.Span]
+    DOM.render { implicit ctx =>
+      ref.each.replace(html"<div>test</div>")
+    }
+
+    assert(
+      DOM.toTree(dom.document.getElementById("test")).toHtml ==
+        """<div id="test"><div>test</div><div>test</div></div>""")
     dom.document.body.removeChild(div)
   }
 
