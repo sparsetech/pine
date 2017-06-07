@@ -268,6 +268,20 @@ class DOMSpec extends FunSuite {
     assert(node2.asInstanceOf[js.Dynamic].className, "changed")
   }*/
 
+  test("Find elements by class") {
+    val div = html"""<div><span class="a test"></span><span class="b test"></span></div>""".as[tag.Div]
+    val node = div.toDom
+    dom.document.body.appendChild(node)
+
+    val input = TagRef.byClass[tag.Span]("test").each
+    assert(input.domAll.length == 2)
+
+    DOM.render(implicit ctx => input.`class`.remove())
+    assert(DOM.toTree(node).toHtml == "<div><span></span><span></span></div>")
+
+    dom.document.body.removeChild(node)
+  }
+
   test("Listen to `onfocus` on `input` node") {
     val input = html"""<input type="text" />""".as[tag.Input]
     val node = input.toDom

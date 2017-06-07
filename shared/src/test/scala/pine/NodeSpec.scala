@@ -166,4 +166,13 @@ class NodeSpec extends FunSuite {
     }.toHtml
     assert(html == "<div><span><b>Hello </b>world</span></div>")
   }
+
+  test("Find elements by class") {
+    val div = html"""<div><span class="a test"></span><span class="b test"></span></div>""".as[tag.Div]
+    val input = TagRef.byClass[tag.Span]("test").each
+    val updated = div.update { implicit ctx =>
+      input.`class`.remove()
+    }
+    assert(updated.toHtml == "<div><span></span><span></span></div>")
+  }
 }

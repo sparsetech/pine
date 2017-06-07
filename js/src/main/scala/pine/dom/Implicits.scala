@@ -16,8 +16,9 @@ trait Implicits {
     /** Resolve DOM node */
     def dom(implicit js: Js[T]): js.X = {
       val node = tagRef match {
-        case TagRef.ById(id)      => document.getElementById(id)
-        case TagRef.ByTag(tag, _) => document.getElementsByTagName(tag).item(0)
+        case TagRef.ById(id)        => document.getElementById(id)
+        case TagRef.ByTag(tag, _)   => document.getElementsByTagName(tag).item(0)
+        case TagRef.ByClass(cls, _) => document.getElementsByClassName(cls).item(0)
       }
 
       Option(node).getOrElse(
@@ -30,6 +31,8 @@ trait Implicits {
       tagRef match {
         case TagRef.ByTag(tag, true) =>
           document.getElementsByTagName(tag).toList.asInstanceOf[List[js.X]]
+        case TagRef.ByClass(cls, true) =>
+          document.getElementsByClassName(cls).toList.asInstanceOf[List[js.X]]
         case _ => List(dom)
       }
 

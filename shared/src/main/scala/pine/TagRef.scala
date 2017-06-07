@@ -37,9 +37,16 @@ object TagRef {
     def each: TagRef[T] = ByTag(tagName, true)
   }
 
+  case class ByClass[T <: Singleton](`class`: String, _each: Boolean = false) extends TagRef[T] {
+    override def matches(tag: Tag[T]): Boolean = tag.hasClass(`class`)
+    override def enqueue: Boolean = _each
+    def each: TagRef[T] = ByClass(`class`, true)
+  }
+
   def apply[T <: Singleton](id: String): ById[T] = ById[T](id)
   def apply[T <: Singleton](id: String, child: String): ById[T] =
     ById[T](id + child)
   def apply[T <: String with Singleton](implicit vt: ValueOf[T]): ByTag[T] =
     ByTag[T](vt.value)
+  def byClass[T <: Singleton](`class`: String): ByClass[T] = ByClass(`class`)
 }

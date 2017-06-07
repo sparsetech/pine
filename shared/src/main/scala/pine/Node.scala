@@ -181,9 +181,12 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
     byTagOpt[U].getOrElse(
       throw new IllegalArgumentException(s"Invalid tag name '$tagName'"))
 
+  def hasClass(`class`: String): Boolean =
+    this.`class`.exists(_.split(' ').toSet.contains(`class`))
+
   def byClassOpt(`class`: String): Option[Tag[_]] =
     find {
-      case t: Tag[_] => t.`class`.exists(_.split(' ').toSet.contains(`class`))
+      case t: Tag[_] => t.hasClass(`class`)
       case _         => false
     }.map(_.asInstanceOf[Tag[_]])
 
