@@ -3,7 +3,12 @@ package pine
 object DiffRender {
   def render[T <: Singleton](tag: Tag[T]): Diff => Option[Node] = {
     case Diff.SetAttribute(attribute, value) =>
-      Some(tag.setAttr(attribute.name, value))
+      if (!HtmlHelpers.BooleanAttributes.contains(attribute.name))
+        Some(tag.setAttr(attribute.name, value.toString))
+      else {
+        if (value.asInstanceOf[Boolean]) Some(tag.setAttr(attribute.name, ""))
+        else Some(tag.remAttr(attribute.name))
+      }
 
     case Diff.UpdateAttribute(attribute, f) =>
       // TODO May not work for custom boolean attributes

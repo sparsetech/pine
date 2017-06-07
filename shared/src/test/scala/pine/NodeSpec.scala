@@ -175,4 +175,19 @@ class NodeSpec extends FunSuite {
     }
     assert(updated.toHtml == "<div><span></span><span></span></div>")
   }
+
+  test("Update `disabled` attribute of `input` node") {
+    val input = html"""<input type="text" />""".as[tag.Input]
+    assert(!input.disabled)
+
+    val updated = input.update { implicit ctx =>
+      TagRef[tag.Input].disabled := true
+    }
+    assert(updated.disabled)
+
+    val updated2 = input.update { implicit ctx =>
+      TagRef[tag.Input].disabled := false
+    }
+    assert(!updated2.disabled)
+  }
 }
