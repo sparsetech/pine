@@ -43,16 +43,6 @@ class DOMSpec extends FunSuite {
     assert(node.href, "http://github.com/")
   }
 
-  test("Update `disabled` attribute of `input` node") {
-    val input = html"""<input type="text" />"""
-    val node = input.toDom.head.asInstanceOf[dom.html.Input]
-
-    assert(node.disabled, false)
-    input.attribute("disabled") := true
-
-    assert(node.disabled, true)
-  }
-
   test("Get updated `value` attribute of `input` node") {
     ignore("Detecting changes in externally modified DOM nodes")
     val input = html"""<input type="text" />"""
@@ -344,6 +334,20 @@ class DOMSpec extends FunSuite {
     node.dispatchEvent(event)
 
     assert(eventTriggered == Seq(42))
+    dom.document.body.removeChild(node)
+  }
+
+  test("Update `disabled` attribute of `input` node") {
+    val input = html"""<input type="text" />""".as[tag.Input]
+    val node = input.toDom
+    dom.document.body.appendChild(node)
+
+    assert(!node.disabled.get)
+    DOM.render { implicit ctx =>
+      TagRef[tag.Input].disabled := true
+    }
+
+    assert(node.disabled.get)
     dom.document.body.removeChild(node)
   }
 }
