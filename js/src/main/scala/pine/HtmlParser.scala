@@ -1,22 +1,21 @@
 package pine
 
-import org.scalajs
+import org.scalajs.dom.{DOMParser, document}
 import pine.dom.DOM
 
 object HtmlParser {
   def fromString(html: String): Node = {
-    val node = if (html.startsWith("<!DOCTYPE")) {
-      val document = scalajs.dom.document.implementation.createHTMLDocument("")
-      document.documentElement.innerHTML = html
-      document.firstChild.nextSibling
-    } else {
-      // TODO Not supported by PhantomJS?
-      // val parser = new DOMParser()
-      // val document = parser.parseFromString(html, "text/html")
-
-      val node = scalajs.dom.document.createElement("div")
-      node.innerHTML = html
-      node.firstChild
+    val tag  = html.substring(0, 5).toLowerCase
+    val node = tag match {
+      case "<!doc" | "<html" =>
+        new DOMParser().parseFromString(html, "text/html").documentElement
+      case "<head" | "<body" =>
+        new DOMParser().parseFromString(html, "text/html")
+          .getElementsByTagName(tag.tail)(0)
+      case _ =>
+        val node = document.createElement("body")
+        node.innerHTML = html
+        node.firstChild
     }
 
     Option(node)

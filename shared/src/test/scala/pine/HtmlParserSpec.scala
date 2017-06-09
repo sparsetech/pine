@@ -24,6 +24,36 @@ class HtmlParserSpec extends FunSuite {
     assert(HtmlParser.fromString(node.toHtml) == node)
   }
 
+  test("Parse HTML node") {
+    val node = tag.Html.set(Seq(tag.Head, tag.Body))
+    assert(HtmlParser.fromString(node.toHtml) == node)
+  }
+
+  test("Parse head node") {
+    val node = tag.Head
+    assert(HtmlParser.fromString(node.toHtml) == node)
+  }
+
+  test("Parse title node") {
+    val node = tag.Title
+    assert(HtmlParser.fromString(node.toHtml) == node)
+  }
+
+  test("Parse meta node") {
+    val node = tag.Meta
+    assert(HtmlParser.fromString(node.toHtml) == node)
+  }
+
+  test("Parse link node") {
+    val node = tag.Link
+    assert(HtmlParser.fromString(node.toHtml) == node)
+  }
+
+  test("Parse body node") {
+    val node = tag.Body
+    assert(HtmlParser.fromString(node.toHtml) == node)
+  }
+
   test("Parse text with entities") {
     val html = "&lpar;Hello world&rpar;"
     val node = HtmlParser.fromString(html)
