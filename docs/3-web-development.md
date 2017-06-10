@@ -6,9 +6,9 @@ Pine may be used for web development. You can use it in various architectures, f
 * Server-side rendered pages with client logic
 * Server-side rendered pages with client logic and client-side rendering
 
-_Server_ refers to either the JVM or LLVM back end, whereas _client_ refers to JavaScript.
+Please refer to our [sample project](https://github.com/sparsetech/pine-example) which implements the last architecture.
 
-We will add sample projects for some of the architectures to let you get started quickly.
+_Server_ refers to either the JVM or LLVM back end, whereas _client_ refers to JavaScript.
 
 All examples require a prior `import pine.dom._`.
 
@@ -97,7 +97,27 @@ input.click := println("Any div was clicked")
 
 See also `dom.Window` and `dom.Document` for global events.
 
-## IntelliJ support
+## Troubleshooting
+### Dangling rendering context
+If you encounter a *Dangling rendering context* exception, this may be reminiscent of a dangling pointer in C. The underlying problem is the same: You set up a rendering context passing it a function, which adds diffs to the context. After this function returns, the diffs are processed. Now, the rendering context should not be used anymore.
+
+Most likely an asynchronous event took place which re-used the implicit context from the scope and added a diff to it. One such example is:
+
+```scala
+DOM.render { implicit ctx =>
+  button.click := box.hide(true)
+}
+```
+
+When the button was clicked, `hide` will re-use `ctx`. The following fixes the situation:
+
+```scala
+button.click := DOM.render(implicit ctx => box.hide(true))
+```
+
+You can safely nest multiple `DOM.render` blocks. The inner-most block will always use the context from the immediate scope. It is advisable to limit the rendering context only to functions that change the DOM and take an implicit context. This could prevent problems as above since an implicit context would not have been found in the first place.
+
+### IntelliJ support
 When loading the sample projects in IntelliJ, some references in the `shared` module may not be resolved properly. This happens because IntelliJ doesn't add a dependency from platform-specific modules (i.e. `jvm` and `js`) to the `shared` module.
 
 To fix this, please go to `File -> Project Structure... -> Modules -> project-Sources -> Dependencies`. Then, add a module dependency to `projectJVM`/`projectNative` and `projectJS`.
