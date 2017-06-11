@@ -55,6 +55,11 @@ Pine makes use of a language extension called *literal types*, see [SIP-23](http
 scalaVersion      := "2.12.2-bin-typelevel-4"
 scalaOrganization := "org.typelevel"
 scalacOptions     += "-Yliteral-types"
+
+addCompilerPlugin(
+  "org.scalamacros" % "paradise" % Paradise cross CrossVersion.patch)
+
+libraryDependencies += scalaOrganization.value % "scala-reflect" % scalaVersion.value
 ```
 
 ### Scala.js settings
