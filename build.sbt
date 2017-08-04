@@ -1,12 +1,12 @@
 // Shadow sbt-scalajs' crossProject and CrossType until Scala.js 1.0.0 is released
 import sbtcrossproject.{crossProject, CrossType}
 
-val Paradise   = "2.1.0"
+val Paradise   = "2.1.1"
 val Scala2_11  = "2.11.11-bin-typelevel-4"
-val Scala2_12  = "2.12.2-bin-typelevel-4"
+val Scala2_12  = "2.12.3-bin-typelevel-4"
 val ScalaTest  = "3.0.3"
 val ScalaCheck = "1.13.5"
-val ScalaJsDom = "0.9.1"
+val ScalaJsDom = "0.9.3"
 
 val SharedSettings = Seq(
   name := "pine",
@@ -79,7 +79,7 @@ lazy val pine = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     excludeFilter in Test := "*",
 
     libraryDependencies := libraryDependencies.value.filterNot(_.name == "nscplugin"),
-    addCompilerPlugin("org.scala-native" % "nscplugin" % "0.2.1" cross CrossVersion.patch),
+    addCompilerPlugin("org.scala-native" % "nscplugin" % "0.3.1" cross CrossVersion.patch),
 
     // Not available for 2.12 yet
     scalaVersion := Scala2_11,

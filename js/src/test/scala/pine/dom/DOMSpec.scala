@@ -342,12 +342,12 @@ class DOMSpec extends FunSuite {
     val node = input.toDom
     dom.document.body.appendChild(node)
 
-    assert(!node.disabled.get)
+    assert(!node.disabled)
     DOM.render { implicit ctx =>
       TagRef[tag.Input].disabled := true
     }
 
-    assert(node.disabled.get)
+    assert(node.disabled)
     dom.document.body.removeChild(node)
   }
 }
