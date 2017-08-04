@@ -25,7 +25,7 @@ class HtmlParserSpec extends FunSuite {
   }
 
   test("Parse HTML node") {
-    val node = tag.Html.set(Seq(tag.Head, tag.Body))
+    val node = tag.Html.set(List(tag.Head, tag.Body))
     assert(HtmlParser.fromString(node.toHtml) == node)
   }
 

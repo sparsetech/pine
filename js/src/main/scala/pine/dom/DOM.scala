@@ -56,6 +56,7 @@ object DOM {
           }.toMap
 
         val children = (0 until e.childNodes.length)
+          .toList
           .map(e.childNodes(_))
           .filter {
             case _: dom.Comment => false

@@ -16,7 +16,7 @@ sealed trait Node {
 
   def +:[U <: Singleton](node: Tag[U]): Tag[U] = node.prepend(this)
   def map(f: Node => Node): T
-  def flatMap(f: Node => Seq[Node]): T
+  def flatMap(f: Node => List[Node]): T
   def mapFirst(f: PartialFunction[Node, Node]): T
 }
 
@@ -24,13 +24,13 @@ case class Text(text: String) extends Node {
   override type T = Text
 
   def map(f: Node => Node): T = this
-  def flatMap(f: Node => Seq[Node]): T = this
+  def flatMap(f: Node => List[Node]): T = this
   def mapFirst(f: PartialFunction[Node, Node]): T = this
 }
 
 case class Tag[TagName <: Singleton](tagName: String with TagName,
                                      attributes: Map[String, Any] = Map.empty,
-                                     children: Seq[Node] = Seq.empty
+                                     children: List[Node] = List.empty
                                     ) extends Node {
   override type T = Tag[TagName]
 
@@ -58,19 +58,19 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
   def append(node: Node): Tag[TagName] = set(children :+ node)
   def :+(node: Node): Tag[TagName] = append(node)
 
-  def appendAll(nodes: Seq[Node]): Tag[TagName] = set(children ++ nodes)
-  def ++(nodes: Seq[Node]): Tag[TagName] = appendAll(nodes)
+  def appendAll(nodes: List[Node]): Tag[TagName] = set(children ++ nodes)
+  def ++(nodes: List[Node]): Tag[TagName] = appendAll(nodes)
 
-  def set(node: Node): Tag[TagName] = copy(children = Seq(node))
-  def set(nodes: Seq[Node]): Tag[TagName] = copy(children = nodes)
+  def set(node: Node): Tag[TagName] = copy(children = List(node))
+  def set(nodes: List[Node]): Tag[TagName] = copy(children = nodes)
 
-  def clearAll: Tag[TagName] = copy(children = Seq.empty)
+  def clearAll: Tag[TagName] = copy(children = List.empty)
 
-  def remove(node: Node): Tag[TagName] = set(children.diff(Seq(node)))
+  def remove(node: Node): Tag[TagName] = set(children.diff(List(node)))
   def -(node: Node): Tag[TagName] = remove(node)
 
-  def removeAll(node: Seq[Node]): Tag[TagName] = set(children.diff(Seq(node)))
-  def --(node: Seq[Node]): Tag[TagName] = removeAll(node)
+  def removeAll(node: List[Node]): Tag[TagName] = set(children.diff(List(node)))
+  def --(node: List[Node]): Tag[TagName] = removeAll(node)
 
   def replace(reference: Node, node: Node): Tag[TagName] =
     copy(children = children.map(n => if (n == reference) node else n))
@@ -82,21 +82,21 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
     copy(attributes = attributes - attribute)
   def clearAttr: Tag[TagName] = copy(attributes = Map.empty)
 
-  private def filterChildren(f: Node => Boolean): Seq[Node] = {
-    val seq = if (f(this)) Seq(this) else Seq.empty
+  private def filterChildren(f: Node => Boolean): List[Node] = {
+    val seq = if (f(this)) List(this) else List.empty
     seq ++ children.flatMap {
       case t: Tag[_] => t.filterChildren(f)
-      case n         => if (f(n)) Seq(n) else Seq.empty
+      case n         => if (f(n)) List(n) else List.empty
     }
   }
 
-  def filter(f: Node => Boolean): Seq[Node] =
+  def filter(f: Node => Boolean): List[Node] =
     children.flatMap {
       case tag: Tag[_] => tag.filterChildren(f)
-      case node        => if (f(node)) Seq(node) else Seq.empty
+      case node        => if (f(node)) List(node) else List.empty
     }
 
-  def filterTags(f: Tag[_] => Boolean): Seq[Tag[_]] =
+  def filterTags(f: Tag[_] => Boolean): List[Tag[_]] =
     filter {
       case t: Tag[_] if f(t) => true
       case _                 => false
@@ -127,7 +127,7 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
     iter(this).asInstanceOf[T]
   }
 
-  def flatMap(f: Node => Seq[Node]): Tag[TagName] =
+  def flatMap(f: Node => List[Node]): Tag[TagName] =
     copy(children = children.flatMap(n => f(n.flatMap(f))))
 
   def mapFirst(f: PartialFunction[Node, Node]): Tag[TagName] = {

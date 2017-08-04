@@ -22,9 +22,9 @@ class NodePropSpec extends Properties("Node") {
     s <- attributeValueGen
   } yield Text(s)
 
-  def tagGen(sz: Int): Gen[Tag[_]] = tagGen(sz, Seq.empty)
+  def tagGen(sz: Int): Gen[Tag[_]] = tagGen(sz, List.empty)
 
-  def tagGen(sz: Int, parentTags: Seq[String]): Gen[Tag[_]] =
+  def tagGen(sz: Int, parentTags: List[String]): Gen[Tag[_]] =
     for {
       // TODO Consider nesting rules (tag.Input cannot have children)
       tag <- Gen.oneOf("a", "b", "div", "span").filter { t =>
@@ -34,7 +34,7 @@ class NodePropSpec extends Properties("Node") {
       attributes <- Gen.mapOfN(sz / 3, attribute)
 
       n <- Gen.choose(sz / 5, sz / 2)
-      children <- Gen.listOfN(n, sizedTree(sz / 2, parentTags ++ Seq(tag))).filter { l =>
+      children <- Gen.listOfN(n, sizedTree(sz / 2, parentTags ++ List(tag))).filter { l =>
         l.length <= 1 || !l.zip(l.tail).exists {
           // Two adjacent nodes cannot be text nodes
           case (left, right) =>
@@ -50,9 +50,9 @@ class NodePropSpec extends Properties("Node") {
       }
     } yield Tag(tag.asInstanceOf[String with Singleton], attributes, children)
 
-  def sizedTree(sz: Int): Gen[Node] = sizedTree(sz, Seq.empty)
+  def sizedTree(sz: Int): Gen[Node] = sizedTree(sz, List.empty)
 
-  def sizedTree(sz: Int, parentTags: Seq[String]): Gen[Node] =
+  def sizedTree(sz: Int, parentTags: List[String]): Gen[Node] =
     if (sz <= 0) textGen
     else Gen.frequency((1, textGen), (3, tagGen(sz, parentTags)))
 
@@ -82,7 +82,7 @@ class NodePropSpec extends Properties("Node") {
     HtmlParser.fromString(node.toHtml) == node
   }
 
-  def myFilter(node: Tag[_], f: Node => Boolean): Seq[Node] = {
+  def myFilter(node: Tag[_], f: Node => Boolean): List[Node] = {
     val collected = ListBuffer.empty[Node]
     def iter(node: Node): Unit = {
       if (f(node)) collected += node
@@ -92,7 +92,7 @@ class NodePropSpec extends Properties("Node") {
       }
     }
     node.children.foreach(iter)
-    collected
+    collected.toList
   }
 
   property("filter (forall)") = forAll(sized.flatMap(tagGen), filterFunGen) { (tag, f) =>

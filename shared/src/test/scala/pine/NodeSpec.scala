@@ -161,8 +161,8 @@ class NodeSpec extends FunSuite {
   test("flatMap") {
     val div = html"<div><span>world</span></div>"
     val html = div.flatMap {
-      case t: Text => Seq(html"<b>Hello </b>", t)
-      case n => Seq(n)
+      case t: Text => List(html"<b>Hello </b>", t)
+      case n => List(n)
     }.toHtml
     assert(html == "<div><span><b>Hello </b>world</span></div>")
   }

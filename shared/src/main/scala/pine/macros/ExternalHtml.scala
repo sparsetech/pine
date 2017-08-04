@@ -24,7 +24,7 @@ object ExternalHtml {
         val tagAttrs    = tag.attributes.mapValues(_.toString)
         val tagChildren = tag.children.map(convert(c)(_, root = false))
 
-        c.Expr(q"pine.Tag(${tag.tagName}, $tagAttrs, Seq(..$tagChildren))")
+        c.Expr(q"pine.Tag(${tag.tagName}, $tagAttrs, List(..$tagChildren))")
     }
   }
 

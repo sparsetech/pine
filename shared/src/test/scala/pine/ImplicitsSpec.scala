@@ -8,7 +8,7 @@ object ImplicitsSpec extends SimpleTestSuite {
     val title = Var("test")
 
     val span = html"""<span></span>"""
-    span.setChildren(Seq(title))
+    span.setChildren(List(title))
 
     assertEquals(span.toHtml, "<span>test</span>")
 

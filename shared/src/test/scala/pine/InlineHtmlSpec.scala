@@ -20,7 +20,7 @@ class InlineHtmlSpec extends FunSuite {
 
   test("Look up by ID") {
     val root = html"""<div></div>"""
-    val appended = root ++ Seq(
+    val appended = root ++ List(
       html"""<div id="a"></div>""",
       html"""<div id="b"></div>""")
 
@@ -92,8 +92,8 @@ class InlineHtmlSpec extends FunSuite {
     assert(div.toHtml == "<div><span>test</span></div>")
   }
 
-  test("Seq[Node] placeholders") {
-    val spans = Seq(
+  test("List[Node] placeholders") {
+    val spans = List(
       html"<span>test</span>",
       html"<span>test2</span>"
     )

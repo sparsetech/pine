@@ -19,7 +19,7 @@ object InlineHtml {
 
   def iter(c: Context)(node: Node,
                        args: Seq[c.Expr[Any]],
-                       root: Boolean): Seq[c.Expr[Seq[Node]]] = {
+                       root: Boolean): List[c.Expr[List[Node]]] = {
     import c.universe._
 
     val integerType = definitions.IntTpe
@@ -29,29 +29,29 @@ object InlineHtml {
       appliedType(definitions.OptionClass, List(stringType))
     val nodeType = c.mirror.staticClass("pine.Node")
        .toType
-    val seqType = c.mirror.staticClass("scala.collection.Seq")
-    val seqNodeType = appliedType(seqType, List(nodeType))
+    val listType = c.mirror.staticClass("scala.collection.immutable.List")
+    val listNodeType = appliedType(listType, List(nodeType))
 
     node match {
       case Text(text) =>
         // TODO Find a better solution
-        val parts = text.replaceAll("""\$\{\d+\}""", "_$0_").split("_").toSeq
+        val parts = text.replaceAll("""\$\{\d+\}""", "_$0_").split("_").toList
 
         parts.map { v =>
           if (!v.startsWith("${") || !v.endsWith("}"))
-            c.Expr(q"Seq(pine.Text($v))")
+            c.Expr(q"List(pine.Text($v))")
           else {
             val index = v.drop(2).init.toInt
 
             args(index) match {
-              case n if n.tree.tpe <:< nodeType => c.Expr(q"Seq($n)")
-              case n if n.tree.tpe <:< seqNodeType =>
-                n.asInstanceOf[c.Expr[Seq[Node]]]
+              case n if n.tree.tpe <:< nodeType => c.Expr(q"List($n)")
+              case n if n.tree.tpe <:< listNodeType =>
+                n.asInstanceOf[c.Expr[List[Node]]]
               case n if n.tree.tpe =:= integerType ||
                         n.tree.tpe =:= booleanType =>
-                c.Expr(q"Seq(pine.Text($n.toString))")
+                c.Expr(q"List(pine.Text($n.toString))")
               case n if n.tree.tpe =:= stringType =>
-                c.Expr(q"Seq(pine.Text($n))")
+                c.Expr(q"List(pine.Text($n))")
               case n =>
                 c.error(c.enclosingPosition, s"Type ${n.tree.tpe} (${n.tree.symbol}) not supported")
                 null
@@ -82,11 +82,11 @@ object InlineHtml {
 
         val tagChildren = tag.children.flatMap(n => iter(c)(n, args, root = false))
         val qAttrs = q"Seq[Option[(String, String)]](..$tagAttrs).collect { case Some(x) => x }.toMap"
-        Seq(c.Expr(q"Seq(pine.Tag(${tag.tagName}, $qAttrs, Seq(..$tagChildren).flatten))"))
+        List(c.Expr(q"List(pine.Tag(${tag.tagName}, $qAttrs, List(..$tagChildren).flatten))"))
     }
   }
 
-  def insertPlaceholders(c: Context)(parts: Seq[c.universe.Tree]): String =
+  def insertPlaceholders(c: Context)(parts: List[c.universe.Tree]): String =
     parts.zipWithIndex.map { case (tree, i) =>
       val p = Helpers.literalValueTree[String](c)(tree)
 
@@ -95,7 +95,7 @@ object InlineHtml {
       else p + "${" + i + "}"
     }.mkString
 
-  def convert(c: Context)(parts: Seq[c.universe.Tree],
+  def convert(c: Context)(parts: List[c.universe.Tree],
                           args: Seq[c.Expr[Any]]): c.Expr[Tag[Singleton]] = {
     import c.universe._
     val html = insertPlaceholders(c)(parts)

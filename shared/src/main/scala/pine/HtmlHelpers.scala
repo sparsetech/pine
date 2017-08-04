@@ -100,7 +100,7 @@ object HtmlHelpers {
 
   def node(tagName: String,
            attributes: Map[String, Any],
-           contents: Seq[String]): String = {
+           contents: List[String]): String = {
     val attrs =
       if (attributes.isEmpty) ""
       else s" ${encodeAttributes(attributes)}"
