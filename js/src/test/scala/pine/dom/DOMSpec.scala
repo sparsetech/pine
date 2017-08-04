@@ -217,6 +217,21 @@ class DOMSpec extends FunSuite {
     dom.document.body.removeChild(div)
   }
 
+  test("Replace first occurrence with multiple children") {
+    val div = html"""<div id="test"><span id="hello">Hello</span></div>""".toDom
+    dom.document.body.appendChild(div)
+
+    val ref = TagRef[tag.Span]
+    DOM.render { implicit ctx =>
+      ref.replace(List(html"<div>Hello</div>", html"<div>World</div>"))
+    }
+
+    assert(
+      DOM.toTree(dom.document.getElementById("test")).toHtml ==
+        """<div id="test"><div>Hello</div><div>World</div></div>""")
+    dom.document.body.removeChild(div)
+  }
+
   test("Replace all occurrences") {
     val div = html"""<div id="test"><span></span><span></span></div>""".toDom
     dom.document.body.appendChild(div)

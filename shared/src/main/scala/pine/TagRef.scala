@@ -9,8 +9,11 @@ sealed trait TagRef[T <: Singleton] {
   def set(node: Node)(implicit renderCtx: RenderContext): Unit =
     renderCtx.render(this, Diff.ReplaceChildren(List(node)))
 
-  def replace(node: Node)(implicit renderCtx: RenderContext): Unit =
+  def replace(node: List[Node])(implicit renderCtx: RenderContext): Unit =
     renderCtx.render(this, Diff.Replace(node))
+
+  def replace(node: Node)(implicit renderCtx: RenderContext): Unit =
+    renderCtx.render(this, Diff.Replace(List(node)))
 
   def remove()(implicit renderCtx: RenderContext): Unit =
     renderCtx.render(this, Diff.RemoveChild())

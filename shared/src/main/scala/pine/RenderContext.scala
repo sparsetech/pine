@@ -21,11 +21,11 @@ class NodeRenderContext extends RenderContext {
 
   /** Recursively iterates over `node` and applies changes in place while
     * `diffs.nonEmpty` */
-  def render(tag: Node): Option[Node] =
+  def render(tag: Node): List[Node] =
     tag match {
       case acc @ Tag(_, _, _) if diffs.nonEmpty =>
         diffs.find { case (ref, _) => matches(ref, acc) } match {
-          case None => Some(acc.set(acc.children.flatMap(render(_).toList)))
+          case None => List(acc.set(acc.children.flatMap(render)))
           case Some(rd @ (ref, diff)) =>
             val result = DiffRender.render(acc)(diff)
             if (ref.enqueue) result
@@ -35,7 +35,7 @@ class NodeRenderContext extends RenderContext {
             }
         }
 
-      case result => Some(result)
+      case result => List(result)
     }
 
   def commit[T <: Singleton](tag: Tag[T]): Tag[T] = {
@@ -43,6 +43,7 @@ class NodeRenderContext extends RenderContext {
     if (r.isEmpty) throw new Exception("Root node cannot be removed")
     else if (diffs.exists(!_._1.enqueue))
       throw new Exception(s"Some diffs could not be applied: $diffs")
-    r.get.asInstanceOf[Tag[T]]
+    assert(r.length == 1)
+    r.head.asInstanceOf[Tag[T]]
   }
 }
