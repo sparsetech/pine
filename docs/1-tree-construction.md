@@ -59,6 +59,34 @@ node.toHtml == html  // true
 
 HTML code is parsed during compile-time and then translated to an immutable tree. This reduces any runtime overhead. HTML can be specified inline or loaded from external files.
 
+## XML
+XML has slightly different semantics with regards to self-closing tags. The following example is valid XML, but would yield a parse error when parsed as HTML:
+
+```xml
+<item><link></link></item>
+```
+
+Also, the typical XML header `<?xml` is not valid HTML. In order to parse documents in the XML mode, use `XmlParser` or the `xml` string interpolator, respectively:
+
+```scala
+XmlParser.fromString("""<item><link></link></item>""")
+```
+
+```scala
+xml"""
+  <?xml version="1.0" encoding="UTF-8"?>
+  <rss version="2.0"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+      <atom:link type="application/rss+xml" />
+    </channel>
+  </rss>
+"""
+```
+
+The underlying data structures are the same for both HTML and XML trees. Unlike [scala-xml](https://github.com/scala/scala-xml), Pine does not strive to provide a full XML implementation.
+
 ## Conversion
 Some functions return `Tag[_]` when the tag type cannot be statically determined. A more concrete type is useful if you want to access element-specific attributes, like `href` on anchor nodes. You can use `as` to convert a tag to its correct type:
 

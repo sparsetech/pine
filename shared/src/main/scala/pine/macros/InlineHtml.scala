@@ -13,6 +13,7 @@ import pine.internal.HtmlParser
 object InlineHtml {
   trait Implicit {
     implicit class HtmlString(sc: StringContext) {
+      def xml (args: Any*): Tag[Singleton] = macro XmlImpl
       def html(args: Any*): Tag[Singleton] = macro HtmlImpl
     }
   }
@@ -95,13 +96,24 @@ object InlineHtml {
       else p + "${" + i + "}"
     }.mkString
 
-  def convert(c: Context)(parts: List[c.universe.Tree],
-                          args: Seq[c.Expr[Any]]): c.Expr[Tag[Singleton]] = {
+  def convert(c: Context, xml: Boolean)
+             (parts: List[c.universe.Tree],
+              args: Seq[c.Expr[Any]]
+             ): c.Expr[Tag[Singleton]] = {
     import c.universe._
     val html = insertPlaceholders(c)(parts)
-    val node = HtmlParser.fromString(html)
+    val node = HtmlParser.fromString(html, xml)
     val nodes = iter(c)(node, args, root = true).head
     c.Expr(q"$nodes.head.asInstanceOf[pine.Tag[Singleton]]")
+  }
+
+  def XmlImpl(c: Context)(args: c.Expr[Any]*): c.Expr[Tag[Singleton]] = {
+    import c.universe._
+
+    c.prefix.tree match {
+      case Apply(_, List(Apply(_, parts))) =>
+        convert(c, xml = true)(parts, args)
+    }
   }
 
   def HtmlImpl(c: Context)(args: c.Expr[Any]*): c.Expr[Tag[Singleton]] = {
@@ -109,7 +121,7 @@ object InlineHtml {
 
     c.prefix.tree match {
       case Apply(_, List(Apply(_, parts))) =>
-        convert(c)(parts, args)
+        convert(c, xml = false)(parts, args)
     }
   }
 }

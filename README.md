@@ -2,13 +2,13 @@
 [![Build Status](https://travis-ci.org/sparsetech/pine.svg)](https://travis-ci.org/sparsetech/pine)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/tech.sparse/pine_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/tech.sparse/pine_2.12)
 
-Pine is a functional HTML5 library for the Scala platform. It supports parsing, manipulating and rendering of HTML. Pine provides type-safe bindings for HTML5 generated from [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element). It implements an immutable tree which can be created directly from compile-time or runtime HTML content. The tree may be manipulated and rendered back as HTML or as a browser node.
+Pine is a functional HTML5 and XML library for the Scala platform. It supports parsing, manipulating and rendering of HTML. Pine provides type-safe bindings for HTML5 generated from [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element). It implements an immutable tree which can be created directly from compile-time or runtime HTML/XML content. The tree may be manipulated and rendered back as HTML or as a browser node.
 
 ## Features
 * Immutable and typed trees
 * Type-safe bindings, generated from MDN
 * Support for custom elements and attributes
-* HTML parser (recursive descent)
+* HTML5 and XML parser (recursive descent)
 * Macros for compile-time HTML string/file parsing
 * Tree manipulation
 * Rendering as HTML strings

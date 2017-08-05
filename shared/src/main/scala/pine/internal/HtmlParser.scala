@@ -49,16 +49,16 @@ object HtmlParser {
       case Some(value) => value
     }
 
-  def parseChildren(reader: Reader, tagName: String): List[Node] =
-    if (HtmlHelpers.VoidElements.contains(tagName)) List.empty
-    else if (HtmlHelpers.CdataElements.contains(tagName)) {
+  def parseChildren(reader: Reader, tagName: String, xml: Boolean): List[Node] =
+    if (!xml && HtmlHelpers.VoidElements.contains(tagName)) List.empty
+    else if (!xml && HtmlHelpers.CdataElements.contains(tagName)) {
       val result = reader.collect(s"</$tagName>").getOrElse(
         expected(reader, s"</$tagName>"))
       List(Text(result))
     } else {
       @tailrec def f(nodes: List[Node]): List[Node] =
         if (reader.prefix(s"</$tagName>")) nodes
-        else parseNode(reader) match {
+        else parseNode(reader, xml) match {
           case None    => nodes
           case Some(t) => f(nodes :+ t)
         }
@@ -78,7 +78,7 @@ object HtmlParser {
     if (reader.prefix("<?xml"))
       reader.collect('>').orElse(expected(reader, ">"))
 
-  def parseTag(reader: Reader): Option[Tag[_]] =
+  def parseTag(reader: Reader, xml: Boolean): Option[Tag[_]] =
     if (!reader.prefix("<")) None
     else {
       val tagName = identifier(reader)
@@ -86,7 +86,7 @@ object HtmlParser {
       val tagAttrs = parseAttrs(reader)
       val tagChildren =
         if (reader.prefix("/>")) List.empty
-        else if (reader.prefix(">")) parseChildren(reader, tagName)
+        else if (reader.prefix(">")) parseChildren(reader, tagName, xml)
         else expected(reader, "/>")
 
       Some(Tag(tagName, tagAttrs, tagChildren))
@@ -98,18 +98,18 @@ object HtmlParser {
     else Some(Text(HtmlHelpers.decodeText(text)))
   }
 
-  def parseNode(reader: Reader): Option[Node] = {
+  def parseNode(reader: Reader, xml: Boolean): Option[Node] = {
     skipComment(reader)
-    parseTag(reader).orElse(parseText(reader))
+    parseTag(reader, xml).orElse(parseText(reader))
   }
 
-  def fromString(html: String): Node = {
+  def fromString(html: String, xml: Boolean): Node = {
     val reader = new Reader(html)
     reader.skip(_.isWhitespace)
     skipDocType(reader)
     reader.skip(_.isWhitespace)
-    skipXml(reader)
+    if (xml) skipXml(reader)
     reader.skip(_.isWhitespace)
-    parseNode(reader).getOrElse(Text(""))
+    parseNode(reader, xml).getOrElse(Text(""))
   }
 }

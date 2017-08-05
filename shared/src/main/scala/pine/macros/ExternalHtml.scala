@@ -12,6 +12,7 @@ import pine.internal.HtmlParser
 object ExternalHtml {
   trait Method {
     /** Expose `html` as a global method */
+    def xml (fileName: String): Tag[Singleton] = macro XmlImpl
     def html(fileName: String): Tag[Singleton] = macro HtmlImpl
   }
 
@@ -28,11 +29,18 @@ object ExternalHtml {
     }
   }
 
-  def HtmlImpl(c: Context)(fileName: c.Expr[String]): c.Expr[Tag[Singleton]] = {
+  def parse(c: Context, xml: Boolean)
+           (fileName: c.Expr[String]): c.Expr[Tag[Singleton]] = {
     val fileNameValue = Helpers.literalValueExpr(c)(fileName)
     val html = io.Source.fromFile(new File(fileNameValue)).mkString
-    val node = HtmlParser.fromString(html)
+    val node = HtmlParser.fromString(html, xml)
     convert(c)(node, root = true)
       .asInstanceOf[c.Expr[Tag[Singleton]]]
   }
+
+  def XmlImpl(c: Context)(fileName: c.Expr[String]): c.Expr[Tag[Singleton]] =
+    parse(c, xml = true)(fileName)
+
+  def HtmlImpl(c: Context)(fileName: c.Expr[String]): c.Expr[Tag[Singleton]] =
+    parse(c, xml = false)(fileName)
 }

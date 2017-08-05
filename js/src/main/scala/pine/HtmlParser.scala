@@ -23,3 +23,14 @@ object HtmlParser {
       .getOrElse(Text(""))
   }
 }
+
+object XmlParser {
+  def fromString(html: String): Node = {
+    val node = new DOMParser().parseFromString(html, "application/xml")
+      .documentElement
+
+    Option(node)
+      .map(DOM.toTree)
+      .getOrElse(Text(""))
+  }
+}

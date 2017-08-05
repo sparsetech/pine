@@ -151,7 +151,12 @@ class HtmlParserSpec extends FunSuite {
     // The JS parser is less strict, only test our internal parser here
     // <link> is a self-closing tag.
     assertThrows[ParseError] {
-      internal.HtmlParser.fromString("""<item><link></link><guid></guid></item>""")
+      internal.HtmlParser.fromString("""<item><link></link><guid></guid></item>""", xml = false)
     }
+  }
+
+  test("Parse XML tags") {
+    internal.HtmlParser.fromString("""<item><link></link><guid></guid></item>""", xml = true)
+    xml"""<item><link></link><guid></guid></item>"""
   }
 }
