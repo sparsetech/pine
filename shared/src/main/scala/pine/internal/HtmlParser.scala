@@ -35,7 +35,7 @@ object HtmlParser {
     throw new ParseError(s"""Expected '$expected', found '${rest(reader)}'""")
 
   def parseAttrValue(reader: Reader): String = {
-    reader.collect('"').getOrElse(expected(reader, "\""))
+    if (!reader.prefix('"')) expected(reader, "\"")
     val str = reader.collect('"').getOrElse(expected(reader, "\""))
     HtmlHelpers.decodeAttributeValue(str)
   }
@@ -43,8 +43,11 @@ object HtmlParser {
   def identifier(reader: Reader): String =
     reader.collectUntil { c =>
       !c.isLetterOrDigit && c != '-' && c != '_' && c != ':'
-    }.getOrElse(
-      throw new ParseError(s"Identifier expected, found '${rest(reader)}'"))
+    } match {
+      case None | Some("") =>
+        throw new ParseError(s"Identifier expected, found '${rest(reader)}'")
+      case Some(value) => value
+    }
 
   def parseChildren(reader: Reader, tagName: String): List[Node] =
     if (HtmlHelpers.VoidElements.contains(tagName)) List.empty
@@ -81,7 +84,6 @@ object HtmlParser {
       val tagName = identifier(reader)
       reader.skip(_.isWhitespace)
       val tagAttrs = parseAttrs(reader)
-
       val tagChildren =
         if (reader.prefix("/>")) List.empty
         else if (reader.prefix(">")) parseChildren(reader, tagName)

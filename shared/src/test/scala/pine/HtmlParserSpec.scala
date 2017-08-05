@@ -1,6 +1,7 @@
 package pine
 
 import org.scalatest.FunSuite
+import pine.internal.ParseError
 
 class HtmlParserSpec extends FunSuite {
   test("Empty text node") {
@@ -144,5 +145,13 @@ class HtmlParserSpec extends FunSuite {
     val html = """<script>i < len</script>"""
     val node = HtmlParser.fromString(html)
     assert(node.toHtml == html)
+  }
+
+  test("Cannot parse XML tags") {
+    // The JS parser is less strict, only test our internal parser here
+    // <link> is a self-closing tag.
+    assertThrows[ParseError] {
+      internal.HtmlParser.fromString("""<item><link></link><guid></guid></item>""")
+    }
   }
 }
