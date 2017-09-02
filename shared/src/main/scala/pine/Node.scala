@@ -54,6 +54,7 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
   }
 
   def prepend(node: Node): Tag[TagName] = set(node +: children)
+  def prependAll(node: List[Node]): Tag[TagName] = set(node ++ children)
 
   def append(node: Node): Tag[TagName] = set(children :+ node)
   def :+(node: Node): Tag[TagName] = append(node)

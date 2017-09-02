@@ -111,6 +111,16 @@ class NodeSpec extends FunSuite {
     assert(str == "<div><span></span><br/></div>")
   }
 
+  test("Prepend all") {
+    val div = html"""<div><br/></div>"""
+    val str = div.prependAll(List(
+      html"""<span></span>""",
+      html"""<div></div>"""
+    )).toHtml
+
+    assert(str == "<div><span></span><div></div><br/></div>")
+  }
+
   test("Append") {
     val div = html"""<div><br/></div>"""
     val str = (div :+ html"""<span></span>""").toHtml
@@ -144,6 +154,12 @@ class NodeSpec extends FunSuite {
     val html = div.update(implicit ctx =>
       TagRef["span"].each += html"<b>Hello</b>").toHtml
     assert(html == "<div><span><b>Hello</b></span><span><b>Hello</b></span></div>")
+  }
+
+  test("Remove") {
+    val div = html"""<div><br/></div>"""
+    val str = (div - html"""<br/>""").toHtml
+    assert(str == "<div></div>")
   }
 
   test("Remove first by tag") {
