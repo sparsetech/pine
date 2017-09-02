@@ -4,7 +4,7 @@ import sbtcrossproject.{crossProject, CrossType}
 val Paradise   = "2.1.1"
 val Scala2_11  = "2.11.11-bin-typelevel-4"
 val Scala2_12  = "2.12.3-bin-typelevel-4"
-val ScalaTest  = "3.0.3"
+val ScalaTest  = "3.0.4"
 val ScalaCheck = "1.13.5"
 val ScalaJsDom = "0.9.3"
 
@@ -73,13 +73,13 @@ lazy val pine = crossProject(JSPlatform, JVMPlatform, NativePlatform)
       "org.scalatest"  %%% "scalatest"   % ScalaTest  % "test",
       "org.scalacheck" %%% "scalacheck"  % ScalaCheck % "test"
     ),
-    jsDependencies += RuntimeDOM % "test",
+    jsEnv in Test := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv,
     scalaJSStage in Global := FastOptStage
   ).nativeSettings(
     excludeFilter in Test := "*",
 
     libraryDependencies := libraryDependencies.value.filterNot(_.name == "nscplugin"),
-    addCompilerPlugin("org.scala-native" % "nscplugin" % "0.3.1" cross CrossVersion.patch),
+    addCompilerPlugin("org.scala-native" % "nscplugin" % "0.3.2" cross CrossVersion.patch),
 
     // Not available for 2.12 yet
     scalaVersion := Scala2_11,
