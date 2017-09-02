@@ -92,15 +92,15 @@ object HtmlParser {
       Some(Tag(tagName, tagAttrs, tagChildren))
     }
 
-  def parseText(reader: Reader): Option[Text] = {
+  def parseText(reader: Reader, xml: Boolean): Option[Text] = {
     val text = reader.collectUntil('<').getOrElse(reader.rest())
     if (text.isEmpty) None
-    else Some(Text(HtmlHelpers.decodeText(text)))
+    else Some(Text(HtmlHelpers.decodeText(text, xml)))
   }
 
   def parseNode(reader: Reader, xml: Boolean): Option[Node] = {
     skipComment(reader)
-    parseTag(reader, xml).orElse(parseText(reader))
+    parseTag(reader, xml).orElse(parseText(reader, xml))
   }
 
   def fromString(html: String, xml: Boolean): Node = {

@@ -74,9 +74,19 @@ class HtmlParserSpec extends FunSuite {
   }
 
   test("Parse invalid entities") {
-    val text = "&;"
-    val node = HtmlParser.fromString(text)
-    assert(node == Text(text))
+    assertThrows[ParseError] {
+      val text = "&abcd;"
+      // TODO JavaScript's HtmlParser accepts &abcd;
+      internal.HtmlParser.fromString(text, xml = false)
+    }
+  }
+
+  test("Parse invalid entities (2)") {
+    assertThrows[ParseError] {
+      val text = "&;"
+      // TODO JavaScript's HtmlParser accepts &;
+      internal.HtmlParser.fromString(text, xml = false)
+    }
   }
 
   test("Parse simple tag") {

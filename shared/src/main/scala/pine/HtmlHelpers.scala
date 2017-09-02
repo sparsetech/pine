@@ -1,5 +1,7 @@
 package pine
 
+import pine.internal.ParseError
+
 import scala.collection.immutable.StringOps
 
 object HtmlHelpers {
@@ -76,24 +78,23 @@ object HtmlHelpers {
     sb.toString
   }
 
-  def decodeEntity(e: String): String = {
-    def stripLeading(str: String, c: Char): String =
-      if (str.isEmpty) str
-      else {
-        var i = 0
-        while (str(i) == c) i += 1
-        str.substring(i)
-      }
+  private def stripLeading(str: String, c: Char): String =
+    if (str.isEmpty) str
+    else {
+      var i = 0
+      while (str(i) == c) i += 1
+      str.substring(i)
+    }
 
+  def decodeEntity(e: String, xml: Boolean): Option[String] =
     if (e.startsWith("#x0"))
-      new String(parseHexBinary(stripLeading(e.substring(3), '0')))
-    else if (e.startsWith("#"))
-      "" + e.substring(1).toInt.toChar
-    else if (e.isEmpty) "&;"
-    else HtmlEntities.entities(e)
-  }
+      Some(new String(parseHexBinary(stripLeading(e.substring(3), '0'))))
+    else if (e.startsWith("#")) Some(e.substring(1).toInt.toChar.toString)
+    else if (e.isEmpty) None
+    else if (xml) XmlEntities.entities.get(e)
+    else          HtmlEntities.entities.get(e)
 
-  def decodeText(text: String): String = {
+  def decodeText(text: String, xml: Boolean): String = {
     val reader = new Reader(text)
 
     def f(): String =
@@ -102,7 +103,10 @@ object HtmlHelpers {
         case Some(prefix) =>
           reader.collect(';') match {
             case None    => reader.rest()
-            case Some(e) => prefix + decodeEntity(e) + f()
+            case Some(e) =>
+              val ent = decodeEntity(e, xml).getOrElse(
+                throw new ParseError(s"Invalid entity '$e'"))
+              prefix + ent + f()
           }
       }
 

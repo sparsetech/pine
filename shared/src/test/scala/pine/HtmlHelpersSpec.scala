@@ -18,22 +18,22 @@ class HtmlHelpersSpec extends FunSuite {
   }
 
   test("Decode text") {
-    assert(HtmlHelpers.decodeText("Hello") == "Hello")
+    assert(HtmlHelpers.decodeText("Hello", xml = false) == "Hello")
   }
 
   test("Decode text (2)") {
-    assert(HtmlHelpers.decodeText("test&grave;42") == "test`42")
+    assert(HtmlHelpers.decodeText("test&grave;42", xml = false) == "test`42")
   }
 
   test("Decode text (3)") {
-    assert(HtmlHelpers.decodeText("&#x00060;") == "`")
+    assert(HtmlHelpers.decodeText("&#x00060;", xml = false) == "`")
   }
 
   test("Decode text (4)") {
-    assert(HtmlHelpers.decodeText("&#96;") == "`")
+    assert(HtmlHelpers.decodeText("&#96;", xml = false) == "`")
   }
 
   test("Decode text (5)") {
-    assert(HtmlHelpers.decodeText("&plus;&equals;") == "+=")
+    assert(HtmlHelpers.decodeText("&plus;&equals;", xml = false) == "+=")
   }
 }
