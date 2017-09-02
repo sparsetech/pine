@@ -7,6 +7,7 @@ trait NodeRender[N <: Node, T] {
 object NodeRender {
   trait Implicits {
     implicit class NodeToHtml(node: Node) {
+      def toXml : String = XML.render(node)
       def toHtml: String = HTML.render(node)
       def toText: String = {
         Text.lineBreak = false
@@ -16,26 +17,40 @@ object NodeRender {
   }
 
   object HTML extends NodeRender[Node, String] {
-    override def render(node: Node): String =
+    def render(node: Node): String =
       node match {
-        case t @ Tag(_, _, _) => RenderTag.render(t)
-        case n: Text          => RenderText.render(n)
+        case t @ Tag("html", _, _) => "<!DOCTYPE html>" + renderChild(t)
+        case n                     => renderChild(n)
       }
 
-    implicit case object RenderTag extends NodeRender[Tag[_], String] {
-      def render(node: Tag[_]): String = {
-        val isLiteral = node.tagName == "script"
-        val children =
-          if (isLiteral) node.children.collect { case t: Text => t.text }
-          else node.children.map(HTML.render)
+    def renderChild(node: Node): String =
+      node match {
+        case Tag(tagName, attributes, children)
+          if HtmlHelpers.CdataElements.contains(tagName) =>
+          HtmlHelpers.node(
+            tagName, attributes, children.collect { case c: Text => c.text },
+            xml = false)
 
-        HtmlHelpers.node(node.tagName, node.attributes, children)
+        case Tag(tagName, attributes, children) =>
+          HtmlHelpers.node(
+            tagName, attributes, children.map(renderChild), xml = false)
+
+        case pine.Text(text) => HtmlHelpers.encodeText(text, xml = false)
       }
-    }
+  }
 
-    implicit case object RenderText extends NodeRender[Text, String] {
-      def render(node: Text): String = HtmlHelpers.encodeText(node.text)
-    }
+  object XML extends NodeRender[Node, String] {
+    def render(node: Node): String =
+      """<?xml version="1.0" encoding="UTF-8"?>""" + renderChild(node)
+
+    def renderChild(node: Node): String =
+      node match {
+        case Tag(tagName, attributes, children) =>
+          HtmlHelpers.node(
+            tagName, attributes, children.map(renderChild), xml = true)
+
+        case pine.Text(text) => HtmlHelpers.encodeText(text, xml = true)
+      }
   }
 
   object Text extends NodeRender[Node, String] {

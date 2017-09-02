@@ -22,6 +22,7 @@ object HtmlHelpers {
     "required", "reversed", "scoped", "seamless", "selected", "sortable",
     "spellcheck", "translate", "truespeed", "typemustmatch", "visible")
 
+  /** @note < and > do not need to be escaped */
   def encodeAttributeValue(value: Any): String =
     "\"" +
       value.toString
@@ -31,21 +32,36 @@ object HtmlHelpers {
 
   def decodeAttributeValue(value: String): String =
     value
-      .replaceAll("&amp;", "&")
+      .replaceAll("&lt;",   "<")
+      .replaceAll("&gt;",   ">")
+      .replaceAll("&amp;",  "&")
       .replaceAll("&quot;", "\"")
 
-  /** See also scala.xml.Utility.escape() */
-  def encodeText(text: String): String =
-    (text: StringOps).flatMap {
-      case '<' => "&lt;"
-      case '>' => "&gt;"
-      case '&' => "&amp;"
-      case '"' => "&quot;"
-      case '\n' => "\n"
-      case '\r' => "\r"
-      case '\t' => "\t"
-      case c if c >= ' ' => c.toString
-      case _ => ""
+  /**
+    * @note " and ' may be represented by &quot; or &apos;, but this is not
+    *       compulsory
+    * @see scala.xml.Utility.escape()
+    */
+  def encodeText(text: String, xml: Boolean): String =
+    (text: StringOps).flatMap { c =>
+      c match {
+        case '<' => "&lt;"
+        case '>' => "&gt;"
+
+        // TODO In HTML5, we only have to replace ampersands if they are
+        // ambiguous. As per:
+        // https://www.w3.org/TR/html5/syntax.html#syntax-ambiguous-ampersand
+        //
+        // > An ambiguous ampersand is a U+0026 AMPERSAND character (&) that is
+        // > followed by one or more alphanumeric ASCII characters, followed by a
+        // > ";" (U+003B) character, where these characters do not match any of
+        // > the names given in the named character references section.
+        case '&' => "&amp;"
+
+        case '\r' | '\n' | '\t' => c.toString
+        case _ if c >= ' ' => c.toString
+        case _ => ""
+      }
     }
 
   /** From http://hohonuuli.blogspot.com/2012/10/simple-hex-string-to-ascii-function-for.html */
@@ -100,17 +116,20 @@ object HtmlHelpers {
 
   def node(tagName: String,
            attributes: Map[String, Any],
-           contents: List[String]): String = {
+           contents: List[String],
+           xml: Boolean): String = {
     val attrs =
       if (attributes.isEmpty) ""
       else s" ${encodeAttributes(attributes)}"
 
-    if (HtmlHelpers.VoidElements.contains(tagName) && contents.isEmpty)
+    // As Pine does not support DTDs, we do not know which elements were
+    // declared EMPTY.
+    // See also https://www.w3.org/TR/REC-xml/#NT-EmptyElemTag
+    if (!xml && HtmlHelpers.VoidElements.contains(tagName) && contents.isEmpty)
       s"<$tagName$attrs/>"
     else {
-      val docType = if (tagName == "html") "<!DOCTYPE html>" else ""
       val children = contents.mkString
-      s"$docType<$tagName$attrs>$children</$tagName>"
+      s"<$tagName$attrs>$children</$tagName>"
     }
   }
 }

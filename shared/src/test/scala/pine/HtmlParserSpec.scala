@@ -101,6 +101,10 @@ class HtmlParserSpec extends FunSuite {
     val html = """<a href="a&amp;b"></a>"""
     val node = HtmlParser.fromString(html)
     assert(node == tag.A.href("a&b"))
+
+    val html2 = """<a href="a&amp;&gt;b"></a>"""
+    val node2 = HtmlParser.fromString(html2)
+    assert(node2 == tag.A.href("a&>b"))
   }
 
   test("Parse node with boolean attribute") {
@@ -145,6 +149,16 @@ class HtmlParserSpec extends FunSuite {
     val html = """<script>i < len</script>"""
     val node = HtmlParser.fromString(html)
     assert(node.toHtml == html)
+  }
+
+  test("Parse style nodes") {
+    val html = """<style>.outer > div {}</style>"""
+    val node = HtmlParser.fromString(html)
+    assert(node.toHtml == html)
+
+    val html2 = """<style><</style>"""
+    val node2 = HtmlParser.fromString(html2)
+    assert(node2.toHtml == html2)
   }
 
   test("Cannot parse XML tags") {

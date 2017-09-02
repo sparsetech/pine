@@ -190,4 +190,20 @@ class NodeSpec extends FunSuite {
     }
     assert(!updated2.disabled)
   }
+
+  test("toXml on empty tags") {
+    val node = Tag("test")
+    assert(node.toXml == """<?xml version="1.0" encoding="UTF-8"?><test></test>""")
+
+    val node2 = Tag("br")
+    assert(node2.toXml == """<?xml version="1.0" encoding="UTF-8"?><br></br>""")
+  }
+
+  test("toXml on non-empty tags") {
+    val node = Tag("test").set("Hello")
+    assert(node.toXml == """<?xml version="1.0" encoding="UTF-8"?><test>Hello</test>""")
+
+    val node2 = Tag("test").set("'\"")
+    assert(node2.toXml == """<?xml version="1.0" encoding="UTF-8"?><test>'"</test>""")
+  }
 }
