@@ -73,7 +73,7 @@ class ExternalHtmlSpec extends FunSuite {
 
     val list = replaced.byId("list")
     assert(list.children.size == 3)
-    assert(list.children.last.toHtml ==
+    assert(list.children.last.asInstanceOf[Tag[_]].toHtml ==
       """<div><div>Title c</div><div>Subtitle c</div></div>""")
   }
 }

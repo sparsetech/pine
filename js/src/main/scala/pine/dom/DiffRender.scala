@@ -36,18 +36,19 @@ object DiffRender {
 
       case Diff.ReplaceChildren(children) =>
         dom.clear()
-        children.foreach(child => dom.appendChild(NodeRender.render(child)))
+        children.foreach(child =>
+          dom.appendChild(NodeRender.renderChild(child)))
 
       case Diff.Replace(replacements) =>
         replacements.foreach(child =>
-          dom.parentNode.insertBefore(NodeRender.render(child), dom))
+          dom.parentNode.insertBefore(NodeRender.renderChild(child), dom))
         dom.parentNode.removeChild(dom)
 
       case Diff.PrependChild(child) =>
-        dom.prependChild(NodeRender.render(child))
+        dom.prependChild(NodeRender.renderChild(child))
 
       case Diff.AppendChild(child) =>
-        dom.appendChild(NodeRender.render(child))
+        dom.appendChild(NodeRender.renderChild(child))
 
       case Diff.RemoveChild() =>
         dom.parentNode.removeChild(dom)

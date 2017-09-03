@@ -50,21 +50,13 @@ class NodePropSpec extends Properties("Node") {
       }
     } yield Tag(tag.asInstanceOf[String with Singleton], attributes, children)
 
-  def sizedTree(sz: Int): Gen[Node] = sizedTree(sz, List.empty)
-
   def sizedTree(sz: Int, parentTags: List[String]): Gen[Node] =
     if (sz <= 0) textGen
     else Gen.frequency((1, textGen), (3, tagGen(sz, parentTags)))
 
   val sized = Gen.choose(0, 20)
 
-  def nodeGen: Gen[Node] = sized.flatMap(sizedTree)
-
-  // Ignore text nodes that start with whitespaces on root level
-  def rootNodeGen: Gen[Node] = nodeGen.filter {
-    case Text(t) => !t.startsWith(" ")
-    case _ => true
-  }
+  def rootTagGen: Gen[Tag[_]] = sized.flatMap(tagGen)
 
   def fun1: Node => Boolean = {
     case Tag(_, _, _) => true
@@ -78,8 +70,8 @@ class NodePropSpec extends Properties("Node") {
 
   def filterFunGen: Gen[Node => Boolean] = Gen.oneOf(fun1, fun2)
 
-  property("toHtml") = forAll(rootNodeGen) { node: Node =>
-    HtmlParser.fromString(node.toHtml) == node
+  property("toHtml") = forAll(rootTagGen) { tag: Tag[_] =>
+    HtmlParser.fromString(tag.toHtml) == tag
   }
 
   def myFilter(node: Tag[_], f: Node => Boolean): List[Node] = {

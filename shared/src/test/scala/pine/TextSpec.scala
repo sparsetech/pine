@@ -4,17 +4,17 @@ import org.scalatest.FunSuite
 
 class TextSpec extends FunSuite {
   test("Text node") {
-    val node = Text("Hello\nworld")
+    val node = tag.Span.set(Text("Hello\nworld"))
     assert(node.toText == "Hello world")
   }
 
   test("Text node (2)") {
-    val node = Text("Hello\tworld")
+    val node = tag.Span.set(Text("Hello\tworld"))
     assert(node.toText == "Hello world")
   }
 
   test("Text node (3)") {
-    val node = Text("Hello \t\n world")
+    val node = tag.Span.set(Text("Hello \t\n world"))
     assert(node.toText == "Hello world")
   }
 

@@ -1,7 +1,5 @@
 package pine
 
-import pine.internal.ParseError
-
 import scala.collection.immutable.StringOps
 
 object HtmlHelpers {
@@ -136,4 +134,7 @@ object HtmlHelpers {
       s"<$tagName$attrs>$children</$tagName>"
     }
   }
+
+  def identifierCharacter(c: Char): Boolean =
+    c.isLetterOrDigit || c == '-' || c == '_' || c == ':'
 }

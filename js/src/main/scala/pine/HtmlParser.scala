@@ -1,8 +1,8 @@
 package pine
 
-import org.scalajs.dom.{DOMParser, document, Document}
+import org.scalajs.dom.{Document, DOMParser, Element}
+
 import pine.dom.DOM
-import pine.internal.ParseError
 
 private object DomParser {
   val parser = new DOMParser()
@@ -20,28 +20,26 @@ private object DomParser {
 }
 
 object HtmlParser {
-  def fromString(html: String): Node = {
-    val tag  = html.substring(0, 5).toLowerCase
-    val node = tag match {
-      case "<!doc" | "<html" =>
-        DomParser.parse(html, "application/xhtml+xml").documentElement
-      case "<head" | "<body" =>
-        DomParser.parse(html, "application/xhtml+xml")
-          .getElementsByTagName(tag.tail)(0)
-      case _ =>
-        val node = document.createElement("body")
-        node.innerHTML = html
-        node.firstChild
-    }
+  def fromString(html: String): Tag[Singleton] = {
+    if (!html.startsWith("<")) throw new ParseError("Does not start with tag")
 
-    Option(node)
-      .map(DOM.toTree)
-      .getOrElse(Text(""))
+    val node =
+      if (html.substring(1, 5).equalsIgnoreCase("!doc"))
+        DomParser.parse(html, "text/html").documentElement
+      else {
+        val tagName = html.tail.takeWhile(HtmlHelpers.identifierCharacter)
+        if (tagName.isEmpty) throw new ParseError("Empty tag name")
+        val e = DomParser.parse(html, "text/html").getElementsByTagName(tagName)
+        // TODO getElementsByTagName should return ElementList
+        e(0).asInstanceOf[Element]
+      }
+
+    DOM.toTree(node)
   }
 }
 
 object XmlParser {
-  def fromString(xml: String): Node = {
+  def fromString(xml: String): Tag[Singleton] = {
     val document = DomParser.parse(xml, "application/xml")
     DOM.toTree(document.documentElement)
   }

@@ -1,23 +1,24 @@
 package pine
 
 import org.scalatest.FunSuite
-import pine.internal.ParseError
 
 class HtmlParserSpec extends FunSuite {
   test("Empty text node") {
-    val node = Text("")
-    assert(HtmlParser.fromString(node.toHtml) == node)
+    assertThrows[ParseError] {
+      HtmlParser.fromString("")
+    }
   }
 
   test("Parse text") {
-    val text = "Hello world"
-    val node = HtmlParser.fromString(text)
-    assert(node == Text(text))
+    assertThrows[ParseError] {
+      HtmlParser.fromString("Hello world")
+    }
   }
 
   test("Parse text (2)") {
-    val node = Text("'\"")
-    assert(HtmlParser.fromString(node.toHtml) == node)
+    assertThrows[ParseError] {
+      HtmlParser.fromString("'\"")
+    }
   }
 
   test("Parse attributes") {
@@ -56,26 +57,26 @@ class HtmlParserSpec extends FunSuite {
   }
 
   test("Parse text with entities") {
-    val html = "&lpar;Hello world&rpar;"
+    val html = "<span>&lpar;Hello world&rpar;</span>"
     val node = HtmlParser.fromString(html)
-    assert(node == Text("(Hello world)"))
+    assert(node == tag.Span.set(Text("(Hello world)")))
   }
 
   test("Parse text with entities (2)") {
-    val html = "&grave;&DiacriticalGrave;&#x00060;&#96;"
+    val html = "<span>&grave;&DiacriticalGrave;&#x00060;&#96;</span>"
     val node = HtmlParser.fromString(html)
-    assert(node == Text("````"))
+    assert(node == tag.Span.set(Text("````")))
   }
 
   test("Parse text with hex entities") {
-    val html = "Hello world&#33;"
+    val html = "<span>Hello world&#33;</span>"
     val node = HtmlParser.fromString(html)
-    assert(node == Text("Hello world!"))
+    assert(node == tag.Span.set(Text("Hello world!")))
   }
 
   test("Parse invalid entities") {
     assertThrows[ParseError] {
-      val text = "&abcd;"
+      val text = "<span>&abcd;</span>"
       // TODO JavaScript's HtmlParser accepts &abcd;
       internal.HtmlParser.fromString(text, xml = false)
     }
@@ -83,7 +84,7 @@ class HtmlParserSpec extends FunSuite {
 
   test("Parse invalid entities (2)") {
     assertThrows[ParseError] {
-      val text = "&;"
+      val text = "<span>&;</span>"
       // TODO JavaScript's HtmlParser accepts &;
       internal.HtmlParser.fromString(text, xml = false)
     }

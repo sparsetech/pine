@@ -4,8 +4,6 @@ import pine._
 
 import scala.annotation.tailrec
 
-class ParseError(e: String) extends Exception(e)
-
 /* In shared/, otherwise it cannot be used by macros in Scala.js */
 object HtmlParser {
   def parseAttr(reader: Reader): (String, String) = {
@@ -41,9 +39,7 @@ object HtmlParser {
   }
 
   def identifier(reader: Reader): String =
-    reader.collectUntil { c =>
-      !c.isLetterOrDigit && c != '-' && c != '_' && c != ':'
-    } match {
+    reader.collectUntil(!HtmlHelpers.identifierCharacter(_)) match {
       case None | Some("") =>
         throw new ParseError(s"Identifier expected, found '${rest(reader)}'")
       case Some(value) => value
@@ -103,13 +99,20 @@ object HtmlParser {
     parseTag(reader, xml).orElse(parseText(reader, xml))
   }
 
-  def fromString(html: String, xml: Boolean): Node = {
+  def parseRootNode(reader: Reader, xml: Boolean): Option[Tag[_]] = {
+    skipComment(reader)
+    parseTag(reader, xml)
+  }
+
+  def fromString(html: String, xml: Boolean): Tag[Singleton] = {
     val reader = new Reader(html)
     reader.skip(_.isWhitespace)
     skipDocType(reader)
     reader.skip(_.isWhitespace)
     if (xml) skipXml(reader)
     reader.skip(_.isWhitespace)
-    parseNode(reader, xml).getOrElse(Text(""))
+    parseRootNode(reader, xml)
+      .getOrElse(throw new ParseError("Invalid input"))
+      .asInstanceOf[Tag[Singleton]]
   }
 }

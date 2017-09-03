@@ -6,7 +6,7 @@ import pine._
 
 object DOM {
   trait Extensions {
-    implicit class DomExtensions(parent: dom.Node) {
+    implicit class DomNodeExtensions(parent: dom.Node) {
       def clear(): Unit =
         while (parent.lastChild != null)
           parent.removeChild(parent.lastChild)
@@ -22,8 +22,10 @@ object DOM {
       def insertAfter(reference: dom.Node, node: dom.Node): Unit =
         if (reference == null || reference.nextSibling == null) parent.appendChild(node)
         else parent.insertBefore(node, reference.nextSibling)
+    }
 
-      def toTree: Node = DOM.toTree(parent)
+    implicit class DomElementExtensions(parent: dom.Element) {
+      def toTree: Tag[_] = DOM.toTree(parent)
     }
   }
 
@@ -42,37 +44,39 @@ object DOM {
       case _ => Map.empty
     }
 
-  def toTree(node: dom.Node): Node =
+  private def toTreeChild(node: dom.Node): Node =
     node match {
       case t: dom.raw.Text => Text(t.textContent)
-
-      case e: dom.Element =>
-        val attributes = (0 until e.attributes.length)
-          .map(e.attributes(_))
-          .map { attr =>
-            val isBooleanAttr = HtmlHelpers.BooleanAttributes.contains(attr.name)
-            if (isBooleanAttr) attr.name -> attr.name
-            else attr.name -> attr.value
-          }.toMap
-
-        val children = (0 until e.childNodes.length)
-          .toList
-          .map(e.childNodes(_))
-          .filter {
-            case _: dom.Comment => false
-            case _              => true
-          }.map(toTree)
-
-        Tag(
-          // TODO See https://github.com/typelevel/scala/issues/154
-          tagName    = e.tagName.toLowerCase.asInstanceOf[String with Singleton],
-          attributes = attributes,
-          children   = children
-        )
+      case e: dom.Element  => toTree(e)
     }
 
-  def toTree(id: String): Tag[_] =
-    toTree(dom.document.getElementById(id)).asInstanceOf[Tag[_]]
+  def toTree(e: dom.Element): Tag[Singleton] = {
+    val attributes = (0 until e.attributes.length)
+      .map(e.attributes(_))
+      .map { attr =>
+        val isBooleanAttr = HtmlHelpers.BooleanAttributes.contains(attr.name)
+        if (isBooleanAttr) attr.name -> attr.name
+        else attr.name -> attr.value
+      }.toMap
+
+    val children = (0 until e.childNodes.length)
+      .toList
+      .map(e.childNodes(_))
+      .filter {
+        case _: dom.Comment => false
+        case _              => true
+      }.map(toTreeChild)
+
+    Tag(
+      // TODO See https://github.com/typelevel/scala/issues/154
+      tagName    = e.tagName.toLowerCase.asInstanceOf[String with Singleton],
+      attributes = attributes,
+      children   = children
+    )
+  }
+
+  def toTree(id: String): Tag[Singleton] =
+    toTree(dom.document.getElementById(id))
 
   def render(f: DomRenderContext => Unit): Unit = {
     val ctx = new DomRenderContext

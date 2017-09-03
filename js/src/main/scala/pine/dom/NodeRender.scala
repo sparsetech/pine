@@ -4,39 +4,36 @@ import org.scalajs.dom
 
 import pine._
 
-object NodeRender extends NodeRender[Node, dom.Node] {
+object NodeRender extends TagRender[Tag[_], dom.Element] {
   trait Implicit {
     implicit class TextToDom(node: Text) {
-      def toDom: dom.raw.Text = RenderText.render(node)
+      def toDom: dom.raw.Text = renderText(node)
     }
 
     implicit class TagToDom[T <: Singleton](node: Tag[T]) {
-      def toDom(implicit js: Js[T]): js.X =
-        RenderTag.render(node).asInstanceOf[js.X]
+      def toDom(implicit js: Js[T]): js.X = renderTag(node).asInstanceOf[js.X]
     }
   }
 
-  override def render(node: Node): dom.Node =
+  override def render(tag: Tag[_]): dom.Element = renderTag(tag)
+
+  @inline def renderChild(node: Node): dom.Node =
     node match {
-      case n @ Tag(_, _, _) => RenderTag.render(n)
-      case n: Text          => RenderText.render(n)
+      case n @ Tag(_, _, _) => renderTag(n)
+      case n @ Text(_)      => renderText(n)
     }
 
-  implicit case object RenderTag extends NodeRender[Tag[_], dom.Element] {
-    def render(node: Tag[_]): dom.Element = {
-      val element = dom.document.createElement(node.tagName)
+  def renderTag(node: Tag[_]): dom.Element = {
+    val element = dom.document.createElement(node.tagName)
 
-      node.attributes.foreach { case (k, v) =>
-        element.setAttribute(k, v.toString)
-      }
-
-      node.children.map(NodeRender.render).foreach(element.appendChild)
-      element
+    node.attributes.foreach { case (k, v) =>
+      element.setAttribute(k, v.toString)
     }
+
+    node.children.map(renderChild).foreach(element.appendChild)
+    element
   }
 
-  implicit case object RenderText extends NodeRender[Text, dom.raw.Text] {
-    def render(node: Text): dom.raw.Text =
-      dom.document.createTextNode(node.text)
-  }
+  @inline def renderText(node: Text): dom.raw.Text =
+    dom.document.createTextNode(node.text)
 }

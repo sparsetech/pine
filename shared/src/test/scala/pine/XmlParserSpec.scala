@@ -1,7 +1,6 @@
 package pine
 
 import org.scalatest.FunSuite
-import pine.internal.ParseError
 
 class XmlParserSpec extends FunSuite {
   test("Simple node") {
