@@ -99,12 +99,15 @@ object HtmlHelpers {
       reader.collect('&') match {
         case None         => reader.rest()
         case Some(prefix) =>
-          reader.collect(';') match {
-            case None    => reader.rest()
+          reader.collectUntil(c => !c.isLetterOrDigit && c != '#') match {
+            case None    => throw new ParseError("Ambiguous entity")
             case Some(e) =>
-              val ent = decodeEntity(e, xml).getOrElse(
-                throw new ParseError(s"Invalid entity '$e'"))
-              prefix + ent + f()
+              if (!reader.prefix(';')) prefix + "&" + f()
+              else {
+                val ent = decodeEntity(e, xml).getOrElse(
+                  throw new ParseError(s"Invalid entity '$e'"))
+                prefix + ent + f()
+              }
           }
       }
 

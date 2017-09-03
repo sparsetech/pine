@@ -184,4 +184,16 @@ class HtmlParserSpec extends FunSuite {
     internal.HtmlParser.fromString("""<item><link></link><guid></guid></item>""", xml = true)
     xml"""<item><link></link><guid></guid></item>"""
   }
+
+  test("Read unambiguous ampersand") {
+    assert(HtmlParser.fromString("<div>editable && copy</div>") ==
+      tag.Div.set("editable && copy"))
+  }
+
+  test("Detect ambiguous ampersand") {
+    // TODO JavaScript's HtmlParser accepts ampersand
+    assertThrows[ParseError] {
+      internal.HtmlParser.fromString("<div>editable&&copy</div>", xml = false)
+    }
+  }
 }
