@@ -14,7 +14,7 @@ install:
 
 # See https://github.com/scala-js/scala-js/issues/2642
 script:
-  sbt ++$TRAVIS_SCALA_VERSION 'set parallelExecution in ThisBuild := false' test
+  sbt ++$TRAVIS_SCALA_VERSION 'set parallelExecution in ThisBuild := false' pineJS/test pineJVM/test
 
 # From http://www.scala-sbt.org/0.13/docs/Travis-CI-with-sbt.html
 # Use container-based infrastructure
