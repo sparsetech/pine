@@ -45,7 +45,7 @@ For loading external HTML files during compile-time, a constant file name must b
 
 ```scala
 val tpl = html("test.html")
-tpl.toHtml  // <html>...</html>
+tpl.toHtml  // <div>...</div>
 ```
 
 ## Runtime HTML parser
@@ -58,6 +58,13 @@ node.toHtml == html  // true
 ```
 
 HTML code is parsed during compile-time and then translated to an immutable tree. This reduces any runtime overhead. HTML can be specified inline or loaded from external files.
+
+The parser has the following limitations:
+
+- The `DOCTYPE` tag is ignored
+- The input is expected to be valid HTML5
+
+The parser supports the complete set of more than 2100 HTML entities such as `&quot;` as well as numeric ones (`&#34;`). These entities can be decoded using the function `HtmlHelpers.decodeEntity`.
 
 ## XML
 XML has slightly different semantics with regards to self-closing tags. The following example is valid XML, but would yield a parse error when parsed as HTML:
@@ -85,7 +92,21 @@ xml"""
 """
 ```
 
-The underlying data structures are the same for both HTML and XML trees. Unlike [scala-xml](https://github.com/scala/scala-xml), Pine does not strive to provide a full XML implementation.
+As per the XML specification, Pine supports only the following four entities:
+
+* `&apos;` (`'`)
+* `&lt;` (`<`)
+* `&gt;` (`>`)
+* `&amp;` (`&`)
+
+The underlying data structures are the same for both HTML and XML trees. Pine strives for simplicity and performance at the cost of implementing only a subset of XML's features. Please refer to [scala-xml](https://github.com/scala/scala-xml) for a more complete implementation.
+
+At the moment, we are aware of the following parser limitations:
+
+- The XML header is optional and its attributes are ignored. The input is expected to be in UTF-8 regardless of the specified character set.
+- [DTDs](https://docstore.mik.ua/orelly/web2/xhtml/ch15_03.htm) are not supported. Therefore, additional entity or element declarations cannot be defined.
+- Processing instructions (other than `<?xml ... ?>`) are not supported
+- CDATA tags are not supported (see issue #37)
 
 ## Conversion
 Some functions return `Tag[_]` when the tag type cannot be statically determined. A more concrete type is useful if you want to access element-specific attributes, like `href` on anchor nodes. You can use `as` to convert a tag to its correct type:
@@ -134,5 +155,6 @@ val ct2 = tag.as["custom-type"]
 ## Rendering
 A node defines two rendering methods:
 
-- **HTML:** `toHtml` is defined on every node and will return the tree as a string
+- **HTML:** `toHtml` is defined on every node and will return the tree as an HTML5 string. If the root node is an `<html>` tag, the `DOCTYPE` will be included as well.
+* **XML:** `toXml` returns the tree as an XML 1.0 string. It always includes the XML header, specifying the encoding as UTF-8.
 - **DOM:** `toDom` is only available in JavaScript; it renders the tree as a browser node, which can be inserted into the DOM
