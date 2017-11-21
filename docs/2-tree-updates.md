@@ -1,6 +1,6 @@
 # Tree updates
-## References
-Pine lets you perform node updates. In order to do so, you need to set the `id` attribute on the nodes you would like to reference:
+## Referencing nodes
+Pine lets you perform node updates. In order to do so, you need to make the nodes you would like to reference identifiable, for example by setting the `id` attributes:
 
 ```scala
 val node = html"""
@@ -11,12 +11,14 @@ val node = html"""
 """
 ```
 
-You can reference nodes using `TagRef`. It takes the referenced tag's ID and HTML type:
+Now you can reference these nodes using `TagRef`s. A `TagRef` takes the referenced tag's ID and HTML type:
 
 ```scala
 val spanAge  = TagRef[tag.Span]("age")
 val spanName = TagRef[tag.Span]("name")
 ```
+
+There are more ways to reference nodes such as by class name or tag type. See section "Tag references".
 
 ## Updating nodes
 You can use the `update()` method to change the node:
@@ -139,7 +141,17 @@ Tags can be referenced using:
 * Tag type: `TagRef[tag.A]`
 * Class name: `TagRef.byClass[tag.A]("class-name")`
 
-If you would like to perform a change on all occurrences, use the `each` attribute:
+A `TagRef` exposes methods for manipulating nodes and their attributes. See its [source code](https://github.com/sparsetech/pine/blob/master/shared/src/main/scala/pine/TagRef.scala) for a full list of operations.
+
+## Diffs
+A `Diff` is an immutable object which describes tree changes. It is instantiated for example by the `TagRef` operations you have seen before such as `:=` (`set`), `replace` etc.
+
+So far, these changes were performed directly on the tree. However, for the JavaScript back end, we have an additional rendering context that can apply those changes to the DOM. This will be explained in the next chapter.
+
+The full list of supported diffs can be found [here](https://github.com/sparsetech/pine/blob/master/shared/src/main/scala/pine/Diff.scala).
+
+### Multiple occurrences
+If you would like to perform a change on all occurrences of a `TagRef`, use the `each` function:
 
 ```scala
 val div = html"""<div><span></span><span></span></div>"""
@@ -148,12 +160,14 @@ div.update(implicit ctx =>
 // <div><span><b>Hello</b></span><span><b>Hello</b></span></div>
 ```
 
-## Diffs
-Diffs encapsulate changes. The operations you have seen before like `:=` (`set`), `replace` etc. create immutable objects describing the change you would like to perform.
+`each` can also be used in conjunction with any other diff type, such as attribute updates:
 
-So far, these changes were performed directly on the tree. However, for the JavaScript back end, we have an additional rendering context that can apply those changes to the DOM. This will be explained in the next chapter.
-
-A full list of supported diffs can be found [here](https://github.com/sparsetech/pine/blob/master/shared/src/main/scala/pine/Diff.scala).
+```scala
+val div  = html"""<div><a href="/a">A</a><a href="/b">B</a></div>"""
+val html = div.update(implicit ctx =>
+  TagRef["a"].each.href.update(_.map(url => s"$url/test"))).toHtml
+// <div><a href="/a/test">A</a><a href="/b/test">B</a></div>
+```
 
 ## DSL
 To facilitate interaction with nodes, Pine provides a small DSL with extensions.

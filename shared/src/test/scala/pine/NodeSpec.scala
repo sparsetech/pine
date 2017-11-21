@@ -156,6 +156,13 @@ class NodeSpec extends FunSuite {
     assert(html == "<div><span><b>Hello</b></span><span><b>Hello</b></span></div>")
   }
 
+  test("Update tag attributes with multiple matches") {
+    val div  = html"""<div><a href="/a">A</a><a href="/b">B</a></div>"""
+    val html = div.update(implicit ctx =>
+      TagRef["a"].each.href.update(_.map(url => s"$url/test"))).toHtml
+    assert(html == """<div><a href="/a/test">A</a><a href="/b/test">B</a></div>""")
+  }
+
   test("Remove") {
     val div = html"""<div><br/></div>"""
     val str = (div - html"""<br/>""").toHtml
