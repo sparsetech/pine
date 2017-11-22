@@ -73,6 +73,17 @@ name.value.get  // Returns value the DOM node was initialised with
 name.dom.value  // Returns current value
 ```
 
+## Converting JavaScript nodes
+It is also possible to convert regular DOM nodes to Pine:
+
+```scala
+val node = dom.document.createElement("span")
+node.setAttribute("id", "test")
+node.appendChild(dom.document.createTextNode("Hello world"))
+
+DOM.toTree(node)  // Tag(span,Map(id -> test),List(Text(Hello world)))
+```
+
 ## Diffs
 Previously, we used `update` to perform the changes on the nodes. To carry out the changes in the DOM, we have to use `DOM.render`:
 
