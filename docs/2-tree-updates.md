@@ -1,6 +1,14 @@
 # Tree updates
+## Operations
+A `Node` is equipped with a variety of functions to easily manipulate trees such as `prepend`, `append`, `remove`, `clearAll`, `filter`, `flatMap`, `map` and others. See the [source code](https://github.com/sparsetech/pine/blob/master/shared/src/main/scala/pine/Node.scala)
+for an overview.
+
 ## Referencing nodes
-Pine lets you perform node updates. In order to do so, you need to make the nodes you would like to reference identifiable, for example by setting the `id` attributes:
+While the operations from the previous section allow you to modify the tree, they operate on either the root node or are applied recursively to all children.
+
+If you would like to update a specific child further down in the hierarchy, Pine introduces the concept of tag references (`TagRef`s). These have the advantage that changes can be batched and applied efficiently.
+
+In order to do so, you need to make the nodes you would like to reference identifiable, for example by setting the `id` attributes:
 
 ```scala
 val node = html"""
