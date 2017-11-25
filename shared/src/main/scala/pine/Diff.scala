@@ -6,9 +6,9 @@ object Diff {
   case class SetAttribute[T <: Singleton, U](attribute: Attribute[T, _, U], value: U) extends Diff
   case class UpdateAttribute[T <: Singleton, U](attribute: Attribute[T, U, _], f: U => U) extends Diff
   case class RemoveAttribute[T <: Singleton](attribute: Attribute[T, _, _]) extends Diff
-  case class Replace(replacements: List[Node]) extends Diff
-  case class ReplaceChildren(children: List[Node]) extends Diff
-  case class PrependChild(child: Node) extends Diff
-  case class AppendChild(child: Node) extends Diff
-  case class RemoveChild() extends Diff
+  case class Replace(nodes: List[Node]) extends Diff
+  case class SetChildren(children: List[Node]) extends Diff
+  case class PrependChildren(children: List[Node]) extends Diff
+  case class AppendChildren(children: List[Node]) extends Diff
+  case class RemoveNode() extends Diff
 }

@@ -58,6 +58,28 @@ class TagRefSpec extends FunSuite {
     assert(updated == tag.Div.set(tag.Span.set(tag.B)))
   }
 
+  test("Prepend nodes") {
+    val div  = html"""<div><span><hr/></span></div>"""
+    val html = div.update(implicit ctx =>
+      TagRef["span"].prepend(List(
+        html"<b>Hello</b>",
+        html"<i>World</i>"
+      ))
+    ).toHtml
+    assert(html == "<div><span><b>Hello</b><i>World</i><hr/></span></div>")
+  }
+
+  test("Append nodes") {
+    val div  = html"""<div><span><hr/></span></div>"""
+    val html = div.update(implicit ctx =>
+      TagRef["span"] ++= List(
+        html"<b>Hello</b>",
+        html"<i>World</i>"
+      )
+    ).toHtml
+    assert(html == "<div><span><hr/><b>Hello</b><i>World</i></span></div>")
+  }
+
   test("Replace node") {
     val node = tag.Div.set(tag.Span)
     val ref = TagRef["span"]

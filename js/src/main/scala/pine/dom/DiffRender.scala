@@ -34,23 +34,25 @@ object DiffRender {
       case Diff.RemoveAttribute(attribute) =>
         dom.removeAttribute(attribute.name)
 
-      case Diff.ReplaceChildren(children) =>
+      case Diff.SetChildren(children) =>
         dom.clear()
         children.foreach(child =>
           dom.appendChild(NodeRender.renderChild(child)))
 
-      case Diff.Replace(replacements) =>
-        replacements.foreach(child =>
-          dom.parentNode.insertBefore(NodeRender.renderChild(child), dom))
+      case Diff.Replace(nodes) =>
+        nodes.foreach(node =>
+          dom.parentNode.insertBefore(NodeRender.renderChild(node), dom))
         dom.parentNode.removeChild(dom)
 
-      case Diff.PrependChild(child) =>
-        dom.prependChild(NodeRender.renderChild(child))
+      case Diff.PrependChildren(children) =>
+        children.reverse.foreach(child =>
+          dom.prependChild(NodeRender.renderChild(child)))
 
-      case Diff.AppendChild(child) =>
-        dom.appendChild(NodeRender.renderChild(child))
+      case Diff.AppendChildren(children) =>
+        children.foreach(child =>
+          dom.appendChild(NodeRender.renderChild(child)))
 
-      case Diff.RemoveChild() =>
+      case Diff.RemoveNode() =>
         dom.parentNode.removeChild(dom)
     }
 }

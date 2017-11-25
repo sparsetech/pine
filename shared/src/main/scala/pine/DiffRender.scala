@@ -29,10 +29,10 @@ object DiffRender {
       }
 
     case Diff.RemoveAttribute(attribute) => List(tag.remAttr(attribute.name))
-    case Diff.PrependChild(child) => List(tag.prepend(child))
-    case Diff.AppendChild(child) => List(tag.append(child))
-    case Diff.Replace(replacements) => replacements
-    case Diff.ReplaceChildren(children) => List(tag.set(children))
-    case Diff.RemoveChild() => List.empty
+    case Diff.PrependChildren(children) => List(tag.prependAll(children))
+    case Diff.AppendChildren(children) => List(tag.appendAll(children))
+    case Diff.Replace(nodes) => nodes
+    case Diff.SetChildren(children) => List(tag.set(children))
+    case Diff.RemoveNode() => List.empty
   }
 }

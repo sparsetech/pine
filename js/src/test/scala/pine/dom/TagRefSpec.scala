@@ -154,4 +154,21 @@ class TagRefSpec extends FunSuite {
     document.body.removeChild(div)
     document.body.removeChild(node)
   }
+
+  test("Prepend nodes") {
+    val div = html"""<div><span><hr/></span></div>""".toDom
+    document.body.appendChild(div)
+
+    DOM.render(implicit ctx =>
+      TagRef["span"].prepend(List(
+        html"<b>Hello</b>",
+        html"<i>World</i>"
+      ))
+    )
+
+    val html = DOM.toTree(div).toHtml
+    document.body.removeChild(div)
+
+    assert(html == "<div><span><b>Hello</b><i>World</i><hr/></span></div>")
+  }
 }
