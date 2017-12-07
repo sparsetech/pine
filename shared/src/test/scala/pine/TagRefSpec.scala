@@ -88,6 +88,14 @@ class TagRefSpec extends FunSuite {
     assert(updated == tag.Div.set(tag.B))
   }
 
+  test("Update class on ByClass reference") {
+    val node = tag.Div.`class`("test")
+    val ref  = TagRef.ByClass[tag.Div]("test")
+
+    val updated = node.update(implicit ctx => ref.`class` := "test2")
+    assert(updated == tag.Div.`class`("test2"))
+  }
+
   test("Resolve child references") {
     val itemRef = TagRef["div"]("item", "0")
     assert(itemRef == TagRef["div"]("item0"))

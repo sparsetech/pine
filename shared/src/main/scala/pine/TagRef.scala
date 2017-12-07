@@ -51,10 +51,10 @@ object TagRef {
     def each: TagRef[T] = ByTag(tagName, true)
   }
 
-  case class ByClass[T <: Singleton](`class`: String,
+  case class ByClass[T <: Singleton](_class: String,
                                      _each: Boolean = false) extends TagRef[T] {
     override def enqueue: Boolean = _each
-    def each: TagRef[T] = ByClass(`class`, true)
+    def each: TagRef[T] = ByClass(_class, true)
   }
 
   def apply[T <: Singleton](id: String): ById[T] = ById[T](id)
