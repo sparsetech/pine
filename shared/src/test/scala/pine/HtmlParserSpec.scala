@@ -172,6 +172,21 @@ class HtmlParserSpec extends FunSuite {
     assert(node2.toHtml == html2)
   }
 
+  test("Parse multiple root comments (prefix)") {
+    val html = """<!--test--><!----><a></a>"""
+    assert(HtmlParser.fromString(html) == tag.A)
+  }
+
+  test("Parse multiple root comments (suffix)") {
+    val html = """<a></a><!--test--><!---->"""
+    assert(HtmlParser.fromString(html) == tag.A)
+  }
+
+  test("Parse multiple child comments") {
+    val html = """<a><!--test--><!----></a>"""
+    assert(HtmlParser.fromString(html) == tag.A)
+  }
+
   test("Cannot parse XML tags") {
     // The JS parser is less strict, only test our internal parser here
     // <link> is a self-closing tag.

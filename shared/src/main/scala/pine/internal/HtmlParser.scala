@@ -54,6 +54,7 @@ object HtmlParser {
     } else {
       @tailrec def f(nodes: List[Node]): List[Node] =
         if (reader.prefix(s"</$tagName>")) nodes
+        else if (skipComment(reader)) f(nodes)
         else parseNode(reader, xml) match {
           case None    => nodes
           case Some(t) => f(nodes :+ t)
@@ -62,9 +63,12 @@ object HtmlParser {
       f(List.empty)
     }
 
-  def skipComment(reader: Reader): Unit =
-    if (reader.prefix("<!--"))
+  def skipComment(reader: Reader): Boolean =
+    if (!reader.prefix("<!--")) false
+    else {
       reader.collect("-->").orElse(expected(reader, "-->"))
+      true
+    }
 
   def skipDocType(reader: Reader): Unit =
     if (reader.prefix("<!DOCTYPE"))
@@ -94,13 +98,11 @@ object HtmlParser {
     else Some(Text(HtmlHelpers.decodeText(text, xml)))
   }
 
-  def parseNode(reader: Reader, xml: Boolean): Option[Node] = {
-    skipComment(reader)
+  def parseNode(reader: Reader, xml: Boolean): Option[Node] =
     parseTag(reader, xml).orElse(parseText(reader, xml))
-  }
 
   def parseRootNode(reader: Reader, xml: Boolean): Option[Tag[_]] = {
-    skipComment(reader)
+    while (skipComment(reader)) {}
     parseTag(reader, xml)
   }
 
