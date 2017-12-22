@@ -1,7 +1,5 @@
 package pine.macros
 
-import scala.collection.mutable
-
 import scala.language.reflectiveCalls
 import scala.language.experimental.macros
 
@@ -18,9 +16,9 @@ object InlineHtml {
     }
   }
 
-  def iter(c: Context)(node: Node,
-                       args: Seq[c.Expr[Any]],
-                       root: Boolean): List[c.Expr[List[Node]]] = {
+  def convertTag[T <: Singleton](c: Context)(tag: Tag[T],
+                                             args: Seq[c.Expr[Any]]
+                                            ): c.Expr[Tag[T]] = {
     import c.universe._
 
     val integerType = definitions.IntTpe
@@ -28,15 +26,38 @@ object InlineHtml {
     val stringType = definitions.StringClass.toType
     val optionStringType =
       appliedType(definitions.OptionClass, List(stringType))
-    val nodeType = c.mirror.staticClass("pine.Node")
-       .toType
+    val nodeType = c.mirror.staticClass("pine.Node").toType
     val listType = c.mirror.staticClass("scala.collection.immutable.List")
     val listNodeType = appliedType(listType, List(nodeType))
 
-    node match {
+    val tagAttrs = tag.attributes.mapValues(_.toString).map { case (k, v) =>
+      if (!v.startsWith("${") || !v.endsWith("}"))
+        c.Expr(q"List($k -> $v)")
+      else {
+        val index = v.drop(2).init.toInt
+
+        args(index) match {
+          case a if a.tree.tpe =:= stringType =>
+            c.Expr(q"List($k -> $a)")
+          case a if a.tree.tpe <:< optionStringType =>
+            c.Expr(q"$a.map($k -> _).toList")
+          case a =>
+            c.error(c.enclosingPosition,
+              s"Type ${a.tree.tpe} (${a.tree.symbol}) not supported")
+            null
+        }
+      }
+    }
+
+    val tagChildren = tag.children.flatMap {
+      case t @ Tag(_, _, _) =>
+        val tag = convertTag(c)(t, args)
+        List(c.Expr(q"List($tag)"))
+
       case Text(text) =>
         // TODO Find a better solution
-        val parts = text.replaceAll("""\$\{\d+\}""", "_$0_").split("_").toList
+        val parts = text.replaceAll("""\$\{\d+\}""", "_$0_").split("_")
+          .toList.filter(_.nonEmpty)
 
         parts.map { v =>
           if (!v.startsWith("${") || !v.endsWith("}"))
@@ -54,37 +75,21 @@ object InlineHtml {
               case n if n.tree.tpe =:= stringType =>
                 c.Expr(q"List(pine.Text($n))")
               case n =>
-                c.error(c.enclosingPosition, s"Type ${n.tree.tpe} (${n.tree.symbol}) not supported")
+                c.error(c.enclosingPosition,
+                  s"Type ${n.tree.tpe} (${n.tree.symbol}) not supported")
                 null
             }
           }
         }
-
-      case tag @ Tag(_, _, _) =>
-        val tagAttrs = mutable.ArrayBuffer.empty[c.Expr[Option[(String, Any)]]]
-
-        tag.attributes.mapValues(_.toString).foreach { case (k, v) =>
-          if (!v.startsWith("${") || !v.endsWith("}"))
-            tagAttrs += c.Expr(q"Some($k -> $v)")
-          else {
-            val index = v.drop(2).init.toInt
-
-            args(index) match {
-              case a if a.tree.tpe =:= stringType =>
-                tagAttrs += c.Expr(q"Some($k -> $a)")
-              case a if a.tree.tpe <:< optionStringType =>
-                tagAttrs += c.Expr(q"$a.map($k -> _)")
-              case a =>
-                c.error(c.enclosingPosition, s"Type ${a.tree.tpe} (${a.tree.symbol}) not supported")
-                null
-            }
-          }
-        }
-
-        val tagChildren = tag.children.flatMap(n => iter(c)(n, args, root = false))
-        val qAttrs = q"Seq[Option[(String, String)]](..$tagAttrs).collect { case Some(x) => x }.toMap"
-        List(c.Expr(q"List(pine.Tag(${tag.tagName}, $qAttrs, List(..$tagChildren).flatten))"))
     }
+
+    c.Expr(q"""
+      pine.Tag(
+        ${tag.tagName},
+        List(..$tagAttrs).flatten.toMap,
+        List(..$tagChildren).flatten
+      )
+    """)
   }
 
   def insertPlaceholders(c: Context)(parts: List[c.universe.Tree]): String =
@@ -100,11 +105,9 @@ object InlineHtml {
              (parts: List[c.universe.Tree],
               args: Seq[c.Expr[Any]]
              ): c.Expr[Tag[Singleton]] = {
-    import c.universe._
     val html = insertPlaceholders(c)(parts)
     val node = HtmlParser.fromString(html, xml)
-    val nodes = iter(c)(node, args, root = true).head
-    c.Expr(q"$nodes.head.asInstanceOf[pine.Tag[Singleton]]")
+    convertTag(c)(node, args)
   }
 
   def XmlImpl(c: Context)(args: c.Expr[Any]*): c.Expr[Tag[Singleton]] = {

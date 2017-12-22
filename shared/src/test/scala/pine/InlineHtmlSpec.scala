@@ -102,6 +102,11 @@ class InlineHtmlSpec extends FunSuite {
     assert(div.toHtml == "<div><span>test</span><span>test2</span></div>")
   }
 
+  test("List[Node] placeholders (2)") {
+    val children = List(Text("hello"))
+    assert(html"<a>$children</a>" == tag.A.set("hello"))
+  }
+
   test("Keep DOCTYPE") {
     val doctype = html"<!DOCTYPE html><html></html>"
     assert(doctype.toHtml == """<!DOCTYPE html><html></html>""")
