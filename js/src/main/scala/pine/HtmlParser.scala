@@ -22,16 +22,24 @@ private object DomParser {
 object HtmlParser {
   def fromString(html: String): Tag[Singleton] = {
     if (!html.startsWith("<")) throw new ParseError("Does not start with tag")
-
+    val reader = new Reader(html)
     val node =
-      if (html.substring(1, 5).equalsIgnoreCase("!doc"))
+      if (reader.prefix("<!DOCTYPE"))
         DomParser.parse(html, "text/html").documentElement
       else {
-        val tagName = html.tail.takeWhile(HtmlHelpers.identifierCharacter)
-        if (tagName.isEmpty) throw new ParseError("Empty tag name")
-        val e = DomParser.parse(html, "text/html").getElementsByTagName(tagName)
-        // TODO getElementsByTagName should return ElementList
-        e(0).asInstanceOf[Element]
+        // Skip leading comments
+        while (reader.prefix("<!--")) reader.collect("-->")
+
+        // Extract root tag name
+        reader.collect('<').flatMap(_ =>
+          reader.collectUntil(!HtmlHelpers.identifierCharacter(_))
+        ) match {
+          case None => throw new ParseError("Empty tag name")
+          case Some(tn) =>
+            val e = DomParser.parse(html, "text/html").getElementsByTagName(tn)
+            // TODO getElementsByTagName should return ElementList
+            e(0).asInstanceOf[Element]
+        }
       }
 
     DOM.toTree(node)
