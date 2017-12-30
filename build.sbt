@@ -9,17 +9,18 @@ val ScalaCheck = "1.13.5"
 val ScalaJsDom = "0.9.4"
 
 val SharedSettings = Seq(
-  name := "pine",
+  name         := "pine",
   organization := "tech.sparse",
 
+  scalaVersion       := Scala2_12,
+  crossScalaVersions := Seq(Scala2_12, Scala2_11),
+
   scalaOrganization := "org.typelevel",
-  scalaVersion := Scala2_12,
-  scalacOptions += "-Yliteral-types",
+  scalacOptions     += "-Yliteral-types",
 
   // See https://github.com/sbt/sbt/pull/2659
   incOptions := incOptions.value.withLogRecompileOnMacro(false),
 
-  crossScalaVersions := Seq(Scala2_12, Scala2_11),
   pomExtra :=
     <url>https://github.com/sparsetech/pine</url>
     <licenses>
@@ -43,7 +44,7 @@ val SharedSettings = Seq(
 lazy val root = project.in(file("."))
   .aggregate(pineJS, pineJVM, pineNative)
   .settings(SharedSettings: _*)
-  .settings(publishArtifact := false)
+  .settings(skip in publish := true)
 
 val convertMDN = taskKey[Unit]("Generate MDN bindings")
 
@@ -82,7 +83,7 @@ lazy val pine = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     addCompilerPlugin("org.scala-native" % "nscplugin" % "0.3.6" cross CrossVersion.patch),
 
     // Not available for 2.12 yet
-    scalaVersion := Scala2_11,
+    scalaVersion       := Scala2_11,
     crossScalaVersions := Seq(Scala2_11)
   )
 
