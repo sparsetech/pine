@@ -1,4 +1,4 @@
-# <img src="http://sparse.tech/opensource/icons/pine.svg" width="50%">
+# <img src="http://sparse.tech/icons/pine.svg" width="50%">
 [![Build Status](https://travis-ci.org/sparsetech/pine.svg)](https://travis-ci.org/sparsetech/pine)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/tech.sparse/pine_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/tech.sparse/pine_2.12)
 
