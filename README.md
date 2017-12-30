@@ -52,7 +52,7 @@ Pine makes use of a language extension called *literal types*, see [SIP-23](http
 
 ### Global settings
 ```scala
-scalaVersion      := "2.12.2-bin-typelevel-4"
+scalaVersion      := "2.12.4-bin-typelevel-4"  // or "2.11.11-bin-typelevel-4"
 scalaOrganization := "org.typelevel"
 scalacOptions     += "-Yliteral-types"
 
@@ -71,7 +71,7 @@ addCompilerPlugin("org.scala-js" % "scalajs-compiler" % scalaJSVersion cross Cro
 ### Scala Native settings
 ```scala
 libraryDependencies := libraryDependencies.value.filterNot(_.name == "nscplugin")
-addCompilerPlugin("org.scala-native" % "nscplugin" % "0.2.1" cross CrossVersion.patch)
+addCompilerPlugin("org.scala-native" % "nscplugin" % "0.3.6" cross CrossVersion.patch)
 ```
 
 ### Dependencies
