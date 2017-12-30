@@ -1,0 +1,13 @@
+[meta]
+title         = "Pine User Manual"
+author        = "Tim Nieradzik"
+affiliation   = "sparse.tech"
+abstract      = "Functional HTML5 and XML library for the Scala platform"
+language      = "en-GB"
+editSourceUrl = "https://github.com/sparsetech/pine/edit/master/"
+
+[input]
+paths = ["docs/*.md"]
+
+[constants]
+inherit = "version.sbt"
