@@ -9,5 +9,8 @@ editSourceUrl = "https://github.com/sparsetech/pine/edit/master/"
 [input]
 paths = ["docs/*.md"]
 
+[output]
+highlightJsStyle = "tomorrow"
+
 [constants]
 inherit = "version.sbt"

@@ -81,7 +81,7 @@ libraryDependencies += "tech.sparse" %%% "pine" % "0.1.1"  // JavaScript, LLVM
 ```
 
 ## Links
-* [Documentation](docs/)
+* [Documentation](http://sparse.tech/docs/pine.html)
 * [ScalaDoc](https://www.javadoc.io/doc/tech.sparse/pine_2.12/)
 
 ## Licence
