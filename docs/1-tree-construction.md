@@ -64,7 +64,7 @@ The parser has the following limitations:
 - The `DOCTYPE` tag is ignored
 - The input is expected to be valid HTML5
 
-The parser supports the complete set of more than 2100 HTML entities such as `&quot;` as well as numeric ones (`&#34;`). These entities can be decoded using the function `HtmlHelpers.decodeEntity`.
+The parser supports the complete set of more than 2100 HTML entities such as `&quot;` as well as numeric ones (`&#34;`). These entities can be decoded using the function `HtmlHelpers.decodeEntity()`. If you would like to decode a text that may contain such entities, you can call `decodeText()` instead.
 
 ## XML
 XML has slightly different semantics with regards to self-closing tags. The following example is valid XML, but would yield a parse error when parsed as HTML:
