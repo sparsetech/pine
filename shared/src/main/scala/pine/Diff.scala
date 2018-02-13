@@ -10,5 +10,6 @@ object Diff {
   case class SetChildren(children: List[Node]) extends Diff
   case class PrependChildren(children: List[Node]) extends Diff
   case class AppendChildren(children: List[Node]) extends Diff
+  case class InsertAt(position: Int, children: List[Node]) extends Diff
   case class RemoveNode() extends Diff
 }

@@ -62,6 +62,14 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
   def appendAll(nodes: List[Node]): Tag[TagName] = set(children ++ nodes)
   def ++(nodes: List[Node]): Tag[TagName] = appendAll(nodes)
 
+  def insertAt(position: Int, nodes: List[Node]): Tag[TagName] = {
+    assert(position <= children.length)
+    copy(children = children.patch(position, nodes, 0))
+  }
+
+  def insertAt(position: Int, node: Node): Tag[TagName] =
+    insertAt(position, List(node))
+
   def set(node: Node): Tag[TagName] = copy(children = List(node))
   def set(nodes: List[Node]): Tag[TagName] = copy(children = nodes)
 

@@ -35,7 +35,7 @@ object DiffRender {
         dom.removeAttribute(attribute.name)
 
       case Diff.SetChildren(children) =>
-        dom.clear()
+        dom.removeChildren()
         children.foreach(child =>
           dom.appendChild(NodeRender.renderChild(child)))
 
@@ -51,6 +51,10 @@ object DiffRender {
       case Diff.AppendChildren(children) =>
         children.foreach(child =>
           dom.appendChild(NodeRender.renderChild(child)))
+
+      case Diff.InsertAt(position, children) =>
+        children.reverse.foreach(child =>
+          dom.insertChildAt(position, NodeRender.renderChild(child)))
 
       case Diff.RemoveNode() =>
         dom.parentNode.removeChild(dom)

@@ -7,11 +7,11 @@ import pine._
 object DOM {
   trait Extensions {
     implicit class DomNodeExtensions(parent: dom.Node) {
-      def clear(): Unit =
+      def removeChildren(): Unit =
         while (parent.lastChild != null)
           parent.removeChild(parent.lastChild)
 
-      def replaceFirst(node: dom.Node): Unit =
+      def replaceFirstChild(node: dom.Node): Unit =
         if (parent.firstChild == null) parent.appendChild(node)
         else parent.replaceChild(node, parent.firstChild)
 
@@ -19,9 +19,13 @@ object DOM {
         if (parent.firstChild == null) parent.appendChild(node)
         else parent.insertBefore(node, parent.firstChild)
 
-      def insertAfter(reference: dom.Node, node: dom.Node): Unit =
-        if (reference == null || reference.nextSibling == null) parent.appendChild(node)
+      def insertChildAfter(reference: dom.Node, node: dom.Node): Unit =
+        if (reference.nextSibling == null) parent.appendChild(node)
         else parent.insertBefore(node, reference.nextSibling)
+
+      def insertChildAt(position: Int, node: dom.Node): Unit =
+        if (parent.firstChild == null) parent.appendChild(node)
+        else parent.insertBefore(node, parent.childNodes(position))
     }
 
     implicit class DomElementExtensions(parent: dom.Element) {

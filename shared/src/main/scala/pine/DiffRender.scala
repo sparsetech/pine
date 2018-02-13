@@ -33,6 +33,7 @@ object DiffRender {
     case Diff.AppendChildren(children) => List(tag.appendAll(children))
     case Diff.Replace(nodes) => nodes
     case Diff.SetChildren(children) => List(tag.set(children))
+    case Diff.InsertAt(position, children) => List(tag.insertAt(position, children))
     case Diff.RemoveNode() => List.empty
   }
 }

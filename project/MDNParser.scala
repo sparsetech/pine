@@ -37,7 +37,7 @@ object MDNParser {
     val fileName = encodeFileName(url)
     val file = new File(cache, fileName)
 
-    if (file.exists()) io.Source.fromFile(file).mkString
+    if (file.exists()) scala.io.Source.fromFile(file).mkString
     else {
       val response = Http(url).asString
 

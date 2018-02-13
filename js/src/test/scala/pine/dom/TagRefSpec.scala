@@ -171,4 +171,32 @@ class TagRefSpec extends FunSuite {
 
     assert(html == "<div><span><b>Hello</b><i>World</i><hr/></span></div>")
   }
+
+  test("Insert at position") {
+    val div = html"""<div id="nodes"></div>""".toDom
+    document.body.appendChild(div)
+
+    val result = DOM.render { implicit ctx =>
+      TagRef("nodes").insertAt(0, tag.Span.set("a"))
+    }
+
+    val html = DOM.toTree(div).toHtml
+    document.body.removeChild(div)
+
+    assert(html == """<div id="nodes"><span>a</span></div>""")
+  }
+
+  test("Insert at position (2)") {
+    val div = html"""<div id="nodes"><span>a</span><span>b</span><span>c</span></div>""".toDom
+    document.body.appendChild(div)
+
+    val result = DOM.render { implicit ctx =>
+      TagRef("nodes").insertAt(1, List(tag.Span.set("d"), tag.Span.set("e")))
+    }
+
+    val html = DOM.toTree(div).toHtml
+    document.body.removeChild(div)
+
+    assert(html == """<div id="nodes"><span>a</span><span>d</span><span>e</span><span>b</span><span>c</span></div>""")
+  }
 }

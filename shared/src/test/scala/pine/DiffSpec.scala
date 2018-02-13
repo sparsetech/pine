@@ -35,4 +35,22 @@ class DiffSpec extends FunSuite {
     val result = node.update(implicit ctx => root.set(items.map(renderItem)))
     assert(result == html"""<div id="page"><div id="child0"><span id="name0">Joe</span></div><div id="child1"><span id="name1">Jeff</span></div></div>""")
   }
+
+  test("insertAt()") {
+    val node  = html"""<div id="nodes"></div>"""
+    val result = node.update { implicit ctx =>
+      TagRef("nodes").insertAt(0, tag.Span.set("a"))
+    }
+
+    assert(result == html"""<div id="nodes"><span>a</span></div>""")
+  }
+
+  test("insertAt() (2)") {
+    val node  = html"""<div id="nodes"><span>a</span><span>b</span><span>c</span></div>"""
+    val result = node.update { implicit ctx =>
+      TagRef("nodes").insertAt(1, List(tag.Span.set("d"), tag.Span.set("e")))
+    }
+
+    assert(result == html"""<div id="nodes"><span>a</span><span>d</span><span>e</span><span>b</span><span>c</span></div>""")
+  }
 }
