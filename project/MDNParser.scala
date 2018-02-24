@@ -10,7 +10,7 @@ import scalaj.http._
 
 object MDNParser {
   case class Element(tag: String, description: String, attributes: Seq[Attribute])
-  case class Attribute(name: String, deprecated: Boolean, description: String, tpe: Option[String] = None)
+  case class Attribute(name: String, deprecated: Boolean, description: String, tpe: String)
   case class AttributeType(name: String, tpe: String)
 
   val cache = new File("cache/")
@@ -20,6 +20,17 @@ object MDNParser {
   val GlobalAttributesUrl = "https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes"
   val AdditionalTagUrls = Set("a", "b", "i", "br", "span", "em", "strong", "small", "code")
     .map(ElementsUrl + "/" + _)
+
+  // Must be kept synchronised with HtmlHelpers.BooleanAttributes
+  val BooleanAttributes = Set("allowfullscreen", "async", "autofocus",
+    "autoplay", "checked", "compact", "controls", "declare", "default",
+    "defaultchecked", "defaultmuted", "defaultselected", "defer", "disabled",
+    "draggable", "enabled", "formnovalidate", "hidden", "indeterminate", "inert",
+    "ismap", "itemscope", "loop", "multiple", "muted", "nohref", "noresize",
+    "noshade", "novalidate", "nowrap", "open", "pauseonexit", "readonly",
+    "required", "reversed", "scoped", "seamless", "selected", "sortable",
+    "spellcheck", "translate", "truespeed", "typemustmatch", "visible")
+
   val FilterTags = Set("element")  // Invalid tags
 
   def encodeFileName(url: String): String =
@@ -138,7 +149,7 @@ object MDNParser {
 
     attributes.filter(_.name != "data-*").foreach { attribute =>
       val attrName = escapeScalaName(attribute.name)
-      val attrType = attribute.tpe.map(mapDomType).getOrElse("String")
+      val attrType = mapDomType(attribute.tpe)
       val elementNameAttr = elementName.fold("T")(el => s"tag.${el.capitalize}")
 
       if (attrType == "Boolean")
@@ -191,7 +202,7 @@ object MDNParser {
       .foreach
     { attribute =>
       val attrName = escapeScalaName(attribute.name)
-      val attrType = attribute.tpe.map(mapDomType).getOrElse("String")
+      val attrType = mapDomType(attribute.tpe)
 
       if (attrType == "Boolean")
         p.println( s"""    def $attrName: $attrType = tag.attributes.contains("${attribute.name}")""")
@@ -232,7 +243,10 @@ object MDNParser {
       val obsolete = attr.select("span.obsolete").size() != 0
 
       if (name.isEmpty) None
-      else Some(Attribute(name, deprecated || deleted || obsolete, docs))
+      else {
+        val tpe = if (BooleanAttributes.contains(name)) "Boolean" else "String"
+        Some(Attribute(name, deprecated || deleted || obsolete, docs, tpe))
+      }
     }
   }
 
@@ -291,7 +305,7 @@ object MDNParser {
 
     attributes.map { case attribute @ Attribute(name, _, _, _) =>
       types.find(_.name == name) match {
-        case Some(AttributeType(_, tpe)) => attribute.copy(tpe = Some(tpe))
+        case Some(AttributeType(_, tpe)) => attribute.copy(tpe = tpe)
         case None =>
           println(s"$parentUrl: Could not find type for `$name` in linked interface")
           attribute

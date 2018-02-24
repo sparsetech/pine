@@ -9,21 +9,21 @@ trait Attributes {
     val contenteditable = new Attribute[T, scala.Option[String], String](tagRef, "contenteditable")
     val contextmenu = new Attribute[T, scala.Option[String], String](tagRef, "contextmenu")
     val dir = new Attribute[T, scala.Option[String], String](tagRef, "dir")
-    val draggable = new Attribute[T, scala.Option[String], String](tagRef, "draggable")
+    val draggable = new Attribute[T, Boolean, Boolean](tagRef, "draggable")
     val dropzone = new Attribute[T, scala.Option[String], String](tagRef, "dropzone")
-    val hidden = new Attribute[T, scala.Option[String], String](tagRef, "hidden")
+    val hidden = new Attribute[T, Boolean, Boolean](tagRef, "hidden")
     val id = new Attribute[T, scala.Option[String], String](tagRef, "id")
     val itemid = new Attribute[T, scala.Option[String], String](tagRef, "itemid")
     val itemprop = new Attribute[T, scala.Option[String], String](tagRef, "itemprop")
     val itemref = new Attribute[T, scala.Option[String], String](tagRef, "itemref")
-    val itemscope = new Attribute[T, scala.Option[String], String](tagRef, "itemscope")
+    val itemscope = new Attribute[T, Boolean, Boolean](tagRef, "itemscope")
     val itemtype = new Attribute[T, scala.Option[String], String](tagRef, "itemtype")
     val lang = new Attribute[T, scala.Option[String], String](tagRef, "lang")
-    val spellcheck = new Attribute[T, scala.Option[String], String](tagRef, "spellcheck")
+    val spellcheck = new Attribute[T, Boolean, Boolean](tagRef, "spellcheck")
     val style = new Attribute[T, scala.Option[String], String](tagRef, "style")
     val tabindex = new Attribute[T, scala.Option[String], String](tagRef, "tabindex")
     val title = new Attribute[T, scala.Option[String], String](tagRef, "title")
-    val translate = new Attribute[T, scala.Option[String], String](tagRef, "translate")
+    val translate = new Attribute[T, Boolean, Boolean](tagRef, "translate")
   }
 
   implicit class TagAttributes[T <: Singleton](tag: Tag[T]) {
@@ -37,12 +37,12 @@ trait Attributes {
     def contextmenu(value: String): Tag[T] = tag.setAttr("contextmenu", value)
     def dir: scala.Option[String] = tag.attr("dir").asInstanceOf[scala.Option[String]]
     def dir(value: String): Tag[T] = tag.setAttr("dir", value)
-    def draggable: scala.Option[String] = tag.attr("draggable").asInstanceOf[scala.Option[String]]
-    def draggable(value: String): Tag[T] = tag.setAttr("draggable", value)
+    def draggable: Boolean = tag.attributes.contains("draggable")
+    def draggable(value: Boolean): Tag[T] = if (value) tag.setAttr("draggable", "") else tag.remAttr("draggable")
     def dropzone: scala.Option[String] = tag.attr("dropzone").asInstanceOf[scala.Option[String]]
     def dropzone(value: String): Tag[T] = tag.setAttr("dropzone", value)
-    def hidden: scala.Option[String] = tag.attr("hidden").asInstanceOf[scala.Option[String]]
-    def hidden(value: String): Tag[T] = tag.setAttr("hidden", value)
+    def hidden: Boolean = tag.attributes.contains("hidden")
+    def hidden(value: Boolean): Tag[T] = if (value) tag.setAttr("hidden", "") else tag.remAttr("hidden")
     def id: scala.Option[String] = tag.attr("id").asInstanceOf[scala.Option[String]]
     def id(value: String): Tag[T] = tag.setAttr("id", value)
     def itemid: scala.Option[String] = tag.attr("itemid").asInstanceOf[scala.Option[String]]
@@ -51,22 +51,22 @@ trait Attributes {
     def itemprop(value: String): Tag[T] = tag.setAttr("itemprop", value)
     def itemref: scala.Option[String] = tag.attr("itemref").asInstanceOf[scala.Option[String]]
     def itemref(value: String): Tag[T] = tag.setAttr("itemref", value)
-    def itemscope: scala.Option[String] = tag.attr("itemscope").asInstanceOf[scala.Option[String]]
-    def itemscope(value: String): Tag[T] = tag.setAttr("itemscope", value)
+    def itemscope: Boolean = tag.attributes.contains("itemscope")
+    def itemscope(value: Boolean): Tag[T] = if (value) tag.setAttr("itemscope", "") else tag.remAttr("itemscope")
     def itemtype: scala.Option[String] = tag.attr("itemtype").asInstanceOf[scala.Option[String]]
     def itemtype(value: String): Tag[T] = tag.setAttr("itemtype", value)
     def lang: scala.Option[String] = tag.attr("lang").asInstanceOf[scala.Option[String]]
     def lang(value: String): Tag[T] = tag.setAttr("lang", value)
-    def spellcheck: scala.Option[String] = tag.attr("spellcheck").asInstanceOf[scala.Option[String]]
-    def spellcheck(value: String): Tag[T] = tag.setAttr("spellcheck", value)
+    def spellcheck: Boolean = tag.attributes.contains("spellcheck")
+    def spellcheck(value: Boolean): Tag[T] = if (value) tag.setAttr("spellcheck", "") else tag.remAttr("spellcheck")
     def style: scala.Option[String] = tag.attr("style").asInstanceOf[scala.Option[String]]
     def style(value: String): Tag[T] = tag.setAttr("style", value)
     def tabindex: scala.Option[String] = tag.attr("tabindex").asInstanceOf[scala.Option[String]]
     def tabindex(value: String): Tag[T] = tag.setAttr("tabindex", value)
     def title: scala.Option[String] = tag.attr("title").asInstanceOf[scala.Option[String]]
     def title(value: String): Tag[T] = tag.setAttr("title", value)
-    def translate: scala.Option[String] = tag.attr("translate").asInstanceOf[scala.Option[String]]
-    def translate(value: String): Tag[T] = tag.setAttr("translate", value)
+    def translate: Boolean = tag.attributes.contains("translate")
+    def translate(value: Boolean): Tag[T] = if (value) tag.setAttr("translate", "") else tag.remAttr("translate")
   }
 
   implicit class TagAttributesA(tag: Tag[pine.tag.A]) {
@@ -192,8 +192,8 @@ trait Attributes {
     def name(value: String): Tag[pine.tag.Area] = tag.setAttr("name", value)
     def media: scala.Option[String] = tag.attr("media").asInstanceOf[scala.Option[String]]
     def media(value: String): Tag[pine.tag.Area] = tag.setAttr("media", value)
-    def nohref: scala.Option[String] = tag.attr("nohref").asInstanceOf[scala.Option[String]]
-    def nohref(value: String): Tag[pine.tag.Area] = tag.setAttr("nohref", value)
+    def nohref: Boolean = tag.attributes.contains("nohref")
+    def nohref(value: Boolean): Tag[pine.tag.Area] = if (value) tag.setAttr("nohref", "") else tag.remAttr("nohref")
     def rel: scala.Option[String] = tag.attr("rel").asInstanceOf[scala.Option[String]]
     def rel(value: String): Tag[pine.tag.Area] = tag.setAttr("rel", value)
     def shape: scala.Option[String] = tag.attr("shape").asInstanceOf[scala.Option[String]]
@@ -213,7 +213,7 @@ trait Attributes {
     val hreflang = new Attribute[tag.Area, scala.Option[String], String](tagRef, "hreflang")
     val name = new Attribute[tag.Area, scala.Option[String], String](tagRef, "name")
     val media = new Attribute[tag.Area, scala.Option[String], String](tagRef, "media")
-    val nohref = new Attribute[tag.Area, scala.Option[String], String](tagRef, "nohref")
+    val nohref = new Attribute[tag.Area, Boolean, Boolean](tagRef, "nohref")
     val rel = new Attribute[tag.Area, scala.Option[String], String](tagRef, "rel")
     val shape = new Attribute[tag.Area, scala.Option[String], String](tagRef, "shape")
     val tabindex = new Attribute[tag.Area, scala.Option[String], String](tagRef, "tabindex")
@@ -222,20 +222,20 @@ trait Attributes {
   }
 
   implicit class TagAttributesAudio(tag: Tag[pine.tag.Audio]) {
-    def autoplay: scala.Option[String] = tag.attr("autoplay").asInstanceOf[scala.Option[String]]
-    def autoplay(value: String): Tag[pine.tag.Audio] = tag.setAttr("autoplay", value)
+    def autoplay: Boolean = tag.attributes.contains("autoplay")
+    def autoplay(value: Boolean): Tag[pine.tag.Audio] = if (value) tag.setAttr("autoplay", "") else tag.remAttr("autoplay")
     def autobuffer: scala.Option[String] = tag.attr("autobuffer").asInstanceOf[scala.Option[String]]
     def autobuffer(value: String): Tag[pine.tag.Audio] = tag.setAttr("autobuffer", value)
     def buffered: scala.Option[String] = tag.attr("buffered").asInstanceOf[scala.Option[String]]
     def buffered(value: String): Tag[pine.tag.Audio] = tag.setAttr("buffered", value)
-    def controls: scala.Option[String] = tag.attr("controls").asInstanceOf[scala.Option[String]]
-    def controls(value: String): Tag[pine.tag.Audio] = tag.setAttr("controls", value)
-    def loop: scala.Option[String] = tag.attr("loop").asInstanceOf[scala.Option[String]]
-    def loop(value: String): Tag[pine.tag.Audio] = tag.setAttr("loop", value)
+    def controls: Boolean = tag.attributes.contains("controls")
+    def controls(value: Boolean): Tag[pine.tag.Audio] = if (value) tag.setAttr("controls", "") else tag.remAttr("controls")
+    def loop: Boolean = tag.attributes.contains("loop")
+    def loop(value: Boolean): Tag[pine.tag.Audio] = if (value) tag.setAttr("loop", "") else tag.remAttr("loop")
     def mozCurrentSampleOffset: scala.Option[String] = tag.attr("mozCurrentSampleOffset").asInstanceOf[scala.Option[String]]
     def mozCurrentSampleOffset(value: String): Tag[pine.tag.Audio] = tag.setAttr("mozCurrentSampleOffset", value)
-    def muted: scala.Option[String] = tag.attr("muted").asInstanceOf[scala.Option[String]]
-    def muted(value: String): Tag[pine.tag.Audio] = tag.setAttr("muted", value)
+    def muted: Boolean = tag.attributes.contains("muted")
+    def muted(value: Boolean): Tag[pine.tag.Audio] = if (value) tag.setAttr("muted", "") else tag.remAttr("muted")
     def played: scala.Option[String] = tag.attr("played").asInstanceOf[scala.Option[String]]
     def played(value: String): Tag[pine.tag.Audio] = tag.setAttr("played", value)
     def preload: scala.Option[String] = tag.attr("preload").asInstanceOf[scala.Option[String]]
@@ -247,13 +247,13 @@ trait Attributes {
   }
 
   implicit class TagRefAttributesAudio(tagRef: TagRef[tag.Audio]) {
-    val autoplay = new Attribute[tag.Audio, scala.Option[String], String](tagRef, "autoplay")
+    val autoplay = new Attribute[tag.Audio, Boolean, Boolean](tagRef, "autoplay")
     val autobuffer = new Attribute[tag.Audio, scala.Option[String], String](tagRef, "autobuffer")
     val buffered = new Attribute[tag.Audio, scala.Option[String], String](tagRef, "buffered")
-    val controls = new Attribute[tag.Audio, scala.Option[String], String](tagRef, "controls")
-    val loop = new Attribute[tag.Audio, scala.Option[String], String](tagRef, "loop")
+    val controls = new Attribute[tag.Audio, Boolean, Boolean](tagRef, "controls")
+    val loop = new Attribute[tag.Audio, Boolean, Boolean](tagRef, "loop")
     val mozCurrentSampleOffset = new Attribute[tag.Audio, scala.Option[String], String](tagRef, "mozCurrentSampleOffset")
-    val muted = new Attribute[tag.Audio, scala.Option[String], String](tagRef, "muted")
+    val muted = new Attribute[tag.Audio, Boolean, Boolean](tagRef, "muted")
     val played = new Attribute[tag.Audio, scala.Option[String], String](tagRef, "played")
     val preload = new Attribute[tag.Audio, scala.Option[String], String](tagRef, "preload")
     val src = new Attribute[tag.Audio, scala.Option[String], String](tagRef, "src")
@@ -365,8 +365,8 @@ trait Attributes {
     def formenctype(value: String): Tag[pine.tag.Button] = tag.setAttr("formenctype", value)
     def formmethod: scala.Option[String] = tag.attr("formmethod").asInstanceOf[scala.Option[String]]
     def formmethod(value: String): Tag[pine.tag.Button] = tag.setAttr("formmethod", value)
-    def formnovalidate: scala.Option[String] = tag.attr("formnovalidate").asInstanceOf[scala.Option[String]]
-    def formnovalidate(value: String): Tag[pine.tag.Button] = tag.setAttr("formnovalidate", value)
+    def formnovalidate: Boolean = tag.attributes.contains("formnovalidate")
+    def formnovalidate(value: Boolean): Tag[pine.tag.Button] = if (value) tag.setAttr("formnovalidate", "") else tag.remAttr("formnovalidate")
     def formtarget: scala.Option[String] = tag.attr("formtarget").asInstanceOf[scala.Option[String]]
     def formtarget(value: String): Tag[pine.tag.Button] = tag.setAttr("formtarget", value)
     def name: scala.Option[String] = tag.attr("name").asInstanceOf[scala.Option[String]]
@@ -385,7 +385,7 @@ trait Attributes {
     val formaction = new Attribute[tag.Button, scala.Option[String], String](tagRef, "formaction")
     val formenctype = new Attribute[tag.Button, scala.Option[String], String](tagRef, "formenctype")
     val formmethod = new Attribute[tag.Button, scala.Option[String], String](tagRef, "formmethod")
-    val formnovalidate = new Attribute[tag.Button, scala.Option[String], String](tagRef, "formnovalidate")
+    val formnovalidate = new Attribute[tag.Button, Boolean, Boolean](tagRef, "formnovalidate")
     val formtarget = new Attribute[tag.Button, scala.Option[String], String](tagRef, "formtarget")
     val name = new Attribute[tag.Button, scala.Option[String], String](tagRef, "name")
     val `type` = new Attribute[tag.Button, scala.Option[String], String](tagRef, "type")
@@ -471,12 +471,12 @@ trait Attributes {
   }
 
   implicit class TagAttributesDd(tag: Tag[pine.tag.Dd]) {
-    def nowrap: scala.Option[String] = tag.attr("nowrap").asInstanceOf[scala.Option[String]]
-    def nowrap(value: String): Tag[pine.tag.Dd] = tag.setAttr("nowrap", value)
+    def nowrap: Boolean = tag.attributes.contains("nowrap")
+    def nowrap(value: Boolean): Tag[pine.tag.Dd] = if (value) tag.setAttr("nowrap", "") else tag.remAttr("nowrap")
   }
 
   implicit class TagRefAttributesDd(tagRef: TagRef[tag.Dd]) {
-    val nowrap = new Attribute[tag.Dd, scala.Option[String], String](tagRef, "nowrap")
+    val nowrap = new Attribute[tag.Dd, Boolean, Boolean](tagRef, "nowrap")
   }
 
   implicit class TagAttributesDel(tag: Tag[pine.tag.Del]) {
@@ -492,12 +492,12 @@ trait Attributes {
   }
 
   implicit class TagAttributesDetails(tag: Tag[pine.tag.Details]) {
-    def open: scala.Option[String] = tag.attr("open").asInstanceOf[scala.Option[String]]
-    def open(value: String): Tag[pine.tag.Details] = tag.setAttr("open", value)
+    def open: Boolean = tag.attributes.contains("open")
+    def open(value: Boolean): Tag[pine.tag.Details] = if (value) tag.setAttr("open", "") else tag.remAttr("open")
   }
 
   implicit class TagRefAttributesDetails(tagRef: TagRef[tag.Details]) {
-    val open = new Attribute[tag.Details, scala.Option[String], String](tagRef, "open")
+    val open = new Attribute[tag.Details, Boolean, Boolean](tagRef, "open")
   }
 
   implicit class TagAttributesDialog(tag: Tag[pine.tag.Dialog]) {
@@ -510,12 +510,12 @@ trait Attributes {
   }
 
   implicit class TagAttributesDir(tag: Tag[pine.tag.Dir]) {
-    def compact: scala.Option[String] = tag.attr("compact").asInstanceOf[scala.Option[String]]
-    def compact(value: String): Tag[pine.tag.Dir] = tag.setAttr("compact", value)
+    def compact: Boolean = tag.attributes.contains("compact")
+    def compact(value: Boolean): Tag[pine.tag.Dir] = if (value) tag.setAttr("compact", "") else tag.remAttr("compact")
   }
 
   implicit class TagRefAttributesDir(tagRef: TagRef[tag.Dir]) {
-    val compact = new Attribute[tag.Dir, scala.Option[String], String](tagRef, "compact")
+    val compact = new Attribute[tag.Dir, Boolean, Boolean](tagRef, "compact")
   }
 
   implicit class TagAttributesDl(tag: Tag[pine.tag.Dl]) {
@@ -546,8 +546,8 @@ trait Attributes {
   }
 
   implicit class TagAttributesFieldset(tag: Tag[pine.tag.Fieldset]) {
-    def disabled: scala.Option[String] = tag.attr("disabled").asInstanceOf[scala.Option[String]]
-    def disabled(value: String): Tag[pine.tag.Fieldset] = tag.setAttr("disabled", value)
+    def disabled: Boolean = tag.attributes.contains("disabled")
+    def disabled(value: Boolean): Tag[pine.tag.Fieldset] = if (value) tag.setAttr("disabled", "") else tag.remAttr("disabled")
     def form: scala.Option[String] = tag.attr("form").asInstanceOf[scala.Option[String]]
     def form(value: String): Tag[pine.tag.Fieldset] = tag.setAttr("form", value)
     def name: scala.Option[String] = tag.attr("name").asInstanceOf[scala.Option[String]]
@@ -555,7 +555,7 @@ trait Attributes {
   }
 
   implicit class TagRefAttributesFieldset(tagRef: TagRef[tag.Fieldset]) {
-    val disabled = new Attribute[tag.Fieldset, scala.Option[String], String](tagRef, "disabled")
+    val disabled = new Attribute[tag.Fieldset, Boolean, Boolean](tagRef, "disabled")
     val form = new Attribute[tag.Fieldset, scala.Option[String], String](tagRef, "form")
     val name = new Attribute[tag.Fieldset, scala.Option[String], String](tagRef, "name")
   }
@@ -577,8 +577,8 @@ trait Attributes {
     def method(value: String): Tag[pine.tag.Form] = tag.setAttr("method", value)
     def name: scala.Option[String] = tag.attr("name").asInstanceOf[scala.Option[String]]
     def name(value: String): Tag[pine.tag.Form] = tag.setAttr("name", value)
-    def novalidate: scala.Option[String] = tag.attr("novalidate").asInstanceOf[scala.Option[String]]
-    def novalidate(value: String): Tag[pine.tag.Form] = tag.setAttr("novalidate", value)
+    def novalidate: Boolean = tag.attributes.contains("novalidate")
+    def novalidate(value: Boolean): Tag[pine.tag.Form] = if (value) tag.setAttr("novalidate", "") else tag.remAttr("novalidate")
     def target: scala.Option[String] = tag.attr("target").asInstanceOf[scala.Option[String]]
     def target(value: String): Tag[pine.tag.Form] = tag.setAttr("target", value)
   }
@@ -592,7 +592,7 @@ trait Attributes {
     val enctype = new Attribute[tag.Form, scala.Option[String], String](tagRef, "enctype")
     val method = new Attribute[tag.Form, scala.Option[String], String](tagRef, "method")
     val name = new Attribute[tag.Form, scala.Option[String], String](tagRef, "name")
-    val novalidate = new Attribute[tag.Form, scala.Option[String], String](tagRef, "novalidate")
+    val novalidate = new Attribute[tag.Form, Boolean, Boolean](tagRef, "novalidate")
     val target = new Attribute[tag.Form, scala.Option[String], String](tagRef, "target")
   }
 
@@ -601,8 +601,8 @@ trait Attributes {
     def src(value: String): Tag[pine.tag.Frame] = tag.setAttr("src", value)
     def name: scala.Option[String] = tag.attr("name").asInstanceOf[scala.Option[String]]
     def name(value: String): Tag[pine.tag.Frame] = tag.setAttr("name", value)
-    def noresize: scala.Option[String] = tag.attr("noresize").asInstanceOf[scala.Option[String]]
-    def noresize(value: String): Tag[pine.tag.Frame] = tag.setAttr("noresize", value)
+    def noresize: Boolean = tag.attributes.contains("noresize")
+    def noresize(value: Boolean): Tag[pine.tag.Frame] = if (value) tag.setAttr("noresize", "") else tag.remAttr("noresize")
     def scrolling: scala.Option[String] = tag.attr("scrolling").asInstanceOf[scala.Option[String]]
     def scrolling(value: String): Tag[pine.tag.Frame] = tag.setAttr("scrolling", value)
     def marginheight: scala.Option[String] = tag.attr("marginheight").asInstanceOf[scala.Option[String]]
@@ -616,7 +616,7 @@ trait Attributes {
   implicit class TagRefAttributesFrame(tagRef: TagRef[tag.Frame]) {
     val src = new Attribute[tag.Frame, scala.Option[String], String](tagRef, "src")
     val name = new Attribute[tag.Frame, scala.Option[String], String](tagRef, "name")
-    val noresize = new Attribute[tag.Frame, scala.Option[String], String](tagRef, "noresize")
+    val noresize = new Attribute[tag.Frame, Boolean, Boolean](tagRef, "noresize")
     val scrolling = new Attribute[tag.Frame, scala.Option[String], String](tagRef, "scrolling")
     val marginheight = new Attribute[tag.Frame, scala.Option[String], String](tagRef, "marginheight")
     val marginwidth = new Attribute[tag.Frame, scala.Option[String], String](tagRef, "marginwidth")
@@ -683,8 +683,8 @@ trait Attributes {
   implicit class TagAttributesIframe(tag: Tag[pine.tag.Iframe]) {
     def align: scala.Option[String] = tag.attr("align").asInstanceOf[scala.Option[String]]
     def align(value: String): Tag[pine.tag.Iframe] = tag.setAttr("align", value)
-    def allowfullscreen: scala.Option[String] = tag.attr("allowfullscreen").asInstanceOf[scala.Option[String]]
-    def allowfullscreen(value: String): Tag[pine.tag.Iframe] = tag.setAttr("allowfullscreen", value)
+    def allowfullscreen: Boolean = tag.attributes.contains("allowfullscreen")
+    def allowfullscreen(value: Boolean): Tag[pine.tag.Iframe] = if (value) tag.setAttr("allowfullscreen", "") else tag.remAttr("allowfullscreen")
     def frameborder: scala.Option[String] = tag.attr("frameborder").asInstanceOf[scala.Option[String]]
     def frameborder(value: String): Tag[pine.tag.Iframe] = tag.setAttr("frameborder", value)
     def height: scala.Option[String] = tag.attr("height").asInstanceOf[scala.Option[String]]
@@ -711,8 +711,8 @@ trait Attributes {
     def scrolling(value: String): Tag[pine.tag.Iframe] = tag.setAttr("scrolling", value)
     def sandbox: scala.Option[String] = tag.attr("sandbox").asInstanceOf[scala.Option[String]]
     def sandbox(value: String): Tag[pine.tag.Iframe] = tag.setAttr("sandbox", value)
-    def seamless: scala.Option[String] = tag.attr("seamless").asInstanceOf[scala.Option[String]]
-    def seamless(value: String): Tag[pine.tag.Iframe] = tag.setAttr("seamless", value)
+    def seamless: Boolean = tag.attributes.contains("seamless")
+    def seamless(value: Boolean): Tag[pine.tag.Iframe] = if (value) tag.setAttr("seamless", "") else tag.remAttr("seamless")
     def src: scala.Option[String] = tag.attr("src").asInstanceOf[scala.Option[String]]
     def src(value: String): Tag[pine.tag.Iframe] = tag.setAttr("src", value)
     def srcdoc: scala.Option[String] = tag.attr("srcdoc").asInstanceOf[scala.Option[String]]
@@ -723,7 +723,7 @@ trait Attributes {
 
   implicit class TagRefAttributesIframe(tagRef: TagRef[tag.Iframe]) {
     val align = new Attribute[tag.Iframe, scala.Option[String], String](tagRef, "align")
-    val allowfullscreen = new Attribute[tag.Iframe, scala.Option[String], String](tagRef, "allowfullscreen")
+    val allowfullscreen = new Attribute[tag.Iframe, Boolean, Boolean](tagRef, "allowfullscreen")
     val frameborder = new Attribute[tag.Iframe, scala.Option[String], String](tagRef, "frameborder")
     val height = new Attribute[tag.Iframe, scala.Option[String], String](tagRef, "height")
     val longdesc = new Attribute[tag.Iframe, scala.Option[String], String](tagRef, "longdesc")
@@ -737,7 +737,7 @@ trait Attributes {
     val remote = new Attribute[tag.Iframe, scala.Option[String], String](tagRef, "remote")
     val scrolling = new Attribute[tag.Iframe, scala.Option[String], String](tagRef, "scrolling")
     val sandbox = new Attribute[tag.Iframe, scala.Option[String], String](tagRef, "sandbox")
-    val seamless = new Attribute[tag.Iframe, scala.Option[String], String](tagRef, "seamless")
+    val seamless = new Attribute[tag.Iframe, Boolean, Boolean](tagRef, "seamless")
     val src = new Attribute[tag.Iframe, scala.Option[String], String](tagRef, "src")
     val srcdoc = new Attribute[tag.Iframe, scala.Option[String], String](tagRef, "srcdoc")
     val width = new Attribute[tag.Iframe, scala.Option[String], String](tagRef, "width")
@@ -756,8 +756,8 @@ trait Attributes {
     def height(value: String): Tag[pine.tag.Img] = tag.setAttr("height", value)
     def hspace: scala.Option[String] = tag.attr("hspace").asInstanceOf[scala.Option[String]]
     def hspace(value: String): Tag[pine.tag.Img] = tag.setAttr("hspace", value)
-    def ismap: scala.Option[String] = tag.attr("ismap").asInstanceOf[scala.Option[String]]
-    def ismap(value: String): Tag[pine.tag.Img] = tag.setAttr("ismap", value)
+    def ismap: Boolean = tag.attributes.contains("ismap")
+    def ismap(value: Boolean): Tag[pine.tag.Img] = if (value) tag.setAttr("ismap", "") else tag.remAttr("ismap")
     def longdesc: scala.Option[String] = tag.attr("longdesc").asInstanceOf[scala.Option[String]]
     def longdesc(value: String): Tag[pine.tag.Img] = tag.setAttr("longdesc", value)
     def name: scala.Option[String] = tag.attr("name").asInstanceOf[scala.Option[String]]
@@ -783,7 +783,7 @@ trait Attributes {
     val crossorigin = new Attribute[tag.Img, scala.Option[String], String](tagRef, "crossorigin")
     val height = new Attribute[tag.Img, scala.Option[String], String](tagRef, "height")
     val hspace = new Attribute[tag.Img, scala.Option[String], String](tagRef, "hspace")
-    val ismap = new Attribute[tag.Img, scala.Option[String], String](tagRef, "ismap")
+    val ismap = new Attribute[tag.Img, Boolean, Boolean](tagRef, "ismap")
     val longdesc = new Attribute[tag.Img, scala.Option[String], String](tagRef, "longdesc")
     val name = new Attribute[tag.Img, scala.Option[String], String](tagRef, "name")
     val sizes = new Attribute[tag.Img, scala.Option[String], String](tagRef, "sizes")
@@ -823,8 +823,8 @@ trait Attributes {
     def formenctype(value: String): Tag[pine.tag.Input] = tag.setAttr("formenctype", value)
     def formmethod: scala.Option[String] = tag.attr("formmethod").asInstanceOf[scala.Option[String]]
     def formmethod(value: String): Tag[pine.tag.Input] = tag.setAttr("formmethod", value)
-    def formnovalidate: scala.Option[String] = tag.attr("formnovalidate").asInstanceOf[scala.Option[String]]
-    def formnovalidate(value: String): Tag[pine.tag.Input] = tag.setAttr("formnovalidate", value)
+    def formnovalidate: Boolean = tag.attributes.contains("formnovalidate")
+    def formnovalidate(value: Boolean): Tag[pine.tag.Input] = if (value) tag.setAttr("formnovalidate", "") else tag.remAttr("formnovalidate")
     def formtarget: scala.Option[String] = tag.attr("formtarget").asInstanceOf[scala.Option[String]]
     def formtarget(value: String): Tag[pine.tag.Input] = tag.setAttr("formtarget", value)
     def height: scala.Option[String] = tag.attr("height").asInstanceOf[scala.Option[String]]
@@ -843,16 +843,16 @@ trait Attributes {
     def min(value: String): Tag[pine.tag.Input] = tag.setAttr("min", value)
     def minlength: scala.Option[String] = tag.attr("minlength").asInstanceOf[scala.Option[String]]
     def minlength(value: String): Tag[pine.tag.Input] = tag.setAttr("minlength", value)
-    def multiple: scala.Option[String] = tag.attr("multiple").asInstanceOf[scala.Option[String]]
-    def multiple(value: String): Tag[pine.tag.Input] = tag.setAttr("multiple", value)
+    def multiple: Boolean = tag.attributes.contains("multiple")
+    def multiple(value: Boolean): Tag[pine.tag.Input] = if (value) tag.setAttr("multiple", "") else tag.remAttr("multiple")
     def name: scala.Option[String] = tag.attr("name").asInstanceOf[scala.Option[String]]
     def name(value: String): Tag[pine.tag.Input] = tag.setAttr("name", value)
     def pattern: scala.Option[String] = tag.attr("pattern").asInstanceOf[scala.Option[String]]
     def pattern(value: String): Tag[pine.tag.Input] = tag.setAttr("pattern", value)
     def placeholder: scala.Option[String] = tag.attr("placeholder").asInstanceOf[scala.Option[String]]
     def placeholder(value: String): Tag[pine.tag.Input] = tag.setAttr("placeholder", value)
-    def readonly: scala.Option[String] = tag.attr("readonly").asInstanceOf[scala.Option[String]]
-    def readonly(value: String): Tag[pine.tag.Input] = tag.setAttr("readonly", value)
+    def readonly: Boolean = tag.attributes.contains("readonly")
+    def readonly(value: Boolean): Tag[pine.tag.Input] = if (value) tag.setAttr("readonly", "") else tag.remAttr("readonly")
     def required: Boolean = tag.attributes.contains("required")
     def required(value: Boolean): Tag[pine.tag.Input] = if (value) tag.setAttr("required", "") else tag.remAttr("required")
     def results: scala.Option[String] = tag.attr("results").asInstanceOf[scala.Option[String]]
@@ -891,7 +891,7 @@ trait Attributes {
     val formaction = new Attribute[tag.Input, scala.Option[String], String](tagRef, "formaction")
     val formenctype = new Attribute[tag.Input, scala.Option[String], String](tagRef, "formenctype")
     val formmethod = new Attribute[tag.Input, scala.Option[String], String](tagRef, "formmethod")
-    val formnovalidate = new Attribute[tag.Input, scala.Option[String], String](tagRef, "formnovalidate")
+    val formnovalidate = new Attribute[tag.Input, Boolean, Boolean](tagRef, "formnovalidate")
     val formtarget = new Attribute[tag.Input, scala.Option[String], String](tagRef, "formtarget")
     val height = new Attribute[tag.Input, scala.Option[String], String](tagRef, "height")
     val incremental = new Attribute[tag.Input, scala.Option[String], String](tagRef, "incremental")
@@ -901,16 +901,16 @@ trait Attributes {
     val maxlength = new Attribute[tag.Input, scala.Option[String], String](tagRef, "maxlength")
     val min = new Attribute[tag.Input, scala.Option[String], String](tagRef, "min")
     val minlength = new Attribute[tag.Input, scala.Option[String], String](tagRef, "minlength")
-    val multiple = new Attribute[tag.Input, scala.Option[String], String](tagRef, "multiple")
+    val multiple = new Attribute[tag.Input, Boolean, Boolean](tagRef, "multiple")
     val name = new Attribute[tag.Input, scala.Option[String], String](tagRef, "name")
     val pattern = new Attribute[tag.Input, scala.Option[String], String](tagRef, "pattern")
     val placeholder = new Attribute[tag.Input, scala.Option[String], String](tagRef, "placeholder")
-    val readonly = new Attribute[tag.Input, scala.Option[String], String](tagRef, "readonly")
+    val readonly = new Attribute[tag.Input, Boolean, Boolean](tagRef, "readonly")
     val required = new Attribute[tag.Input, Boolean, Boolean](tagRef, "required")
     val results = new Attribute[tag.Input, scala.Option[String], String](tagRef, "results")
     val selectionDirection = new Attribute[tag.Input, scala.Option[String], String](tagRef, "selectionDirection")
     val size = new Attribute[tag.Input, scala.Option[Long], Long](tagRef, "size")
-    val spellcheck = new Attribute[tag.Input, scala.Option[String], String](tagRef, "spellcheck")
+    val spellcheck = new Attribute[tag.Input, Boolean, Boolean](tagRef, "spellcheck")
     val src = new Attribute[tag.Input, scala.Option[String], String](tagRef, "src")
     val step = new Attribute[tag.Input, scala.Option[String], String](tagRef, "step")
     val tabindex = new Attribute[tag.Input, scala.Option[String], String](tagRef, "tabindex")
@@ -945,12 +945,12 @@ trait Attributes {
   }
 
   implicit class TagAttributesKeygen(tag: Tag[pine.tag.Keygen]) {
-    def autofocus: scala.Option[String] = tag.attr("autofocus").asInstanceOf[scala.Option[String]]
-    def autofocus(value: String): Tag[pine.tag.Keygen] = tag.setAttr("autofocus", value)
+    def autofocus: Boolean = tag.attributes.contains("autofocus")
+    def autofocus(value: Boolean): Tag[pine.tag.Keygen] = if (value) tag.setAttr("autofocus", "") else tag.remAttr("autofocus")
     def challenge: scala.Option[String] = tag.attr("challenge").asInstanceOf[scala.Option[String]]
     def challenge(value: String): Tag[pine.tag.Keygen] = tag.setAttr("challenge", value)
-    def disabled: scala.Option[String] = tag.attr("disabled").asInstanceOf[scala.Option[String]]
-    def disabled(value: String): Tag[pine.tag.Keygen] = tag.setAttr("disabled", value)
+    def disabled: Boolean = tag.attributes.contains("disabled")
+    def disabled(value: Boolean): Tag[pine.tag.Keygen] = if (value) tag.setAttr("disabled", "") else tag.remAttr("disabled")
     def form: scala.Option[String] = tag.attr("form").asInstanceOf[scala.Option[String]]
     def form(value: String): Tag[pine.tag.Keygen] = tag.setAttr("form", value)
     def keytype: scala.Option[String] = tag.attr("keytype").asInstanceOf[scala.Option[String]]
@@ -960,9 +960,9 @@ trait Attributes {
   }
 
   implicit class TagRefAttributesKeygen(tagRef: TagRef[tag.Keygen]) {
-    val autofocus = new Attribute[tag.Keygen, scala.Option[String], String](tagRef, "autofocus")
+    val autofocus = new Attribute[tag.Keygen, Boolean, Boolean](tagRef, "autofocus")
     val challenge = new Attribute[tag.Keygen, scala.Option[String], String](tagRef, "challenge")
-    val disabled = new Attribute[tag.Keygen, scala.Option[String], String](tagRef, "disabled")
+    val disabled = new Attribute[tag.Keygen, Boolean, Boolean](tagRef, "disabled")
     val form = new Attribute[tag.Keygen, scala.Option[String], String](tagRef, "form")
     val keytype = new Attribute[tag.Keygen, scala.Option[String], String](tagRef, "keytype")
     val name = new Attribute[tag.Keygen, scala.Option[String], String](tagRef, "name")
@@ -998,8 +998,8 @@ trait Attributes {
     def charset(value: String): Tag[pine.tag.Link] = tag.setAttr("charset", value)
     def crossorigin: scala.Option[String] = tag.attr("crossorigin").asInstanceOf[scala.Option[String]]
     def crossorigin(value: String): Tag[pine.tag.Link] = tag.setAttr("crossorigin", value)
-    def disabled: scala.Option[String] = tag.attr("disabled").asInstanceOf[scala.Option[String]]
-    def disabled(value: String): Tag[pine.tag.Link] = tag.setAttr("disabled", value)
+    def disabled: Boolean = tag.attributes.contains("disabled")
+    def disabled(value: Boolean): Tag[pine.tag.Link] = if (value) tag.setAttr("disabled", "") else tag.remAttr("disabled")
     def href: scala.Option[String] = tag.attr("href").asInstanceOf[scala.Option[String]]
     def href(value: String): Tag[pine.tag.Link] = tag.setAttr("href", value)
     def hreflang: scala.Option[String] = tag.attr("hreflang").asInstanceOf[scala.Option[String]]
@@ -1025,7 +1025,7 @@ trait Attributes {
   implicit class TagRefAttributesLink(tagRef: TagRef[tag.Link]) {
     val charset = new Attribute[tag.Link, scala.Option[String], String](tagRef, "charset")
     val crossorigin = new Attribute[tag.Link, scala.Option[String], String](tagRef, "crossorigin")
-    val disabled = new Attribute[tag.Link, scala.Option[String], String](tagRef, "disabled")
+    val disabled = new Attribute[tag.Link, Boolean, Boolean](tagRef, "disabled")
     val href = new Attribute[tag.Link, scala.Option[String], String](tagRef, "href")
     val hreflang = new Attribute[tag.Link, scala.Option[String], String](tagRef, "hreflang")
     val media = new Attribute[tag.Link, scala.Option[String], String](tagRef, "media")
@@ -1060,14 +1060,14 @@ trait Attributes {
   }
 
   implicit class TagAttributesMenuitem(tag: Tag[pine.tag.Menuitem]) {
-    def checked: scala.Option[String] = tag.attr("checked").asInstanceOf[scala.Option[String]]
-    def checked(value: String): Tag[pine.tag.Menuitem] = tag.setAttr("checked", value)
+    def checked: Boolean = tag.attributes.contains("checked")
+    def checked(value: Boolean): Tag[pine.tag.Menuitem] = if (value) tag.setAttr("checked", "") else tag.remAttr("checked")
     def command: scala.Option[String] = tag.attr("command").asInstanceOf[scala.Option[String]]
     def command(value: String): Tag[pine.tag.Menuitem] = tag.setAttr("command", value)
-    def default: scala.Option[String] = tag.attr("default").asInstanceOf[scala.Option[String]]
-    def default(value: String): Tag[pine.tag.Menuitem] = tag.setAttr("default", value)
-    def disabled: scala.Option[String] = tag.attr("disabled").asInstanceOf[scala.Option[String]]
-    def disabled(value: String): Tag[pine.tag.Menuitem] = tag.setAttr("disabled", value)
+    def default: Boolean = tag.attributes.contains("default")
+    def default(value: Boolean): Tag[pine.tag.Menuitem] = if (value) tag.setAttr("default", "") else tag.remAttr("default")
+    def disabled: Boolean = tag.attributes.contains("disabled")
+    def disabled(value: Boolean): Tag[pine.tag.Menuitem] = if (value) tag.setAttr("disabled", "") else tag.remAttr("disabled")
     def icon: scala.Option[String] = tag.attr("icon").asInstanceOf[scala.Option[String]]
     def icon(value: String): Tag[pine.tag.Menuitem] = tag.setAttr("icon", value)
     def label: scala.Option[String] = tag.attr("label").asInstanceOf[scala.Option[String]]
@@ -1079,10 +1079,10 @@ trait Attributes {
   }
 
   implicit class TagRefAttributesMenuitem(tagRef: TagRef[tag.Menuitem]) {
-    val checked = new Attribute[tag.Menuitem, scala.Option[String], String](tagRef, "checked")
+    val checked = new Attribute[tag.Menuitem, Boolean, Boolean](tagRef, "checked")
     val command = new Attribute[tag.Menuitem, scala.Option[String], String](tagRef, "command")
-    val default = new Attribute[tag.Menuitem, scala.Option[String], String](tagRef, "default")
-    val disabled = new Attribute[tag.Menuitem, scala.Option[String], String](tagRef, "disabled")
+    val default = new Attribute[tag.Menuitem, Boolean, Boolean](tagRef, "default")
+    val disabled = new Attribute[tag.Menuitem, Boolean, Boolean](tagRef, "disabled")
     val icon = new Attribute[tag.Menuitem, scala.Option[String], String](tagRef, "icon")
     val label = new Attribute[tag.Menuitem, scala.Option[String], String](tagRef, "label")
     val radiogroup = new Attribute[tag.Menuitem, scala.Option[String], String](tagRef, "radiogroup")
@@ -1150,8 +1150,8 @@ trait Attributes {
     def codetype(value: String): Tag[pine.tag.Object] = tag.setAttr("codetype", value)
     def data: scala.Option[String] = tag.attr("data").asInstanceOf[scala.Option[String]]
     def data(value: String): Tag[pine.tag.Object] = tag.setAttr("data", value)
-    def declare: scala.Option[String] = tag.attr("declare").asInstanceOf[scala.Option[String]]
-    def declare(value: String): Tag[pine.tag.Object] = tag.setAttr("declare", value)
+    def declare: Boolean = tag.attributes.contains("declare")
+    def declare(value: Boolean): Tag[pine.tag.Object] = if (value) tag.setAttr("declare", "") else tag.remAttr("declare")
     def form: scala.Option[String] = tag.attr("form").asInstanceOf[scala.Option[String]]
     def form(value: String): Tag[pine.tag.Object] = tag.setAttr("form", value)
     def height: scala.Option[String] = tag.attr("height").asInstanceOf[scala.Option[String]]
@@ -1162,8 +1162,8 @@ trait Attributes {
     def standby(value: String): Tag[pine.tag.Object] = tag.setAttr("standby", value)
     def `type`: scala.Option[String] = tag.attr("type").asInstanceOf[scala.Option[String]]
     def `type`(value: String): Tag[pine.tag.Object] = tag.setAttr("type", value)
-    def typemustmatch: scala.Option[String] = tag.attr("typemustmatch").asInstanceOf[scala.Option[String]]
-    def typemustmatch(value: String): Tag[pine.tag.Object] = tag.setAttr("typemustmatch", value)
+    def typemustmatch: Boolean = tag.attributes.contains("typemustmatch")
+    def typemustmatch(value: Boolean): Tag[pine.tag.Object] = if (value) tag.setAttr("typemustmatch", "") else tag.remAttr("typemustmatch")
     def usemap: scala.Option[String] = tag.attr("usemap").asInstanceOf[scala.Option[String]]
     def usemap(value: String): Tag[pine.tag.Object] = tag.setAttr("usemap", value)
     def width: scala.Option[String] = tag.attr("width").asInstanceOf[scala.Option[String]]
@@ -1177,23 +1177,23 @@ trait Attributes {
     val codebase = new Attribute[tag.Object, scala.Option[String], String](tagRef, "codebase")
     val codetype = new Attribute[tag.Object, scala.Option[String], String](tagRef, "codetype")
     val data = new Attribute[tag.Object, scala.Option[String], String](tagRef, "data")
-    val declare = new Attribute[tag.Object, scala.Option[String], String](tagRef, "declare")
+    val declare = new Attribute[tag.Object, Boolean, Boolean](tagRef, "declare")
     val form = new Attribute[tag.Object, scala.Option[String], String](tagRef, "form")
     val height = new Attribute[tag.Object, scala.Option[String], String](tagRef, "height")
     val name = new Attribute[tag.Object, scala.Option[String], String](tagRef, "name")
     val standby = new Attribute[tag.Object, scala.Option[String], String](tagRef, "standby")
     val tabindex = new Attribute[tag.Object, scala.Option[String], String](tagRef, "tabindex")
     val `type` = new Attribute[tag.Object, scala.Option[String], String](tagRef, "type")
-    val typemustmatch = new Attribute[tag.Object, scala.Option[String], String](tagRef, "typemustmatch")
+    val typemustmatch = new Attribute[tag.Object, Boolean, Boolean](tagRef, "typemustmatch")
     val usemap = new Attribute[tag.Object, scala.Option[String], String](tagRef, "usemap")
     val width = new Attribute[tag.Object, scala.Option[String], String](tagRef, "width")
   }
 
   implicit class TagAttributesOl(tag: Tag[pine.tag.Ol]) {
-    def compact: scala.Option[String] = tag.attr("compact").asInstanceOf[scala.Option[String]]
-    def compact(value: String): Tag[pine.tag.Ol] = tag.setAttr("compact", value)
-    def reversed: scala.Option[String] = tag.attr("reversed").asInstanceOf[scala.Option[String]]
-    def reversed(value: String): Tag[pine.tag.Ol] = tag.setAttr("reversed", value)
+    def compact: Boolean = tag.attributes.contains("compact")
+    def compact(value: Boolean): Tag[pine.tag.Ol] = if (value) tag.setAttr("compact", "") else tag.remAttr("compact")
+    def reversed: Boolean = tag.attributes.contains("reversed")
+    def reversed(value: Boolean): Tag[pine.tag.Ol] = if (value) tag.setAttr("reversed", "") else tag.remAttr("reversed")
     def start: scala.Option[String] = tag.attr("start").asInstanceOf[scala.Option[String]]
     def start(value: String): Tag[pine.tag.Ol] = tag.setAttr("start", value)
     def `type`: scala.Option[String] = tag.attr("type").asInstanceOf[scala.Option[String]]
@@ -1201,8 +1201,8 @@ trait Attributes {
   }
 
   implicit class TagRefAttributesOl(tagRef: TagRef[tag.Ol]) {
-    val compact = new Attribute[tag.Ol, scala.Option[String], String](tagRef, "compact")
-    val reversed = new Attribute[tag.Ol, scala.Option[String], String](tagRef, "reversed")
+    val compact = new Attribute[tag.Ol, Boolean, Boolean](tagRef, "compact")
+    val reversed = new Attribute[tag.Ol, Boolean, Boolean](tagRef, "reversed")
     val start = new Attribute[tag.Ol, scala.Option[String], String](tagRef, "start")
     val `type` = new Attribute[tag.Ol, scala.Option[String], String](tagRef, "type")
   }
@@ -1220,20 +1220,20 @@ trait Attributes {
   }
 
   implicit class TagAttributesOption(tag: Tag[pine.tag.Option]) {
-    def disabled: scala.Option[String] = tag.attr("disabled").asInstanceOf[scala.Option[String]]
-    def disabled(value: String): Tag[pine.tag.Option] = tag.setAttr("disabled", value)
+    def disabled: Boolean = tag.attributes.contains("disabled")
+    def disabled(value: Boolean): Tag[pine.tag.Option] = if (value) tag.setAttr("disabled", "") else tag.remAttr("disabled")
     def label: scala.Option[String] = tag.attr("label").asInstanceOf[scala.Option[String]]
     def label(value: String): Tag[pine.tag.Option] = tag.setAttr("label", value)
-    def selected: scala.Option[String] = tag.attr("selected").asInstanceOf[scala.Option[String]]
-    def selected(value: String): Tag[pine.tag.Option] = tag.setAttr("selected", value)
+    def selected: Boolean = tag.attributes.contains("selected")
+    def selected(value: Boolean): Tag[pine.tag.Option] = if (value) tag.setAttr("selected", "") else tag.remAttr("selected")
     def value: scala.Option[String] = tag.attr("value").asInstanceOf[scala.Option[String]]
     def value(value: String): Tag[pine.tag.Option] = tag.setAttr("value", value)
   }
 
   implicit class TagRefAttributesOption(tagRef: TagRef[tag.Option]) {
-    val disabled = new Attribute[tag.Option, scala.Option[String], String](tagRef, "disabled")
+    val disabled = new Attribute[tag.Option, Boolean, Boolean](tagRef, "disabled")
     val label = new Attribute[tag.Option, scala.Option[String], String](tagRef, "label")
-    val selected = new Attribute[tag.Option, scala.Option[String], String](tagRef, "selected")
+    val selected = new Attribute[tag.Option, Boolean, Boolean](tagRef, "selected")
     val value = new Attribute[tag.Option, scala.Option[String], String](tagRef, "value")
   }
 
@@ -1298,16 +1298,16 @@ trait Attributes {
   }
 
   implicit class TagAttributesScript(tag: Tag[pine.tag.Script]) {
-    def async: scala.Option[String] = tag.attr("async").asInstanceOf[scala.Option[String]]
-    def async(value: String): Tag[pine.tag.Script] = tag.setAttr("async", value)
+    def async: Boolean = tag.attributes.contains("async")
+    def async(value: Boolean): Tag[pine.tag.Script] = if (value) tag.setAttr("async", "") else tag.remAttr("async")
     def src: scala.Option[String] = tag.attr("src").asInstanceOf[scala.Option[String]]
     def src(value: String): Tag[pine.tag.Script] = tag.setAttr("src", value)
     def `type`: scala.Option[String] = tag.attr("type").asInstanceOf[scala.Option[String]]
     def `type`(value: String): Tag[pine.tag.Script] = tag.setAttr("type", value)
     def language: scala.Option[String] = tag.attr("language").asInstanceOf[scala.Option[String]]
     def language(value: String): Tag[pine.tag.Script] = tag.setAttr("language", value)
-    def defer: scala.Option[String] = tag.attr("defer").asInstanceOf[scala.Option[String]]
-    def defer(value: String): Tag[pine.tag.Script] = tag.setAttr("defer", value)
+    def defer: Boolean = tag.attributes.contains("defer")
+    def defer(value: Boolean): Tag[pine.tag.Script] = if (value) tag.setAttr("defer", "") else tag.remAttr("defer")
     def crossorigin: scala.Option[String] = tag.attr("crossorigin").asInstanceOf[scala.Option[String]]
     def crossorigin(value: String): Tag[pine.tag.Script] = tag.setAttr("crossorigin", value)
     def integrity: scala.Option[String] = tag.attr("integrity").asInstanceOf[scala.Option[String]]
@@ -1315,39 +1315,39 @@ trait Attributes {
   }
 
   implicit class TagRefAttributesScript(tagRef: TagRef[tag.Script]) {
-    val async = new Attribute[tag.Script, scala.Option[String], String](tagRef, "async")
+    val async = new Attribute[tag.Script, Boolean, Boolean](tagRef, "async")
     val src = new Attribute[tag.Script, scala.Option[String], String](tagRef, "src")
     val `type` = new Attribute[tag.Script, scala.Option[String], String](tagRef, "type")
     val language = new Attribute[tag.Script, scala.Option[String], String](tagRef, "language")
-    val defer = new Attribute[tag.Script, scala.Option[String], String](tagRef, "defer")
+    val defer = new Attribute[tag.Script, Boolean, Boolean](tagRef, "defer")
     val crossorigin = new Attribute[tag.Script, scala.Option[String], String](tagRef, "crossorigin")
     val integrity = new Attribute[tag.Script, scala.Option[String], String](tagRef, "integrity")
   }
 
   implicit class TagAttributesSelect(tag: Tag[pine.tag.Select]) {
-    def autofocus: scala.Option[String] = tag.attr("autofocus").asInstanceOf[scala.Option[String]]
-    def autofocus(value: String): Tag[pine.tag.Select] = tag.setAttr("autofocus", value)
-    def disabled: scala.Option[String] = tag.attr("disabled").asInstanceOf[scala.Option[String]]
-    def disabled(value: String): Tag[pine.tag.Select] = tag.setAttr("disabled", value)
+    def autofocus: Boolean = tag.attributes.contains("autofocus")
+    def autofocus(value: Boolean): Tag[pine.tag.Select] = if (value) tag.setAttr("autofocus", "") else tag.remAttr("autofocus")
+    def disabled: Boolean = tag.attributes.contains("disabled")
+    def disabled(value: Boolean): Tag[pine.tag.Select] = if (value) tag.setAttr("disabled", "") else tag.remAttr("disabled")
     def form: scala.Option[String] = tag.attr("form").asInstanceOf[scala.Option[String]]
     def form(value: String): Tag[pine.tag.Select] = tag.setAttr("form", value)
-    def multiple: scala.Option[String] = tag.attr("multiple").asInstanceOf[scala.Option[String]]
-    def multiple(value: String): Tag[pine.tag.Select] = tag.setAttr("multiple", value)
+    def multiple: Boolean = tag.attributes.contains("multiple")
+    def multiple(value: Boolean): Tag[pine.tag.Select] = if (value) tag.setAttr("multiple", "") else tag.remAttr("multiple")
     def name: scala.Option[String] = tag.attr("name").asInstanceOf[scala.Option[String]]
     def name(value: String): Tag[pine.tag.Select] = tag.setAttr("name", value)
-    def required: scala.Option[String] = tag.attr("required").asInstanceOf[scala.Option[String]]
-    def required(value: String): Tag[pine.tag.Select] = tag.setAttr("required", value)
+    def required: Boolean = tag.attributes.contains("required")
+    def required(value: Boolean): Tag[pine.tag.Select] = if (value) tag.setAttr("required", "") else tag.remAttr("required")
     def size: scala.Option[String] = tag.attr("size").asInstanceOf[scala.Option[String]]
     def size(value: String): Tag[pine.tag.Select] = tag.setAttr("size", value)
   }
 
   implicit class TagRefAttributesSelect(tagRef: TagRef[tag.Select]) {
-    val autofocus = new Attribute[tag.Select, scala.Option[String], String](tagRef, "autofocus")
-    val disabled = new Attribute[tag.Select, scala.Option[String], String](tagRef, "disabled")
+    val autofocus = new Attribute[tag.Select, Boolean, Boolean](tagRef, "autofocus")
+    val disabled = new Attribute[tag.Select, Boolean, Boolean](tagRef, "disabled")
     val form = new Attribute[tag.Select, scala.Option[String], String](tagRef, "form")
-    val multiple = new Attribute[tag.Select, scala.Option[String], String](tagRef, "multiple")
+    val multiple = new Attribute[tag.Select, Boolean, Boolean](tagRef, "multiple")
     val name = new Attribute[tag.Select, scala.Option[String], String](tagRef, "name")
-    val required = new Attribute[tag.Select, scala.Option[String], String](tagRef, "required")
+    val required = new Attribute[tag.Select, Boolean, Boolean](tagRef, "required")
     val size = new Attribute[tag.Select, scala.Option[String], String](tagRef, "size")
   }
 
@@ -1398,18 +1398,18 @@ trait Attributes {
     def `type`(value: String): Tag[pine.tag.Style] = tag.setAttr("type", value)
     def media: scala.Option[String] = tag.attr("media").asInstanceOf[scala.Option[String]]
     def media(value: String): Tag[pine.tag.Style] = tag.setAttr("media", value)
-    def scoped: scala.Option[String] = tag.attr("scoped").asInstanceOf[scala.Option[String]]
-    def scoped(value: String): Tag[pine.tag.Style] = tag.setAttr("scoped", value)
-    def disabled: scala.Option[String] = tag.attr("disabled").asInstanceOf[scala.Option[String]]
-    def disabled(value: String): Tag[pine.tag.Style] = tag.setAttr("disabled", value)
+    def scoped: Boolean = tag.attributes.contains("scoped")
+    def scoped(value: Boolean): Tag[pine.tag.Style] = if (value) tag.setAttr("scoped", "") else tag.remAttr("scoped")
+    def disabled: Boolean = tag.attributes.contains("disabled")
+    def disabled(value: Boolean): Tag[pine.tag.Style] = if (value) tag.setAttr("disabled", "") else tag.remAttr("disabled")
   }
 
   implicit class TagRefAttributesStyle(tagRef: TagRef[tag.Style]) {
     val `type` = new Attribute[tag.Style, scala.Option[String], String](tagRef, "type")
     val media = new Attribute[tag.Style, scala.Option[String], String](tagRef, "media")
-    val scoped = new Attribute[tag.Style, scala.Option[String], String](tagRef, "scoped")
+    val scoped = new Attribute[tag.Style, Boolean, Boolean](tagRef, "scoped")
     val title = new Attribute[tag.Style, scala.Option[String], String](tagRef, "title")
-    val disabled = new Attribute[tag.Style, scala.Option[String], String](tagRef, "disabled")
+    val disabled = new Attribute[tag.Style, Boolean, Boolean](tagRef, "disabled")
   }
 
   implicit class TagAttributesTable(tag: Tag[pine.tag.Table]) {
@@ -1513,12 +1513,12 @@ trait Attributes {
     def autocapitalize(value: String): Tag[pine.tag.Textarea] = tag.setAttr("autocapitalize", value)
     def autocomplete: scala.Option[String] = tag.attr("autocomplete").asInstanceOf[scala.Option[String]]
     def autocomplete(value: String): Tag[pine.tag.Textarea] = tag.setAttr("autocomplete", value)
-    def autofocus: scala.Option[String] = tag.attr("autofocus").asInstanceOf[scala.Option[String]]
-    def autofocus(value: String): Tag[pine.tag.Textarea] = tag.setAttr("autofocus", value)
+    def autofocus: Boolean = tag.attributes.contains("autofocus")
+    def autofocus(value: Boolean): Tag[pine.tag.Textarea] = if (value) tag.setAttr("autofocus", "") else tag.remAttr("autofocus")
     def cols: scala.Option[String] = tag.attr("cols").asInstanceOf[scala.Option[String]]
     def cols(value: String): Tag[pine.tag.Textarea] = tag.setAttr("cols", value)
-    def disabled: scala.Option[String] = tag.attr("disabled").asInstanceOf[scala.Option[String]]
-    def disabled(value: String): Tag[pine.tag.Textarea] = tag.setAttr("disabled", value)
+    def disabled: Boolean = tag.attributes.contains("disabled")
+    def disabled(value: Boolean): Tag[pine.tag.Textarea] = if (value) tag.setAttr("disabled", "") else tag.remAttr("disabled")
     def form: scala.Option[String] = tag.attr("form").asInstanceOf[scala.Option[String]]
     def form(value: String): Tag[pine.tag.Textarea] = tag.setAttr("form", value)
     def maxlength: scala.Option[String] = tag.attr("maxlength").asInstanceOf[scala.Option[String]]
@@ -1529,10 +1529,10 @@ trait Attributes {
     def name(value: String): Tag[pine.tag.Textarea] = tag.setAttr("name", value)
     def placeholder: scala.Option[String] = tag.attr("placeholder").asInstanceOf[scala.Option[String]]
     def placeholder(value: String): Tag[pine.tag.Textarea] = tag.setAttr("placeholder", value)
-    def readonly: scala.Option[String] = tag.attr("readonly").asInstanceOf[scala.Option[String]]
-    def readonly(value: String): Tag[pine.tag.Textarea] = tag.setAttr("readonly", value)
-    def required: scala.Option[String] = tag.attr("required").asInstanceOf[scala.Option[String]]
-    def required(value: String): Tag[pine.tag.Textarea] = tag.setAttr("required", value)
+    def readonly: Boolean = tag.attributes.contains("readonly")
+    def readonly(value: Boolean): Tag[pine.tag.Textarea] = if (value) tag.setAttr("readonly", "") else tag.remAttr("readonly")
+    def required: Boolean = tag.attributes.contains("required")
+    def required(value: Boolean): Tag[pine.tag.Textarea] = if (value) tag.setAttr("required", "") else tag.remAttr("required")
     def rows: scala.Option[String] = tag.attr("rows").asInstanceOf[scala.Option[String]]
     def rows(value: String): Tag[pine.tag.Textarea] = tag.setAttr("rows", value)
     def selectionDirection: scala.Option[String] = tag.attr("selectionDirection").asInstanceOf[scala.Option[String]]
@@ -1548,21 +1548,21 @@ trait Attributes {
   implicit class TagRefAttributesTextarea(tagRef: TagRef[tag.Textarea]) {
     val autocapitalize = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "autocapitalize")
     val autocomplete = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "autocomplete")
-    val autofocus = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "autofocus")
+    val autofocus = new Attribute[tag.Textarea, Boolean, Boolean](tagRef, "autofocus")
     val cols = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "cols")
-    val disabled = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "disabled")
+    val disabled = new Attribute[tag.Textarea, Boolean, Boolean](tagRef, "disabled")
     val form = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "form")
     val maxlength = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "maxlength")
     val minlength = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "minlength")
     val name = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "name")
     val placeholder = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "placeholder")
-    val readonly = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "readonly")
-    val required = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "required")
+    val readonly = new Attribute[tag.Textarea, Boolean, Boolean](tagRef, "readonly")
+    val required = new Attribute[tag.Textarea, Boolean, Boolean](tagRef, "required")
     val rows = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "rows")
     val selectionDirection = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "selectionDirection")
     val selectionEnd = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "selectionEnd")
     val selectionStart = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "selectionStart")
-    val spellcheck = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "spellcheck")
+    val spellcheck = new Attribute[tag.Textarea, Boolean, Boolean](tagRef, "spellcheck")
     val wrap = new Attribute[tag.Textarea, scala.Option[String], String](tagRef, "wrap")
   }
 
@@ -1672,8 +1672,8 @@ trait Attributes {
   }
 
   implicit class TagAttributesTrack(tag: Tag[pine.tag.Track]) {
-    def default: scala.Option[String] = tag.attr("default").asInstanceOf[scala.Option[String]]
-    def default(value: String): Tag[pine.tag.Track] = tag.setAttr("default", value)
+    def default: Boolean = tag.attributes.contains("default")
+    def default(value: Boolean): Tag[pine.tag.Track] = if (value) tag.setAttr("default", "") else tag.remAttr("default")
     def kind: scala.Option[String] = tag.attr("kind").asInstanceOf[scala.Option[String]]
     def kind(value: String): Tag[pine.tag.Track] = tag.setAttr("kind", value)
     def label: scala.Option[String] = tag.attr("label").asInstanceOf[scala.Option[String]]
@@ -1685,7 +1685,7 @@ trait Attributes {
   }
 
   implicit class TagRefAttributesTrack(tagRef: TagRef[tag.Track]) {
-    val default = new Attribute[tag.Track, scala.Option[String], String](tagRef, "default")
+    val default = new Attribute[tag.Track, Boolean, Boolean](tagRef, "default")
     val kind = new Attribute[tag.Track, scala.Option[String], String](tagRef, "kind")
     val label = new Attribute[tag.Track, scala.Option[String], String](tagRef, "label")
     val src = new Attribute[tag.Track, scala.Option[String], String](tagRef, "src")
@@ -1693,34 +1693,34 @@ trait Attributes {
   }
 
   implicit class TagAttributesUl(tag: Tag[pine.tag.Ul]) {
-    def compact: scala.Option[String] = tag.attr("compact").asInstanceOf[scala.Option[String]]
-    def compact(value: String): Tag[pine.tag.Ul] = tag.setAttr("compact", value)
+    def compact: Boolean = tag.attributes.contains("compact")
+    def compact(value: Boolean): Tag[pine.tag.Ul] = if (value) tag.setAttr("compact", "") else tag.remAttr("compact")
     def `type`: scala.Option[String] = tag.attr("type").asInstanceOf[scala.Option[String]]
     def `type`(value: String): Tag[pine.tag.Ul] = tag.setAttr("type", value)
   }
 
   implicit class TagRefAttributesUl(tagRef: TagRef[tag.Ul]) {
-    val compact = new Attribute[tag.Ul, scala.Option[String], String](tagRef, "compact")
+    val compact = new Attribute[tag.Ul, Boolean, Boolean](tagRef, "compact")
     val `type` = new Attribute[tag.Ul, scala.Option[String], String](tagRef, "type")
   }
 
   implicit class TagAttributesVideo(tag: Tag[pine.tag.Video]) {
-    def autoplay: scala.Option[String] = tag.attr("autoplay").asInstanceOf[scala.Option[String]]
-    def autoplay(value: String): Tag[pine.tag.Video] = tag.setAttr("autoplay", value)
+    def autoplay: Boolean = tag.attributes.contains("autoplay")
+    def autoplay(value: Boolean): Tag[pine.tag.Video] = if (value) tag.setAttr("autoplay", "") else tag.remAttr("autoplay")
     def autobuffer: scala.Option[String] = tag.attr("autobuffer").asInstanceOf[scala.Option[String]]
     def autobuffer(value: String): Tag[pine.tag.Video] = tag.setAttr("autobuffer", value)
     def buffered: scala.Option[String] = tag.attr("buffered").asInstanceOf[scala.Option[String]]
     def buffered(value: String): Tag[pine.tag.Video] = tag.setAttr("buffered", value)
-    def controls: scala.Option[String] = tag.attr("controls").asInstanceOf[scala.Option[String]]
-    def controls(value: String): Tag[pine.tag.Video] = tag.setAttr("controls", value)
+    def controls: Boolean = tag.attributes.contains("controls")
+    def controls(value: Boolean): Tag[pine.tag.Video] = if (value) tag.setAttr("controls", "") else tag.remAttr("controls")
     def crossorigin: scala.Option[String] = tag.attr("crossorigin").asInstanceOf[scala.Option[String]]
     def crossorigin(value: String): Tag[pine.tag.Video] = tag.setAttr("crossorigin", value)
     def height: scala.Option[String] = tag.attr("height").asInstanceOf[scala.Option[String]]
     def height(value: String): Tag[pine.tag.Video] = tag.setAttr("height", value)
-    def loop: scala.Option[String] = tag.attr("loop").asInstanceOf[scala.Option[String]]
-    def loop(value: String): Tag[pine.tag.Video] = tag.setAttr("loop", value)
-    def muted: scala.Option[String] = tag.attr("muted").asInstanceOf[scala.Option[String]]
-    def muted(value: String): Tag[pine.tag.Video] = tag.setAttr("muted", value)
+    def loop: Boolean = tag.attributes.contains("loop")
+    def loop(value: Boolean): Tag[pine.tag.Video] = if (value) tag.setAttr("loop", "") else tag.remAttr("loop")
+    def muted: Boolean = tag.attributes.contains("muted")
+    def muted(value: Boolean): Tag[pine.tag.Video] = if (value) tag.setAttr("muted", "") else tag.remAttr("muted")
     def played: scala.Option[String] = tag.attr("played").asInstanceOf[scala.Option[String]]
     def played(value: String): Tag[pine.tag.Video] = tag.setAttr("played", value)
     def preload: scala.Option[String] = tag.attr("preload").asInstanceOf[scala.Option[String]]
@@ -1734,14 +1734,14 @@ trait Attributes {
   }
 
   implicit class TagRefAttributesVideo(tagRef: TagRef[tag.Video]) {
-    val autoplay = new Attribute[tag.Video, scala.Option[String], String](tagRef, "autoplay")
+    val autoplay = new Attribute[tag.Video, Boolean, Boolean](tagRef, "autoplay")
     val autobuffer = new Attribute[tag.Video, scala.Option[String], String](tagRef, "autobuffer")
     val buffered = new Attribute[tag.Video, scala.Option[String], String](tagRef, "buffered")
-    val controls = new Attribute[tag.Video, scala.Option[String], String](tagRef, "controls")
+    val controls = new Attribute[tag.Video, Boolean, Boolean](tagRef, "controls")
     val crossorigin = new Attribute[tag.Video, scala.Option[String], String](tagRef, "crossorigin")
     val height = new Attribute[tag.Video, scala.Option[String], String](tagRef, "height")
-    val loop = new Attribute[tag.Video, scala.Option[String], String](tagRef, "loop")
-    val muted = new Attribute[tag.Video, scala.Option[String], String](tagRef, "muted")
+    val loop = new Attribute[tag.Video, Boolean, Boolean](tagRef, "loop")
+    val muted = new Attribute[tag.Video, Boolean, Boolean](tagRef, "muted")
     val played = new Attribute[tag.Video, scala.Option[String], String](tagRef, "played")
     val preload = new Attribute[tag.Video, scala.Option[String], String](tagRef, "preload")
     val poster = new Attribute[tag.Video, scala.Option[String], String](tagRef, "poster")

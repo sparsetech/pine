@@ -3,13 +3,26 @@ package pine
 import org.scalatest.FunSuite
 
 class NodeSpec extends FunSuite {
-  test("Instantiate") {
+  test("Instantiate node") {
     val a = tag.A
       .href("http://github.com/")
       .set(Text("GitHub"))
     assert((a: Tag["a"]) == a)
     assert(a == html"""<a href="http://github.com/">GitHub</a>""")
     assert(a.toHtml == """<a href="http://github.com/">GitHub</a>""")
+  }
+
+  test("Instantiate node with Boolean attribute") {
+    val opt = tag.Option.selected(true)
+    assert(opt.toHtml == """<option selected=""></option>""")
+
+    val opt2 = html"""<option></option>"""
+    val opt3 = html"""<option selected=""></option>"""
+    val opt4 = html"""<option selected="selected"></option>"""
+
+    assert(!opt2.as[tag.Option].selected)
+    assert(opt3.as[tag.Option].selected)
+    assert(opt4.as[tag.Option].selected)
   }
 
   test("byClass") {
