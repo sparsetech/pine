@@ -1,8 +1,9 @@
 package pine.macros
 
-import scala.language.experimental.macros
-import scala.language.reflectiveCalls
+import java.io.File
 
+import scala.language.reflectiveCalls
+import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
 
 object Helpers {
@@ -18,4 +19,9 @@ object Helpers {
 
   def literalValueExpr[T](c: Context)(expr: c.Expr[T]): T =
     literalValueTree[T](c)(expr.tree)
+
+  def readFile(file: File): String = {
+    val source = io.Source.fromFile(file)
+    try source.mkString finally source.close()
+  }
 }

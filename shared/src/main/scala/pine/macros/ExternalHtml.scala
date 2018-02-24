@@ -32,7 +32,7 @@ object ExternalHtml {
   def parse(c: Context, xml: Boolean)
            (fileName: c.Expr[String]): c.Expr[Tag[Singleton]] = {
     val fileNameValue = Helpers.literalValueExpr(c)(fileName)
-    val html = io.Source.fromFile(new File(fileNameValue)).mkString
+    val html = Helpers.readFile(new File(fileNameValue))
     val node = HtmlParser.fromString(html, xml)
     convert(c)(node, root = true)
       .asInstanceOf[c.Expr[Tag[Singleton]]]
