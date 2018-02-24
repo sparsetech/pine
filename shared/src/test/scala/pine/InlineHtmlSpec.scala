@@ -61,38 +61,57 @@ class InlineHtmlSpec extends FunSuite {
     }
   }
 
-  test("String placeholder") {
+  test("Concatenated string attribute placeholder (suffix)") {
+    val id   = "test"
+    val node = html"""<ol id="$id-item"></ol>"""
+    assert(node.toHtml == """<ol id="test-item"></ol>""")
+  }
+
+  test("Concatenated string attribute placeholder (prefix)") {
+    val id   = "test"
+    val node = html"""<ol id="item-$id"></ol>"""
+    assert(node.toHtml == """<ol id="item-test"></ol>""")
+  }
+
+  test("Concatenated string attribute placeholder (infix)") {
+    val id   = "test"
+    val id2  = "test2"
+    val node = html"""<ol id="$id-$id2"></ol>"""
+    assert(node.toHtml == """<ol id="test-test2"></ol>""")
+  }
+
+  test("String content placeholder") {
     val text = "Hello world"
     val div = html"<div>$text</div>"
     assert(div.toHtml == "<div>Hello world</div>")
   }
 
-  test("String (type alias) placeholder") {
+  test("String (type alias) content placeholder") {
     type Str = String
     val text: Str = "Hello world"
     val div = html"<div>$text</div>"
     assert(div.toHtml == "<div>Hello world</div>")
   }
 
-  test("Integer placeholder") {
+  test("Integer content placeholder") {
     val text = 42
     val div = html"<div>$text</div>"
     assert(div.toHtml == "<div>42</div>")
   }
 
-  test("Boolean placeholder") {
+  test("Boolean content placeholder") {
     val text = true
     val div = html"<div>$text</div>"
     assert(div.toHtml == "<div>true</div>")
   }
 
-  test("Node placeholder") {
+  test("Node content placeholder") {
     val span = html"<span>test</span>"
     val div = html"<div>$span</div>"
     assert(div.toHtml == "<div><span>test</span></div>")
   }
 
-  test("List[Node] placeholders") {
+  test("List[Node] content placeholders") {
     val spans = List(
       html"<span>test</span>",
       html"<span>test2</span>"
@@ -102,7 +121,7 @@ class InlineHtmlSpec extends FunSuite {
     assert(div.toHtml == "<div><span>test</span><span>test2</span></div>")
   }
 
-  test("List[Node] placeholders (2)") {
+  test("List[Node] content placeholders (2)") {
     val children = List(Text("hello"))
     assert(html"<a>$children</a>" == tag.A.set("hello"))
   }

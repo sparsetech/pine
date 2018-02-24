@@ -16,36 +16,68 @@ object InlineHtml {
     }
   }
 
-  def convertTag[T <: Singleton](c: Context)(tag: Tag[T],
-                                             args: Seq[c.Expr[Any]]
-                                            ): c.Expr[Tag[T]] = {
+  /** @return Left if string value, Right if optional value */
+  def convertAttribute(c: Context)(
+    value: String, args: Seq[c.Expr[Any]]
+  ): Either[c.Expr[Any], c.Expr[Any]] = {
     import c.universe._
 
-    val integerType = definitions.IntTpe
-    val booleanType = definitions.BooleanTpe
     val stringType = definitions.StringClass.toType
     val optionStringType =
       appliedType(definitions.OptionClass, List(stringType))
-    val nodeType = c.mirror.staticClass("pine.Node").toType
-    val listType = c.mirror.staticClass("scala.collection.immutable.List")
-    val listNodeType = appliedType(listType, List(nodeType))
 
-    val tagAttrs = tag.attributes.mapValues(_.toString).map { case (k, v) =>
-      if (!v.startsWith("${") || !v.endsWith("}"))
-        c.Expr(q"List($k -> $v)")
-      else {
-        val index = v.drop(2).init.toInt
+    value.indexOf("${") match {
+      case -1    => Left(c.Expr(q"$value"))
+      case start =>
+        val end    = value.indexOf("}")
+        val index  = value.substring(start + 2, end).toInt
+        val prefix = value.substring(0, start)
+        val suffix = value.substring(end + 1)
 
         args(index) match {
           case a if a.tree.tpe =:= stringType =>
-            c.Expr(q"List($k -> $a)")
+            Left(
+              (prefix, suffix) match {
+                case ("", "") => a
+                case (p, "") => c.Expr(q"$p + $a")
+                case ("", s) =>
+                  c.Expr(q"$a + ${convertAttribute(c)(s, args).left.get}")
+                case (p, s) =>
+                  c.Expr(q"$p + $a + ${convertAttribute(c)(s, args).left.get}")
+              }
+            )
+
           case a if a.tree.tpe <:< optionStringType =>
-            c.Expr(q"$a.map($k -> _).toList")
+            if (prefix.nonEmpty || suffix.nonEmpty)
+              c.error(c.enclosingPosition,
+                s"${a.tree.symbol} must not have a prefix or suffix")
+
+            Right(a)
+
           case a =>
             c.error(c.enclosingPosition,
               s"Type ${a.tree.tpe} (${a.tree.symbol}) not supported")
             null
         }
+    }
+  }
+
+  def convertTag[T <: Singleton](c: Context)(tag: Tag[T],
+                                             args: Seq[c.Expr[Any]]
+                                            ): c.Expr[Tag[T]] = {
+    import c.universe._
+
+    val integerType  = definitions.IntTpe
+    val booleanType  = definitions.BooleanTpe
+    val stringType   = definitions.StringClass.toType
+    val nodeType     = c.mirror.staticClass("pine.Node").toType
+    val listType     = c.mirror.staticClass("scala.collection.immutable.List")
+    val listNodeType = appliedType(listType, List(nodeType))
+
+    val tagAttrs = tag.attributes.mapValues(_.toString).map { case (k, v) =>
+      convertAttribute(c)(v, args) match {
+        case Left (a) => c.Expr(q"List($k -> $a)")
+        case Right(a) => c.Expr(q"$a.map($k -> _).toList")
       }
     }
 
