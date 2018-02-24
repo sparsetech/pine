@@ -56,6 +56,12 @@ trait Implicits {
       new EventN(tagRef.domAll, _.onmouseover = _)
     def dragLeave(implicit js: Js[T]): EventN[DragEvent] =
       new EventN(tagRef.domAll, _.ondragleave = _)
+    def cut(implicit js: Js[T]): EventN[DragEvent] =
+      new EventN(tagRef.domAll, _.oncut = _)
+    def copy(implicit js: Js[T]): EventN[DragEvent] =
+      new EventN(tagRef.domAll, _.oncopy = _)
+    def paste(implicit js: Js[T]): EventN[DragEvent] =
+      new EventN(tagRef.domAll, _.onpaste = _)
     def pause(implicit js: Js[T]): EventN[org.scalajs.dom.Event] =
       new EventN(tagRef.domAll, _.onpause = _)
     def mouseDown(implicit js: Js[T]): EventN[MouseEvent] =
