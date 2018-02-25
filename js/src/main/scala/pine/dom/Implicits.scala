@@ -56,12 +56,15 @@ trait Implicits {
       new EventN(tagRef.domAll, _.onmouseover = _)
     def dragLeave(implicit js: Js[T]): EventN[DragEvent] =
       new EventN(tagRef.domAll, _.ondragleave = _)
-    def cut(implicit js: Js[T]): EventN[DragEvent] =
-      new EventN(tagRef.domAll, _.oncut = _)
-    def copy(implicit js: Js[T]): EventN[DragEvent] =
-      new EventN(tagRef.domAll, _.oncopy = _)
-    def paste(implicit js: Js[T]): EventN[DragEvent] =
-      new EventN(tagRef.domAll, _.onpaste = _)
+
+    // TODO See also https://github.com/scala-js/scala-js-dom/pull/314
+    def cut(implicit js: Js[T]): EventN[ClipboardEvent] =
+      new EventN(tagRef.domAll, _.asInstanceOf[scala.scalajs.js.Dynamic].oncut = _)
+    def copy(implicit js: Js[T]): EventN[ClipboardEvent] =
+      new EventN(tagRef.domAll, _.asInstanceOf[scala.scalajs.js.Dynamic].oncopy = _)
+    def paste(implicit js: Js[T]): EventN[ClipboardEvent] =
+      new EventN(tagRef.domAll, _.asInstanceOf[scala.scalajs.js.Dynamic].onpaste = _)
+
     def pause(implicit js: Js[T]): EventN[org.scalajs.dom.Event] =
       new EventN(tagRef.domAll, _.onpause = _)
     def mouseDown(implicit js: Js[T]): EventN[MouseEvent] =
