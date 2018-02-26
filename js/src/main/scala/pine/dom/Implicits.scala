@@ -145,11 +145,10 @@ trait Implicits {
       new EventN(tagRef.domAll, _.oninput = _)
   }
 
-  implicit class AttributeExtensions[T <: Singleton, G](attribute: Attribute[T, G, _]) {
-    /** TODO Introduce BooleanAttribute and StringAttribute for better type-safety? */
-    def get(implicit js: Js[T]): G =
-      if (HtmlHelpers.BooleanAttributes.contains(attribute.name))
-        attribute.parent.dom.hasAttribute(attribute.name).asInstanceOf[G]
-      else Option(attribute.parent.dom.getAttribute(attribute.name)).asInstanceOf[G]
+  implicit class AttributeExtensions[T <: Singleton, U](attribute: TagRefAttribute[T, U]) {
+    def get(implicit js: Js[T]): U = {
+      val node = attribute.parent.dom
+      attribute.codec.decode(Option(node.getAttribute(attribute.name)))
+    }
   }
 }

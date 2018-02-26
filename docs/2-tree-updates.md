@@ -200,7 +200,7 @@ For example, to define attributes on anchor nodes, you would write:
 
 ```scala
 implicit class TagRefAttributesA(tagRef: TagRef[tag.A]) {
-  val dataTooltip = new Attribute[tag.A, Option[String], String](tagRef, "data-tooltip")
-  val dataShow    = new Attribute[tag.A, Boolean, Boolean](tagRef, "data-show")
+  val dataTooltip = TagRefAttribute[tag.A, String](tagRef, "data-tooltip")
+  val dataShow    = TagRefAttribute[tag.A, Boolean](tagRef, "data-show")
 }
 ```

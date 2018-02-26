@@ -192,16 +192,16 @@ class InlineHtmlSpec extends FunSuite {
 
   test("Getting value of Boolean attributes") {
     val input = html"""<input type="checkbox" />""".as["input"]
-    assert(!input.checked)
+    assert(!input.checked())
 
     val input2 = html"""<input type="checkbox" checked="" />""".as["input"]
-    assert(input2.checked)
+    assert(input2.checked())
   }
 
   test("Setting value of Boolean attributes") {
     val input = html"""<input type="checkbox" />""".as["input"]
     val input2 = input.checked(true)
-    assert(input2.checked)
+    assert(input2.checked())
     assert(input2.toHtml == """<input type="checkbox" checked=""/>""")
     assert(input == input2.checked(false))
   }

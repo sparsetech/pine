@@ -21,7 +21,7 @@ object MDNParser {
   val AdditionalTagUrls = Set("a", "b", "i", "br", "span", "em", "strong", "small", "code")
     .map(ElementsUrl + "/" + _)
 
-  // Must be kept synchronised with HtmlHelpers.BooleanAttributes
+  /** Boolean attributes don't require a value */
   val BooleanAttributes = Set("allowfullscreen", "async", "autofocus",
     "autoplay", "checked", "compact", "controls", "declare", "default",
     "defaultchecked", "defaultmuted", "defaultselected", "defer", "disabled",
@@ -131,7 +131,7 @@ object MDNParser {
     }
 
     val elementName = s"pine.tag.$className"
-    writeAttributes(p, elementName, uniqueAttrs)
+    writeAttributes(p, Some(elementName), uniqueAttrs)
     p.println("  }")
   }
 
@@ -151,12 +151,9 @@ object MDNParser {
       val attrName = escapeScalaName(attribute.name)
       val attrType = mapDomType(attribute.tpe)
       val elementNameAttr = elementName.fold("T")(el => s"tag.${el.capitalize}")
-
-      if (attrType == "Boolean")
-        p.println(s"""    val $attrName = new Attribute[$elementNameAttr, Boolean, Boolean](tagRef, "${attribute.name}")""")
-      else
-        p.println(s"""    val $attrName = new Attribute[$elementNameAttr, scala.Option[$attrType], $attrType](tagRef, "${attribute.name}")""")
+      p.println(s"""    val $attrName = TagRefAttribute[$elementNameAttr, $attrType](tagRef, "${attribute.name}")""")
     }
+
     p.println("  }")
   }
 
@@ -172,12 +169,11 @@ object MDNParser {
       p.println("import pine._")
       p.println()
       p.println("trait Attributes {")
-      writeTagRefAttributesClass(p, None, globalAttributes)
-      p.println()
-
       p.println("  implicit class TagAttributes[T <: Singleton](tag: Tag[T]) {")
-      writeAttributes(p, "T", globalAttributes)
+      writeAttributes(p, None, globalAttributes)
       p.println("  }")
+      p.println()
+      writeTagRefAttributesClass(p, None, globalAttributes)
       p.println()
 
       elements.toList.sortBy(_.tag).foreach { element =>
@@ -195,7 +191,7 @@ object MDNParser {
     file
   }
 
-  def writeAttributes(p: PrintWriter, elementName: String, attributes: Seq[Attribute]): Unit =
+  def writeAttributes(p: PrintWriter, elementName: Option[String], attributes: Seq[Attribute]): Unit =
     attributes
       .filter(_.name != "data-*")
       .filter(!_.name.startsWith("on"))
@@ -203,16 +199,9 @@ object MDNParser {
     { attribute =>
       val attrName = escapeScalaName(attribute.name)
       val attrType = mapDomType(attribute.tpe)
+      val elementNameAttr = elementName.getOrElse("T")
 
-      if (attrType == "Boolean")
-        p.println( s"""    def $attrName: $attrType = tag.attributes.contains("${attribute.name}")""")
-      else
-        p.println( s"""    def $attrName: scala.Option[$attrType] = tag.attr("${attribute.name}").asInstanceOf[scala.Option[$attrType]]""")
-
-      if (attrType == "Boolean")
-        p.println( s"""    def $attrName(value: $attrType): Tag[$elementName] = if (value) tag.setAttr("${attribute.name}", "") else tag.remAttr("${attribute.name}")""")
-      else
-        p.println( s"""    def $attrName(value: $attrType): Tag[$elementName] = tag.setAttr("${attribute.name}", value)""")
+      p.println(s"""    val $attrName = TagAttribute[$elementNameAttr, $attrType](tag, "${attribute.name}")""")
     }
 
   def globalAttributes(): Seq[Attribute] = {

@@ -12,16 +12,6 @@ object HtmlHelpers {
   /** Content of these tags is treated as raw text */
   val CdataElements = Set("script", "style")
 
-  /** Boolean attributes don't require a value */
-  val BooleanAttributes = Set("allowfullscreen", "async", "autofocus",
-    "autoplay", "checked", "compact", "controls", "declare", "default",
-    "defaultchecked", "defaultmuted", "defaultselected", "defer", "disabled",
-    "draggable", "enabled", "formnovalidate", "hidden", "indeterminate", "inert",
-    "ismap", "itemscope", "loop", "multiple", "muted", "nohref", "noresize",
-    "noshade", "novalidate", "nowrap", "open", "pauseonexit", "readonly",
-    "required", "reversed", "scoped", "seamless", "selected", "sortable",
-    "spellcheck", "translate", "truespeed", "typemustmatch", "visible")
-
   /** @note < and > do not need to be escaped */
   def encodeAttributeValue(value: Any): String =
     "\"" +

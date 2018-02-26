@@ -28,9 +28,9 @@ case class Text(text: String) extends Node {
   def mapFirst(f: PartialFunction[Node, Node]): T = this
 }
 
-case class Tag[TagName <: Singleton](tagName: String with TagName,
-                                     attributes: Map[String, Any] = Map.empty,
-                                     children: List[Node] = List.empty
+case class Tag[TagName <: Singleton](tagName   : String with TagName,
+                                     attributes: Map[String, String] = Map.empty,
+                                     children  : List[Node]          = List.empty
                                     ) extends Node {
   override type T = Tag[TagName]
 
@@ -84,9 +84,11 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
   def replace(reference: Node, node: Node): Tag[TagName] =
     copy(children = children.map(n => if (n == reference) node else n))
 
-  def attr(attribute: String): Option[Any] = attributes.get(attribute)
-  def setAttr(attribute: String, value: Any): Tag[TagName] =
+  def attr(attribute: String): Option[String] = attributes.get(attribute)
+  def setAttr(attribute: String, value: String): Tag[TagName] =
     copy(attributes = attributes + (attribute -> value))
+  def hasAttr(attribute: String): Boolean =
+    attributes.contains(attribute)
   def remAttr(attribute: String): Tag[TagName] =
     copy(attributes = attributes - attribute)
   def clearAttr: Tag[TagName] = copy(attributes = Map.empty)
@@ -166,13 +168,13 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
   def suffixIds(suffix: String): Tag[TagName] =
     if (suffix.isEmpty) copy()
     else mapRoot {
-      case t @ Tag(_, _, _) if t.id.nonEmpty => t.id(t.id.get + suffix)
+      case t @ Tag(_, _, _) if t.id().nonEmpty => t.id(t.id() + suffix)
       case n => n
     }
 
   def byIdOpt(id: String): Option[Tag[_]] =
     find {
-      case t @ Tag(_, _, _) => t.id.contains(id)
+      case t @ Tag(_, _, _) => t.id() == id
       case _                => false
     }.map(_.asInstanceOf[Tag[_]])
 
@@ -191,7 +193,7 @@ case class Tag[TagName <: Singleton](tagName: String with TagName,
       throw new IllegalArgumentException(s"Invalid tag name '$tagName'"))
 
   def hasClass(`class`: String): Boolean =
-    this.`class`.exists(_.split(' ').toSet.contains(`class`))
+    this.`class`().split(' ').toSet.contains(`class`)
 
   def byClassOpt(`class`: String): Option[Tag[_]] =
     find {

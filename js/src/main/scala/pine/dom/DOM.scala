@@ -57,11 +57,7 @@ object DOM {
   def toTree(e: dom.Element): Tag[Singleton] = {
     val attributes = (0 until e.attributes.length)
       .map(e.attributes(_))
-      .map { attr =>
-        val isBooleanAttr = HtmlHelpers.BooleanAttributes.contains(attr.name)
-        if (isBooleanAttr) attr.name -> attr.name
-        else attr.name -> attr.value
-      }.toMap
+      .map(attr => attr.name -> attr.value).toMap
 
     val children = (0 until e.childNodes.length)
       .toList

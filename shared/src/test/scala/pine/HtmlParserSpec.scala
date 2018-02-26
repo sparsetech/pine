@@ -119,14 +119,14 @@ class HtmlParserSpec extends FunSuite {
   }
 
   test("Parse node with boolean attribute") {
-    val html = """<input type="checkbox" checked/>"""
-    val htmlParsed = """<input type="checkbox" checked="checked"/>"""
+    val html       = """<input type="checkbox" checked/>"""
+    val htmlParsed = """<input type="checkbox" checked=""/>"""
     val node = HtmlParser.fromString(html)
     assert(node.toHtml == htmlParsed)
   }
 
   test("Parse node with custom data attribute") {
-    val html = """<input type="checkbox" data-key="value" data-key2/>"""
+    val html       = """<input type="checkbox" data-key="value" data-key2/>"""
     val htmlParsed = """<input type="checkbox" data-key="value" data-key2=""/>"""
     val node = HtmlParser.fromString(html)
     assert(node.toHtml == htmlParsed)

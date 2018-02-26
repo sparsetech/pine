@@ -8,10 +8,7 @@ import scala.annotation.tailrec
 object HtmlParser {
   def parseAttr(reader: Reader): (String, String) = {
     val name  = identifier(reader)
-    val value =
-      if (reader.prefix('=')) parseAttrValue(reader)
-      else if (HtmlHelpers.BooleanAttributes.contains(name)) name
-      else ""
+    val value = if (reader.prefix('=')) parseAttrValue(reader) else ""
 
     name -> value
   }

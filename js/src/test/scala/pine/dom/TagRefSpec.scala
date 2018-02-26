@@ -96,11 +96,11 @@ class TagRefSpec extends FunSuite {
     val tagRef = TagRef[tag.A]("test")
     document.body.appendChild(node)
 
-    DOM.render(implicit ctx => tagRef.href.update(_ => None))
+    DOM.render(implicit ctx => tagRef.href.update(_ => ""))
     assert(tagRef.href.get.isEmpty)
 
-    DOM.render(implicit ctx => tagRef.href.update(x => Some(x.toString)))
-    assert(tagRef.href.get.contains("None"))
+    DOM.render(implicit ctx => tagRef.href.update(_ => "test"))
+    assert(tagRef.href.get.contains("test"))
 
     document.body.removeChild(node)
   }

@@ -132,8 +132,7 @@ Additionally, you can define methods to access attributes conveniently:
 
 ```scala
 implicit class TagAttributesCustomType(tag: Tag[CustomType]) {
-  def myValue: Option[String] = tag.attr("my-value").map(_.toString)
-  def myValue(value: String): Tag[CustomType] = tag.setAttr("my-value", value)
+  val myValue = TagAttribute[CustomType, String](tag, "my-value")
 }
 ```
 
@@ -142,7 +141,7 @@ Now, you can access and modify your custom HTML element while preserving type-sa
 ```scala
 val tag = html"""<custom-type my-value="value"></custom-type>"""
 val ct  = tag.as[CustomType]
-ct.myValue                   // Some(value)
+ct.myValue()                 // value
 ct.myValue("value2").toHtml  // <custom-type my-value="value2"></custom-type>
 ```
 
@@ -150,6 +149,31 @@ Note that the type definition above is optional and you could also write the lit
 
 ```scala
 val ct2 = tag.as["custom-type"]
+```
+
+`TagAttribute` takes an implicit `AttributeCodec`. If you would like to enforce more type-safety in attributes, you could define an enumeration and create an `AttributeCodec` instance for it:
+
+```scala
+sealed abstract class Language(val id: String)
+object Language {
+  case object French  extends Language("french")
+  case object Spanish extends Language("spanish")
+  case object Unknown extends Language("unknown")
+  val All = Set(French, Spanish)
+}
+
+implicit case object LanguageAttributeCodec extends AttributeCodec[Language] {
+  override def encode(value: Language): Option[String] = Some(value.id)
+  override def decode(value: Option[String]): Language =
+    value.flatMap(id => Language.All.find(_.id == id))
+      .getOrElse(Language.Unknown)
+}
+
+implicit class TagAttributesCustomDiv(tag: Tag[pine.tag.Div]) {
+  val dataLanguage = TagAttribute[pine.tag.Div, Language](tag, "data-language")
+}
+
+tag.Div.dataLanguage(Language.Spanish)
 ```
 
 ## Rendering

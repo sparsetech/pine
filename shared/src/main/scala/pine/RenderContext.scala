@@ -14,7 +14,7 @@ class NodeRenderContext extends RenderContext {
 
   def matches[T <: Singleton](tagRef: TagRef[T], tag: Tag[T]): Boolean =
     tagRef match {
-      case TagRef.ById(tagRefId)    => tag.id.contains(tagRefId)
+      case TagRef.ById(tagRefId)    => tag.id() == tagRefId
       case TagRef.ByTag(tagName, _) => tag.tagName == tagName
       case TagRef.ByClass(cls, _)   => tag.hasClass(cls)
     }

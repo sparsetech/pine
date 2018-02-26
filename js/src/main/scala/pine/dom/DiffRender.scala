@@ -9,26 +9,18 @@ object DiffRender {
   def render(dom: Element, diff: Diff): Unit =
     diff match {
       case Diff.SetAttribute(attribute, value) =>
-        if (!HtmlHelpers.BooleanAttributes.contains(attribute.name))
-          dom.setAttribute(attribute.name, value.toString)
-        else {
-          if (value.asInstanceOf[Boolean]) dom.setAttribute(attribute.name, "")
-          else dom.removeAttribute(attribute.name)
+        attribute.codec.encode(value) match {
+          case None    => dom.removeAttribute(attribute.name)
+          case Some(v) => dom.setAttribute(attribute.name, v)
         }
 
       case Diff.UpdateAttribute(attribute, f) =>
-        if (HtmlHelpers.BooleanAttributes.contains(attribute.name)) {
-          val fBoolean = f.asInstanceOf[Boolean => Boolean]
-          val current = dom.hasAttribute(attribute.name)
-          if (fBoolean(current)) dom.setAttribute(attribute.name, "")
-          else                   dom.removeAttribute(attribute.name)
-        } else {
-          val fString = f.asInstanceOf[Option[String] => Option[String]]
-          val current = Option(dom.getAttribute(attribute.name))
-          fString(current) match {
-            case None    => dom.removeAttribute(attribute.name)
-            case Some(s) => dom.setAttribute(attribute.name, s)
-          }
+        val curValue = Option(dom.getAttribute(attribute.name))
+        val newValue = f(attribute.codec.decode(curValue))
+
+        attribute.codec.encode(newValue) match {
+          case None    => dom.removeAttribute(attribute.name)
+          case Some(v) => dom.setAttribute(attribute.name, v)
         }
 
       case Diff.RemoveAttribute(attribute) =>

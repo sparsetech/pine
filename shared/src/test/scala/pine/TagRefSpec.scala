@@ -8,7 +8,7 @@ class TagRefSpec extends FunSuite {
 
     val tagRef = TagRef["input"]("test")
 
-    assert(!node.checked)
+    assert(!node.checked())
 
     val updated = node.update(implicit ctx => tagRef.checked.update(!_))
     assert(updated == node.checked(true))
@@ -21,7 +21,7 @@ class TagRefSpec extends FunSuite {
 
     val tagRef = TagRef[tag.Input]("test")
 
-    assert(node.checked)
+    assert(node.checked())
 
     val updated = node.update(implicit ctx => tagRef.checked.update(!_))
     assert(updated == node.checked(false))

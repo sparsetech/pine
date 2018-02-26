@@ -20,9 +20,9 @@ class NodeSpec extends FunSuite {
     val opt3 = html"""<option selected=""></option>"""
     val opt4 = html"""<option selected="selected"></option>"""
 
-    assert(!opt2.as[tag.Option].selected)
-    assert(opt3.as[tag.Option].selected)
-    assert(opt4.as[tag.Option].selected)
+    assert(!opt2.as[tag.Option].selected())
+    assert(opt3.as[tag.Option].selected())
+    assert(opt4.as[tag.Option].selected())
   }
 
   test("byClass") {
@@ -172,7 +172,7 @@ class NodeSpec extends FunSuite {
   test("Update tag attributes with multiple matches") {
     val div  = html"""<div><a href="/a">A</a><a href="/b">B</a></div>"""
     val html = div.update(implicit ctx =>
-      TagRef["a"].each.href.update(_.map(url => s"$url/test"))).toHtml
+      TagRef["a"].each.href.update(url => s"$url/test")).toHtml
     assert(html == """<div><a href="/a/test">A</a><a href="/b/test">B</a></div>""")
   }
 
@@ -214,17 +214,17 @@ class NodeSpec extends FunSuite {
 
   test("Update `disabled` attribute of `input` node") {
     val input = html"""<input type="text" />""".as[tag.Input]
-    assert(!input.disabled)
+    assert(!input.disabled())
 
     val updated = input.update { implicit ctx =>
       TagRef[tag.Input].disabled := true
     }
-    assert(updated.disabled)
+    assert(updated.disabled())
 
     val updated2 = input.update { implicit ctx =>
       TagRef[tag.Input].disabled := false
     }
-    assert(!updated2.disabled)
+    assert(!updated2.disabled())
   }
 
   test("toXml on empty tags") {
@@ -241,5 +241,29 @@ class NodeSpec extends FunSuite {
 
     val node2 = Tag("test").set("'\"")
     assert(node2.toXml == """<?xml version="1.0" encoding="UTF-8"?><test>'"</test>""")
+  }
+
+  test("Custom attribute codec") {
+    sealed abstract class Language(val id: String)
+    object Language {
+      case object French  extends Language("french")
+      case object Spanish extends Language("spanish")
+      case object Unknown extends Language("unknown")
+      val All = Set(French, Spanish)
+    }
+
+    implicit case object LanguageAttributeCodec extends AttributeCodec[Language] {
+      override def encode(value: Language): Option[String] = Some(value.id)
+      override def decode(value: Option[String]): Language =
+        value.flatMap(id => Language.All.find(_.id == id))
+          .getOrElse(Language.Unknown)
+    }
+
+    implicit class TagAttributesCustomDiv(tag: Tag[pine.tag.Div]) {
+      val dataLanguage = TagAttribute[pine.tag.Div, Language](tag, "data-language")
+    }
+
+    assert(tag.Div.dataLanguage(Language.Spanish).toHtml ==
+      """<div data-language="spanish"></div>""")
   }
 }
