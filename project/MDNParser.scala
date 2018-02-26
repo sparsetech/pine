@@ -33,6 +33,9 @@ object MDNParser {
 
   val FilterTags = Set("element")  // Invalid tags
 
+  def isEventHandler(attribute: String): Boolean =
+    attribute.startsWith("on")
+
   def encodeFileName(url: String): String =
     url.flatMap {
       case ':' | '/' => Seq('_')
@@ -337,12 +340,15 @@ object MDNParser {
         case None => parseAttributes(document)
       }
 
+      val attributesWithoutEvents =
+        attributes.filter(attr => !isEventHandler(attr.name))
+
       val description = descriptionElements.asScala
         .filterNot(_.hasClass("htmlelt"))  // Filter box with meta information
         .map(_.html())
         .mkString("\n")
 
-      Some(Element(tag, description, attributes))
+      Some(Element(tag, description, attributesWithoutEvents))
     }
   }
 
