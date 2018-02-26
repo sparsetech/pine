@@ -44,11 +44,16 @@ object MDNParser {
     try op(p) finally p.close()
   }
 
+  def readFile(file: File): String = {
+    val source = scala.io.Source.fromFile(file)
+    try source.mkString finally source.close()
+  }
+
   def request(url: String): String = {
     val fileName = encodeFileName(url)
-    val file = new File(cache, fileName)
 
-    if (file.exists()) scala.io.Source.fromFile(file).mkString
+    val file = new File(cache, fileName)
+    if (file.exists()) readFile(file)
     else {
       val response = Http(url).asString
 
