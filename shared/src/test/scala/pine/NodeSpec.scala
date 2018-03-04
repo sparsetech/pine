@@ -162,6 +162,20 @@ class NodeSpec extends FunSuite {
     assert(html == "<div><span><b>Hello</b></span><span></span></div>")
   }
 
+  test("Update by tag using optional TagRef") {
+    val div = html"""<div><span></span><span></span></div>"""
+    val html = div.update(implicit ctx =>
+      TagRef["span"].opt += html"<b>Hello</b>").toHtml
+    assert(html == "<div><span><b>Hello</b></span><span></span></div>")
+  }
+
+  test("Update by tag using optional TagRef (2)") {
+    val div = html"""<div><span></span><span></span></div>"""
+    val html = div.update(implicit ctx =>
+      TagRef["strong"].opt += html"<b>Hello</b>").toHtml
+    assert(html == "<div><span></span><span></span></div>")
+  }
+
   test("Update by tag with multiple matches") {
     val div = html"""<div><span></span><span></span></div>"""
     val html = div.update(implicit ctx =>

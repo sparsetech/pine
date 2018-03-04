@@ -279,7 +279,8 @@ class DOMSpec extends FunSuite {
     dom.document.body.appendChild(node)
 
     val input = TagRef.byClass[tag.Span]("test").each
-    assert(input.domAll.length == 2)
+    assert(input.dom.isInstanceOf[List[dom.html.Span]])
+    assert(input.dom.length == 2)
 
     DOM.render(implicit ctx => input.`class`.remove())
     assert(DOM.toTree(node).toHtml == "<div><span></span><span></span></div>")
@@ -301,18 +302,42 @@ class DOMSpec extends FunSuite {
     dom.document.body.removeChild(node)
   }
 
+  test("Resolve optional node") {
+    val span = html"""<span></span>""".as[tag.Span]
+    val node = span.toDom
+    dom.document.body.appendChild(node)
+
+    val ref = TagRef[tag.Span].opt
+    assert(ref.dom.isInstanceOf[Option[_]])
+    assert(ref.dom.contains(node))
+
+    dom.document.body.removeChild(node)
+  }
+
+  test("Resolve optional node (2)") {
+    val span = html"""<span></span>""".as[tag.Span]
+    val node = span.toDom
+    dom.document.body.appendChild(node)
+
+    val ref = TagRef[tag.Input].opt
+    assert(ref.dom.isInstanceOf[Option[_]])
+    assert(ref.dom.isEmpty)
+
+    dom.document.body.removeChild(node)
+  }
+
   test("Listen to `onclick` on `input` nodes") {
     val div = html"""<div><input type="text" /><input type="test" /></div>""".as[tag.Div]
     val node = div.toDom
     dom.document.body.appendChild(node)
 
     val input = TagRef[tag.Input].each
-    assert(input.domAll.length == 2)
+    assert(input.dom.length == 2)
 
     var eventTriggered = 0
     input.click := { eventTriggered += 1 }
 
-    input.domAll.foreach(_.click())
+    input.dom.foreach(_.click())
     assert(eventTriggered == 2)
 
     dom.document.body.removeChild(node)

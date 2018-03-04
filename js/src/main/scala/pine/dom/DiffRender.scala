@@ -65,10 +65,9 @@ class DomRenderContext extends RenderContext {
   def commit(): Unit = {
     while (diffs.nonEmpty) {
       val (ref, diff) = diffs.dequeue()
-      ref.domAll.foreach { node =>
-        DiffRender.render(node, diff)
-      }
+      ref.resolve.foreach(node => DiffRender.render(node, diff))
     }
+
     committed = true
   }
 }

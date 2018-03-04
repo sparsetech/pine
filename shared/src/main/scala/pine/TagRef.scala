@@ -1,8 +1,6 @@
 package pine
 
 sealed trait TagRef[T <: Singleton] {
-  def enqueue: Boolean
-
   def set(nodes: List[Node])(implicit renderCtx: RenderContext): Unit =
     renderCtx.render(this, Diff.SetChildren(nodes))
 
@@ -45,22 +43,23 @@ sealed trait TagRef[T <: Singleton] {
 }
 
 object TagRef {
+  case class Opt [T <: Singleton](tagRef: TagRef[T]) extends TagRef[T]
+  case class Each[T <: Singleton](tagRef: TagRef[T]) extends TagRef[T]
+
   // Do not rename `tagRefId` to `id`, otherwise it shadows
   // `TagRefAttributes.id`.
   case class ById[T <: Singleton](tagRefId: String) extends TagRef[T] {
-    override def enqueue: Boolean = false
+    def opt = TagRef.Opt(this)
   }
 
-  case class ByTag[T <: Singleton](tagName: String with T,
-                                   _each: Boolean = false) extends TagRef[T] {
-    override def enqueue: Boolean = _each
-    def each: TagRef[T] = ByTag(tagName, true)
+  case class ByTag[T <: Singleton](tagName: String with T) extends TagRef[T] {
+    def opt  = TagRef.Opt (this)
+    def each = TagRef.Each(this)
   }
 
-  case class ByClass[T <: Singleton](_class: String,
-                                     _each: Boolean = false) extends TagRef[T] {
-    override def enqueue: Boolean = _each
-    def each: TagRef[T] = ByClass(_class, true)
+  case class ByClass[T <: Singleton](_class: String) extends TagRef[T] {
+    def opt  = TagRef.Opt (this)
+    def each = TagRef.Each(this)
   }
 
   def apply[T <: Singleton](id: String): ById[T] = ById[T](id)
