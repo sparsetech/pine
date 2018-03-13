@@ -6,14 +6,10 @@ import pine.dom.DOM
 
 private object DomParser {
   val parser = new DOMParser()
-  val parserErrorNs = parser
-    .parseFromString("invalid", "application/xml")
-    .getElementsByTagName("parsererror")(0)
-    .namespaceURI
 
   def parse(content: String, mimeType: String): Document = {
     val document   = parser.parseFromString(content, mimeType)
-    val parseError = document.getElementsByTagNameNS(parserErrorNs, "parsererror")
+    val parseError = document.getElementsByTagNameNS("*", "parsererror")
     if (parseError.length != 0) throw new ParseError(parseError(0).textContent)
     document
   }
