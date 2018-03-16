@@ -1,6 +1,8 @@
 package pine.dom
 
 import org.scalajs.dom
+import org.scalajs.dom.html.Element
+import org.scalajs.dom.document
 
 import pine._
 
@@ -19,9 +21,9 @@ object DOM {
         if (parent.firstChild == null) parent.appendChild(node)
         else parent.insertBefore(node, parent.firstChild)
 
-      def insertChildAfter(reference: dom.Node, node: dom.Node): Unit =
-        if (reference.nextSibling == null) parent.appendChild(node)
-        else parent.insertBefore(node, reference.nextSibling)
+      def insertAfter(node: dom.Node, refChild: dom.Node): Unit =
+        if (refChild.nextSibling == null) parent.appendChild(node)
+        else parent.insertBefore(node, refChild.nextSibling)
 
       def insertChildAt(position: Int, node: dom.Node): Unit =
         if (parent.firstChild == null) parent.appendChild(node)
@@ -32,6 +34,20 @@ object DOM {
       def toTree: Tag[_] = DOM.toTree(parent)
     }
   }
+
+  /** Resolve relative tag reference */
+  def resolve[T <: Singleton](element: Element, tagRef: TagRef[T])
+                             (implicit js: Js[T]): js.X =
+    tagRef match {
+      case TagRef.ById(id) =>
+        document.getElementById(id).asInstanceOf[js.X]
+      case TagRef.ByTag(tag) =>
+        element.getElementsByTagName(tag)(0).asInstanceOf[js.X]
+      case TagRef.ByClass(cls) =>
+        element.getElementsByClassName(cls)(0).asInstanceOf[js.X]
+      case TagRef.Each(tr) => resolve(element, tr)(js)
+      case TagRef.Opt(tr) => resolve(element, tr)(js)
+    }
 
   def collectNodes(node: dom.Node): Map[String, dom.Element] =
     node match {

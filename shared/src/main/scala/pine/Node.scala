@@ -1,5 +1,6 @@
 package pine
 
+import scala.annotation.tailrec
 import scala.language.implicitConversions
 
 object Node {
@@ -173,6 +174,15 @@ case class Tag[TagName <: Singleton](tagName   : String with TagName,
     else mapRoot {
       case t @ Tag(_, _, _) if t.id.get.nonEmpty => t.id.set(t.id.get + suffix)
       case n => n
+    }
+
+  @tailrec final def matches[T <: Singleton](tagRef: TagRef[T]): Boolean =
+    tagRef match {
+      case TagRef.Opt(tr)      => matches(tr)
+      case TagRef.Each(tr)     => matches(tr)
+      case TagRef.ById(id)     => this.id.get == id
+      case TagRef.ByTag(tn)    => tagName == tn
+      case TagRef.ByClass(cls) => this.`class`.has(cls)
     }
 
   def byIdOpt(id: String): Option[Tag[_]] =

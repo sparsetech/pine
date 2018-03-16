@@ -14,7 +14,7 @@ sealed trait TagRef[T <: Singleton] {
     renderCtx.render(this, Diff.Replace(List(node)))
 
   def remove()(implicit renderCtx: RenderContext): Unit =
-    renderCtx.render(this, Diff.RemoveNode())
+    renderCtx.render(this, Diff.RemoveNode)
 
   def prepend(nodes: List[Node])(implicit renderCtx: RenderContext): Unit =
     renderCtx.render(this, Diff.PrependChildren(nodes))
@@ -28,10 +28,28 @@ sealed trait TagRef[T <: Singleton] {
   def append(node: Node)(implicit renderCtx: RenderContext): Unit =
     renderCtx.render(this, Diff.AppendChildren(List(node)))
 
-  def insertAt(position: Int, nodes: List[Node])(implicit renderCtx: RenderContext): Unit =
+  def insertBefore[U <: Singleton](childRef: TagRef[U], nodes: List[Node])
+                                  (implicit renderCtx: RenderContext): Unit =
+    renderCtx.render(this, Diff.InsertBefore(childRef, nodes))
+
+  def insertBefore[U <: Singleton](childRef: TagRef[U], node: Node)
+                                  (implicit renderCtx: RenderContext): Unit =
+    renderCtx.render(this, Diff.InsertBefore(childRef, List(node)))
+
+  def insertAfter[U <: Singleton](childRef: TagRef[U], nodes: List[Node])
+                                 (implicit renderCtx: RenderContext): Unit =
+    renderCtx.render(this, Diff.InsertAfter(childRef, nodes))
+
+  def insertAfter[U <: Singleton](childRef: TagRef[U], node: Node)
+                                 (implicit renderCtx: RenderContext): Unit =
+    renderCtx.render(this, Diff.InsertAfter(childRef, List(node)))
+
+  def insertAt(position: Int, nodes: List[Node])
+              (implicit renderCtx: RenderContext): Unit =
     renderCtx.render(this, Diff.InsertAt(position, nodes))
 
-  def insertAt(position: Int, node: Node)(implicit renderCtx: RenderContext): Unit =
+  def insertAt(position: Int, node: Node)
+              (implicit renderCtx: RenderContext): Unit =
     renderCtx.render(this, Diff.InsertAt(position, List(node)))
 
   def clearAll()(implicit renderCtx: RenderContext): Unit =

@@ -1,6 +1,5 @@
 package pine
 
-import scala.annotation.tailrec
 import scala.collection.mutable
 
 trait RenderContext {
@@ -13,21 +12,12 @@ class NodeRenderContext extends RenderContext {
   override def render[T <: Singleton](tagRef: TagRef[T], diff: Diff): Unit =
     diffs.enqueue((tagRef.asInstanceOf[TagRef[Singleton]], diff))
 
-  @tailrec final def matches[T <: Singleton](tagRef: TagRef[T], tag: Tag[T]): Boolean =
-    tagRef match {
-      case TagRef.Opt(tr)        => matches(tr, tag)
-      case TagRef.Each(tr)       => matches(tr, tag)
-      case TagRef.ById(tagRefId) => tag.id() == tagRefId
-      case TagRef.ByTag(tagName) => tag.tagName == tagName
-      case TagRef.ByClass(cls)   => tag.`class`.has(cls)
-    }
-
   /** Recursively iterates over `node` and applies changes in place while
     * `diffs.nonEmpty` */
   def render(tag: Node): List[Node] =
     tag match {
       case acc @ Tag(_, _, _) if diffs.nonEmpty =>
-        diffs.find { case (ref, _) => matches(ref, acc) } match {
+        diffs.find { case (ref, _) => acc.matches(ref) } match {
           case None => List(acc.set(acc.children.flatMap(render)))
           case Some(rd @ (ref, diff)) =>
             val result = DiffRender.render(acc)(diff)

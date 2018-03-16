@@ -7,7 +7,8 @@ import pine._
 
 trait Implicits {
   /** Resolve DOM node */
-  private final def domOpt[T <: Singleton](tagRef: TagRef[T])(implicit js: Js[T]): Option[js.X] =
+  private final def domOpt[T <: Singleton](tagRef: TagRef[T])
+                                          (implicit js: Js[T]): Option[js.X] =
     tagRef match {
       case TagRef.ById(id) =>
         Option(document.getElementById(id).asInstanceOf[js.X])
@@ -21,7 +22,8 @@ trait Implicits {
     }
 
   /** Resolve all DOM nodes */
-  private def domEach[T <: Singleton](tagRef: TagRef[T])(implicit js: Js[T]): List[js.X] =
+  private def domEach[T <: Singleton](tagRef: TagRef[T])
+                                     (implicit js: Js[T]): List[js.X] =
     tagRef match {
       case TagRef.ByTag(tag) =>
         document.getElementsByTagName(tag).toList.asInstanceOf[List[js.X]]

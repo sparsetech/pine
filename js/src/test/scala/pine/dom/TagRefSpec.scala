@@ -172,6 +172,45 @@ class TagRefSpec extends FunSuite {
     assert(html == "<div><span><b>Hello</b><i>World</i><hr/></span></div>")
   }
 
+  test("Insert before") {
+    val div = html"""<div><span><hr/><hr/></span></div>""".toDom
+    document.body.appendChild(div)
+
+    DOM.render(implicit ctx =>
+      TagRef["span"].insertBefore(TagRef["hr"], tag.Div))
+
+    val html = DOM.toTree(div).toHtml
+    document.body.removeChild(div)
+
+    assert(html == "<div><span><div></div><hr/><hr/></span></div>")
+  }
+
+  test("Insert after") {
+    val div = html"""<div><span><hr/></span></div>""".toDom
+    document.body.appendChild(div)
+
+    DOM.render(implicit ctx =>
+      TagRef["span"].insertAfter(TagRef["hr"], tag.Div))
+
+    val html = DOM.toTree(div).toHtml
+    document.body.removeChild(div)
+
+    assert(html == "<div><span><hr/><div></div></span></div>")
+  }
+
+  test("Insert after (2)") {
+    val div = html"""<div><span><hr/><hr/></span></div>""".toDom
+    document.body.appendChild(div)
+
+    DOM.render(implicit ctx =>
+      TagRef["span"].insertAfter(TagRef["hr"], tag.Div))
+
+    val html = DOM.toTree(div).toHtml
+    document.body.removeChild(div)
+
+    assert(html == "<div><span><hr/><div></div><hr/></span></div>")
+  }
+
   test("Insert at position") {
     val div = html"""<div id="nodes"></div>""".toDom
     document.body.appendChild(div)

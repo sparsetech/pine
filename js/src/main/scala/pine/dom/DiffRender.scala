@@ -17,6 +17,16 @@ object DiffRender {
           case Some(v) => dom.setAttribute(name, v)
         }
 
+      case Diff.InsertBefore(childRef, nodes) =>
+        val ref = DOM.resolve(dom, childRef)
+        nodes.reverse.foreach(child =>
+          dom.insertBefore(NodeRender.renderChild(child), ref))
+
+      case Diff.InsertAfter(childRef, nodes) =>
+        val ref = DOM.resolve(dom, childRef)
+        nodes.reverse.foreach(child =>
+          dom.insertAfter(NodeRender.renderChild(child), ref))
+
       case Diff.SetChildren(children) =>
         dom.removeChildren()
         children.foreach(child =>
@@ -39,7 +49,7 @@ object DiffRender {
         children.reverse.foreach(child =>
           dom.insertChildAt(position, NodeRender.renderChild(child)))
 
-      case Diff.RemoveNode() => dom.parentNode.removeChild(dom)
+      case Diff.RemoveNode => dom.parentNode.removeChild(dom)
     }
 }
 
