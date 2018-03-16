@@ -41,6 +41,13 @@ class NodeSpec extends FunSuite {
     }
   }
 
+  test("Change tag") {
+    val span = tag.Span.`class`("cls")
+    val div  = span.tag[tag.Div]
+    assert((div: Tag["div"]) == div)
+    assert(div.toHtml == """<div class="cls"></div>""")
+  }
+
   test("map") {
     val h = html"""
       <html>

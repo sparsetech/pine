@@ -84,6 +84,9 @@ case class Tag[TagName <: Singleton](tagName   : String with TagName,
   def replace(reference: Node, node: Node): Tag[TagName] =
     copy(children = children.map(n => if (n == reference) node else n))
 
+  def tag[T <: Singleton with String](implicit vo: ValueOf[T]): Tag[T] =
+    copy(tagName = vo.value)
+
   def attr(attribute: String): Option[String] = attributes.get(attribute)
   def setAttr(attribute: String, value: String): Tag[TagName] =
     copy(attributes = attributes + (attribute -> value))
@@ -113,8 +116,8 @@ case class Tag[TagName <: Singleton](tagName   : String with TagName,
       case _                 => false
     }.map(_.asInstanceOf[Tag[_]])
 
-  def as[T <: Singleton with String](implicit vu: ValueOf[T]): Tag[T] = {
-    assert(tagName == vu.value)
+  def as[T <: Singleton with String](implicit vo: ValueOf[T]): Tag[T] = {
+    assert(tagName == vo.value)
     this.asInstanceOf[Tag[T]]
   }
 
