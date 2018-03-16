@@ -257,6 +257,14 @@ class NodeSpec extends FunSuite {
     assert(node2.toXml == """<?xml version="1.0" encoding="UTF-8"?><test>'"</test>""")
   }
 
+  test("Encode Long attribute") {
+    val input = html"""<input></input>"""
+    val updated = input.update { implicit ctx =>
+      TagRef[tag.Input].size := 42
+    }
+    assert(updated.toHtml == "<input size=\"42\"/>")
+  }
+
   test("Custom attribute codec") {
     sealed abstract class Language(val id: String)
     object Language {
