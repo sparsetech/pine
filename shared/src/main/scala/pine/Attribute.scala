@@ -35,6 +35,14 @@ object AttributeCodec {
     override def decode(value: Option[String]): String = value.getOrElse("")
   }
 
+  implicit case object IntAttributeCodec extends AttributeCodec[Int] {
+    override def encode(value: Int): Option[String] =
+      Some(value.toString)
+
+    override def decode(value: Option[String]): Int =
+      value.map(_.toInt).getOrElse(0)
+  }
+
   implicit case object LongAttributeCodec extends AttributeCodec[Long] {
     override def encode(value: Long): Option[String] =
       Some(value.toString)
