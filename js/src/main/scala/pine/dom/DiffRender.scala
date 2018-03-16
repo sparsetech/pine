@@ -1,30 +1,21 @@
 package pine.dom
 
-import org.scalajs.dom.html.Element
-import pine._
-
 import scala.collection.mutable
+
+import org.scalajs.dom.html.Element
+
+import pine._
 
 object DiffRender {
   def render(dom: Element, diff: Diff): Unit =
     diff match {
-      case Diff.SetAttribute(attribute, value) =>
-        attribute.codec.encode(value) match {
-          case None    => dom.removeAttribute(attribute.name)
-          case Some(v) => dom.setAttribute(attribute.name, v)
+      case Diff.SetAttribute(name, value) => dom.setAttribute(name, value)
+      case Diff.RemoveAttribute(name) => dom.removeAttribute(name)
+      case Diff.UpdateAttribute(name, f) =>
+        f(Option(dom.getAttribute(name))) match {
+          case None    => dom.removeAttribute(name)
+          case Some(v) => dom.setAttribute(name, v)
         }
-
-      case Diff.UpdateAttribute(attribute, f) =>
-        val curValue = Option(dom.getAttribute(attribute.name))
-        val newValue = f(attribute.codec.decode(curValue))
-
-        attribute.codec.encode(newValue) match {
-          case None    => dom.removeAttribute(attribute.name)
-          case Some(v) => dom.setAttribute(attribute.name, v)
-        }
-
-      case Diff.RemoveAttribute(attribute) =>
-        dom.removeAttribute(attribute.name)
 
       case Diff.SetChildren(children) =>
         dom.removeChildren()
@@ -48,8 +39,7 @@ object DiffRender {
         children.reverse.foreach(child =>
           dom.insertChildAt(position, NodeRender.renderChild(child)))
 
-      case Diff.RemoveNode() =>
-        dom.parentNode.removeChild(dom)
+      case Diff.RemoveNode() => dom.parentNode.removeChild(dom)
     }
 }
 

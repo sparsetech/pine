@@ -54,6 +54,9 @@ object HtmlHelpers {
       }
     }
 
+  def parseTokenList(value: String): List[String] =
+    if (value.isEmpty) List.empty else value.split(' ').toList
+
   /** From http://hohonuuli.blogspot.com/2012/10/simple-hex-string-to-ascii-function-for.html */
   def parseHexBinary(hex: String): String = {
     val sb = new StringBuilder

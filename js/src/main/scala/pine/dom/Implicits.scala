@@ -165,10 +165,22 @@ trait Implicits {
       new EventN(tagRef.resolve, _.oninput = _)
   }
 
-  implicit class AttributeExtensions[T <: Singleton, U](attribute: TagRefAttribute[T, U]) {
+  implicit class TagRefAttributeExtensions[T <: Singleton, U](
+    attribute: TagRefAttribute[T, U]
+  ) {
     def get(implicit js: Js[T]): U = {
       val node = attribute.parent.dom
       attribute.codec.decode(Option(node.getAttribute(attribute.name)))
+    }
+  }
+
+  implicit class TagRefTokenListAttributeExtensions[T <: Singleton, U](
+    attribute: TagRefTokenListAttribute[T]
+  ) {
+    def get(implicit js: Js[T]): List[String] = {
+      val node = attribute.parent.dom
+      Option(node.getAttribute(attribute.name))
+        .map(HtmlHelpers.parseTokenList).getOrElse(List.empty)
     }
   }
 }

@@ -228,7 +228,7 @@ class NodeSpec extends FunSuite {
     val div = html"""<div><span class="a test"></span><span class="b test"></span></div>""".as[tag.Div]
     val input = TagRef.byClass[tag.Span]("test").each
     val updated = div.update { implicit ctx =>
-      input.`class`.remove()
+      input.`class`.clear()
     }
     assert(updated.toHtml == "<div><span></span><span></span></div>")
   }
@@ -262,6 +262,28 @@ class NodeSpec extends FunSuite {
 
     val node2 = Tag("test").set("'\"")
     assert(node2.toXml == """<?xml version="1.0" encoding="UTF-8"?><test>'"</test>""")
+  }
+
+  test("Specify multiple classes") {
+    val span = tag.Div.`class`("a", "b")
+    assert(span.toHtml == """<div class="a b"></div>""")
+  }
+
+  test("Toggle class") {
+    val div    = tag.Div.`class`("a", "b")
+    val result = div.`class`.toggle("a")
+    assert(result.toHtml == """<div class="b"></div>""")
+  }
+
+  test("Toggle class (2)") {
+    val div    = tag.Div.`class`("a")
+    val result = div.`class`.toggle("a")
+    assert(result.toHtml == """<div></div>""")
+  }
+
+  test("Toggle class (3)") {
+    val result = tag.Div.`class`.toggle("a")
+    assert(result.toHtml == """<div class="a"></div>""")
   }
 
   test("Encode Long attribute") {

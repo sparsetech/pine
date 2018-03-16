@@ -132,7 +132,7 @@ class TagRefSpec extends FunSuite {
     document.body.appendChild(node)
 
     DOM.render(implicit ctx => tagRef.css(false, "b"))
-    assert(tagRef.`class`.get.contains("a c"))
+    assert(tagRef.`class`.get == List("a", "c"))
     assert(tagRef.dom.className == "a c")
 
     document.body.removeChild(node)

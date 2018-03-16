@@ -19,7 +19,7 @@ class NodeRenderContext extends RenderContext {
       case TagRef.Each(tr)       => matches(tr, tag)
       case TagRef.ById(tagRefId) => tag.id() == tagRefId
       case TagRef.ByTag(tagName) => tag.tagName == tagName
-      case TagRef.ByClass(cls)   => tag.hasClass(cls)
+      case TagRef.ByClass(cls)   => tag.`class`.has(cls)
     }
 
   /** Recursively iterates over `node` and applies changes in place while

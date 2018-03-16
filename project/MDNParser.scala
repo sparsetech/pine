@@ -21,7 +21,7 @@ object MDNParser {
   val AdditionalTagUrls = Set("a", "b", "i", "br", "span", "em", "strong", "small", "code")
     .map(ElementsUrl + "/" + _)
 
-  /** Boolean attributes don't require a value */
+  /** Boolean attributes do not require a value */
   val BooleanAttributes = Set("allowfullscreen", "async", "autofocus",
     "autoplay", "checked", "compact", "controls", "declare", "default",
     "defaultchecked", "defaultmuted", "defaultselected", "defer", "disabled",
@@ -30,6 +30,9 @@ object MDNParser {
     "noshade", "novalidate", "nowrap", "open", "pauseonexit", "readonly",
     "required", "reversed", "scoped", "seamless", "selected", "sortable",
     "spellcheck", "translate", "truespeed", "typemustmatch", "visible")
+
+  /** @see https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList */
+  val TokenListAttributes = Set("class", "rel", "sandbox")
 
   val FilterTags = Set("element")  // Invalid tags
 
@@ -159,7 +162,11 @@ object MDNParser {
       val attrName = escapeScalaName(attribute.name)
       val attrType = mapDomType(attribute.tpe)
       val elementNameAttr = elementName.fold("T")(el => s"tag.${el.capitalize}")
-      p.println(s"""    val $attrName = TagRefAttribute[$elementNameAttr, $attrType](tagRef, "${attribute.name}")""")
+
+      if (attrType == "TokenList")
+        p.println(s"""    val $attrName = TagRefTokenListAttribute[$elementNameAttr](tagRef, "${attribute.name}")""")
+      else
+        p.println(s"""    val $attrName = TagRefAttribute[$elementNameAttr, $attrType](tagRef, "${attribute.name}")""")
     }
 
     p.println("  }")
@@ -209,7 +216,10 @@ object MDNParser {
       val attrType = mapDomType(attribute.tpe)
       val elementNameAttr = elementName.getOrElse("T")
 
-      p.println(s"""    val $attrName = TagAttribute[$elementNameAttr, $attrType](tag, "${attribute.name}")""")
+      if (attrType == "TokenList")
+        p.println(s"""    val $attrName = TagTokenListAttribute[$elementNameAttr](tag, "${attribute.name}")""")
+      else
+        p.println(s"""    val $attrName = TagAttribute[$elementNameAttr, $attrType](tag, "${attribute.name}")""")
     }
 
   def globalAttributes(): Seq[Attribute] = {
@@ -241,7 +251,11 @@ object MDNParser {
 
       if (name.isEmpty) None
       else {
-        val tpe = if (BooleanAttributes.contains(name)) "Boolean" else "String"
+        val tpe =
+          if (BooleanAttributes.contains(name)) "Boolean"
+          else if (TokenListAttributes.contains(name)) "TokenList"
+          else "String"
+
         Some(Attribute(name, deprecated || deleted || obsolete, docs, tpe))
       }
     }

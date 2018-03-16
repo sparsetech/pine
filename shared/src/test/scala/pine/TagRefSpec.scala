@@ -42,7 +42,7 @@ class TagRefSpec extends FunSuite {
     val node = tag.Input
       .id("test")
       .`type`("checkbox")
-      .`class`("a b c")
+      .`class`("a", "b", "c")
 
     val tagRef = TagRef["input"]("test")
 
@@ -92,6 +92,27 @@ class TagRefSpec extends FunSuite {
     val div  = html"""<div><span><hr/></span></div>"""
     val html = div.update(implicit ctx => TagRef["span"].clearAll()).toHtml
     assert(html == "<div><span></span></div>")
+  }
+
+  test("Add class") {
+    val div  = html"""<div class="b"></div>"""
+    val html = div.update(implicit ctx =>
+      TagRef["div"].`class`.add("a")).toHtml
+    assert(html == """<div class="b a"></div>""")
+  }
+
+  test("Toggle class") {
+    val div  = html"""<div class="b"></div>"""
+    val html = div.update(implicit ctx =>
+      TagRef["div"].`class`.toggle("b")).toHtml
+    assert(html == """<div></div>""")
+  }
+
+  test("Toggle class (2)") {
+    val div  = html"""<div></div>"""
+    val html = div.update(implicit ctx =>
+      TagRef["div"].`class`.toggle("b")).toHtml
+    assert(html == """<div class="b"></div>""")
   }
 
   test("Update class on ByClass reference") {

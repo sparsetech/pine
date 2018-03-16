@@ -177,21 +177,31 @@ val html = div.update(implicit ctx =>
 // <div><a href="/a/test">A</a><a href="/b/test">B</a></div>
 ```
 
-## DSL
-To facilitate interaction with nodes, Pine provides a small DSL with extensions.
-
-For example, to toggle one or multiple CSS tags, use `css()`:
-
-```scala
-val div = TagRef[tag.Div]("div")
-div.css(false, "a", "b")  // Remove the CSS tags "a" and "b" from div
-```
-
-For toggling the visibility of a node, use `hide()`:
+## HTML/CSS extensions
+Pine's DSL provides extensions to facilitate interaction with HTML/CSS. For toggling the visibility of a node, you can use `hide()`:
 
 ```scala
 div.hide(true)  // Sets `style` attribute to hide the element in the browser
 ```
+
+## Token list attributes
+There are certain HTML attributes whose values are encoded as space-separated tokens. `class` and `rel` are the most prominent examples.
+
+These attributes have a special mapping in Pine that models their underlying sequential nature:
+
+```scala
+tag.Div.`class`("a", "b")           // Sets the classes "a" and "b"
+tag.Div.`class`.set(Seq("a", "b"))  // Same as before
+tag.Div.`class`.get                 // Returns the list of classes
+tag.Div.`class`.add("a")            // Adds the class "a"
+tag.Div.`class`.remove("a")         // Removes the class "a"
+tag.Div.`class`.clear()             // Removes all classes
+tag.Div.`class`.toggle("a")         // Toggles the class "a"
+tag.Div.`class`.state(value, "a")   // Adds the class "a" if value is true, remove otherwise
+tag.Div.`class`.update(_ :+ "a")    // Updates the classes
+```
+
+The same functionality is available on `TagRef`s.
 
 ## Custom attributes
 If you would like to support custom attributes, you can extend the functionality of any tag by defining an implicit class. This is the same approach which Pine uses internally to define attributes for HTML elements.

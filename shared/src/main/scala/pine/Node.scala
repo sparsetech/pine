@@ -171,13 +171,13 @@ case class Tag[TagName <: Singleton](tagName   : String with TagName,
   def suffixIds(suffix: String): Tag[TagName] =
     if (suffix.isEmpty) copy()
     else mapRoot {
-      case t @ Tag(_, _, _) if t.id().nonEmpty => t.id(t.id() + suffix)
+      case t @ Tag(_, _, _) if t.id.get.nonEmpty => t.id.set(t.id.get + suffix)
       case n => n
     }
 
   def byIdOpt(id: String): Option[Tag[_]] =
     find {
-      case t @ Tag(_, _, _) => t.id() == id
+      case t @ Tag(_, _, _) => t.id.get == id
       case _                => false
     }.map(_.asInstanceOf[Tag[_]])
 
@@ -195,12 +195,9 @@ case class Tag[TagName <: Singleton](tagName   : String with TagName,
     byTagOpt[U].getOrElse(
       throw new IllegalArgumentException(s"Invalid tag name '$tagName'"))
 
-  def hasClass(`class`: String): Boolean =
-    this.`class`().split(' ').toSet.contains(`class`)
-
   def byClassOpt(`class`: String): Option[Tag[_]] =
     find {
-      case t: Tag[_] => t.hasClass(`class`)
+      case t: Tag[_] => t.`class`.has(`class`)
       case _         => false
     }.map(_.asInstanceOf[Tag[_]])
 

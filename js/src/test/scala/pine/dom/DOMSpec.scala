@@ -282,7 +282,7 @@ class DOMSpec extends FunSuite {
     assert(input.dom.isInstanceOf[List[dom.html.Span]])
     assert(input.dom.length == 2)
 
-    DOM.render(implicit ctx => input.`class`.remove())
+    DOM.render(implicit ctx => input.`class`.clear())
     assert(DOM.toTree(node).toHtml == "<div><span></span><span></span></div>")
 
     dom.document.body.removeChild(node)
