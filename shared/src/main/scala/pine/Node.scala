@@ -195,6 +195,12 @@ case class Tag[TagName <: Singleton](tagName   : String with TagName,
     byIdOpt(id)
       .getOrElse(throw new IllegalArgumentException(s"Invalid node ID '$id'"))
 
+  def byTagAll[U <: Singleton](implicit vu: ValueOf[U]): List[Tag[U]] =
+    filter {
+      case Tag(vu.value, _, _) => true
+      case _                   => false
+    }.map(_.asInstanceOf[Tag[U]])
+
   def byTagOpt[U <: Singleton](implicit vu: ValueOf[U]): Option[Tag[U]] =
     find {
       case Tag(vu.value, _, _) => true
@@ -204,6 +210,12 @@ case class Tag[TagName <: Singleton](tagName   : String with TagName,
   def byTag[U <: Singleton](implicit ct: ValueOf[U]): Tag[U] =
     byTagOpt[U].getOrElse(
       throw new IllegalArgumentException(s"Invalid tag name '$tagName'"))
+
+  def byClassAll(`class`: String): List[Tag[_]] =
+    filter {
+      case t: Tag[_] => t.`class`.has(`class`)
+      case _         => false
+    }.map(_.asInstanceOf[Tag[_]])
 
   def byClassOpt(`class`: String): Option[Tag[_]] =
     find {

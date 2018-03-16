@@ -125,6 +125,19 @@ class NodeSpec extends FunSuite {
     assert(modified == div2)
   }
 
+  test("byTagAll") {
+    val div = html"""
+      <div>
+        <div><span>hello</span></div>
+        <div><span>world</span></div>
+      </div>
+    """
+
+    assert(div.byTagAll["span"] == List(
+      tag.Span.set("hello"), tag.Span.set("world")
+    ))
+  }
+
   test("Prepend") {
     val div = html"""<div><br/></div>"""
     val str = (div +: html"""<span></span>""").toHtml
