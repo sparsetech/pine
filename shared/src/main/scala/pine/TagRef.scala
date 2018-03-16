@@ -34,6 +34,9 @@ sealed trait TagRef[T <: Singleton] {
   def insertAt(position: Int, node: Node)(implicit renderCtx: RenderContext): Unit =
     renderCtx.render(this, Diff.InsertAt(position, List(node)))
 
+  def clearAll()(implicit renderCtx: RenderContext): Unit =
+    renderCtx.render(this, Diff.SetChildren(List.empty))
+
   def :=(nodes: List[Node])(implicit renderCtx: RenderContext): Unit =
     set(nodes)
   def :=(node: Node)(implicit renderCtx: RenderContext): Unit = set(node)

@@ -88,6 +88,12 @@ class TagRefSpec extends FunSuite {
     assert(updated == tag.Div.set(tag.B))
   }
 
+  test("Clear nodes") {
+    val div  = html"""<div><span><hr/></span></div>"""
+    val html = div.update(implicit ctx => TagRef["span"].clearAll()).toHtml
+    assert(html == "<div><span></span></div>")
+  }
+
   test("Update class on ByClass reference") {
     val node = tag.Div.`class`("test")
     val ref  = TagRef.ByClass[tag.Div]("test")
