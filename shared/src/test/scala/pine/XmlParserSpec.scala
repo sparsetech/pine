@@ -34,4 +34,27 @@ class XmlParserSpec extends FunSuite {
     val xml = "<b>&amp;</b>"
     assert(XmlParser.fromString(xml) == tag.B.set("&"))
   }
+
+  test("Parse CDATA") {
+    val html = "<node><![CDATA[hello]]></node>"
+    val node = XmlParser.fromString(html)
+    assert(node == Tag("node").set(Text("hello")))
+  }
+
+  // From https://www.soapui.org/docs/functional-testing/working-with-cdata.html
+  test("Parse CDATA (2)") {
+    val html = "<message><![CDATA[<data>embedded XML</data>]]></message>"
+    val node = XmlParser.fromString(html)
+    assert(node == Tag("message").set(Text("<data>embedded XML</data>")))
+  }
+
+  test("Parse CDATA (3)") {
+    val html = "<message><![CDATA[<data>embedded XML <![CDATA[<text>with XML</text>]]]]>><![CDATA[</data>]]></message>"
+    val node = XmlParser.fromString(html)
+    assert(node == Tag("message").set(List(
+      Text("<data>embedded XML <![CDATA[<text>with XML</text>]]"),
+      Text(">"),
+      Text("</data>"))
+    ))
+  }
 }

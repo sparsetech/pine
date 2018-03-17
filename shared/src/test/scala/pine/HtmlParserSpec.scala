@@ -156,6 +156,18 @@ class HtmlParserSpec extends FunSuite {
     assert(node.toHtml == html)
   }
 
+  test("Do not handle CDATA") {
+    val html = """<script>// <![CDATA[
+var x = 42;
+// ]]></script>"""
+
+    val node = HtmlParser.fromString(html)
+    assert(node == tag.Script.set(
+      """// <![CDATA[
+var x = 42;
+// ]]>"""))
+  }
+
   test("Parse script nodes") {
     val html = """<script>i < len</script>"""
     val node = HtmlParser.fromString(html)

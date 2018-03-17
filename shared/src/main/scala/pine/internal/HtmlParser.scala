@@ -75,6 +75,10 @@ object HtmlParser {
     if (reader.prefix("<?xml"))
       reader.collect('>').orElse(expected(reader, ">"))
 
+  def parseCdata(reader: Reader): Option[Text] =
+    if (!reader.prefix("<![CDATA[")) None
+    else reader.collect("]]>").map(Text).orElse(expected(reader, "]]>"))
+
   def parseTag(reader: Reader, xml: Boolean): Option[Tag[_]] =
     if (!reader.prefix("<")) None
     else {
@@ -96,7 +100,9 @@ object HtmlParser {
   }
 
   def parseNode(reader: Reader, xml: Boolean): Option[Node] =
-    parseTag(reader, xml).orElse(parseText(reader, xml))
+    (if (!xml) None else parseCdata(reader))
+      .orElse(parseTag(reader, xml))
+      .orElse(parseText(reader, xml))
 
   def parseRootNode(reader: Reader, xml: Boolean): Option[Tag[_]] = {
     while (skipComment(reader)) {}

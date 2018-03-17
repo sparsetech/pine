@@ -5,7 +5,7 @@ import org.scalajs.dom.{Document, DOMParser, Element}
 import pine.dom.DOM
 
 private object DomParser {
-  val parser = new DOMParser()
+  val parser = new DOMParser
 
   def parse(content: String, mimeType: String): Document = {
     val document   = parser.parseFromString(content, mimeType)
