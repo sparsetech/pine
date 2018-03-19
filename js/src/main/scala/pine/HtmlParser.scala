@@ -32,9 +32,7 @@ object HtmlParser {
         ) match {
           case None => throw new ParseError("Empty tag name")
           case Some(tn) =>
-            val e = DomParser.parse(html, "text/html").getElementsByTagName(tn)
-            // TODO getElementsByTagName should return ElementList
-            e(0).asInstanceOf[Element]
+            DomParser.parse(html, "text/html").getElementsByTagName(tn)(0)
         }
       }
 
