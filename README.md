@@ -71,7 +71,7 @@ addCompilerPlugin("org.scala-js" % "scalajs-compiler" % scalaJSVersion cross Cro
 ### Scala Native settings
 ```scala
 libraryDependencies := libraryDependencies.value.filterNot(_.name == "nscplugin")
-addCompilerPlugin("org.scala-native" % "nscplugin" % "0.3.6" cross CrossVersion.patch)
+addCompilerPlugin("org.scala-native" % "nscplugin" % nativeVersion cross CrossVersion.patch)
 ```
 
 ### Dependencies

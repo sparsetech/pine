@@ -80,7 +80,7 @@ lazy val pine = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     excludeFilter in Test := "*",
 
     libraryDependencies := libraryDependencies.value.filterNot(_.name == "nscplugin"),
-    addCompilerPlugin("org.scala-native" % "nscplugin" % "0.3.6" cross CrossVersion.patch),
+    addCompilerPlugin("org.scala-native" % "nscplugin" % nativeVersion cross CrossVersion.patch),
 
     // Not available for 2.12 yet
     scalaVersion       := Scala2_11,
