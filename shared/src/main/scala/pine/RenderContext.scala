@@ -33,13 +33,15 @@ class NodeRenderContext extends RenderContext {
 
   def commit[T <: Singleton](tag: Tag[T]): Tag[T] = {
     val r = render(tag)
-    if (r.isEmpty) throw new Exception("Root node cannot be removed")
-    else if (diffs.exists {
-      case (TagRef.Each(_), _) => false
-      case (TagRef.Opt (_), _) => false
-      case _ => true
-    }) throw new Exception(s"Some diffs could not be applied: $diffs")
-    assert(r.length == 1)
-    r.head.asInstanceOf[Tag[T]]
+    if (r.length != 1) throw new Exception("The root must consist of exactly one node")
+    else {
+      if (diffs.exists {
+        case (TagRef.Each(_), _) => false
+        case (TagRef.Opt(_), _) => false
+        case _ => true
+      }) throw new Exception(s"Some diffs could not be applied: $diffs")
+
+      r.head.asInstanceOf[Tag[T]]
+    }
   }
 }
