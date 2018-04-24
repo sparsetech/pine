@@ -173,13 +173,13 @@ trait Implicits {
     }
   }
 
-  implicit class TagRefTokenListAttributeExtensions[T <: Singleton, U](
-    attribute: TagRefTokenListAttribute[T]
+  implicit class TagRefTokenSetAttributeExtensions[T <: Singleton, U](
+    attribute: TagRefTokenSetAttribute[T]
   ) {
     def get(implicit js: Js[T]): List[String] = {
       val node = attribute.parent.dom
       Option(node.getAttribute(attribute.name))
-        .map(HtmlHelpers.parseTokenList).getOrElse(List.empty)
+        .map(HtmlHelpers.parseTokenSet).getOrElse(List.empty)
     }
   }
 }

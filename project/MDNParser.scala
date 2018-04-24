@@ -32,7 +32,7 @@ object MDNParser {
     "spellcheck", "translate", "truespeed", "typemustmatch", "visible")
 
   /** @see https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList */
-  val TokenListAttributes = Set("class", "rel", "sandbox")
+  val TokenSetAttributes = Set("class", "rel", "sandbox")
 
   val FilterTags = Set("element")  // Invalid tags
 
@@ -163,8 +163,8 @@ object MDNParser {
       val attrType = mapDomType(attribute.tpe)
       val elementNameAttr = elementName.fold("T")(el => s"tag.${el.capitalize}")
 
-      if (attrType == "TokenList")
-        p.println(s"""    val $attrName = TagRefTokenListAttribute[$elementNameAttr](tagRef, "${attribute.name}")""")
+      if (attrType == "TokenSet")
+        p.println(s"""    val $attrName = TagRefTokenSetAttribute[$elementNameAttr](tagRef, "${attribute.name}")""")
       else
         p.println(s"""    val $attrName = TagRefAttribute[$elementNameAttr, $attrType](tagRef, "${attribute.name}")""")
     }
@@ -216,8 +216,8 @@ object MDNParser {
       val attrType = mapDomType(attribute.tpe)
       val elementNameAttr = elementName.getOrElse("T")
 
-      if (attrType == "TokenList")
-        p.println(s"""    val $attrName = TagTokenListAttribute[$elementNameAttr](tag, "${attribute.name}")""")
+      if (attrType == "TokenSet")
+        p.println(s"""    val $attrName = TagTokenSetAttribute[$elementNameAttr](tag, "${attribute.name}")""")
       else
         p.println(s"""    val $attrName = TagAttribute[$elementNameAttr, $attrType](tag, "${attribute.name}")""")
     }
@@ -253,7 +253,7 @@ object MDNParser {
       else {
         val tpe =
           if (BooleanAttributes.contains(name)) "Boolean"
-          else if (TokenListAttributes.contains(name)) "TokenList"
+          else if (TokenSetAttributes.contains(name)) "TokenSet"
           else "String"
 
         Some(Attribute(name, deprecated || deleted || obsolete, docs, tpe))

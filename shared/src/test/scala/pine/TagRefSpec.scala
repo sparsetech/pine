@@ -125,6 +125,42 @@ class TagRefSpec extends FunSuite {
     assert(html == """<div class="b a"></div>""")
   }
 
+  test("Add existing class") {
+    val div  = html"""<div class="a b"></div>"""
+    val html = div.update(implicit ctx =>
+      TagRef["div"].`class`.add("a")).toHtml
+    assert(html == """<div class="a b"></div>""")
+  }
+
+  test("Add existing class (2)") {
+    // Retain order
+    val div  = html"""<div class="b a"></div>"""
+    val html = div.update(implicit ctx =>
+      TagRef["div"].`class`.add("a")).toHtml
+    assert(html == """<div class="b a"></div>""")
+  }
+
+  test("Add existing class (3)") {
+    val div  = html"""<div class="b a"></div>"""
+    val html = div.update(implicit ctx =>
+      TagRef["div"].`class`.state(true, "a")).toHtml
+    assert(html == """<div class="b a"></div>""")
+  }
+
+  test("Remove non-existing class") {
+    val div  = html"""<div class="a b"></div>"""
+    val html = div.update(implicit ctx =>
+      TagRef["div"].`class`.remove("c")).toHtml
+    assert(html == """<div class="a b"></div>""")
+  }
+
+  test("Remove non-existing class (2)") {
+    val div  = html"""<div class="b a"></div>"""
+    val html = div.update(implicit ctx =>
+      TagRef["div"].`class`.remove("c")).toHtml
+    assert(html == """<div class="b a"></div>""")
+  }
+
   test("Toggle class") {
     val div  = html"""<div class="b"></div>"""
     val html = div.update(implicit ctx =>

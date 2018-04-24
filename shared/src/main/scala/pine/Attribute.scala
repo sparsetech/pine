@@ -44,20 +44,31 @@ case class TagRefAttribute[T <: Singleton, U](parent: TagRef[T], name: String)
   def :=(value: U)(implicit renderCtx: RenderContext): Unit = set(value)
 }
 
-/** Set of space-separated tokens */
-case class TagTokenListAttribute[T <: Singleton](parent: Tag[T], name: String) {
+/**
+  * Insertion order preserving set of space-separated tokens
+  *
+  * @see https://html.spec.whatwg.org/#ordered-set-of-unique-space-separated-tokens
+  * @see https://dom.spec.whatwg.org/#interface-domtokenlist
+  */
+case class TagTokenSetAttribute[T <: Singleton](parent: Tag[T], name: String) {
   def get: List[String] =
-    parent.attr(name).map(HtmlHelpers.parseTokenList).getOrElse(List.empty)
+    parent.attr(name).map(HtmlHelpers.parseTokenSet).getOrElse(List.empty)
   def set(value: String): Tag[T] = parent.setAttr(name, value)
   def set(values: Seq[String]): Tag[T] =
     if (values.isEmpty) parent.remAttr(name)
     else parent.setAttr(name, values.mkString(" "))
   def has(value: String): Boolean = get.contains(value)
-  def add(value: String): Tag[T] = set(get :+ value)
+  def add(value: String): Tag[T] = {
+    val current = get
+    if (current.contains(value)) parent else set(current :+ value)
+  }
   def remove(value: String): Tag[T] = set(get.diff(List(value)))
   def clear(): Tag[T] = parent.remAttr(name)
-  def toggle(value: String): Tag[T] =
-    if (has(value)) remove(value) else add(value)
+  def toggle(value: String): Tag[T] = {
+    val current = get
+    if (current.contains(value)) set(current.diff(List(value)))
+    else set(current :+ value)
+  }
   def state(state: Boolean, value: String): Tag[T] =
     if (state) add(value) else remove(value)
   def update(f: List[String] => List[String]): Tag[T] = set(f(get))
@@ -66,7 +77,7 @@ case class TagTokenListAttribute[T <: Singleton](parent: Tag[T], name: String) {
   def apply(values: String*): Tag[T] = set(values)
 }
 
-case class TagRefTokenListAttribute[T <: Singleton](
+case class TagRefTokenSetAttribute[T <: Singleton](
   parent: TagRef[T], name: String
 ) {
   def set(value: String)(implicit renderCtx: RenderContext): Unit =
@@ -81,7 +92,10 @@ case class TagRefTokenListAttribute[T <: Singleton](
   }
 
   def add(value: String)(implicit renderCtx: RenderContext): Unit =
-    update(_ :+ value)
+    update { current =>
+      if (current.contains(value)) current
+      else current :+ value
+    }
 
   def remove(value: String)(implicit renderCtx: RenderContext): Unit =
     update(_.diff(List(value)))
@@ -96,13 +110,16 @@ case class TagRefTokenListAttribute[T <: Singleton](
 
   def state(state: Boolean, value: String)
             (implicit renderCtx: RenderContext): Unit =
-    update(values => if (state) values :+ value else values.diff(List(value)))
+    update(values =>
+      if (!state) values.diff(List(value))
+      else if (values.contains(value)) values
+      else values :+ value)
 
   def update(f: List[String] => List[String])
             (implicit renderCtx: RenderContext): Unit =
     renderCtx.render(parent, Diff.UpdateAttribute(name, { oldValue =>
       val current =
-        oldValue.map(HtmlHelpers.parseTokenList).getOrElse(List.empty)
+        oldValue.map(HtmlHelpers.parseTokenSet).getOrElse(List.empty)
       val updated = f(current)
       if (updated.isEmpty) None else Some(updated.mkString(" "))
     }))

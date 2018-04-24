@@ -299,6 +299,33 @@ class NodeSpec extends FunSuite {
     assert(result.toHtml == """<div class="a"></div>""")
   }
 
+  test("Add existing class") {
+    val div = html"""<div class="a b"></div>""".`class`.add("a")
+    assert(div.toHtml == """<div class="a b"></div>""")
+  }
+
+  test("Add existing class (2)") {
+    // Retain order
+    val div = html"""<div class="b a"></div>""".`class`.add("a")
+    assert(div.toHtml == """<div class="b a"></div>""")
+  }
+
+  test("Add existing class (3)") {
+    val div = html"""<div class="b a"></div>""".`class`
+      .state(true, "a")
+    assert(div.toHtml == """<div class="b a"></div>""")
+  }
+
+  test("Remove non-existing class") {
+    val div = html"""<div class="a b"></div>""".`class`.remove("c")
+    assert(div.toHtml == """<div class="a b"></div>""")
+  }
+
+  test("Remove non-existing class (2)") {
+    val div = html"""<div class="b a"></div>""".`class`.remove("c")
+    assert(div.toHtml == """<div class="b a"></div>""")
+  }
+
   test("Encode Long attribute") {
     val input = html"""<input></input>"""
     val updated = input.update { implicit ctx =>
