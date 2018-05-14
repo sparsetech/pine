@@ -56,9 +56,6 @@ scalaVersion      := "2.12.4-bin-typelevel-4"  // or "2.11.11-bin-typelevel-4"
 scalaOrganization := "org.typelevel"
 scalacOptions     += "-Yliteral-types"
 
-addCompilerPlugin(
-  "org.scalamacros" % "paradise" % Paradise cross CrossVersion.patch)
-
 libraryDependencies += scalaOrganization.value % "scala-reflect" % scalaVersion.value
 ```
 
