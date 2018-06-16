@@ -6,7 +6,7 @@ val Scala2_11  = "2.11.11-bin-typelevel-4"
 val Scala2_12  = "2.12.4-bin-typelevel-4"
 val ScalaTest  = "3.0.5"
 val ScalaCheck = "1.14.0"
-val ScalaJsDom = "0.9.5"
+val ScalaJsDom = "0.9.6"
 
 val SharedSettings = Seq(
   name         := "pine",
