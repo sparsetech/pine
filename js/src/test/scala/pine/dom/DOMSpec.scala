@@ -390,4 +390,48 @@ class DOMSpec extends FunSuite {
     assert(node.disabled)
     dom.document.body.removeChild(node)
   }
+
+  test("Render attributes in a namespace") {
+    val node = tag.Div.setAttr("a:b:c", "test").toDom
+    assert(node.getAttribute("a:b:c") == "test")
+    assert(node.getAttributeNS("a:b", "c") == null)
+  }
+
+  test("Render SVG node") {
+    val input =
+      xml"""
+        <svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="test">
+          <circle pn:id="circle" a:b:c="test" cx="50" cy="50" r="40" fill="blue" />
+        </svg>
+      """.as["svg"]
+    val node = input.toDom
+
+    assert(node.getAttribute("xmlns") == "http://www.w3.org/2000/svg")
+    assert(node.getAttribute("xmlns:xlink") == "http://www.w3.org/1999/xlink")
+
+    assert(node.getAttributeNS("xmlns", "xlink") == null)
+
+    // TODO These two assertions were commented out because jsdom's behaviour
+    //      diverges from Chromium's
+    // assert(node.getAttributeNS(null, "xmlns") == null)
+    // assert(node.getAttributeNS(null, "xmlns:xlink") == null)
+
+    assert(node.getAttribute("class") == "test")
+    assert(node.getAttributeNS(null, "class") == "test")
+    assert(node.getAttributeNS(null, "viewBox") == "0 0 300 100")
+
+    assert(node
+      .getElementsByTagNameNS(null, "circle")
+      .length == 0)
+
+    val circle = node
+      .getElementsByTagNameNS("http://www.w3.org/2000/svg", "circle")
+      .item(0)
+
+    assert(circle.getAttributeNS(null, "cx") == "50")
+    assert(circle.getAttribute("pn:id") == "circle")
+    assert(circle.getAttributeNS("pn", "id") == null)
+    assert(circle.getAttribute("a:b:c") == "test")
+    assert(circle.getAttributeNS("a:b", "c") == null)
+  }
 }

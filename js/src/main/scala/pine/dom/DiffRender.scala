@@ -2,7 +2,7 @@ package pine.dom
 
 import scala.collection.mutable
 
-import org.scalajs.dom.html.Element
+import org.scalajs.dom.Element
 
 import pine._
 
