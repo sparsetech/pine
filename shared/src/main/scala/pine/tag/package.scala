@@ -185,6 +185,8 @@ package object tag {
   val Style = Tag("style")
   type Summary = "summary"
   val Summary = Tag("summary")
+  type Svg = "svg"
+  val Svg = Tag("svg")
   type Table = "table"
   val Table = Tag("table")
   type Tbody = "tbody"

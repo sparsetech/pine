@@ -82,5 +82,5 @@ object Js extends JsLowPrio {
   implicit object JsUl extends JsHtml[tag.Ul] { override type X = dom.html.UList }
   implicit object JsVideo extends JsHtml[tag.Video] { override type X = dom.html.Video }
 
-  implicit object JsSvg extends JsSvg["svg"] { override type X = dom.svg.SVG }
+  implicit object JsSvg extends JsSvg[tag.Svg] { override type X = dom.svg.SVG }
 }

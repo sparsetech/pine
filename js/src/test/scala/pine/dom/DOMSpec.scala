@@ -403,7 +403,7 @@ class DOMSpec extends FunSuite {
         <svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="test">
           <circle pn:id="circle" a:b:c="test" cx="50" cy="50" r="40" fill="blue" />
         </svg>
-      """.as["svg"]
+      """.as[tag.Svg]
     val node = input.toDom
 
     assert(node.getAttribute("xmlns") == "http://www.w3.org/2000/svg")
