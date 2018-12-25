@@ -1,7 +1,7 @@
 package pine.dom
 
 import org.scalajs.dom
-import org.scalajs.dom.html.Element
+import org.scalajs.dom.Element
 import org.scalajs.dom.document
 
 import pine._

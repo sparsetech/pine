@@ -20,6 +20,7 @@ object MDNParser {
   val GlobalAttributesUrl = "https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes"
   val AdditionalTagUrls = Set("a", "b", "i", "br", "span", "em", "strong", "small", "code")
     .map(ElementsUrl + "/" + _)
+  val AdditionalElements = Set(Element("svg", "", Seq()))
 
   /** Boolean attributes do not require a value */
   val BooleanAttributes = Set("allowfullscreen", "async", "autofocus",
@@ -384,7 +385,8 @@ object MDNParser {
         println(s"Link $additionalTag missing in index")
     }
 
-    val parsedElements = (elements ++ AdditionalTagUrls).flatMap(processElement)
+    val parsedElements = (elements ++ AdditionalTagUrls)
+                           .flatMap(processElement) ++ AdditionalElements
     val globalAttrs = globalAttributes()
 
     val attrsFile = writePackageFile(pinePath, parsedElements, globalAttrs)
