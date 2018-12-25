@@ -1,0 +1,44 @@
+[project]
+scalaVersion   = "2.12.4-bin-typelevel-4"
+scalaJsVersion = "0.6.26"
+scalaOptions   = [
+  "-encoding", "UTF-8",
+  "-unchecked",
+  "-deprecation",
+  "-Xfuture",
+  "-Yno-adapted-args",
+  "-Ywarn-numeric-widen",
+  "-feature",
+  "-Yliteral-types"
+]
+scalaOrganisation = "org.typelevel"
+testFrameworks = [
+  "org.scalatest.tools.Framework",
+  "org.scalacheck.ScalaCheckFramework"
+]
+
+[module.pine]
+root    = "shared"
+sources = ["shared/src/main/scala"]
+targets = ["js", "jvm"]
+
+[module.pine.test]
+sources   = ["shared/src/test/scala"]
+targets   = ["js", "jvm"]
+scalaDeps = [
+  ["org.scalatest" , "scalatest" , "3.0.5" ],
+  ["org.scalacheck", "scalacheck", "1.14.0"]
+]
+
+[module.pine.jvm]
+sources = ["jvm/src/main/scala"]
+
+[module.pine.js]
+sources = ["js/src/main/scala"]
+scalaDeps = [
+  ["org.scala-js", "scalajs-dom", "0.9.6"]
+]
+
+[module.pine.test.js]
+jsdom   = true
+sources = ["js/src/test/scala"]

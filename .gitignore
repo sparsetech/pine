@@ -18,3 +18,4 @@ project/plugins/project/
 .idea
 
 node_modules/
+.bloop/
