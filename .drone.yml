@@ -1,0 +1,16 @@
+kind: pipeline
+name: default
+steps:
+  - name: build
+    image: tindzk/seed:0.1.2
+    commands:
+      - apk add --no-cache yarn
+      - yarn add jsdom
+      - blp-server &
+      - seed --build=build211.toml bloop
+      - bloop compile pine-native
+      - bloop test pine-jvm pine-js
+      - sleep 5  # Synchronise analysis.bin files, otherwise rm might fail
+      - rm -rf .bloop build
+      - seed --build=build212.toml bloop
+      - bloop test pine-jvm pine-js
