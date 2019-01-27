@@ -32,9 +32,11 @@ scalaDeps = [
 ]
 
 [module.pine.jvm]
+root    = "jvm"
 sources = ["jvm/src/main/scala"]
 
 [module.pine.js]
+root    = "js"
 sources = ["js/src/main/scala"]
 scalaDeps = [
   ["org.scala-js", "scalajs-dom", "0.9.6"]
