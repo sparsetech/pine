@@ -180,11 +180,9 @@ case class Tag[TagName <: Singleton](tagName   : String with TagName,
     if (suffix.isEmpty || attributes.isEmpty) copy()
     else mapRoot {
       case t @ Tag(_, _, _) =>
-        attributes
-          .foldLeft(t) { case (acc, attr) =>
-            if (acc.attr(attr).exists(_.nonEmpty)) acc.setAttr(attr, acc.attr(attr) + suffix)
-            else acc
-          }
+        attributes.foldLeft(t) { case (acc, attr) =>
+          acc.attr(attr).filter(_.nonEmpty).fold(acc)(value => acc.setAttr(attr, value + suffix))
+        }
       case n => n
     }
 
