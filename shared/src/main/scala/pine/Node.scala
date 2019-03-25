@@ -168,11 +168,23 @@ case class Tag[TagName <: Singleton](tagName   : String with TagName,
   def partialMap(f: PartialFunction[Node, Node]): Tag[TagName] =
     map(node => f.lift(node).getOrElse(node))
 
-  /** Recursively adds `suffix` to every ID attribute */
-  def suffixIds(suffix: String): Tag[TagName] =
-    if (suffix.isEmpty) copy()
+  /**
+    * Recursively adds `suffix` to every given attribute.
+    *
+    * @param suffix the text to add to the attribute value
+    * @param attributes which attributes to add the suffix to, by default this is just `Set("id")`
+    *                   for backward compatibility reasons. Use [[Tag.IdAttributeNames]] for
+    *                   a more comprehensive set.
+    */
+  def suffixIds(suffix: String, attributes: Set[String] = Set("id")): Tag[TagName] =
+    if (suffix.isEmpty || attributes.isEmpty) copy()
     else mapRoot {
-      case t @ Tag(_, _, _) if t.id.get.nonEmpty => t.id.set(t.id.get + suffix)
+      case t @ Tag(_, _, _) =>
+        attributes
+          .foldLeft(t) { case (acc, attr) =>
+            if (acc.attr(attr).exists(_.nonEmpty)) acc.setAttr(attr, acc.attr(attr) + suffix)
+            else acc
+          }
       case n => n
     }
 
@@ -224,4 +236,11 @@ case class Tag[TagName <: Singleton](tagName   : String with TagName,
     }.map(_.asInstanceOf[Tag[_]])
 
   def byClass(`class`: String): Tag[_] = byClassOpt(`class`).get
+}
+
+object Tag {
+  /** Attributes that contain HTML id's. Can be used in [[Tag.suffixIds()]].
+    * The set can be extended in future Pine versions.
+    */
+  val IdAttributeNames = Set("id", "for", "list")
 }

@@ -125,6 +125,31 @@ class NodeSpec extends FunSuite {
     assert(modified == div2)
   }
 
+  test("suffixIds") {
+    val div = html"""
+      <div id="d" other="o">
+        <label for="dd">hello</label>
+        <input id="dd" value="world" list="ddlist">
+        <br>
+        <div><span data-a="c">hello</span></div>
+        <div><span data-b="c">world</span></div>
+      </div>
+    """
+
+    assert(
+      div.suffixIds("-suffix", Set("id", "for", "list", "data-b")) ==
+        html"""
+        <div id="d-suffix" other="o">
+          <label for="dd-suffix">hello</label>
+          <input id="dd-suffix" value="world" list="ddlist-suffix">
+          <br>
+          <div><span data-a="c">hello</span></div>
+          <div><span data-b="c-suffix">world</span></div>
+        </div>
+      """
+    )
+  }
+
   test("byTagAll") {
     val div = html"""
       <div>
