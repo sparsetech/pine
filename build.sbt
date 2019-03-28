@@ -4,7 +4,7 @@ import sbtcrossproject.{crossProject, CrossType}
 val Paradise   = "2.1.1"
 val Scala2_11  = "2.11.11-bin-typelevel-4"
 val Scala2_12  = "2.12.4-bin-typelevel-4"
-val ScalaTest  = "3.0.5"
+val ScalaTest  = "3.0.7"
 val ScalaCheck = "1.14.0"
 val ScalaJsDom = "0.9.6"
 

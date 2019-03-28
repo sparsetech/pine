@@ -26,7 +26,7 @@ targets = ["js", "jvm"]
 sources   = ["shared/src/test/scala"]
 targets   = ["js", "jvm"]
 scalaDeps = [
-  ["org.scalatest" , "scalatest" , "3.0.5" ],
+  ["org.scalatest" , "scalatest" , "3.0.7" ],
   ["org.scalacheck", "scalacheck", "1.14.0"]
 ]
 
