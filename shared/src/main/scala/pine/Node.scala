@@ -240,5 +240,5 @@ object Tag {
   /** Attributes that contain HTML id's. Can be used in [[Tag.suffixIds()]].
     * The set can be extended in future Pine versions.
     */
-  val IdAttributeNames = Set("id", "for", "list")
+  val IdAttributeNames = Set("id", "for", "list", "form", "headers")
 }
