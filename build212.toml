@@ -1,6 +1,6 @@
 [project]
 scalaVersion   = "2.12.4-bin-typelevel-4"
-scalaJsVersion = "0.6.26"
+scalaJsVersion = "0.6.28"
 scalaOptions   = [
   "-encoding", "UTF-8",
   "-unchecked",
@@ -18,29 +18,29 @@ testFrameworks = [
 ]
 
 [module.pine]
-root    = "shared"
-sources = ["shared/src/main/scala"]
+# root    = "."
+sources = ["src/main/scala"]
 targets = ["js", "jvm"]
 
 [module.pine.test]
-sources   = ["shared/src/test/scala"]
+sources   = ["src/test/scala"]
 targets   = ["js", "jvm"]
 scalaDeps = [
-  ["org.scalatest" , "scalatest" , "3.0.7" ],
+  ["org.scalatest" , "scalatest" , "3.0.8" ],
   ["org.scalacheck", "scalacheck", "1.14.0"]
 ]
 
 [module.pine.jvm]
-root    = "jvm"
-sources = ["jvm/src/main/scala"]
+# root    = "jvm"
+sources = ["src/main/scala-jvm"]
 
 [module.pine.js]
-root    = "js"
-sources = ["js/src/main/scala"]
+# root    = "js"
+sources = ["src/main/scala-js"]
 scalaDeps = [
   ["org.scala-js", "scalajs-dom", "0.9.6"]
 ]
 
 [module.pine.test.js]
 jsdom   = true
-sources = ["js/src/test/scala"]
+sources = ["src/test/scala-js"]

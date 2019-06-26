@@ -1,0 +1,5 @@
+-Xms768m
+-Xmx1536m
+-Xss2m
+-XX:+UseG1GC
+-XX:+CMSClassUnloadingEnabled
