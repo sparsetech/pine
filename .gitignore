@@ -19,3 +19,8 @@ project/plugins/project/
 
 node_modules/
 .bloop/
+.metals/
+*.DS_Store
+/package-lock.json
+/build/
+/seed

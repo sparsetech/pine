@@ -14,3 +14,4 @@ steps:
       - rm -rf .bloop build
       - seed --build=build212.toml bloop
       - bloop test pine-jvm pine-js
+
