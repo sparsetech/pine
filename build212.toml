@@ -40,6 +40,19 @@ scalaOptions   = [
     #    "-Ywarn-unused:implicits",           # Warn if an implicit parameter is unused.
     #    "-Ywarn-unused:params",              # Warn if a value parameter is unused.
     #    "-Ywarn-value-discard"               # Warn when non-Unit expression results are unused.
+
+       ### pre-13 options ###
+    
+    "-Xfuture",                          # Turn on future language features.
+    "-Xlint:by-name-right-associative",  # By-name parameter of right associative operator.
+    "-Xlint:unsound-match",              # Pattern match may not be typesafe.
+    "-Yliteral-types",                   # ... this is why we need the typelevel org
+    "-Yno-adapted-args",                 # Do not adapt an argument list (either by inserting () or creating a tuple) to match the receiver.
+    "-Ypartial-unification",             # Enable partial unification in type constructor inference
+    "-Ywarn-inaccessible",               # Warn about inaccessible types in method signatures.
+    "-Ywarn-infer-any",                  # Warn when a type argument is inferred to be `Any`.
+    "-Ywarn-nullary-override",           # Warn when non-nullary `def f()' overrides nullary `def f'.
+    "-Ywarn-nullary-unit",               # Warn when nullary methods return Unit.
 ]
 scalaOrganisation = "org.typelevel"
 testFrameworks = [
@@ -68,7 +81,7 @@ sources = ["src/main/scala-jvm"]
 root    = "src/main/scala-js"
 sources = ["src/main/scala-js"]
 scalaDeps = [
-  ["org.scala-js", "scalajs-dom", "0.9.6"]
+  ["org.scala-js", "scalajs-dom", "0.9.7"]
 ]
 
 [module.pine.test.js]
