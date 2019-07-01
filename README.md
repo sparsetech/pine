@@ -49,9 +49,15 @@ println(root.toDom)  // [object HTMLAnchorElement]
 ```
 
 ## sbt
-Pine makes use of a language extension called *literal types*, see [SIP-23](http://docs.scala-lang.org/sips/pending/42.type.html). For scala 2.11 and 2.13, only [Typelevel Scala](https://github.com/typelevel/scala) implements this feature. However, it's available in Lightbend Scala from 2.13 onwards.
+Pine makes use of a language extension called *literal types*, see [SIP-23](http://docs.scala-lang.org/sips/pending/42.type.html). For Scala 2.11 and 2.12, only [Typelevel Scala](https://github.com/typelevel/scala) implements this feature. However, it is available in Lightbend Scala from 2.13 onwards.
 
-### Global settings
+### 2.13 onwards
+```scala
+scalaVersion := "2.13.0"
+libraryDependencies += scalaOrganization.value % "scala-reflect" % scalaVersion.value
+```
+
+### < 2.13
 ```scala
 scalaVersion      := "2.12.4-bin-typelevel-4"  // or "2.11.11-bin-typelevel-4"
 scalaOrganization := "org.typelevel"
@@ -60,20 +66,13 @@ scalacOptions     += "-Yliteral-types"
 libraryDependencies += scalaOrganization.value % "scala-reflect" % scalaVersion.value
 ```
 
-or for 2.13
-
-```scala
-scalaVersion := "2.13.0"
-libraryDependencies += scalaOrganization.value % "scala-reflect" % scalaVersion.value
-```
-
-### Scala.js settings (only needed for 2.11, 2.12)
+#### Scala.js settings
 ```scala
 libraryDependencies := libraryDependencies.value.filterNot(_.name == "scalajs-compiler") 
 addCompilerPlugin("org.scala-js" % "scalajs-compiler" % scalaJSVersion cross CrossVersion.patch)
 ```
 
-### Scala Native settings
+#### Scala Native settings
 ```scala
 libraryDependencies := libraryDependencies.value.filterNot(_.name == "nscplugin")
 addCompilerPlugin("org.scala-native" % "nscplugin" % nativeVersion cross CrossVersion.patch)
@@ -96,3 +95,4 @@ Pine is licensed under the terms of the Apache v2.0 licence.
 * Tim Nieradzik
 * Matt Hicks
 * Anatoliy Kmetyuk
+* Keven Wright
