@@ -11,9 +11,12 @@ val V = new {
   val scalaJsDom = "0.9.7"
 }
 
+
+
 val GlobalSettings = nocomma {
   ThisBuild / name         := "pine"
   ThisBuild / organization := "tech.sparse"
+  ThisBuild / scalaVersion := V.scala2_13
 
   ThisBuild / pomExtra :=
     <url>https://github.com/sparsetech/pine</url>

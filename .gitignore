@@ -22,3 +22,5 @@ node_modules/
 .metals/
 *.DS_Store
 /package-lock.json
+/build/
+/seed
