@@ -2,7 +2,7 @@ kind: pipeline
 name: default
 steps:
   - name: build
-    image: tindzk/seed:0.1.2
+    image: tindzk/seed:0.1.4
     commands:
       - apk add --no-cache yarn
       - yarn add jsdom
@@ -14,4 +14,7 @@ steps:
       - rm -rf .bloop build
       - seed --build=build212.toml bloop
       - bloop test pine-jvm pine-js
-
+      - sleep 5
+      - rm -rf .bloop build
+      - seed --build=build213.toml bloop
+      - bloop test pine-jvm pine-js
