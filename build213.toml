@@ -1,13 +1,3 @@
-#########################################
-#
-# BIG ALERT
-#
-# Bloop doesn't support scala 2.13 at the moment, so this file isn't used yet.
-# But when bloop is ready, so are we!
-#
-#########################################
-
-
 [project]
 scalaVersion   = "2.13.0"
 scalaJsVersion = "0.6.28"
