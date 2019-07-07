@@ -11,32 +11,10 @@ val V = new {
   val scalaJsDom = "0.9.7"
 }
 
+ThisBuild / scalaVersion := V.scala2_13
 
-
-val GlobalSettings = nocomma {
-  ThisBuild / name         := "pine"
-  ThisBuild / organization := "tech.sparse"
-  ThisBuild / scalaVersion := V.scala2_13
-
-  ThisBuild / pomExtra :=
-    <url>https://github.com/sparsetech/pine</url>
-      <licenses>
-        <license>
-          <name>Apache-2.0</name>
-          <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
-        </license>
-      </licenses>
-      <scm>
-        <url>git@github.com:sparsetech/pine.git</url>
-      </scm>
-      <developers>
-        <developer>
-          <id>tindzk</id>
-          <name>Tim Nieradzik</name>
-          <url>http://github.com/tindzk</url>
-        </developer>
-      </developers>
-
+val commonSettings = nocomma {
+  name       := "pine"
   convertMDN := MDNParser.createFiles(new File("src/main/scala"))
 
   // See https://github.com/sbt/sbt/pull/2659
@@ -148,7 +126,7 @@ val NativeSettings = nocomma {
 }
 
 lazy val pine = (projectMatrix in file("."))
-  .settings( GlobalSettings )
+  .settings(commonSettings)
   .jvmPlatform(    Seq(V.scala2_13), JvmSettings    ++ Scala13Settings)
   .jvmPlatform(    Seq(V.scala2_12), JvmSettings    ++ Scala12Settings)
   .jvmPlatform(    Seq(V.scala2_11), JvmSettings    ++ Scala11Settings)
@@ -157,3 +135,26 @@ lazy val pine = (projectMatrix in file("."))
   .jsPlatform(     Seq(V.scala2_11), JsSettings     ++ Scala11Settings)
   .nativePlatform( Seq(V.scala2_11), NativeSettings ++ Pre13Settings)
 
+// root settings. src/ is handled by sbt-projectmatrix
+publish / skip := false
+Compile / sources := List()
+Test    / sources := List()
+
+// publish settings
+ThisBuild / organization := "tech.sparse"
+ThisBuild / homepage := Some(url("https://github.com/sparsetech/pine"))
+ThisBuild / licenses := List("Apache 2" -> url("https://www.apache.org/licenses/LICENSE-2.0.html"))
+ThisBuild / scmInfo := Some(
+  ScmInfo(
+    url("https://github.com/sparsetech/pine"),
+    "scm:git@github.com:sparsetech/pine.git"
+  )
+)
+ThisBuild / developers := List(
+  Developer(
+    id    = "tindzk",
+    name  = "Tim Nieradzik",
+    email = "@tindzk",
+    url   = url("http://github.com/tindzk")
+  )
+)
