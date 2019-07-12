@@ -7,7 +7,9 @@ val V = new {
   val scala2_12 = "2.12.4-bin-typelevel-4"
   val scala2_13 = "2.13.0"
   val scalaTest = "3.0.8"
+  val scalaTestNative = "3.2.0-SNAP10"
   val scalaCheck = "1.14.0"
+  val scalaCheckNative = "1.14.1"
   val scalaJsDom = "0.9.7"
 }
 
@@ -121,9 +123,16 @@ val JsSettings = nocomma {
 }
 
 val NativeSettings = nocomma {
+  libraryDependencies ++= Seq(
+    "org.scalatest"     %%% "scalatest"   % V.scalaTestNative  % "test",
+    "com.github.lolgab" %%% "scalacheck"  % V.scalaCheckNative % "test"
+  )
+
   libraryDependencies ~= (_.filterNot(_.name == "nscplugin"))
   addCompilerPlugin("org.scala-native" % "nscplugin" % nativeVersion cross CrossVersion.patch)
-  Test / excludeFilter := "*"
+
+  // See https://github.com/scalalandio/chimney/issues/78#issuecomment-419705142
+  nativeLinkStubs := true
 }
 
 lazy val pine = (projectMatrix in file("."))

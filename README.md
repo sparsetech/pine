@@ -23,14 +23,13 @@ Pine is a functional HTML5 and XML library for the Scala platform. It supports p
 * DSL for attaching/detaching events
 
 ## Compatibility
-| Back end   | Scala versions       | Remarks             |
-|:-----------|:---------------------|:--------------------|
-| JVM        | 2.11, 2.12, 2.13     | Fully supported     |
-| JavaScript | 2.11, 2.12, 2.13     | Fully supported (1) |
-| LLVM       | 2.11                 | Experimental (2)    |
+| Back end       | Scala versions   |
+|:---------------|:-----------------|
+| JVM            | 2.11, 2.12, 2.13 |
+| JavaScript (1) | 2.11, 2.12, 2.13 |
+| LLVM           | 2.11             |
 
 * (1) Adds support for browser DOM
-* (2) Presently, Scala Native does not support running ScalaTest/ScalaCheck test suites
 
 ## Examples
 ```scala
