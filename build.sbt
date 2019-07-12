@@ -114,7 +114,7 @@ val JsSettings = nocomma {
   // under the lighbend compiler it causes no harm
   // See https://github.com/scala-js/scala-js/pull/2954
   libraryDependencies ~= (_.filterNot(_.name == "scalajs-compiler"))
-  addCompilerPlugin("org.scala-js" % "scalajs-compiler" % scalaJSVersion cross CrossVersion.patch)  
+  addCompilerPlugin("org.scala-js" % "scalajs-compiler" % scalaJSVersion cross CrossVersion.patch)
 
   Test / jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
   Global / scalaJSStage := FastOptStage
@@ -122,6 +122,7 @@ val JsSettings = nocomma {
 
 val NativeSettings = nocomma {
   libraryDependencies ~= (_.filterNot(_.name == "nscplugin"))
+  addCompilerPlugin("org.scala-native" % "nscplugin" % nativeVersion cross CrossVersion.patch)
   Test / excludeFilter := "*"
 }
 
