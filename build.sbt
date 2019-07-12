@@ -7,7 +7,9 @@ val V = new {
   val scala2_12 = "2.12.4-bin-typelevel-4"
   val scala2_13 = "2.13.0"
   val scalaTest = "3.0.8"
+  val scalaTestNative = "3.2.0-SNAP10"
   val scalaCheck = "1.14.0"
+  val scalaCheckNative = "1.14.1"
   val scalaJsDom = "0.9.7"
 }
 
@@ -114,15 +116,23 @@ val JsSettings = nocomma {
   // under the lighbend compiler it causes no harm
   // See https://github.com/scala-js/scala-js/pull/2954
   libraryDependencies ~= (_.filterNot(_.name == "scalajs-compiler"))
-  addCompilerPlugin("org.scala-js" % "scalajs-compiler" % scalaJSVersion cross CrossVersion.patch)  
+  addCompilerPlugin("org.scala-js" % "scalajs-compiler" % scalaJSVersion cross CrossVersion.patch)
 
   Test / jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
   Global / scalaJSStage := FastOptStage
 }
 
 val NativeSettings = nocomma {
+  libraryDependencies ++= Seq(
+    "org.scalatest"     %%% "scalatest"   % V.scalaTestNative  % "test",
+    "com.github.lolgab" %%% "scalacheck"  % V.scalaCheckNative % "test"
+  )
+
   libraryDependencies ~= (_.filterNot(_.name == "nscplugin"))
-  Test / excludeFilter := "*"
+  addCompilerPlugin("org.scala-native" % "nscplugin" % nativeVersion cross CrossVersion.patch)
+
+  // See https://github.com/scalalandio/chimney/issues/78#issuecomment-419705142
+  nativeLinkStubs := true
 }
 
 lazy val pine = (projectMatrix in file("."))
