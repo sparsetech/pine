@@ -133,6 +133,9 @@ val NativeSettings = nocomma {
 
   // See https://github.com/scalalandio/chimney/issues/78#issuecomment-419705142
   nativeLinkStubs := true
+
+  // Workaround for "No documentation generated with unsuccessful compiler run"
+  sources in (Compile, doc) := Seq()
 }
 
 lazy val pine = (projectMatrix in file("."))
