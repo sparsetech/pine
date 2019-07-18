@@ -1,1 +1,6 @@
-version in ThisBuild := "0.1.6-SNAPSHOT"
+version in ThisBuild := {
+  import sys.process._
+  val version = Seq("git", "describe", "--tags").!!.trim.tail
+  println("[info] Setting version to: " + version)
+  version
+}
