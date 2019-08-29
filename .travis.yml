@@ -2,7 +2,7 @@ language: scala
 scala:
   - 2.11.11-bin-typelevel-4
 jdk:
-  - oraclejdk8
+  - openjdk8
 
 # See https://github.com/scala-js/scala-js/issues/2642
 install:
