@@ -156,6 +156,14 @@ class HtmlParserSpec extends FunSuite {
     assert(node.toHtml == html)
   }
 
+  test("Parse DOCTYPE (2)") {
+    // Parser must match DOCTYPE case-insensitively
+    // See https://html.spec.whatwg.org/multipage/syntax.html#the-doctype
+    val html = """<!doctype html><html><head lang="en"></head><body><span>42</span></body></html>"""
+    val node = HtmlParser.fromString(html)
+    assert(node.toHtml == html.replace("<!doctype", "<!DOCTYPE"))
+  }
+
   test("Do not handle CDATA") {
     val html = """<script>// <![CDATA[
 var x = 42;

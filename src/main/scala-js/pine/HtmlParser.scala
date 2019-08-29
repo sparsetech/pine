@@ -20,7 +20,7 @@ object HtmlParser {
     if (!html.startsWith("<")) throw new ParseError("Does not start with tag")
     val reader = new Reader(html)
     val node =
-      if (reader.prefix("<!DOCTYPE"))
+      if (reader.prefixIgnoreCase("<!DOCTYPE"))
         DomParser.parse(html, "text/html").documentElement
       else {
         // Skip leading comments
