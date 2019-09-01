@@ -94,7 +94,7 @@ object HtmlParser {
     }
 
   def parseText(reader: Reader, xml: Boolean): Option[Text] = {
-    val text = reader.collectUntil('<').getOrElse(reader.rest())
+    val text = reader.collectUntil('<').getOrElse(reader.restAdvance())
     if (text.isEmpty) None
     else Some(Text(HtmlHelpers.decodeText(text, xml)))
   }

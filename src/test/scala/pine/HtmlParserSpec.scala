@@ -223,4 +223,12 @@ var x = 42;
       internal.HtmlParser.fromString("<div>editable&&copy</div>", xml = false)
     }
   }
+
+  test("Ignore unclosed tags") {
+    assert(internal.HtmlParser.fromString("<html>", xml = false) == tag.Html)
+    assert(internal.HtmlParser.fromString("<html>\n", xml = false) == tag.Html.set("\n"))
+
+    assert(internal.HtmlParser.fromString("<html>", xml = true) == tag.Html)
+    assert(internal.HtmlParser.fromString("<html>\n", xml = true) == tag.Html.set("\n"))
+  }
 }

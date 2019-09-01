@@ -7,6 +7,12 @@ private[pine] class Reader(data: String) {
 
   def rest(): String = data.drop(offset)
 
+  def restAdvance(): String = {
+    val result = data.drop(offset)
+    offset = data.length
+    result
+  }
+
   /** Returns true if `value` matches */
   def lookahead(value: Char): Boolean = data(offset) == value
 
