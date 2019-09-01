@@ -68,7 +68,7 @@ object HtmlParser {
     }
 
   def skipDocType(reader: Reader): Unit =
-    if (reader.prefix("<!DOCTYPE"))
+    if (reader.prefixIgnoreCase("<!DOCTYPE"))
       reader.collect('>').orElse(expected(reader, ">"))
 
   def skipXml(reader: Reader): Unit =

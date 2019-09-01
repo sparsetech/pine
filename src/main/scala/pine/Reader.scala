@@ -13,6 +13,9 @@ private[pine] class Reader(data: String) {
     result
   }
 
+  /** Return next `n` characters (or less) without advancing pointer */
+  def take(n: Int): String = data.slice(offset, offset + n)
+
   /** Returns true if `value` matches */
   def lookahead(value: Char): Boolean = data(offset) == value
 
@@ -21,16 +24,23 @@ private[pine] class Reader(data: String) {
 
   /** Returns true if `value` matches and places pointer afterwards */
   def prefix(value: Char): Boolean =
-    if (data(offset) != value) false
-    else {
+    data(offset) == value && {
       offset += 1
       true
     }
 
   /** Returns true if `value` matches and places pointer afterwards */
   def prefix(value: String): Boolean =
-    if (!rest().startsWith(value)) false
-    else {
+    rest().startsWith(value) && {
+      offset += value.length
+      true
+    }
+
+  /** Returns true if `value` matches regardless of case and places pointer
+    * afterwards
+    */
+  def prefixIgnoreCase(value: String): Boolean =
+    take(value.length).equalsIgnoreCase(value) && {
       offset += value.length
       true
     }
