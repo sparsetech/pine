@@ -79,7 +79,7 @@ case class Tag[TagName <: Singleton](tagName   : String with TagName,
   def remove(node: Node): Tag[TagName] = set(children.diff(List(node)))
   def -(node: Node): Tag[TagName] = remove(node)
 
-  def removeAll(node: List[Node]): Tag[TagName] = set(children.diff(List(node)))
+  def removeAll(nodes: List[Node]): Tag[TagName] = set(children.diff(nodes))
   def --(node: List[Node]): Tag[TagName] = removeAll(node)
 
   def replace(reference: Node, node: Node): Tag[TagName] =
