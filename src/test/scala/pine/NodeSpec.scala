@@ -350,6 +350,31 @@ class NodeSpec extends FunSuite {
     assert(div.toHtml == """<div class="b a"></div>""")
   }
 
+  test("Remove node") {
+    val rt1 = Tag("div", Map.empty, List(Text("one")))
+    val html = html"""<div class="b a"><div>one</div><div>two</div></div>""".remove(rt1)
+    assert(html.toHtml == """<div class="b a"><div>two</div></div>""")
+  }
+
+  test("Remove non-existing node") {
+    val rt3 = Tag("div", Map.empty, List(Text("three")))
+    val html = html"""<div class="b a"><div>one</div><div>two</div></div>""".remove(rt3)
+    assert(html.toHtml == """<div class="b a"><div>one</div><div>two</div></div>""")
+  }
+
+  test("Remove all nodes") {
+    val rt1 = Tag("div", Map.empty, List(Text("one")))
+    val rt2 = Tag("div", Map.empty, List(Text("two")))
+    val html = html"""<div class="b a"><div>one</div><div>two</div></div>"""
+    val removed = html.removeAll(List(rt1, rt2))
+    assert(removed.toHtml == """<div class="b a"></div>""")
+  }
+
+  test("Remove all nodes (non-existing)") {
+    val div = html"""<div class="b a">text</div>""".removeAll(List(Text("three"), Text("four")))
+    assert(div.toHtml == """<div class="b a">text</div>""")
+  }
+
   test("Encode Long attribute") {
     val input = html"""<input></input>"""
     val updated = input.update { implicit ctx =>
