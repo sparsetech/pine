@@ -20,7 +20,18 @@ private[pine] class Reader(data: String) {
   def lookahead(value: Char): Boolean = data(offset) == value
 
   /** Returns true if `value` matches */
-  def lookahead(value: String): Boolean = rest().startsWith(value)
+  def lookahead(value: String): Boolean = {
+    if (value.length > data.length - offset) false
+    else {
+      var i = 0
+      while (i < value.length) {
+        if (value(i) != data(offset + i)) return false
+        i += 1
+      }
+
+      true
+    }
+  }
 
   /** Returns true if `value` matches and places pointer afterwards */
   def prefix(value: Char): Boolean =
@@ -31,7 +42,7 @@ private[pine] class Reader(data: String) {
 
   /** Returns true if `value` matches and places pointer afterwards */
   def prefix(value: String): Boolean =
-    rest().startsWith(value) && {
+    lookahead(value) && {
       offset += value.length
       true
     }
