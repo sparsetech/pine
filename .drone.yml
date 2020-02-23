@@ -2,7 +2,7 @@ kind: pipeline
 name: default
 steps:
   - name: build
-    image: tindzk/seed:0.1.4
+    image: tindzk/seed:0.1.6-8-g9f574df
     commands:
       - apk add --no-cache yarn
       - yarn add jsdom
@@ -10,11 +10,19 @@ steps:
       - seed --build=build211.toml bloop
       - bloop compile pine-native
       - bloop test pine-jvm pine-js
+      - seed publish bintray:tindzk/maven2/experiments2 pine:native pine:js pine:jvm
       - sleep 5  # Synchronise analysis.bin files, otherwise rm might fail
       - rm -rf .bloop build
       - seed --build=build212.toml bloop
       - bloop test pine-jvm pine-js
+      - seed publish bintray:tindzk/maven2/experiments2 pine:native pine:js pine:jvm
       - sleep 5
       - rm -rf .bloop build
       - seed --build=build213.toml bloop
       - bloop test pine-jvm pine-js
+      - seed publish bintray:tindzk/maven2/experiments2 pine:native pine:js pine:jvm
+    environment:
+      BINTRAY_USER:
+        from_secret: bintray_user
+      BINTRAY_API_KEY:
+        from_secret: bintray_api_key
