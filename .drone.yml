@@ -4,6 +4,8 @@ steps:
   - name: build
     image: tindzk/seed:0.1.6-9-g57d6422
     commands:
+      - apk add --no-cache git
+      - git fetch --tags
       - apk add --no-cache yarn
       - yarn add jsdom
       - blp-server &
