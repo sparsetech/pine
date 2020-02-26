@@ -1,8 +1,8 @@
 kind: pipeline
 name: default
 steps:
-  - name: build
-    image: tindzk/seed:0.1.4
+  - name: test
+    image: tindzk/seed:0.1.6-15-gac088b5
     commands:
       - apk add --no-cache yarn
       - yarn add jsdom
@@ -18,3 +18,30 @@ steps:
       - rm -rf .bloop build
       - seed --build=build213.toml bloop
       - bloop test pine-jvm pine-js
+  - name: publish_prerelease
+    image: tindzk/seed:0.1.6-15-gac088b5
+    commands:
+      - apk add --no-cache git
+      - git fetch --tags
+      - blp-server &
+      - seed --build=build211.toml bloop
+      - seed publish --build=build211.toml bintray:tindzk/maven2/experiments2 pine:native pine:js pine:jvm
+      - sleep 5
+      - rm -rf .bloop build
+      - seed --build=build212.toml bloop
+      - seed publish --build=build212.toml bintray:tindzk/maven2/experiments2 pine:js pine:jvm
+      - sleep 5
+      - rm -rf .bloop build
+      - seed --build=build213.toml bloop
+      - seed publish --build=build213.toml bintray:tindzk/maven2/experiments2 pine:js pine:jvm
+    environment:
+      BINTRAY_USER:
+        from_secret: bintray_user
+      BINTRAY_API_KEY:
+        from_secret: bintray_api_key
+    when:
+      branch:
+        - master
+        - feat/publish  # TODO remove
+      event:
+        - push

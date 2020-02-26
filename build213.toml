@@ -1,3 +1,9 @@
+[package]
+url          = "https://github.com/sparsetech/pine/"
+name         = "pine"
+organisation = "tech.sparse"
+developers   = [["tindzk", "Tim Nieradzik", "tim@sparse.tech"]]
+
 [project]
 scalaVersion   = "2.13.0"
 scalaJsVersion = "0.6.28"
