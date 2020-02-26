@@ -2,7 +2,7 @@ kind: pipeline
 name: default
 steps:
   - name: build
-    image: tindzk/seed:0.1.6-14-g807c7a0
+    image: tindzk/seed:0.1.6-15-gac088b5
     commands:
       - apk add --no-cache git
       - git fetch --tags
