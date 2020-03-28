@@ -8,7 +8,11 @@ import scala.annotation.tailrec
 object HtmlParser {
   def parseAttr(reader: Reader): (String, String) = {
     val name  = identifier(reader)
-    val value = if (reader.prefix('=')) parseAttrValue(reader) else ""
+    reader.skip(_.isWhitespace)
+    val value = if (reader.prefix('=')) {
+      reader.skip(_.isWhitespace)
+      parseAttrValue(reader)
+    } else ""
 
     name -> value
   }
