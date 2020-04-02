@@ -132,6 +132,13 @@ class HtmlParserSpec extends FunSuite {
     assert(node.toHtml == htmlParsed)
   }
 
+  test("Parse node with attribute which contains spaces before and after equal sign") {
+    val html       = """<input type =  "checkbox"/>"""
+    val htmlParsed = """<input type="checkbox"/>"""
+    val node = HtmlParser.fromString(html)
+    assert(node.toHtml == htmlParsed)
+  }
+
   test("Ignore comments") {
     val html = """<div>test <!-- Ignore -->!</div>"""
     val node = HtmlParser.fromString(html)
