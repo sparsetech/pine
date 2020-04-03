@@ -1,8 +1,8 @@
 package pine
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class XmlParserSpec extends FunSuite {
+class XmlParserSpec extends AnyFunSuite {
   test("Simple node") {
     val xml = "<b>test</b>"
     assert(XmlParser.fromString(xml) == tag.B.set("test"))

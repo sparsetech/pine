@@ -1,8 +1,8 @@
 package pine
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class TextSpec extends FunSuite {
+class TextSpec extends AnyFunSuite {
   test("Text node") {
     val node = tag.Span.set(Text("Hello\nworld"))
     assert(node.toText == "Hello world")

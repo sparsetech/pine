@@ -1,8 +1,8 @@
 package pine
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class HtmlParserSpec extends FunSuite {
+class HtmlParserSpec extends AnyFunSuite {
   test("Empty text node") {
     assertThrows[ParseError] {
       HtmlParser.fromString("")

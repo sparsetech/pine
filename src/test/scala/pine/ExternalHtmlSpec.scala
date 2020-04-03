@@ -1,8 +1,8 @@
 package pine
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ExternalHtmlSpec extends FunSuite {
+class ExternalHtmlSpec extends AnyFunSuite {
   def checkTestHtml(value: String): Unit =
     assert(value ==
       """<!DOCTYPE html><html>

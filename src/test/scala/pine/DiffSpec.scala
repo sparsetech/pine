@@ -1,8 +1,8 @@
 package pine
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class DiffSpec extends FunSuite {
+class DiffSpec extends AnyFunSuite {
   test("Replace nodes") {
     val spanAge  = TagRef["span"]("age")
     val spanName = TagRef["span"]("name")

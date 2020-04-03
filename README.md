@@ -23,13 +23,14 @@ Pine is a functional HTML5 and XML library for the Scala platform. It supports p
 * DSL for attaching/detaching events
 
 ## Compatibility
-| Back end       | Scala versions   |
-|:---------------|:-----------------|
-| JVM            | 2.11, 2.12, 2.13 |
-| JavaScript (1) | 2.11, 2.12, 2.13 |
-| Native         | 2.11             |
+| Platform     | Platform version | Scala versions               |
+|:-------------|:-----------------|:-----------------------------|
+| JVM          |                  | 2.11 (T), 2.12 (T), 2.13 (L) |
+| Scala.js     | 1.0              | 2.12 (T), 2.13 (L)           |
+| Scala Native | 0.4.0-M2         | 2.11 (T)                     |
 
-* (1) Adds support for browser DOM
+* (T): Typelevel Scala
+* (L): Lightbend Scala
 
 ## Examples
 ```scala
@@ -52,7 +53,7 @@ Pine makes use of a language extension called *literal types*, see [SIP-23](http
 
 ### 2.13 onwards
 ```scala
-scalaVersion := "2.13.0"
+scalaVersion := "2.<version>"
 libraryDependencies += scalaOrganization.value % "scala-reflect" % scalaVersion.value
 ```
 
@@ -79,8 +80,8 @@ addCompilerPlugin("org.scala-native" % "nscplugin" % nativeVersion cross CrossVe
 
 ### Dependencies
 ```scala
-libraryDependencies += "tech.sparse" %%  "pine" % "0.1.3"  // JVM
-libraryDependencies += "tech.sparse" %%% "pine" % "0.1.3"  // JavaScript, Native
+libraryDependencies += "tech.sparse" %%  "pine" % "<version>"  // JVM
+libraryDependencies += "tech.sparse" %%% "pine" % "<version>"  // JavaScript, Native
 ```
 
 ## Links

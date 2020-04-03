@@ -1,8 +1,8 @@
 package pine
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class InlineHtmlSpec extends FunSuite {
+class InlineHtmlSpec extends AnyFunSuite {
   test("toHtml on immutable tree") {
     val url = "http://github.com/"
     val title = "GitHub"
