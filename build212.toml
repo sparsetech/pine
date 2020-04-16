@@ -87,3 +87,21 @@ scalaDeps = [
 [module.pine.test.js]
 jsdom   = true
 sources = ["src/test/scala-js"]
+
+[module.pine-bench]
+moduleDeps = ["pine"]
+root       = "src/bench"
+sources    = ["src/bench/shared"]
+targets    = ["js", "jvm"]
+
+[module.pine-bench.jvm]
+root     = "src/bench/jvm"
+sources  = ["src/bench/jvm"]
+javaDeps = [
+  ["org.openjdk.jol", "jol-core", "0.13"]
+]
+
+[module.pine-bench.js]
+root       = "src/bench/js"
+sources    = ["src/bench/js"]
+moduleKind = "commonjs"
