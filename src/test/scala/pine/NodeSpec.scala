@@ -406,4 +406,9 @@ class NodeSpec extends FunSuite {
     assert(tag.Div.dataLanguage(Language.Spanish).toHtml ==
       """<div data-language="spanish"></div>""")
   }
+
+  test("Ordered list with custom start index") {
+    val ol = tag.Ol.start(42)
+    assert(ol.toHtml == "<ol start=\"42\"></ol>")
+  }
 }

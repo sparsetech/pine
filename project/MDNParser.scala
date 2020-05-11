@@ -32,6 +32,9 @@ object MDNParser {
     "required", "reversed", "scoped", "seamless", "selected", "sortable",
     "spellcheck", "translate", "truespeed", "typemustmatch", "visible")
 
+  /** Override type of these attributes */
+  val IntegerAttributes = Set("start")
+
   /** @see https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList */
   val TokenSetAttributes = Set("class", "rel", "sandbox")
 
@@ -255,6 +258,7 @@ object MDNParser {
         val tpe =
           if (BooleanAttributes.contains(name)) "Boolean"
           else if (TokenSetAttributes.contains(name)) "TokenSet"
+          else if (IntegerAttributes.contains(name)) "Int"
           else "String"
 
         Some(Attribute(name, deprecated || deleted || obsolete, docs, tpe))
