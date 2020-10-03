@@ -5,7 +5,6 @@ import java.io.File
 import scala.reflect.macros.blackbox.Context
 
 import pine._
-import pine.internal.HtmlParser
 
 object ExternalHtml {
   trait Method {
@@ -32,7 +31,7 @@ object ExternalHtml {
     val path = new File(c.enclosingPosition.source.path).getParentFile
     val fileNameValue = Helpers.literalValueExpr(c)(fileName)
     val html = Helpers.readFile(new File(path, fileNameValue))
-    val node = HtmlParser.fromString(html, xml)
+    val node = Parser.fromString(html, xml)
     convert(c)(node, root = true)
       .asInstanceOf[c.Expr[Tag[Singleton]]]
   }

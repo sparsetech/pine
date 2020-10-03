@@ -20,14 +20,6 @@ class PlatformBench extends BenchmarkSuite with TreeBench {
       numberOfNodes(depth) -> ()
     }
 
-    bench("Parse HTML w/o attributes via DOM", depths, measureMemory = false) { depth =>
-      numberOfNodes(depth) -> HtmlParser.fromString(htmlTreesWoAttributes(depth))
-    }
-
-    bench("Parse HTML w/ attributes via DOM", depths, measureMemory = false) { depth =>
-      numberOfNodes(depth) -> HtmlParser.fromString(htmlTreesWithAttributes(depth))
-    }
-
     bench("Render as DOM node", depths, measureMemory = false) { depth =>
       numberOfNodes(depth) -> treesWithAttributes(depth).toDom
     }

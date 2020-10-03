@@ -1,11 +1,8 @@
-package pine.internal
-
-import pine._
+package pine
 
 import scala.annotation.tailrec
 
-/* In shared/, otherwise it cannot be used by macros in Scala.js */
-object HtmlParser {
+object Parser {
   def parseAttr(reader: Reader): (String, String) = {
     val name  = identifier(reader)
     reader.skip(_.isWhitespace)
@@ -124,4 +121,14 @@ object HtmlParser {
       .getOrElse(throw new ParseError("Invalid input"))
       .asInstanceOf[Tag[Singleton]]
   }
+}
+
+object HtmlParser {
+  def fromString(html: String): Tag[Singleton] =
+    Parser.fromString(html, xml = false)
+}
+
+object XmlParser {
+  def fromString(html: String): Tag[Singleton] =
+    Parser.fromString(html, xml = true)
 }

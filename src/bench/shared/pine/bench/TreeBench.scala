@@ -13,11 +13,11 @@ trait TreeBench {
     d -> binaryTree(d).asInstanceOf[Tag[Singleton]]
   ).toMap
 
-  val htmlTreesWoAttributes = treesWoAttributes.view.mapValues(_.toHtml)
+  val htmlTreesWoAttributes = treesWoAttributes.map { case (k, v) => (k, v.toHtml) }
 
   val treesWithAttributes = depths.map(d =>
     d -> binaryTreeWithAttribute(d).asInstanceOf[Tag[Singleton]]
   ).toMap
 
-  val htmlTreesWithAttributes = treesWithAttributes.view.mapValues(_.toHtml)
+  val htmlTreesWithAttributes = treesWithAttributes.map { case (k, v) => (k, v.toHtml) }
 }

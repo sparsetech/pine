@@ -49,7 +49,7 @@ tpl.toHtml  // <div>...</div>
 ```
 
 ## Runtime HTML parser
-Pine provides an HTML parser backed by the DOM in JavaScript, but uses its own parser for other back ends.
+Pine provides an HTML parser with the same semantics on all backends:
 
 ```scala
 val html = """<div id="a"><span>42</span></div>"""

@@ -18,8 +18,7 @@ class XmlParserSpec extends FunSuite {
   test("Invalid entity") {
     val xml = "<b>&lambda;</b>"
     assertThrows[ParseError] {
-      // TODO JavaScript's HtmlParser accepts &lambda;
-      internal.HtmlParser.fromString(xml, xml = true)
+      XmlParser.fromString(xml)
     }
   }
 

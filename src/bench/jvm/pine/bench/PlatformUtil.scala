@@ -9,5 +9,6 @@ object PlatformUtil {
 
   def cliArgs(): List[String] = List()
   def format(value: Double): String = decimalFormat.format(value)
-  def measure(obj: Any): Long = GraphLayout.parseInstance(obj).totalSize()
+  def measure(obj: Any): Long =
+    GraphLayout.parseInstance(obj.asInstanceOf[Object]).totalSize()
 }
