@@ -873,14 +873,14 @@ trait Attributes {
   implicit class TagAttributesOl(tag: Tag[pine.tag.Ol]) {
     val compact = TagAttribute[pine.tag.Ol, Boolean](tag, "compact")
     val reversed = TagAttribute[pine.tag.Ol, Boolean](tag, "reversed")
-    val start = TagAttribute[pine.tag.Ol, String](tag, "start")
+    val start = TagAttribute[pine.tag.Ol, Int](tag, "start")
     val `type` = TagAttribute[pine.tag.Ol, String](tag, "type")
   }
 
   implicit class TagRefAttributesOl(tagRef: TagRef[tag.Ol]) {
     val compact = TagRefAttribute[tag.Ol, Boolean](tagRef, "compact")
     val reversed = TagRefAttribute[tag.Ol, Boolean](tagRef, "reversed")
-    val start = TagRefAttribute[tag.Ol, String](tagRef, "start")
+    val start = TagRefAttribute[tag.Ol, Int](tagRef, "start")
     val `type` = TagRefAttribute[tag.Ol, String](tagRef, "type")
   }
 
