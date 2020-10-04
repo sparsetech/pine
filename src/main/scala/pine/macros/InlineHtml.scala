@@ -3,7 +3,6 @@ package pine.macros
 import scala.reflect.macros.blackbox.Context
 
 import pine._
-import pine.internal.HtmlParser
 
 object InlineHtml {
   trait Implicit {
@@ -141,7 +140,7 @@ object InlineHtml {
               args: Seq[c.Expr[Any]]
              ): c.Expr[Tag[Singleton]] = {
     val html = insertPlaceholders(c)(parts)
-    val node = HtmlParser.fromString(html, xml)
+    val node = Parser.fromString(html, xml)
     convertTag(c)(node, args)
   }
 

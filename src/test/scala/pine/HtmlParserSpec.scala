@@ -77,16 +77,14 @@ class HtmlParserSpec extends FunSuite {
   test("Parse invalid entities") {
     assertThrows[ParseError] {
       val text = "<span>&abcd;</span>"
-      // TODO JavaScript's HtmlParser accepts &abcd;
-      internal.HtmlParser.fromString(text, xml = false)
+      HtmlParser.fromString(text)
     }
   }
 
   test("Parse invalid entities (2)") {
     assertThrows[ParseError] {
       val text = "<span>&;</span>"
-      // TODO JavaScript's HtmlParser accepts &;
-      internal.HtmlParser.fromString(text, xml = false)
+      HtmlParser.fromString(text)
     }
   }
 
@@ -215,15 +213,13 @@ var x = 42;
   }
 
   test("Cannot parse XML tags") {
-    // The JS parser is less strict, only test our internal parser here
-    // <link> is a self-closing tag.
     assertThrows[ParseError] {
-      internal.HtmlParser.fromString("""<item><link></link><guid></guid></item>""", xml = false)
+      HtmlParser.fromString("""<item><link></link><guid></guid></item>""")
     }
   }
 
   test("Parse XML tags") {
-    internal.HtmlParser.fromString("""<item><link></link><guid></guid></item>""", xml = true)
+    XmlParser.fromString("""<item><link></link><guid></guid></item>""")
     xml"""<item><link></link><guid></guid></item>"""
   }
 
@@ -233,17 +229,16 @@ var x = 42;
   }
 
   test("Detect ambiguous ampersand") {
-    // TODO JavaScript's HtmlParser accepts ampersand
     assertThrows[ParseError] {
-      internal.HtmlParser.fromString("<div>editable&&copy</div>", xml = false)
+      HtmlParser.fromString("<div>editable&&copy</div>")
     }
   }
 
   test("Ignore unclosed tags") {
-    assert(internal.HtmlParser.fromString("<html>", xml = false) == tag.Html)
-    assert(internal.HtmlParser.fromString("<html>\n", xml = false) == tag.Html.set("\n"))
+    assert(HtmlParser.fromString("<html>") == tag.Html)
+    assert(HtmlParser.fromString("<html>\n") == tag.Html.set("\n"))
 
-    assert(internal.HtmlParser.fromString("<html>", xml = true) == tag.Html)
-    assert(internal.HtmlParser.fromString("<html>\n", xml = true) == tag.Html.set("\n"))
+    assert(XmlParser.fromString("<html>") == tag.Html)
+    assert(XmlParser.fromString("<html>\n") == tag.Html.set("\n"))
   }
 }

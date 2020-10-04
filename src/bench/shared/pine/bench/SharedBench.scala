@@ -45,10 +45,10 @@ class SharedBench extends BenchmarkSuite with TreeBench {
   }
 
   bench("Parse HTML w/o attributes", depths, measureMemory = false) { depth =>
-    numberOfNodes(depth) -> internal.HtmlParser.fromString(htmlTreesWoAttributes(depth), xml = false)
+    numberOfNodes(depth) -> HtmlParser.fromString(htmlTreesWoAttributes(depth))
   }
 
   bench("Parse HTML w/ attributes", depths, measureMemory = false) { depth =>
-    numberOfNodes(depth) -> internal.HtmlParser.fromString(htmlTreesWithAttributes(depth), xml = false)
+    numberOfNodes(depth) -> HtmlParser.fromString(htmlTreesWithAttributes(depth))
   }
 }

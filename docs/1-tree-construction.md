@@ -49,7 +49,7 @@ tpl.toHtml  // <div>...</div>
 ```
 
 ## Runtime HTML parser
-Pine provides an HTML parser backed by the DOM in JavaScript, but uses its own parser for other back ends.
+Pine provides an HTML parser with the same semantics on all backends:
 
 ```scala
 val html = """<div id="a"><span>42</span></div>"""
@@ -99,14 +99,13 @@ As per the XML specification, Pine supports only the following four entities:
 * `&gt;` (`>`)
 * `&amp;` (`&`)
 
-The underlying data structures are the same for both HTML and XML trees. Pine strives for simplicity and performance at the cost of implementing only a subset of XML's features. Please refer to [scala-xml](https://github.com/scala/scala-xml) for a more complete implementation.
+The underlying data structures are the same for HTML and XML trees. Pine strives for simplicity and performance at the cost of implementing only a subset of XML's features. Please refer to [scala-xml](https://github.com/scala/scala-xml) for a more complete implementation.
 
 At the moment, we are aware of the following parser limitations:
 
 - The XML header is optional and its attributes are ignored. The input is expected to be in UTF-8 regardless of the specified character set.
 - [DTDs](https://docstore.mik.ua/orelly/web2/xhtml/ch15_03.htm) are not supported. Therefore, additional entity or element declarations cannot be defined.
 - Processing instructions (other than `<?xml ... ?>`) are not supported
-- CDATA tags are not supported (see issue #37)
 
 ## Conversion
 Some functions return `Tag[_]` when the tag type cannot be statically determined. A more concrete type is useful if you want to access element-specific attributes, like `href` on anchor nodes. You can use `as` to convert a tag to its correct type:
@@ -126,7 +125,7 @@ type CustomType = "custom-type"
 val  CustomType = Tag("CustomType")
 ```
 
-The feature we use here is called a literal type which is provided by the Typelevel Scala compiler.
+The compiler feature we use here are literal types. Originally developed within Typelevel Scala, it is now part of Lightbend Scala 2.13 onwards.
 
 Additionally, you can define methods to access attributes conveniently:
 
@@ -177,8 +176,8 @@ tag.Div.dataLanguage(Language.Spanish)
 ```
 
 ## Rendering
-A node defines two rendering methods:
+A node has several rendering methods:
 
 - **HTML:** `toHtml` is defined on every node and will return the tree as an HTML5 string. If the root node is an `<html>` tag, the `DOCTYPE` will be included as well.
-* **XML:** `toXml` returns the tree as an XML 1.0 string. It always includes the XML header, specifying the encoding as UTF-8.
-- **DOM:** `toDom` is only available in JavaScript; it renders the tree as a browser node, which can be inserted into the DOM
+- **XML:** `toXml` returns the tree as an XML 1.0 string. It always includes the XML header, specifying the encoding as UTF-8.
+- **DOM:** `toDom` is only available in JavaScript. It renders the tree as a browser node, which can be inserted into the DOM.
