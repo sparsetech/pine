@@ -3,13 +3,13 @@
 [![Build Status](http://ci.sparse.tech/api/badges/sparsetech/pine/status.svg)](http://ci.sparse.tech/sparsetech/pine)
 [![Maven Central](https://img.shields.io/maven-central/v/tech.sparse/pine_2.12.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22tech.sparse%22%20AND%20a%3A%22pine_2.12%22)
 
-Pine is a functional HTML5 and XML library for the Scala platform. It supports parsing, manipulating and rendering of HTML. Pine provides type-safe bindings for HTML5 generated from [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element). It implements an immutable tree which can be created directly from compile-time or runtime HTML/XML content. The tree may be manipulated and rendered back as HTML or as a browser node.
+Pine is a functional HTML5 and XML library for the Scala platform. It supports parsing, manipulating and rendering of HTML. Pine provides type-safe bindings for HTML5 generated from [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element). Tree nodes are immutable and can be constructed from compile-time or runtime HTML/XML content. The tree may be manipulated and rendered back as HTML or as a browser node.
 
 ## Features
 * Immutable and typed trees
 * Type-safe bindings, generated from MDN
 * Support for custom elements and attributes
-* HTML5 and XML parser (recursive descent)
+* HTML5 and XML parser based on recursive descent
 * Macros for compile-time HTML string/file parsing
 * Tree manipulation
 * Rendering as HTML strings
@@ -17,7 +17,7 @@ Pine is a functional HTML5 and XML library for the Scala platform. It supports p
 * Unit and property-based tests
 * Few dependencies
 
-### JavaScript backend
+### JavaScript back end
 * Rendering as DOM nodes
 * Updating nodes in DOM
 * DSL for attaching/detaching events
@@ -27,7 +27,7 @@ Pine is a functional HTML5 and XML library for the Scala platform. It supports p
 |:---------------|:-----------------|
 | JVM            | 2.11, 2.12, 2.13 |
 | JavaScript (1) | 2.11, 2.12, 2.13 |
-| LLVM           | 2.11             |
+| Native         | 2.11             |
 
 * (1) Adds support for browser DOM
 
@@ -80,7 +80,7 @@ addCompilerPlugin("org.scala-native" % "nscplugin" % nativeVersion cross CrossVe
 ### Dependencies
 ```scala
 libraryDependencies += "tech.sparse" %%  "pine" % "0.1.3"  // JVM
-libraryDependencies += "tech.sparse" %%% "pine" % "0.1.3"  // JavaScript, LLVM
+libraryDependencies += "tech.sparse" %%% "pine" % "0.1.3"  // JavaScript, Native
 ```
 
 ## Links

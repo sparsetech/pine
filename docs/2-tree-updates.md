@@ -1,7 +1,6 @@
 # Tree updates
 ## Operations
-A `Node` is equipped with a variety of functions to easily manipulate trees such as `prepend`, `append`, `remove`, `clearAll`, `filter`, `flatMap`, `map` and others. See the [source code](https://github.com/sparsetech/pine/blob/master/shared/src/main/scala/pine/Node.scala)
-for an overview.
+A `Node` is equipped with a variety of functions to easily manipulate trees such as `prepend`, `append`, `remove`, `clearAll`, `filter`, `flatMap`, `map` and others. See the [source code](https://github.com/sparsetech/pine/blob/master/shared/src/main/scala/pine/Node.scala) for an overview.
 
 ## Referencing nodes
 While the operations from the previous section allow you to modify the tree, they operate on either the root node or are applied recursively to all children.
@@ -149,14 +148,14 @@ Tags can be referenced using:
 * Tag type: `TagRef[tag.A]`
 * Class name: `TagRef.byClass[tag.A]("class-name")`
 
-A `TagRef` exposes methods for manipulating nodes and their attributes. See its [source code](https://github.com/sparsetech/pine/blob/master/shared/src/main/scala/pine/TagRef.scala) for a full list of operations.
+A `TagRef` exposes methods for manipulating nodes and their attributes. See its [source code](https://github.com/sparsetech/pine/tree/master/src/main/scala/pine/TagRef.scala) for a full list of operations.
 
 ## Diffs
 A `Diff` is an immutable object which describes tree changes. It is instantiated for example by the `TagRef` operations you have seen before such as `:=` (`set`), `replace` etc.
 
 So far, these changes were performed directly on the tree. However, for the JavaScript back end, we have an additional rendering context that can apply those changes to the DOM. This will be explained in the next chapter.
 
-The full list of supported diffs can be found [here](https://github.com/sparsetech/pine/blob/master/shared/src/main/scala/pine/Diff.scala).
+The full list of supported diffs can be found [here](https://github.com/sparsetech/pine/tree/master/src/main/scala/pine/Diff.scala).
 
 ### Multiple occurrences
 If you would like to perform a change on all occurrences of a `TagRef`, use the `each` function:
