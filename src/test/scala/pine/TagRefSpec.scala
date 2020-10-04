@@ -1,8 +1,8 @@
 package pine
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class TagRefSpec extends FunSuite {
+class TagRefSpec extends AnyFunSuite {
   test("Use DSL to set boolean attribute to true") {
     val node = tag.Input.id("test")
 

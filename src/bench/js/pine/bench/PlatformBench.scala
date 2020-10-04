@@ -7,7 +7,7 @@ import pine.dom._
 import pine.bench.BenchUtil._
 
 class PlatformBench extends BenchmarkSuite with TreeBench {
-  val isNodeJs = js.isUndefined(org.scalajs.dom.window)
+  val isNodeJs = js.typeOf(js.Dynamic.global.window) == "undefined"
 
   if (isNodeJs) println("[warn] Ignoring all tests requiring DOM access")
   else {
@@ -17,7 +17,7 @@ class PlatformBench extends BenchmarkSuite with TreeBench {
       org.scalajs.dom.document.body.appendChild(rendered)
       DOM.render { implicit ctx => ref := "test" }
       org.scalajs.dom.document.body.removeChild(rendered)
-      numberOfNodes(depth) -> ()
+      numberOfNodes(depth) -> (())
     }
 
     bench("Render as DOM node", depths, measureMemory = false) { depth =>

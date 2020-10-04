@@ -1,7 +1,6 @@
 [project]
 scalaVersion   = "2.11.11-bin-typelevel-4"
-scalaJsVersion = "0.6.28"
-scalaNativeVersion = "0.3.7"
+scalaNativeVersion = "0.4.0-M2"
 scalaOptions   = [
     "-deprecation",                      # Emit warning and location for usages of deprecated APIs.
     "-encoding", "utf-8",                # Specify character encoding used by source files.
@@ -31,7 +30,7 @@ scalaOptions   = [
     "-Ywarn-numeric-widen",              # Warn when numerics are widened.
 
     ### pre-13 options ###
-    
+
     "-Xfuture",                          # Turn on future language features.
     "-Xlint:by-name-right-associative",  # By-name parameter of right associative operator.
     "-Xlint:unsound-match",              # Pattern match may not be typesafe.
@@ -52,36 +51,24 @@ testFrameworks = [
 [module.pine]
 root    = "src/main/scala"
 sources = ["src/main/scala"]
-targets = ["js", "jvm", "native"]
+targets = ["jvm", "native"]
 
 [module.pine.test]
 sources   = ["src/test/scala"]
-targets   = ["js", "jvm"]
+targets   = ["jvm"]
 scalaDeps = [
-  ["org.scalatest" , "scalatest" , "3.0.8" ],
-  ["org.scalacheck", "scalacheck", "1.14.0"]
+  ["org.scalatest" , "scalatest" , "3.2.2" ],
+  ["org.scalacheck", "scalacheck", "1.14.3"]
 ]
 
 [module.pine.jvm]
 root    = "src/main/scala-jvm"
 sources = ["src/main/scala-jvm"]
 
-[module.pine.js]
-root    = "src/main/scala-js"
-sources = ["src/main/scala-js"]
-scalaDeps = [
-  ["org.scala-js", "scalajs-dom", "0.9.7"]
-]
-
-[module.pine.test.js]
-jsdom   = true
-sources = ["src/test/scala-js"]
-
 [module.pine-bench]
 moduleDeps = ["pine"]
 root       = "src/bench"
 sources    = ["src/bench/shared"]
-targets    = ["js", "jvm"]
 
 [module.pine-bench.jvm]
 root     = "src/bench/jvm"
@@ -89,8 +76,3 @@ sources  = ["src/bench/jvm"]
 javaDeps = [
   ["org.openjdk.jol", "jol-core", "0.13"]
 ]
-
-[module.pine-bench.js]
-root       = "src/bench/js"
-sources    = ["src/bench/js"]
-moduleKind = "commonjs"

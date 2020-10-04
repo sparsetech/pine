@@ -1,8 +1,8 @@
 package pine
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class NodeSpec extends FunSuite {
+class NodeSpec extends AnyFunSuite {
   test("Instantiate node") {
     val a = tag.A
       .href("http://github.com/")

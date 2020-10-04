@@ -1,11 +1,11 @@
 package pine.dom
 
 import org.scalajs.dom.document
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import pine._
 
-class TagRefSpec extends FunSuite {
+class TagRefSpec extends AnyFunSuite {
   test("Get value of String attribute") {
     val node = document.createElement("a")
     node.setAttribute("id", "test")

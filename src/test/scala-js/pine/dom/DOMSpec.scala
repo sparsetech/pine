@@ -1,13 +1,13 @@
 package pine.dom
 
 import org.scalajs.dom
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import pine._
 
 import scala.collection.mutable.ListBuffer
 import scala.scalajs.js
 
-class DOMSpec extends FunSuite {
+class DOMSpec extends AnyFunSuite {
   /*
   test("Render node with one-way binding") {
     val title = Var("test")

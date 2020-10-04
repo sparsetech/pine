@@ -1,8 +1,8 @@
 package pine
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class HtmlHelpersSpec extends FunSuite {
+class HtmlHelpersSpec extends AnyFunSuite {
   test("Reader") {
     val reader = new Reader("test;bc")
     assert(reader.collect(';').contains("test"))

@@ -5,12 +5,10 @@ val V = new {
   val paradise = "2.1.1"
   val scala2_11 = "2.11.11-bin-typelevel-4"
   val scala2_12 = "2.12.4-bin-typelevel-4"
-  val scala2_13 = "2.13.1"
-  val scalaTest = "3.0.8"
-  val scalaTestNative = "3.2.0-SNAP10"
-  val scalaCheck = "1.14.0"
-  val scalaCheckNative = "1.14.1"
-  val scalaJsDom = "0.9.7"
+  val scala2_13 = "2.13.3"
+  val scalaTest = "3.2.2"
+  val scalaCheck = "1.14.3"
+  val scalaJsDom = "1.1.0"
 }
 
 ThisBuild / scalaVersion := V.scala2_13
@@ -25,6 +23,9 @@ val commonSettings = nocomma {
   libraryDependencies ++= Seq(
     scalaOrganization.value % "scala-reflect" % scalaVersion.value % "provided",
     scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided",
+
+    "org.scalatest"  %%% "scalatest"   % V.scalaTest  % "test",
+    "org.scalacheck" %%% "scalacheck"  % V.scalaCheck % "test"
   )
 
   scalacOptions ++= Seq(
@@ -44,7 +45,6 @@ val commonSettings = nocomma {
     "-Xlint:inaccessible",               // Warn about inaccessible types in method signatures.
     "-Xlint:infer-any",                  // Warn when a type argument is inferred to be `Any`.
     "-Xlint:missing-interpolator",       // A string literal appears to be missing an interpolator id.
-    "-Xlint:nullary-override",           // Warn when non-nullary `def f()' overrides nullary `def f'.
     "-Xlint:nullary-unit",               // Warn when nullary methods return Unit.
     "-Xlint:option-implicit",            // Option.apply used implicit view.
     "-Xlint:package-object-classes",     // Class or object defined in package object.
@@ -59,7 +59,7 @@ val commonSettings = nocomma {
 
 val Pre13Settings = nocomma {
   scalaOrganization := "org.typelevel"
-  
+
   scalacOptions ++= Seq(
     "-Xfuture",                          // Turn on future language features.
     "-Xlint:by-name-right-associative",  // By-name parameter of right associative operator.
@@ -72,7 +72,7 @@ val Pre13Settings = nocomma {
     "-Ywarn-nullary-override",           // Warn when non-nullary `def f()' overrides nullary `def f'.
     "-Ywarn-nullary-unit",               // Warn when nullary methods return Unit.
   )
-  
+
   addCompilerPlugin("org.scalamacros" %% "paradise" % V.paradise cross CrossVersion.patch)
 }
 
@@ -98,18 +98,11 @@ val Scala13Settings = Post11Settings ++ nocomma {
   scalacOptions += "-Ymacro-annotations"
 }
 
-val JvmSettings = nocomma {
-  libraryDependencies ++= Seq(
-    "org.scalatest"  %% "scalatest"   % V.scalaTest  % "test",
-    "org.scalacheck" %% "scalacheck"  % V.scalaCheck % "test",
-  )
-}
+val JvmSettings = Seq()
 
 val JsSettings = nocomma {
   libraryDependencies ++= Seq(
-    "org.scalatest"  %%% "scalatest"   % V.scalaTest  % "test",
-    "org.scalacheck" %%% "scalacheck"  % V.scalaCheck % "test",
-    "org.scala-js"   %%% "scalajs-dom" % V.scalaJsDom,
+    "org.scala-js" %%% "scalajs-dom" % V.scalaJsDom
   )
 
   // We need to remove and re-add this if working under the typelevel compiler
@@ -123,11 +116,6 @@ val JsSettings = nocomma {
 }
 
 val NativeSettings = nocomma {
-  libraryDependencies ++= Seq(
-    "org.scalatest"     %%% "scalatest"   % V.scalaTestNative  % "test",
-    "com.github.lolgab" %%% "scalacheck"  % V.scalaCheckNative % "test"
-  )
-
   libraryDependencies ~= (_.filterNot(_.name == "nscplugin"))
   addCompilerPlugin("org.scala-native" % "nscplugin" % nativeVersion cross CrossVersion.patch)
 
@@ -145,7 +133,6 @@ lazy val pine = (projectMatrix in file("."))
   .jvmPlatform(    Seq(V.scala2_11), JvmSettings    ++ Scala11Settings)
   .jsPlatform(     Seq(V.scala2_13), JsSettings     ++ Scala13Settings)
   .jsPlatform(     Seq(V.scala2_12), JsSettings     ++ Scala12Settings)
-  .jsPlatform(     Seq(V.scala2_11), JsSettings     ++ Scala11Settings)
   .nativePlatform( Seq(V.scala2_11), NativeSettings ++ Pre13Settings)
 
 // root settings. src/ is handled by sbt-projectmatrix

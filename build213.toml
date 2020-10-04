@@ -1,6 +1,6 @@
 [project]
-scalaVersion   = "2.13.0"
-scalaJsVersion = "0.6.28"
+scalaVersion   = "2.13.2"
+scalaJsVersion = "1.0.1"
 scalaOptions   = [
     "-deprecation",                      # Emit warning and location for usages of deprecated APIs.
     "-encoding", "utf-8",                # Specify character encoding used by source files.
@@ -18,7 +18,6 @@ scalaOptions   = [
     "-Xlint:inaccessible",               # Warn about inaccessible types in method signatures.
     "-Xlint:infer-any",                  # Warn when a type argument is inferred to be `Any`.
     "-Xlint:missing-interpolator",       # A string literal appears to be missing an interpolator id.
-    "-Xlint:nullary-override",           # Warn when non-nullary `def f()' overrides nullary `def f'.
     "-Xlint:nullary-unit",               # Warn when nullary methods return Unit.
     "-Xlint:option-implicit",            # Option.apply used implicit view.
     "-Xlint:package-object-classes",     # Class or object defined in package object.
@@ -55,8 +54,8 @@ targets = ["js", "jvm"]
 sources   = ["src/test/scala"]
 targets   = ["js", "jvm"]
 scalaDeps = [
-  ["org.scalatest" , "scalatest" , "3.0.8" ],
-  ["org.scalacheck", "scalacheck", "1.14.0"]
+  ["org.scalatest" , "scalatest" , "3.1.1" ],
+  ["org.scalacheck", "scalacheck", "1.14.3"]
 ]
 
 [module.pine.jvm]
@@ -67,7 +66,7 @@ sources = ["src/main/scala-jvm"]
 root    = "src/main/scala-js"
 sources = ["src/main/scala-js"]
 scalaDeps = [
-  ["org.scala-js", "scalajs-dom", "0.9.7"]
+  ["org.scala-js", "scalajs-dom", "1.1.0"]
 ]
 
 [module.pine.test.js]

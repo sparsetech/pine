@@ -12,7 +12,7 @@ object SizeOf extends js.Object {
 
 object PlatformUtil {
   def cliArgs(): List[String] =
-    if (js.isUndefined(js.Dynamic.global.process)) List()
+    if (js.typeOf(js.Dynamic.global.process) == "undefined") List()
     else js.Dynamic.global.process.argv.asInstanceOf[js.Array[String]].toList.drop(2)
   def format(value: Double): String = value.toFixed(1)
   def measure(obj: Any): Long =
