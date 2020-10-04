@@ -19,14 +19,18 @@ sealed trait Node {
   def map(f: Node => Node): T
   def flatMap(f: Node => List[Node]): T
   def mapFirst(f: PartialFunction[Node, Node]): T
+
+  /** Recursively traverses tree and returns content of first text node */
+  def textContent: Option[String]
 }
 
 case class Text(text: String) extends Node {
   override type T = Text
 
-  def map(f: Node => Node): T = this
-  def flatMap(f: Node => List[Node]): T = this
-  def mapFirst(f: PartialFunction[Node, Node]): T = this
+  override def map(f: Node => Node): T = this
+  override def flatMap(f: Node => List[Node]): T = this
+  override def mapFirst(f: PartialFunction[Node, Node]): T = this
+  override def textContent: Option[String] = Some(text)
 }
 
 case class Tag[TagName <: Singleton](tagName   : String with TagName,
@@ -129,7 +133,7 @@ case class Tag[TagName <: Singleton](tagName   : String with TagName,
   }
 
   /** Recursively map children, excluding root node */
-  def map(f: Node => Node): Tag[TagName] = set(children.map(f(_).map(f)))
+  override def map(f: Node => Node): Tag[TagName] = set(children.map(f(_).map(f)))
 
   /** Recursively map tag children, including root node */
   def mapRoot(f: Tag[_] => Tag[_]): Tag[TagName] = {
@@ -142,10 +146,10 @@ case class Tag[TagName <: Singleton](tagName   : String with TagName,
     iter(this).asInstanceOf[T]
   }
 
-  def flatMap(f: Node => List[Node]): Tag[TagName] =
+  override def flatMap(f: Node => List[Node]): Tag[TagName] =
     copy(children = children.flatMap(n => f(n.flatMap(f))))
 
-  def mapFirst(f: PartialFunction[Node, Node]): Tag[TagName] = {
+  override def mapFirst(f: PartialFunction[Node, Node]): Tag[TagName] = {
     var done = false
 
     def m(n: Node): Node =
@@ -167,6 +171,17 @@ case class Tag[TagName <: Singleton](tagName   : String with TagName,
 
   def partialMap(f: PartialFunction[Node, Node]): Tag[TagName] =
     map(node => f.lift(node).getOrElse(node))
+
+  override def textContent: Option[String] = {
+    for (c <- children) {
+      c.textContent match {
+        case Some(c) => return Some(c)
+        case _ =>
+      }
+    }
+
+    None
+  }
 
   /**
     * Recursively adds `suffix` to every given attribute.

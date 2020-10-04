@@ -411,4 +411,30 @@ class NodeSpec extends FunSuite {
     val ol = tag.Ol.start(42)
     assert(ol.toHtml == "<ol start=\"42\"></ol>")
   }
+
+  test("textContent") {
+    // top-level text node
+    val n = Text("hello world")
+    assert(n.textContent == Some("hello world"))
+
+    // an empty string is treated like a regular text node
+    val n2 = Text("")
+    assert(n2.textContent == Some(""))
+
+    // one nesting level
+    val n3 = tag.Div.set(Text("hello"))
+    assert(n3.textContent == Some("hello"))
+
+    // two nesting levels
+    val n4 = tag.Div.set(tag.Div.set(Text("hello")))
+    assert(n4.textContent == Some("hello"))
+
+    // return only first text node
+    val n5 = tag.Div.set(List(tag.Div.set(Text("hello")), Text(" world")))
+    assert(n5.textContent == Some("hello"))
+
+    // no text node found
+    val n6 = tag.Div
+    assert(n6.textContent == None)
+  }
 }
