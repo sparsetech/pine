@@ -2,7 +2,7 @@ kind: pipeline
 name: default
 steps:
   - name: build
-    image: tindzk/seed:0.1.7-15-gcf4cb2b0
+    image: tindzk/seed:0.1.7-15-gcf4cb2b
     commands:
       - apk add --no-cache yarn
       - yarn add jsdom object-sizeof
