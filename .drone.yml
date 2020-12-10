@@ -2,21 +2,16 @@ kind: pipeline
 name: default
 steps:
   - name: build
-    image: tindzk/seed:0.1.7
+    image: tindzk/seed:0.1.7-15-gcf4cb2b0
     commands:
       - apk add --no-cache yarn
       - yarn add jsdom object-sizeof
-      # Patch Bloop version to support Scala.js 1.0
-      - apk add --no-cache curl && curl -L https://github.com/scalacenter/bloop/releases/download/v1.4.0-RC1/install.py | python - -d /usr/bin/ -v 1.4.0-RC1-229-b7c15aa9 || true
-      - blp-server &
       - seed --build=build211.toml bloop
       - bloop compile pine-native
       - bloop test pine-jvm
-      - sleep 5  # Synchronise analysis.bin files, otherwise rm might fail
       - rm -rf .bloop build
       - seed --build=build212.toml bloop
       - bloop test pine-jvm pine-js
-      - sleep 5
       - rm -rf .bloop build
       - seed --build=build213.toml bloop
       - bloop test pine-jvm pine-js
